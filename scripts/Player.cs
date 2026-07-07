@@ -116,6 +116,9 @@ public partial class Player : CharacterBody2D
 
 			if (Input.IsActionJustPressed("lancer") && _lancerCooldownTimer <= 0f)
 				Lancer();
+
+			if (Input.IsActionJustPressed("manger"))
+				Manger();
 		}
 
 		if (_enLancer)
@@ -184,6 +187,18 @@ public partial class Player : CharacterBody2D
 
 		if (_invincibiliteTimer <= 0f)
 			_sprite.Visible = true;
+	}
+
+	// Manger un poisson (soin) : pas d'animation dédiée pour économiser le budget
+	// de génération, un flash vert suffit comme retour visuel immédiat.
+	private void Manger()
+	{
+		if (GameState.Instance == null || !GameState.Instance.ManagerPoisson())
+			return;
+
+		var tween = CreateTween();
+		tween.TweenProperty(_sprite, "modulate", new Color(0.6f, 1f, 0.6f), 0.08f);
+		tween.TweenProperty(_sprite, "modulate", Colors.White, 0.25f);
 	}
 
 	private void DemarrerGlissade()

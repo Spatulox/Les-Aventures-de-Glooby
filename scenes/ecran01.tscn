@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/Ecran01.cs" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/igloo.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/checkpoint_peche.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/transition_ecran.tscn" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/poisson.tscn" id="7"]
 
 [node name="Ecran01" type="Node2D"]
 script = ExtResource("1")
@@ -29,6 +30,22 @@ IdCheckpoint = "ecran01_campement_2"
 position = Vector2(2700, 200)
 CheminScene = "res://scenes/ecran_carrefour.tscn"
 PositionEntree = Vector2(200, 280)
+
+[node name="Poisson1" parent="." instance=ExtResource("7")]
+position = Vector2(320, 220)
+IdPoisson = "ecran01_poisson_1"
+
+[node name="Poisson2" parent="." instance=ExtResource("7")]
+position = Vector2(880, 160)
+IdPoisson = "ecran01_poisson_2"
+
+[node name="Poisson3" parent="." instance=ExtResource("7")]
+position = Vector2(1450, 220)
+IdPoisson = "ecran01_poisson_3"
+
+[node name="Poisson4" parent="." instance=ExtResource("7")]
+position = Vector2(2016, 220)
+IdPoisson = "ecran01_poisson_4"
 
 [node name="Joueur" parent="." instance=ExtResource("5")]
 position = Vector2(80, 230)
