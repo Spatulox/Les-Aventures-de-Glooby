@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://c77w6x1ibmgh0"]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1"]
+[ext_resource type="Texture2D" uid="uid://dbkln14cmuiso" path="res://assets/fond_aurore.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://qgnd7ip2lx8i" path="res://assets/terrain_sol.png" id="3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_terrain"]
+size = Vector2(627, 342)
+
+[node name="Ecran01" type="Node2D" unique_id=576910280]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="." unique_id=1460565479]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground" unique_id=1708297925]
+motion_scale = Vector2(0.5, 0.5)
+motion_mirroring = Vector2(1184, 0)
+
+[node name="Fond" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer" unique_id=1534270047]
+position = Vector2(592, 304.99997)
+scale = Vector2(1, 0.90773803)
+texture = ExtResource("2")
+
+[node name="Terrain" type="StaticBody2D" parent="." unique_id=1395188535]
+position = Vector2(592, 500)
+
+[node name="Sprite2D" type="Sprite2D" parent="Terrain" unique_id=2095850564]
+position = Vector2(-329, 267)
+texture = ExtResource("3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain" unique_id=708593784]
+position = Vector2(-307, 260)
+shape = SubResource("RectangleShape2D_terrain")
+
+[node name="Joueur" parent="." unique_id=629303065 instance=ExtResource("1")]
+position = Vector2(150, 300)
+
+[node name="Sprite2D" parent="Joueur" index="0"]
+position = Vector2(8, 3.999999)
+
+[node name="Camera2D2" type="Camera2D" parent="Joueur" unique_id=1502575472]
+limit_left = 0
+limit_top = 0
+limit_right = 1184
+limit_bottom = 672
+
+[editable path="Joueur"]
