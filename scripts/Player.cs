@@ -19,6 +19,7 @@ public partial class Player : CharacterBody2D
 	[Export] public float LancerDuree = 0.35f;
 	[Export] public float DegatsDuree = 0.4f;
 	[Export] public float DelaiRuptureFragile = 0.4f;
+	[Export] public float SeuilChuteVide = 700f;
 	[Export] public PackedScene SceneBouleDeNeige;
 
 	private AnimatedSprite2D _sprite;
@@ -129,7 +130,20 @@ public partial class Player : CharacterBody2D
 		Velocity = velocity;
 		MoveAndSlide();
 
+		if (GlobalPosition.Y > SeuilChuteVide)
+		{
+			TomberDansLeVide();
+			return;
+		}
+
 		MettreAJourAnimation(auSol, direction);
+	}
+
+	// Filet de sécurité : une chute manquée dans un trou ne doit jamais se
+	// terminer en vide sans fond, elle renvoie au dernier campement activé.
+	private void TomberDansLeVide()
+	{
+		GameState.Instance?.RespawnAuCheckpoint();
 	}
 
 	public void SubirDegats(int direction)

@@ -32,6 +32,18 @@ public static class TileSetFabrique
 		return tileSet;
 	}
 
+	// TileSet unique regroupant toutes les sources (banquise + grotte), nécessaire
+	// dès qu'un même niveau/TileMapLayer doit mélanger plusieurs tuilesets.
+	public static TileSet CreerMonde()
+	{
+		var tileSet = CreerTileSetVide();
+		tileSet.SetMeta("banquise_plein", AjouterSource(tileSet, "res://assets/tiles/banquise_base.png", false, false));
+		tileSet.SetMeta("banquise_glissant", AjouterSource(tileSet, "res://assets/tiles/banquise_glissante.png", true, false));
+		tileSet.SetMeta("banquise_fragile", AjouterSource(tileSet, "res://assets/tiles/banquise_fragile.png", false, true));
+		tileSet.SetMeta("grotte_plein", AjouterSource(tileSet, "res://assets/tiles/grotte_base.png", false, false));
+		return tileSet;
+	}
+
 	public static Vector2I CoordsAtlasPleine => CoordsPleine;
 	public static Vector2I CoordsAtlasSurface => CoordsSurface;
 
