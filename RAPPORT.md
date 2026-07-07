@@ -87,6 +87,16 @@ lors des étapes de design précédentes.
 - Chemin critique dégâts → mort du boss → victoire → écran de fin vérifié
   explicitement par un test dédié (retiré après validation).
 
+## Refonte post-mission : monde continu façon Hollow Knight
+
+Sur demande explicite, l'architecture est passée de 7 scènes séparées
+(rechargées à chaque transition) à **une seule scène monde.tscn** contenant
+tout le niveau : chaque salle est peinte à un décalage dans le même
+TileMapLayer, et des zones de caméra (Area2D) ajustent les limites de vue
+en entrant dans une salle - plus aucun rechargement pendant le jeu (sauf la
+victoire finale -> écran de fin). Voir le commit dédié pour le détail
+(bug du seuil de chute absolu corrigé en le rendant relatif à chaque zone).
+
 ## Limites connues (voir TODO.md)
 
 - Tuning des PV/dégâts du boss non validé par un vrai humain à la manette
