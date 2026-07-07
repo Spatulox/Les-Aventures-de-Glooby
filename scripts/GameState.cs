@@ -51,7 +51,10 @@ public partial class GameState : Node
 		Pv = Mathf.Max(0, Pv - quantite);
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 		if (Pv <= 0)
+		{
 			EmitSignal(SignalName.JoueurMort);
+			RespawnAuCheckpoint();
+		}
 	}
 
 	public void Soigner(int quantite)

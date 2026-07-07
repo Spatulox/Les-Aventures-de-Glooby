@@ -18,6 +18,8 @@ public partial class Player : CharacterBody2D
 	[Export] public float LancerCooldown = 0.5f;
 	[Export] public float LancerDuree = 0.35f;
 	[Export] public float DegatsDuree = 0.4f;
+	[Export] public float InvincibiliteDuree = 1.0f;
+	[Export] public float ClignoteInterval = 0.08f;
 	[Export] public float DelaiRuptureFragile = 0.4f;
 	[Export] public float SeuilChuteVide = 700f;
 	[Export] public PackedScene SceneBouleDeNeige;
@@ -35,6 +37,8 @@ public partial class Player : CharacterBody2D
 	private float _lancerTimer;
 	private float _lancerCooldownTimer;
 	private float _degatsTimer;
+	private float _invincibiliteTimer;
+	private float _clignoteTimer;
 	private bool _enGlissade;
 	private bool _enLancer;
 	private bool _enDegats;
@@ -127,6 +131,8 @@ public partial class Player : CharacterBody2D
 				_enDegats = false;
 		}
 
+		GererInvincibilite(dt);
+
 		Velocity = velocity;
 		MoveAndSlide();
 
@@ -146,15 +152,38 @@ public partial class Player : CharacterBody2D
 		GameState.Instance?.RespawnAuCheckpoint();
 	}
 
-	public void SubirDegats(int direction)
+	public bool EstInvincible => _invincibiliteTimer > 0f;
+
+	public void SubirDegats(int direction, int quantite = 1)
 	{
-		if (_enDegats)
+		if (EstInvincible)
 			return;
 
-		GameState.Instance?.Degats(1);
+		GameState.Instance?.Degats(quantite);
 		_enDegats = true;
 		_degatsTimer = DegatsDuree;
+		_invincibiliteTimer = InvincibiliteDuree;
 		Velocity = new Vector2(-direction * 120f, -180f);
+	}
+
+	private void GererInvincibilite(float dt)
+	{
+		if (_invincibiliteTimer <= 0f)
+		{
+			_sprite.Visible = true;
+			return;
+		}
+
+		_invincibiliteTimer -= dt;
+		_clignoteTimer -= dt;
+		if (_clignoteTimer <= 0f)
+		{
+			_clignoteTimer = ClignoteInterval;
+			_sprite.Visible = !_sprite.Visible;
+		}
+
+		if (_invincibiliteTimer <= 0f)
+			_sprite.Visible = true;
 	}
 
 	private void DemarrerGlissade()
