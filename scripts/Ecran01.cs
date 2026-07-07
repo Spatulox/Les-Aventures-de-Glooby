@@ -29,6 +29,15 @@ public partial class Ecran01 : Node2D
 		new(69, 85, 8, "grotte_plein", 4), // entrée de la grotte
 	};
 
+	// 3 variantes différentes (même palette, composition différente) pour éviter
+	// l'effet "copier-coller" d'un même fond répété via Parallax2D.
+	private static readonly string[] VariantesAurore =
+	{
+		"res://assets/backgrounds/fond_aurore_banquise.png",
+		"res://assets/backgrounds/fond_aurore_banquise_b.png",
+		"res://assets/backgrounds/fond_aurore_banquise_c.png",
+	};
+
 	public override void _Ready()
 	{
 		var couche = GetNode<TileMapLayer>("Terrain");
@@ -42,13 +51,33 @@ public partial class Ecran01 : Node2D
 			TerrainPeintre.PeindreBandeSol(couche, sourceId, segment.ColDebut, segment.ColFin, segment.Rangee, segment.Profondeur);
 		}
 
+		int largeurNiveau = (Segments[^1].ColFin + 1) * TailleTuile;
+
+		PlacerFondAurore(largeurNiveau);
 		PlacerFondGrotte();
 		PlacerDecors();
 
-		int largeurNiveau = (Segments[^1].ColFin + 1) * TailleTuile;
 		var camera = GetNode<Camera2D>("Joueur/Camera2D");
 		camera.LimitRight = largeurNiveau;
 		camera.LimitBottom = 400;
+	}
+
+	private void PlacerFondAurore(int largeurNiveau)
+	{
+		var parallaxe = GetNode<Node2D>("FondParallaxe");
+		const float largeurPanneau = 720f;
+		int nombrePanneaux = Mathf.CeilToInt(largeurNiveau / largeurPanneau) + 1;
+
+		for (int i = 0; i < nombrePanneaux; i++)
+		{
+			var panneau = new Sprite2D
+			{
+				Texture = GD.Load<Texture2D>(VariantesAurore[i % VariantesAurore.Length]),
+				Scale = new Vector2(2f, 2f),
+				Position = new Vector2(i * largeurPanneau + largeurPanneau / 2f, 180)
+			};
+			parallaxe.AddChild(panneau);
+		}
 	}
 
 	private void PlacerFondGrotte()
