@@ -119,6 +119,9 @@ public partial class Player : CharacterBody2D
 
 			if (Input.IsActionJustPressed("manger"))
 				Manger();
+
+			if (Input.IsActionJustPressed("pouvoir_chaleur"))
+				UtiliserPouvoirChaleur();
 		}
 
 		if (_enLancer)
@@ -199,6 +202,35 @@ public partial class Player : CharacterBody2D
 		var tween = CreateTween();
 		tween.TweenProperty(_sprite, "modulate", new Color(0.6f, 1f, 0.6f), 0.08f);
 		tween.TweenProperty(_sprite, "modulate", Colors.White, 0.25f);
+	}
+
+	// Pouvoir de Chaleur : aura courte portée qui fait fondre les murs de
+	// glace fondable à proximité. Flash orange procédural, pas de nouvel
+	// asset d'effet visuel.
+	private void UtiliserPouvoirChaleur()
+	{
+		if (GameState.Instance?.PouvoirChaleurActif != true)
+			return;
+
+		var espace = GetWorld2D().DirectSpaceState;
+		var forme = new CircleShape2D { Radius = 40f };
+		var param = new PhysicsShapeQueryParameters2D
+		{
+			Shape = forme,
+			Transform = new Transform2D(0, GlobalPosition + new Vector2(_directionRegard * 24f, 0)),
+			CollideWithBodies = true,
+			CollideWithAreas = false,
+		};
+
+		foreach (var resultat in espace.IntersectShape(param))
+		{
+			if (resultat["collider"].As<GodotObject>() is MurFondable mur)
+				mur.Melt();
+		}
+
+		var tween = CreateTween();
+		tween.TweenProperty(_sprite, "modulate", new Color(1f, 0.7f, 0.3f), 0.1f);
+		tween.TweenProperty(_sprite, "modulate", Colors.White, 0.3f);
 	}
 
 	private void DemarrerGlissade()
