@@ -1,9 +1,12 @@
 using Godot;
+using System.Collections.Generic;
 
 // Autoload (singleton) : progression du joueur entre les écrans.
 public partial class GameState : Node
 {
 	public static GameState Instance { get; private set; }
+
+	private readonly HashSet<string> _mursFondus = new();
 
 	[Signal]
 	public delegate void PoissonsChangesEventHandler(int total);
@@ -25,6 +28,10 @@ public partial class GameState : Node
 	public string CheckpointScene { get; private set; } = "res://scenes/ecran01.tscn";
 	public Vector2 CheckpointPosition { get; private set; } = Vector2.Zero;
 	public string CheckpointIdActif { get; private set; } = "";
+
+	// Position d'arrivée pour une transition d'écran (distincte d'un checkpoint :
+	// consommée une seule fois par Player au chargement de la scène suivante).
+	public Vector2? PositionEntreeSuivante { get; set; }
 
 	public override void _Ready()
 	{
@@ -80,11 +87,17 @@ public partial class GameState : Node
 		return true;
 	}
 
+	public bool EstMurFondu(string idMur) => _mursFondus.Contains(idMur);
+
+	public void MarquerMurFondu(string idMur) => _mursFondus.Add(idMur);
+
 	public void RespawnAuCheckpoint()
 	{
 		Pv = PvMax;
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
-		GetTree().ChangeSceneToFile(CheckpointScene);
+		// Différé : appelé depuis _PhysicsProcess (chute dans le vide), et changer
+		// de scène en plein callback physique fait planter Godot.
+		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, CheckpointScene);
 	}
 
 	// Enregistre les actions d'entrée (mouvement, saut, glissade) par code,

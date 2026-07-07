@@ -271,8 +271,20 @@ public partial class Player : CharacterBody2D
 	private void AppliquerCheckpointSiPresent()
 	{
 		var etat = GameState.Instance;
+		if (etat == null)
+			return;
+
+		// Une transition d'écran est prioritaire sur un éventuel checkpoint :
+		// elle correspond à un point d'arrivée précis, consommé une seule fois.
+		if (etat.PositionEntreeSuivante.HasValue)
+		{
+			GlobalPosition = etat.PositionEntreeSuivante.Value;
+			etat.PositionEntreeSuivante = null;
+			return;
+		}
+
 		var sceneActuelle = GetTree().CurrentScene?.SceneFilePath;
-		if (etat == null || string.IsNullOrEmpty(etat.CheckpointIdActif) || etat.CheckpointScene != sceneActuelle)
+		if (string.IsNullOrEmpty(etat.CheckpointIdActif) || etat.CheckpointScene != sceneActuelle)
 			return;
 
 		GlobalPosition = etat.CheckpointPosition;

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/Ecran01.cs" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/igloo.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/checkpoint_peche.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/transition_ecran.tscn" id="6"]
 
 [node name="Ecran01" type="Node2D"]
 script = ExtResource("1")
@@ -23,6 +24,11 @@ IdCheckpoint = "ecran01_campement"
 [node name="CampementPeche2" parent="." instance=ExtResource("4")]
 position = Vector2(1344, 242)
 IdCheckpoint = "ecran01_campement_2"
+
+[node name="VersCarrefour" parent="." instance=ExtResource("6")]
+position = Vector2(2700, 200)
+CheminScene = "res://scenes/ecran_carrefour.tscn"
+PositionEntree = Vector2(200, 280)
 
 [node name="Joueur" parent="." instance=ExtResource("5")]
 position = Vector2(80, 230)
