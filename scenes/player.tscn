@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1"]
-[ext_resource type="Texture2D" path="res://icon.svg" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/boule_de_neige.tscn" id="2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_debout"]
 radius = 8.0
@@ -12,10 +12,9 @@ size = Vector2(26, 14)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1")
+SceneBouleDeNeige = ExtResource("2")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2")
-scale = Vector2(0.4, 0.4)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
 [node name="CollisionDebout" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_debout")

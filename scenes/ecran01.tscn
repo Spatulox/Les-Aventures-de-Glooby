@@ -1,46 +1,38 @@
-[gd_scene format=3 uid="uid://c77w6x1ibmgh0"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1"]
-[ext_resource type="Texture2D" uid="uid://dbkln14cmuiso" path="res://assets/fond_aurore.png" id="2"]
-[ext_resource type="Texture2D" uid="uid://qgnd7ip2lx8i" path="res://assets/terrain_sol.png" id="3"]
+[ext_resource type="Script" path="res://scripts/Ecran01.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/fond_aurore_banquise.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/igloo.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/checkpoint_peche.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="5"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_terrain"]
-size = Vector2(627, 342)
+[node name="Ecran01" type="Node2D"]
+script = ExtResource("1")
 
-[node name="Ecran01" type="Node2D" unique_id=576910280]
+[node name="FondParallaxe" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.5, 0.5)
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="." unique_id=1460565479]
-
-[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground" unique_id=1708297925]
-motion_scale = Vector2(0.5, 0.5)
-motion_mirroring = Vector2(1184, 0)
-
-[node name="Fond" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer" unique_id=1534270047]
-position = Vector2(592, 304.99997)
-scale = Vector2(1, 0.90773803)
+[node name="Fond" type="Sprite2D" parent="FondParallaxe"]
+position = Vector2(320, 180)
+scale = Vector2(2, 2)
 texture = ExtResource("2")
 
-[node name="Terrain" type="StaticBody2D" parent="." unique_id=1395188535]
-position = Vector2(592, 500)
+[node name="Terrain" type="TileMapLayer" parent="."]
 
-[node name="Sprite2D" type="Sprite2D" parent="Terrain" unique_id=2095850564]
-position = Vector2(-329, 267)
-texture = ExtResource("3")
+[node name="Igloo" parent="." instance=ExtResource("3")]
+position = Vector2(110, 220)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Terrain" unique_id=708593784]
-position = Vector2(-307, 260)
-shape = SubResource("RectangleShape2D_terrain")
+[node name="CampementPeche" parent="." instance=ExtResource("4")]
+position = Vector2(210, 242)
+IdCheckpoint = "ecran01_campement"
 
-[node name="Joueur" parent="." unique_id=629303065 instance=ExtResource("1")]
-position = Vector2(150, 300)
+[node name="Joueur" parent="." instance=ExtResource("5")]
+position = Vector2(80, 230)
 
-[node name="Sprite2D" parent="Joueur" index="0"]
-position = Vector2(8, 3.999999)
-
-[node name="Camera2D2" type="Camera2D" parent="Joueur" unique_id=1502575472]
+[node name="Camera2D" parent="Joueur" index="3"]
 limit_left = 0
 limit_top = 0
-limit_right = 1184
-limit_bottom = 672
+limit_right = 640
+limit_bottom = 360
 
 [editable path="Joueur"]

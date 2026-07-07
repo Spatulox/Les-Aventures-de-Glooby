@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 public partial class Player : CharacterBody2D
 {
@@ -9,26 +10,51 @@ public partial class Player : CharacterBody2D
 	[Export] public float Gravity = 1200f;
 	[Export] public float MaxFallSpeed = 900f;
 	[Export] public float CoyoteTime = 0.12f;
+	[Export] public float JumpBufferTime = 0.12f;
 	[Export] public float SlideSpeed = 420f;
+	[Export] public float SlideSpeedBonusGlace = 1.4f;
 	[Export] public float SlideDuration = 0.35f;
 	[Export] public float SlideCooldown = 0.4f;
+	[Export] public float LancerCooldown = 0.5f;
+	[Export] public float LancerDuree = 0.35f;
+	[Export] public float DegatsDuree = 0.4f;
+	[Export] public float DelaiRuptureFragile = 0.4f;
+	[Export] public PackedScene SceneBouleDeNeige;
 
-	private Sprite2D _sprite;
+	private AnimatedSprite2D _sprite;
 	private CollisionShape2D _colDebout;
 	private CollisionShape2D _colGlisse;
+	private TileMapLayer _coucheSol;
 
 	private float _coyoteTimer;
+	private float _bufferSautTimer;
 	private float _slideTimer;
 	private float _slideCooldownTimer;
+	private float _slideVitesseActuelle;
+	private float _lancerTimer;
+	private float _lancerCooldownTimer;
+	private float _degatsTimer;
 	private bool _enGlissade;
-	private int _directionGlissade = 1;
+	private bool _enLancer;
+	private bool _enDegats;
+	private int _directionRegard = 1;
+
+	private float _timerFragile;
+	private Vector2I _celluleFragileActuelle;
+	private bool _celluleFragileValide;
 
 	public override void _Ready()
 	{
-		_sprite = GetNode<Sprite2D>("Sprite2D");
+		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_colDebout = GetNode<CollisionShape2D>("CollisionDebout");
 		_colGlisse = GetNode<CollisionShape2D>("CollisionGlisse");
 		_colGlisse.Disabled = true;
+
+		ChargerAnimations();
+		_coucheSol = GetTree().GetFirstNodeInGroup("sol") as TileMapLayer;
+
+		AppliquerCheckpointSiPresent();
+		JouerApparition();
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -38,60 +64,94 @@ public partial class Player : CharacterBody2D
 
 		var auSol = IsOnFloor();
 		_coyoteTimer = auSol ? CoyoteTime : Mathf.Max(0f, _coyoteTimer - dt);
+
+		if (Input.IsActionJustPressed("jump"))
+			_bufferSautTimer = JumpBufferTime;
+		else
+			_bufferSautTimer = Mathf.Max(0f, _bufferSautTimer - dt);
+
 		if (_slideCooldownTimer > 0f)
 			_slideCooldownTimer -= dt;
+		if (_lancerCooldownTimer > 0f)
+			_lancerCooldownTimer -= dt;
 
 		velocity.Y = Mathf.Min(velocity.Y + Gravity * dt, MaxFallSpeed);
 
 		var direction = Input.GetAxis("move_left", "move_right");
+		if (Mathf.Abs(direction) > 0.01f)
+			_directionRegard = (int)Mathf.Sign(direction);
+
+		GererGlaceFragile(auSol, dt);
 
 		if (_enGlissade)
 		{
 			_slideTimer -= dt;
-			velocity.X = _directionGlissade * SlideSpeed;
+			velocity.X = _directionRegard * _slideVitesseActuelle;
 			if (_slideTimer <= 0f || (!auSol && velocity.Y > 0f))
 				FinirGlissade();
 		}
 		else
 		{
 			if (Mathf.Abs(direction) > 0.01f)
-			{
 				velocity.X = Mathf.MoveToward(velocity.X, direction * Speed, Acceleration * dt);
-				_sprite.FlipH = direction < 0f;
-			}
 			else
-			{
 				velocity.X = Mathf.MoveToward(velocity.X, 0f, Friction * dt);
-			}
 
-			if (Input.IsActionJustPressed("jump") && _coyoteTimer > 0f)
+			if (_bufferSautTimer > 0f && _coyoteTimer > 0f)
 			{
 				velocity.Y = JumpVelocity;
 				_coyoteTimer = 0f;
+				_bufferSautTimer = 0f;
 			}
 			if (Input.IsActionJustReleased("jump") && velocity.Y < 0f)
-			{
 				velocity.Y *= 0.5f;
-			}
 
 			if (Input.IsActionJustPressed("slide") && auSol && _slideCooldownTimer <= 0f)
-			{
-				var directionGlissade = Mathf.Abs(direction) > 0.01f
-					? (int)Mathf.Sign(direction)
-					: (_sprite.FlipH ? -1 : 1);
-				DemarrerGlissade(directionGlissade);
-			}
+				DemarrerGlissade();
+
+			if (Input.IsActionJustPressed("lancer") && _lancerCooldownTimer <= 0f)
+				Lancer();
+		}
+
+		if (_enLancer)
+		{
+			_lancerTimer -= dt;
+			if (_lancerTimer <= 0f)
+				_enLancer = false;
+		}
+		if (_enDegats)
+		{
+			_degatsTimer -= dt;
+			if (_degatsTimer <= 0f)
+				_enDegats = false;
 		}
 
 		Velocity = velocity;
 		MoveAndSlide();
+
+		MettreAJourAnimation(auSol, direction);
 	}
 
-	private void DemarrerGlissade(int direction)
+	public void SubirDegats(int direction)
+	{
+		if (_enDegats)
+			return;
+
+		GameState.Instance?.Degats(1);
+		_enDegats = true;
+		_degatsTimer = DegatsDuree;
+		Velocity = new Vector2(-direction * 120f, -180f);
+	}
+
+	private void DemarrerGlissade()
 	{
 		_enGlissade = true;
-		_directionGlissade = direction;
 		_slideTimer = SlideDuration;
+		_slideVitesseActuelle = SlideSpeed;
+
+		if (ObtenirDonneesSol(out var estGlace, out _, out _) && estGlace)
+			_slideVitesseActuelle *= SlideSpeedBonusGlace;
+
 		_colDebout.Disabled = true;
 		_colGlisse.Disabled = false;
 	}
@@ -102,5 +162,154 @@ public partial class Player : CharacterBody2D
 		_slideCooldownTimer = SlideCooldown;
 		_colDebout.Disabled = false;
 		_colGlisse.Disabled = true;
+	}
+
+	private void Lancer()
+	{
+		_enLancer = true;
+		_lancerTimer = LancerDuree;
+		_lancerCooldownTimer = LancerCooldown;
+
+		if (SceneBouleDeNeige == null)
+			return;
+
+		var boule = SceneBouleDeNeige.Instantiate<Node2D>();
+		GetParent().AddChild(boule);
+		boule.GlobalPosition = GlobalPosition + new Vector2(_directionRegard * 18f, -4f);
+		if (boule is Snowball snowball)
+			snowball.Direction = _directionRegard;
+	}
+
+	private void GererGlaceFragile(bool auSol, float dt)
+	{
+		if (!auSol || !ObtenirDonneesSol(out _, out var estFragile, out var coordsCellule) || !estFragile)
+		{
+			_celluleFragileValide = false;
+			return;
+		}
+
+		if (!_celluleFragileValide || coordsCellule != _celluleFragileActuelle)
+		{
+			_celluleFragileActuelle = coordsCellule;
+			_celluleFragileValide = true;
+			_timerFragile = 0f;
+		}
+
+		_timerFragile += dt;
+		if (_timerFragile >= DelaiRuptureFragile)
+		{
+			_coucheSol.SetCell(coordsCellule, -1);
+			_celluleFragileValide = false;
+		}
+	}
+
+	private bool ObtenirDonneesSol(out bool estGlace, out bool estFragile, out Vector2I coordsCellule)
+	{
+		estGlace = false;
+		estFragile = false;
+		coordsCellule = Vector2I.Zero;
+
+		if (_coucheSol == null)
+			return false;
+
+		var positionPieds = GlobalPosition + new Vector2(0, 2f);
+		coordsCellule = _coucheSol.LocalToMap(_coucheSol.ToLocal(positionPieds));
+		var donnees = _coucheSol.GetCellTileData(coordsCellule);
+		if (donnees == null)
+			return false;
+
+		estGlace = (bool)donnees.GetCustomData(TileSetFabrique.DonneeIsIce);
+		estFragile = (bool)donnees.GetCustomData(TileSetFabrique.DonneeIsFragile);
+		return true;
+	}
+
+	private void MettreAJourAnimation(bool auSol, float direction)
+	{
+		_sprite.FlipH = _directionRegard < 0;
+
+		string animation;
+		if (_enGlissade)
+			animation = "glissade";
+		else if (_enDegats)
+			animation = "degats";
+		else if (_enLancer)
+			animation = "lancer";
+		else if (!auSol)
+			animation = Velocity.Y < 0f ? "saut_montee" : "saut_chute";
+		else if (Mathf.Abs(direction) > 0.01f)
+			animation = "course";
+		else
+			animation = "idle";
+
+		if (_sprite.Animation != animation)
+			_sprite.Play(animation);
+	}
+
+	private void JouerApparition()
+	{
+		Scale = new Vector2(0.6f, 0.6f);
+		var tween = CreateTween();
+		tween.SetTrans(Tween.TransitionType.Back);
+		tween.SetEase(Tween.EaseType.Out);
+		tween.TweenProperty(this, "scale", Vector2.One, 0.35f);
+	}
+
+	private void AppliquerCheckpointSiPresent()
+	{
+		var etat = GameState.Instance;
+		var sceneActuelle = GetTree().CurrentScene?.SceneFilePath;
+		if (etat == null || string.IsNullOrEmpty(etat.CheckpointIdActif) || etat.CheckpointScene != sceneActuelle)
+			return;
+
+		GlobalPosition = etat.CheckpointPosition;
+	}
+
+	private void ChargerAnimations()
+	{
+		var frames = new SpriteFrames();
+		frames.RemoveAnimation("default");
+
+		EnregistrerAnimation(frames, "idle", ChargerFrames("res://assets/player/idle"), 6f, true);
+		EnregistrerAnimation(frames, "course", ChargerFrames("res://assets/player/course"), 12f, true);
+		EnregistrerAnimation(frames, "glissade", ChargerFrames("res://assets/player/glissade"), 14f, true);
+		EnregistrerAnimation(frames, "lancer", ChargerFrames("res://assets/player/lancer"), 16f, false);
+		EnregistrerAnimation(frames, "degats", ChargerFrames("res://assets/player/degats"), 10f, false);
+
+		var sautFrames = ChargerFrames("res://assets/player/saut");
+		int findeMontee = Mathf.Min(4, sautFrames.Length - 1);
+		EnregistrerAnimation(frames, "saut_montee", sautFrames, 12f, false, 0, findeMontee);
+		EnregistrerAnimation(frames, "saut_chute", sautFrames, 10f, true, findeMontee + 1, sautFrames.Length - 1);
+
+		_sprite.SpriteFrames = frames;
+		_sprite.Play("idle");
+	}
+
+	private static Texture2D[] ChargerFrames(string dossier)
+	{
+		var fichiers = new List<string>();
+		foreach (var fichier in DirAccess.GetFilesAt(dossier))
+		{
+			if (fichier.EndsWith(".png"))
+				fichiers.Add(fichier);
+		}
+		fichiers.Sort();
+
+		var textures = new Texture2D[fichiers.Count];
+		for (int i = 0; i < fichiers.Count; i++)
+			textures[i] = GD.Load<Texture2D>($"{dossier}/{fichiers[i]}");
+		return textures;
+	}
+
+	private static void EnregistrerAnimation(SpriteFrames frames, string nom, Texture2D[] toutesLesFrames, float fps, bool boucle, int debut = 0, int fin = -1)
+	{
+		if (fin < 0)
+			fin = toutesLesFrames.Length - 1;
+
+		frames.AddAnimation(nom);
+		frames.SetAnimationSpeed(nom, fps);
+		frames.SetAnimationLoop(nom, boucle);
+
+		for (int i = debut; i <= fin; i++)
+			frames.AddFrame(nom, toutesLesFrames[i]);
 	}
 }

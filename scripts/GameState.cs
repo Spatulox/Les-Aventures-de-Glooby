@@ -14,6 +14,9 @@ public partial class GameState : Node
 	[Signal]
 	public delegate void JoueurMortEventHandler();
 
+	[Signal]
+	public delegate void CheckpointActifEventHandler(string idCheckpoint);
+
 	[Export] public int PvMax = 5;
 
 	public int Poissons { get; private set; } = 0;
@@ -21,6 +24,7 @@ public partial class GameState : Node
 
 	public string CheckpointScene { get; private set; } = "res://scenes/ecran01.tscn";
 	public Vector2 CheckpointPosition { get; private set; } = Vector2.Zero;
+	public string CheckpointIdActif { get; private set; } = "";
 
 	public override void _Ready()
 	{
@@ -55,6 +59,27 @@ public partial class GameState : Node
 		CheckpointPosition = position;
 	}
 
+	// Active un campement de pêche : un seul actif à la fois, les autres
+	// basculent en inactif via le signal CheckpointActif.
+	public void ActiverCheckpoint(string idCheckpoint, string scenePath, Vector2 position)
+	{
+		CheckpointIdActif = idCheckpoint;
+		DefinirCheckpoint(scenePath, position);
+		Soigner(PvMax);
+		EmitSignal(SignalName.CheckpointActif, idCheckpoint);
+	}
+
+	public bool ManagerPoisson()
+	{
+		if (Poissons <= 0 || Pv >= PvMax)
+			return false;
+
+		Poissons--;
+		EmitSignal(SignalName.PoissonsChanges, Poissons);
+		Soigner(1);
+		return true;
+	}
+
 	public void RespawnAuCheckpoint()
 	{
 		Pv = PvMax;
@@ -70,6 +95,7 @@ public partial class GameState : Node
 		AjouterAction("move_right", Key.D, Key.Right);
 		AjouterAction("jump", Key.Space);
 		AjouterAction("slide", Key.Shift);
+		AjouterAction("lancer", Key.J, Key.Ctrl);
 	}
 
 	private static void AjouterAction(string nom, params Key[] touches)
