@@ -26,6 +26,11 @@ position = Vector2(528, 470)
 CheminScene = "res://scenes/chemin_pouvoir.tscn"
 PositionEntree = Vector2(48, 40)
 
+[node name="VersChemin1" parent="." instance=ExtResource("5")]
+position = Vector2(890, 250)
+CheminScene = "res://scenes/chemin1.tscn"
+PositionEntree = Vector2(48, 230)
+
 [node name="Joueur" parent="." instance=ExtResource("4")]
 position = Vector2(200, 280)
 

@@ -1,0 +1,66 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/EcranBoss.cs" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/boss_cerf.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/stalactite_piege.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="4"]
+[ext_resource type="Script" path="res://scripts/BossHudBarre.cs" id="5"]
+
+[node name="EcranBoss" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Terrain" type="TileMapLayer" parent="."]
+
+[node name="BossCerf" parent="." instance=ExtResource("2")]
+position = Vector2(2240, 250)
+
+[node name="Stalactite1" parent="." instance=ExtResource("3")]
+position = Vector2(700, 80)
+groups = ["stalactites_boss"]
+
+[node name="Stalactite2" parent="." instance=ExtResource("3")]
+position = Vector2(950, 80)
+groups = ["stalactites_boss"]
+
+[node name="Stalactite3" parent="." instance=ExtResource("3")]
+position = Vector2(1200, 80)
+groups = ["stalactites_boss"]
+
+[node name="Stalactite4" parent="." instance=ExtResource("3")]
+position = Vector2(1450, 80)
+groups = ["stalactites_boss"]
+
+[node name="Stalactite5" parent="." instance=ExtResource("3")]
+position = Vector2(1700, 80)
+groups = ["stalactites_boss"]
+
+[node name="Stalactite6" parent="." instance=ExtResource("3")]
+position = Vector2(1950, 80)
+groups = ["stalactites_boss"]
+
+[node name="BossHudBarre" type="CanvasLayer" parent="."]
+script = ExtResource("5")
+CheminBoss = NodePath("../BossCerf")
+
+[node name="Fond" type="ColorRect" parent="BossHudBarre"]
+offset_left = 170.0
+offset_top = 10.0
+offset_right = 470.0
+offset_bottom = 26.0
+color = Color(0.15, 0.15, 0.18, 1)
+
+[node name="Remplissage" type="ColorRect" parent="BossHudBarre/Fond"]
+offset_right = 300.0
+offset_bottom = 16.0
+color = Color(0.85, 0.25, 0.2, 1)
+
+[node name="Joueur" parent="." instance=ExtResource("4")]
+position = Vector2(64, 230)
+
+[node name="Camera2D" parent="Joueur" index="3"]
+limit_left = 0
+limit_top = 0
+limit_right = 2880
+limit_bottom = 400
+
+[editable path="Joueur"]

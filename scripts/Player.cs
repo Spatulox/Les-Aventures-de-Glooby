@@ -50,6 +50,8 @@ public partial class Player : CharacterBody2D
 
 	public override void _Ready()
 	{
+		AddToGroup("joueur");
+
 		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_colDebout = GetNode<CollisionShape2D>("CollisionDebout");
 		_colGlisse = GetNode<CollisionShape2D>("CollisionGlisse");
@@ -159,6 +161,7 @@ public partial class Player : CharacterBody2D
 	}
 
 	public bool EstInvincible => _invincibiliteTimer > 0f;
+	public bool EstEnGlissade => _enGlissade;
 
 	public void SubirDegats(int direction, int quantite = 1)
 	{

@@ -37,6 +37,8 @@ public partial class Snowball : Area2D
 
 	private void OnBodyEntered(Node body)
 	{
+		if (body is BossCerf boss)
+			boss.SubirDegats(1);
 		Eclater();
 	}
 

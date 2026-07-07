@@ -28,6 +28,16 @@ public partial class StalactitePiege : Area2D
 		if (_declenchee || body is not Player)
 			return;
 
+		DeclencherImmediatement();
+	}
+
+	// Déclenchement direct (utilisé par le pattern piétinement du Boss Cerf,
+	// indépendamment de la position du joueur).
+	public void DeclencherImmediatement()
+	{
+		if (_declenchee)
+			return;
+
 		_declenchee = true;
 		_ = SecouerPuisTomber();
 	}
