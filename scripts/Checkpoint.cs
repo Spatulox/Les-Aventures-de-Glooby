@@ -34,7 +34,7 @@ public partial class Checkpoint : Area2D
 		if (body is not Player)
 			return;
 
-		GameState.Instance.ActiverCheckpoint(IdCheckpoint, GetTree().CurrentScene.SceneFilePath, GlobalPosition + new Vector2(-20, 0));
+		GameState.Instance.ActiverCheckpoint(IdCheckpoint, GlobalPosition + new Vector2(-20, 0));
 	}
 
 	private void AfficherEtat(bool actif)

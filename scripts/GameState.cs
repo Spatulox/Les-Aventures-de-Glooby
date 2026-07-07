@@ -32,13 +32,10 @@ public partial class GameState : Node
 	// Flags de progression (débloqués une fois pour toute la partie).
 	public bool PouvoirChaleurActif { get; private set; }
 
-	public string CheckpointScene { get; private set; } = "res://scenes/ecran01.tscn";
+	// Un seul monde continu (façon Hollow Knight) : plus de scène à recharger,
+	// juste une position où replacer le joueur.
 	public Vector2 CheckpointPosition { get; private set; } = Vector2.Zero;
 	public string CheckpointIdActif { get; private set; } = "";
-
-	// Position d'arrivée pour une transition d'écran (distincte d'un checkpoint :
-	// consommée une seule fois par Player au chargement de la scène suivante).
-	public Vector2? PositionEntreeSuivante { get; set; }
 
 	public override void _Ready()
 	{
@@ -58,10 +55,7 @@ public partial class GameState : Node
 		Pv = Mathf.Max(0, Pv - quantite);
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 		if (Pv <= 0)
-		{
 			EmitSignal(SignalName.JoueurMort);
-			RespawnAuCheckpoint();
-		}
 	}
 
 	public void Soigner(int quantite)
@@ -70,18 +64,12 @@ public partial class GameState : Node
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 	}
 
-	public void DefinirCheckpoint(string scenePath, Vector2 position)
-	{
-		CheckpointScene = scenePath;
-		CheckpointPosition = position;
-	}
-
 	// Active un campement de pêche : un seul actif à la fois, les autres
 	// basculent en inactif via le signal CheckpointActif.
-	public void ActiverCheckpoint(string idCheckpoint, string scenePath, Vector2 position)
+	public void ActiverCheckpoint(string idCheckpoint, Vector2 position)
 	{
 		CheckpointIdActif = idCheckpoint;
-		DefinirCheckpoint(scenePath, position);
+		CheckpointPosition = position;
 		Soigner(PvMax);
 		EmitSignal(SignalName.CheckpointActif, idCheckpoint);
 	}
@@ -121,13 +109,12 @@ public partial class GameState : Node
 		AjouterPoissons(1);
 	}
 
+	// Ne change plus de scène (monde continu) : Player se téléporte lui-même
+	// à CheckpointPosition après cet appel.
 	public void RespawnAuCheckpoint()
 	{
 		Pv = PvMax;
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
-		// Différé : appelé depuis _PhysicsProcess (chute dans le vide), et changer
-		// de scène en plein callback physique fait planter Godot.
-		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, CheckpointScene);
 	}
 
 	// Enregistre les actions d'entrée (mouvement, saut, glissade) par code,

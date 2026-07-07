@@ -21,7 +21,6 @@ public partial class BossCerf : CharacterBody2D
 	[Export] public int MultiplicateurDegatsEtourdi = 3;
 	[Export] public float LimiteGauche = 80f;
 	[Export] public float LimiteDroite = 2800f;
-	[Export] public float SolY = 320f;
 
 	public int Pv { get; private set; }
 	public int Phase { get; private set; } = 1;

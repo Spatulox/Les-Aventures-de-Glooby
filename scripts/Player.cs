@@ -21,7 +21,10 @@ public partial class Player : CharacterBody2D
 	[Export] public float InvincibiliteDuree = 1.0f;
 	[Export] public float ClignoteInterval = 0.08f;
 	[Export] public float DelaiRuptureFragile = 0.4f;
-	[Export] public float SeuilChuteVide = 700f;
+	// Ajusté dynamiquement par la CameraZone active (le monde continu a des
+	// salles à des profondeurs très différentes - un seuil absolu unique
+	// déclencherait le filet de sécurité en permanence dans les salles profondes).
+	public float SeuilChuteVide = 700f;
 	[Export] public PackedScene SceneBouleDeNeige;
 
 	private AnimatedSprite2D _sprite;
@@ -59,8 +62,8 @@ public partial class Player : CharacterBody2D
 
 		ChargerAnimations();
 		_coucheSol = GetTree().GetFirstNodeInGroup("sol") as TileMapLayer;
+		GameState.Instance.JoueurMort += OnJoueurMort;
 
-		AppliquerCheckpointSiPresent();
 		JouerApparition();
 	}
 
@@ -158,6 +161,20 @@ public partial class Player : CharacterBody2D
 	private void TomberDansLeVide()
 	{
 		GameState.Instance?.RespawnAuCheckpoint();
+		TeleporterAuCheckpoint();
+	}
+
+	private void OnJoueurMort()
+	{
+		GameState.Instance.RespawnAuCheckpoint();
+		TeleporterAuCheckpoint();
+	}
+
+	private void TeleporterAuCheckpoint()
+	{
+		GlobalPosition = GameState.Instance.CheckpointPosition;
+		Velocity = Vector2.Zero;
+		JouerApparition();
 	}
 
 	public bool EstInvincible => _invincibiliteTimer > 0f;
@@ -345,28 +362,6 @@ public partial class Player : CharacterBody2D
 		tween.SetTrans(Tween.TransitionType.Back);
 		tween.SetEase(Tween.EaseType.Out);
 		tween.TweenProperty(this, "scale", Vector2.One, 0.35f);
-	}
-
-	private void AppliquerCheckpointSiPresent()
-	{
-		var etat = GameState.Instance;
-		if (etat == null)
-			return;
-
-		// Une transition d'écran est prioritaire sur un éventuel checkpoint :
-		// elle correspond à un point d'arrivée précis, consommé une seule fois.
-		if (etat.PositionEntreeSuivante.HasValue)
-		{
-			GlobalPosition = etat.PositionEntreeSuivante.Value;
-			etat.PositionEntreeSuivante = null;
-			return;
-		}
-
-		var sceneActuelle = GetTree().CurrentScene?.SceneFilePath;
-		if (string.IsNullOrEmpty(etat.CheckpointIdActif) || etat.CheckpointScene != sceneActuelle)
-			return;
-
-		GlobalPosition = etat.CheckpointPosition;
 	}
 
 	private void ChargerAnimations()
