@@ -21,3 +21,6 @@ obj/
 
 # Config et état locaux Claude Code (propres à cette machine)
 .claude/
+
+# Config IDE locale
+.idea/

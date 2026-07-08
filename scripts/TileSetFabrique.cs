@@ -41,6 +41,12 @@ public static class TileSetFabrique
 		tileSet.SetMeta("banquise_glissant", AjouterSource(tileSet, "res://assets/tiles/banquise_glissante.png", true, false));
 		tileSet.SetMeta("banquise_fragile", AjouterSource(tileSet, "res://assets/tiles/banquise_fragile.png", false, true));
 		tileSet.SetMeta("grotte_plein", AjouterSource(tileSet, "res://assets/tiles/grotte_base.png", false, false));
+
+		// Récupérés via l'éditeur visuel pixellab.ai/maps (déjà dans le compte,
+		// 0 génération) : variante neige pastel et variante glace fissurée fragile.
+		tileSet.SetMeta("banquise_neige_pastel", AjouterSource(tileSet, "res://assets/tiles/banquise_neige_pastel.png", false, false));
+		tileSet.SetMeta("banquise_fissuree", AjouterSource(tileSet, "res://assets/tiles/banquise_fissuree.png", false, true));
+
 		return tileSet;
 	}
 

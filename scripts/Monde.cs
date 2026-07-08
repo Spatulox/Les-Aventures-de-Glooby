@@ -16,6 +16,7 @@ public partial class Monde : Node2D
 	private static readonly Vector2I DecalageCheminPouvoir = new(140, 32);
 	private static readonly Vector2I DecalageChemin1 = new(154, 20);
 	private static readonly Vector2I DecalageBoss = new(181, 20);
+	private static readonly Vector2I DecalagePrototypeGlace = new(141, 16);
 
 	public override void _Ready()
 	{
@@ -33,6 +34,7 @@ public partial class Monde : Node2D
 		SalleCheminPouvoir.Construire(couche, tileSet, this, DecalageCheminPouvoir);
 		SalleChemin1.Construire(couche, tileSet, this, DecalageChemin1);
 		SalleBoss.Construire(couche, tileSet, this, DecalageBoss);
+		SallePrototypeGlace.Construire(couche, tileSet, this, DecalagePrototypeGlace);
 
 		CreerZonesCamera();
 
@@ -56,6 +58,7 @@ public partial class Monde : Node2D
 			ZoneDe(DecalageCheminPouvoir, 25, 0, 400),
 			ZoneDe(DecalageChemin1, 27, 0, 400),
 			ZoneDe(DecalageBoss, 90, 0, 400),
+			ZoneDe(DecalagePrototypeGlace, SallePrototypeGlace.Largeur, 0, SallePrototypeGlace.Hauteur * TailleTuile),
 		};
 
 		var racine = GetNode<Node2D>("ZonesCamera");
