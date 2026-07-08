@@ -1,9 +1,12 @@
 using Godot;
 
-// Monde continu façon Hollow Knight : une seule scène contient tout le
-// niveau. Chaque salle est peinte à un décalage (en tuiles) dans le même
-// TileMapLayer ; des zones de caméra (Area2D) ajustent les limites de la
-// Camera2D du joueur en entrant dans une salle, sans jamais recharger de scène.
+// Générateur d'origine du monde continu (façon Hollow Knight) : peint chaque
+// salle à un décalage (en tuiles) dans un même TileMapLayer et crée les
+// zones de caméra. N'EST PLUS BRANCHÉ à scenes/monde.tscn - cette scène est
+// désormais éditable à la main dans Godot (le résultat de ce générateur y a
+// été capturé une fois, tuiles et objets compris). Ce script reste comme
+// outil de référence si on veut regénérer une salle par code puis la
+// recapturer, mais il ne tourne plus au lancement du jeu.
 public partial class Monde : Node2D
 {
 	private const int TailleTuile = 32;
@@ -78,6 +81,10 @@ public partial class Monde : Node2D
 			aire.AddChild(forme);
 			aire.Position = new Vector2((zone.gauche + zone.droite) / 2f, (zone.haut + zone.bas) / 2f);
 			racine.AddChild(aire);
+			// L'Owner ne peut être fixé qu'une fois le nœud effectivement dans
+			// l'arbre (l'Owner doit être un ancêtre réel au moment de l'appel).
+			aire.Owner = this;
+			forme.Owner = this;
 		}
 	}
 

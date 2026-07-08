@@ -5,10 +5,10 @@ using Godot;
 // chevauchent volontairement aux transitions - la dernière traversée gagne.
 public partial class CameraZone : Area2D
 {
-	public int LimGauche;
-	public int LimDroite;
-	public int LimHaut;
-	public int LimBas;
+	[Export] public int LimGauche;
+	[Export] public int LimDroite;
+	[Export] public int LimHaut;
+	[Export] public int LimBas;
 
 	public override void _Ready()
 	{

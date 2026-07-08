@@ -48,6 +48,7 @@ public static class SalleBanquise02
 				Position = new Vector2(i * 720f + 360f, 180) + dec,
 			};
 			parallaxe.AddChild(panneau);
+			panneau.Owner = racine;
 		}
 
 		Outils.Instancier(racine, "res://scenes/checkpoint_peche.tscn", new Vector2(80, 242) + dec,

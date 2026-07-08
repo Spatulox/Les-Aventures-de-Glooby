@@ -28,10 +28,12 @@ public static class SalleBoss
 				ZIndex = -3,
 			};
 			racine.AddChild(panneau);
+			panneau.Owner = racine;
 		}
 
 		var boss = GD.Load<PackedScene>("res://scenes/boss_cerf.tscn").Instantiate<BossCerf>();
 		racine.AddChild(boss);
+		boss.Owner = racine;
 		boss.Position = new Vector2(2240, 250) + dec;
 		boss.LimiteGauche = 6 * TailleTuile + dec.X;
 		boss.LimiteDroite = (Largeur - 6) * TailleTuile + dec.X;
@@ -51,5 +53,6 @@ public static class SalleBoss
 		var barre = GD.Load<PackedScene>("res://scenes/boss_hud_barre.tscn").Instantiate<BossHudBarre>();
 		barre.CheminBoss = "../BossCerf";
 		racine.AddChild(barre);
+		barre.Owner = racine;
 	}
 }

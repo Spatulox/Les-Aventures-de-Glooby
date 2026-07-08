@@ -39,6 +39,7 @@ public static class SalleCarrefour
 			Position = new Vector2(480, 320) + dec,
 		};
 		racine.AddChild(fond);
+		fond.Owner = racine;
 
 		Outils.AjouterDecor(racine, "res://assets/props/cristal_petit.png", new Vector2(16 * TailleTuile, 9 * TailleTuile - 20) + dec);
 		Outils.AjouterDecor(racine, "res://assets/props/cristal_petit.png", new Vector2(23 * TailleTuile, 9 * TailleTuile - 20) + dec);

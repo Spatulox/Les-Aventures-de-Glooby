@@ -12,6 +12,9 @@ public static class Outils
 			ZIndex = -1,
 		};
 		racine.AddChild(sprite);
+		// Owner requis pour qu'un nœud ajouté par code soit inclus si la scène
+		// est capturée/sauvegardée (sans ça, PackedScene.Pack() l'ignore).
+		sprite.Owner = racine;
 	}
 
 	// Les propriétés doivent être fixées AVANT AddChild : _Ready() s'exécute
@@ -23,6 +26,7 @@ public static class Outils
 		instance.Position = position;
 		avantAjout?.Invoke(instance);
 		racine.AddChild(instance);
+		instance.Owner = racine;
 		return instance;
 	}
 }

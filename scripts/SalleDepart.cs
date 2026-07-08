@@ -42,7 +42,7 @@ public static class SalleDepart
 
 		var dec = new Vector2(decalage.X * TailleTuile, decalage.Y * TailleTuile);
 
-		PlacerFondAurore(parallaxe, dec);
+		PlacerFondAurore(racine, parallaxe, dec);
 
 		var fondGrotte = new Sprite2D
 		{
@@ -52,6 +52,7 @@ public static class SalleDepart
 			Position = new Vector2(69 * TailleTuile + 8 * TailleTuile, 180) + dec,
 		};
 		parallaxe.AddChild(fondGrotte);
+		fondGrotte.Owner = racine;
 
 		Outils.AjouterDecor(racine, "res://assets/props/rocher_glace.png", new Vector2(20 * TailleTuile, 8 * TailleTuile - 24) + dec);
 		Outils.AjouterDecor(racine, "res://assets/props/cristal_petit.png", new Vector2(26 * TailleTuile, 6 * TailleTuile - 20) + dec);
@@ -79,7 +80,7 @@ public static class SalleDepart
 		}
 	}
 
-	private static void PlacerFondAurore(Node2D parallaxe, Vector2 dec)
+	private static void PlacerFondAurore(Node2D racine, Node2D parallaxe, Vector2 dec)
 	{
 		const float largeurPanneau = 720f;
 		int largeurNiveau = (Segments[^1].ColFin + 1) * TailleTuile;
@@ -94,6 +95,7 @@ public static class SalleDepart
 				Position = new Vector2(i * largeurPanneau + largeurPanneau / 2f, 180) + dec,
 			};
 			parallaxe.AddChild(panneau);
+			panneau.Owner = racine;
 		}
 	}
 }
