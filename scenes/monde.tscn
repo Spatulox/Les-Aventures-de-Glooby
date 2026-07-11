@@ -66,8 +66,6 @@
 [ext_resource type="Texture2D" path="res://assets/props/igloo_grand.png" id="61_4hj1r"]
 [ext_resource type="PackedScene" path="res://scenes/checkpoint_peche.tscn" id="62_pcjmn"]
 [ext_resource type="Script" path="res://scripts/Entities/Checkpoint.cs" id="63_kdph4"]
-[ext_resource type="PackedScene" path="res://scenes/poisson.tscn" id="64_ftaed"]
-[ext_resource type="Script" path="res://scripts/Entities/Poisson.cs" id="65_6nvt7"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/grotte_cathedrale.png" id="66_xqwlf"]
 [ext_resource type="PackedScene" path="res://scenes/mur_fondable.tscn" id="67_yccpo"]
 [ext_resource type="Script" path="res://scripts/Entities/MurFondable.cs" id="68_4p37s"]
@@ -753,26 +751,6 @@ IdCheckpoint = "ecran01_campement"
 position = Vector2(1344, 242)
 script = ExtResource("63_kdph4")
 IdCheckpoint = "ecran01_campement_2"
-
-[node name="Poisson" type="Area2D" parent="." unique_id=474701559 instance=ExtResource("64_ftaed")]
-position = Vector2(320, 220)
-script = ExtResource("65_6nvt7")
-IdPoisson = "ecran01_poisson_1"
-
-[node name="@Area2D@19" type="Area2D" parent="." unique_id=1346293366 instance=ExtResource("64_ftaed")]
-position = Vector2(880, 160)
-script = ExtResource("65_6nvt7")
-IdPoisson = "ecran01_poisson_2"
-
-[node name="@Area2D@20" type="Area2D" parent="." unique_id=1536007414 instance=ExtResource("64_ftaed")]
-position = Vector2(1450, 220)
-script = ExtResource("65_6nvt7")
-IdPoisson = "ecran01_poisson_3"
-
-[node name="@Area2D@21" type="Area2D" parent="." unique_id=1346886797 instance=ExtResource("64_ftaed")]
-position = Vector2(2016, 220)
-script = ExtResource("65_6nvt7")
-IdPoisson = "ecran01_poisson_4"
 
 [node name="@Sprite2D@22" type="Sprite2D" parent="." unique_id=392988591]
 z_index = -1

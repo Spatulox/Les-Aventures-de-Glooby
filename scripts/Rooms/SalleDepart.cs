@@ -1,7 +1,7 @@
 using Godot;
 using static Constantes;
 
-// Salle "Le Départ" (banquise) : igloo, campements, poissons, jusqu'à l'entrée
+// Salle "Le Départ" (banquise) : igloo, campements, jusqu'à l'entrée
 // de la grotte. Construite à un décalage (en tuiles) dans le monde continu.
 public static class SalleDepart
 {
@@ -60,17 +60,6 @@ public static class SalleDepart
 
 		Outils.Instancier(racine, "res://scenes/checkpoint_peche.tscn", new Vector2(1344, 242) + dec,
 			n => n.Set("IdCheckpoint", "ecran01_campement_2"));
-
-		var positionsPoissons = new[]
-		{
-			new Vector2(320, 220), new Vector2(880, 160), new Vector2(1450, 220), new Vector2(2016, 220),
-		};
-		for (int i = 0; i < positionsPoissons.Length; i++)
-		{
-			int index = i;
-			Outils.Instancier(racine, "res://scenes/poisson.tscn", positionsPoissons[i] + dec,
-				n => n.Set("IdPoisson", $"ecran01_poisson_{index + 1}"));
-		}
 	}
 
 	private static void PlacerFondAurore(Node2D racine, Node2D parallaxe, Vector2 dec)
