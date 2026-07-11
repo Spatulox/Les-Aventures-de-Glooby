@@ -77,6 +77,7 @@
 [ext_resource type="Script" path="res://scripts/Entities/BossCerf.cs" id="74_v4qfc"]
 [ext_resource type="PackedScene" path="res://scenes/boss_hud_barre.tscn" id="75_vvpnk"]
 [ext_resource type="Script" path="res://scripts/UI/BossHudBarre.cs" id="76_3ov84"]
+[ext_resource type="Script" path="res://scripts/Core/ZoneBoss.cs" id="77_zoneboss"]
 [ext_resource type="Texture2D" path="res://assets/props/grotte/fleur_givre.png" id="77_3dhh3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uvb3i"]
@@ -873,6 +874,17 @@ script = ExtResource("70_jtdoi")
 [node name="BossHudBarre" type="CanvasLayer" parent="." unique_id=1855716595 instance=ExtResource("75_vvpnk")]
 script = ExtResource("76_3ov84")
 CheminBoss = NodePath("../BossCerf")
+
+[node name="ZoneBoss" type="Area2D" parent="."]
+position = Vector2(7232, 840)
+script = ExtResource("77_zoneboss")
+CheminBoss = NodePath("../BossCerf")
+NomBoss = "Boss Cerf (Rodolphe)"
+CheminBarre = NodePath("../BossHudBarre")
+PvBoss = 40
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBoss"]
+shape = SubResource("RectangleShape2D_w5upp")
 
 [node name="@Sprite2D@51" type="Sprite2D" parent="." unique_id=1143423747]
 z_index = -1

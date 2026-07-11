@@ -94,6 +94,15 @@ public partial class BossCerf : CharacterBody2D
 		MoveAndSlide();
 	}
 
+	// (Re)définit les PV max et remet le boss à pleine vie. Sert à une ZoneBoss
+	// qui arme le combat à l'entrée du joueur ; émet PvChanges pour la barre.
+	public void DefinirPvMax(int pvMax)
+	{
+		PvMax = Mathf.Max(1, pvMax);
+		Pv = PvMax;
+		EmitSignal(SignalName.PvChanges, Pv, PvMax);
+	}
+
 	public void SubirDegats(int quantite)
 	{
 		if (_etat == Etat.Vaincu)
