@@ -1,26 +1,27 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://b230aybnrmrin"]
 
-[ext_resource type="Script" path="res://scripts/Plateformes/PlateformeMobile.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/plateformes/mobile.png" id="2"]
+[ext_resource type="Script" uid="uid://c4fppyruucspm" path="res://scripts/Plateformes/PlateformeMobile.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://clobaweljvw4h" path="res://assets/plateformes/mobile.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top"]
-size = Vector2(176, 36)
+size = Vector2(176, 59)
 
 [sub_resource type="Curve2D" id="Curve2D_defaut"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 260, 0)
 }
+point_count = 2
 
-[node name="PlateformeMobile" type="AnimatableBody2D"]
+[node name="PlateformeMobile" type="AnimatableBody2D" unique_id=514327090]
 script = ExtResource("1")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1905243285]
 scale = Vector2(2, 2)
 texture = ExtResource("2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-3, -46)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1550358577]
+position = Vector2(-3, -1.5)
 shape = SubResource("RectangleShape2D_top")
 
-[node name="Path2D" type="Path2D" parent="."]
+[node name="Path2D" type="Path2D" parent="." unique_id=919820440]
 curve = SubResource("Curve2D_defaut")
