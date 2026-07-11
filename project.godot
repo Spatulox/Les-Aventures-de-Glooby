@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GameState="*res://scripts/GameState.cs"
+GameState="*res://scripts/Core/GameState.cs"
 Hud="*res://scenes/hud.tscn"
 
 [display]
