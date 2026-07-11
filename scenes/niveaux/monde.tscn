@@ -107,8 +107,8 @@ IdCheckpoint = "village_depart"
 [node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
 
 [node name="ZoneVillage" parent="Village/Camera" unique_id=132868656 instance=ExtResource("camzone")]
-position = Vector2(329, 202)
-scale = Vector2(2.5599976, 1)
+position = Vector2(319, 202)
+scale = Vector2(2.4799964, 1)
 
 [node name="Frontiere" type="Node2D" parent="Village" unique_id=1612957047]
 
@@ -153,13 +153,14 @@ position = Vector2(2420, 284)
 [node name="Camera" type="Node2D" parent="Banquise" unique_id=989063594]
 
 [node name="ZoneBanquise" parent="Banquise/Camera" unique_id=841426661 instance=ExtResource("camzone")]
-position = Vector2(1564, 195)
-scale = Vector2(7.007948, 0.9498781)
+position = Vector2(1605.0001, 195)
+scale = Vector2(7.5679502, 0.9498781)
 
 [node name="Frontiere" type="Node2D" parent="Banquise" unique_id=482695684]
 
-[node name="VersBanquise" parent="Banquise/Frontiere" unique_id=1465350486 instance=ExtResource("region_trigger")]
-position = Vector2(2500, 200)
+[node name="GrotteVersBanquise" parent="Banquise/Frontiere" unique_id=1465350486 instance=ExtResource("region_trigger")]
+position = Vector2(2583, 207)
+scale = Vector2(0.19203782, 1)
 NomRegion = "banquise"
 
 [node name="Grotte" type="Node2D" parent="." unique_id=1201709441]
@@ -237,12 +238,13 @@ position = Vector2(4900, 252)
 
 [node name="ZoneGrotte" parent="Grotte/Camera" unique_id=2005198318 instance=ExtResource("camzone")]
 position = Vector2(3824, 200)
-scale = Vector2(9.119998, 1)
+scale = Vector2(9.399998, 1)
 
 [node name="Frontiere" type="Node2D" parent="Grotte" unique_id=2102435091]
 
-[node name="VersGrotte" parent="Grotte/Frontiere" unique_id=1156654284 instance=ExtResource("region_trigger")]
-position = Vector2(2620, 200)
+[node name="BanquiseVersGrotte" parent="Grotte/Frontiere" unique_id=55501036 instance=ExtResource("region_trigger")]
+position = Vector2(2605, 201)
+scale = Vector2(0.19999999, 1)
 NomRegion = "grotte"
 
 [node name="Joueur" parent="." unique_id=1975658094 instance=ExtResource("player")]
