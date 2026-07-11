@@ -298,10 +298,12 @@ public partial class Player : LivingEntity
 			return;
 
 		var boule = SceneBouleDeNeige.Instantiate<Node2D>();
+		// Init (instanciateur + direction) AVANT l'ajout à l'arbre : _Ready lit ces valeurs.
+		// Le joueur s'enregistre comme instanciateur pour être immunisé contre sa propre boule.
+		if (boule is Projectile projectile)
+			projectile.Initialiser(this, _directionRegard);
 		GetParent().AddChild(boule);
 		boule.GlobalPosition = GlobalPosition + new Vector2(_directionRegard * 18f, -4f);
-		if (boule is Snowball snowball)
-			snowball.Direction = _directionRegard;
 	}
 
 	private void GererGlaceFragile(bool auSol, float dt)

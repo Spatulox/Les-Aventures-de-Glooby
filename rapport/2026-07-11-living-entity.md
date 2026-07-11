@@ -73,6 +73,25 @@ une quantité brute codée en dur ; ils passent désormais tous par un `DamageSo
 
 Vérification : `dotnet build` réussi (0 avertissement) + boot headless propre.
 
+## Base commune `Projectile`
+Généralisation de la boule de neige en un projectile réutilisable.
+
+- Nouvelle classe abstraite `scripts/Entities/Damage/Projectile.cs` (`: Area2D`) :
+  déplacement horizontal (vitesse+gravité) + `DureeVie`, dégâts au contact via un
+  `DamageSource` (`Source` fourni par la sous-classe), disparition (`Eclater` →
+  `Disparaitre` surchargeable).
+- **Immunité de l'instanciateur** : `Initialiser(LivingEntity instanciateur, int direction)`
+  garde une référence au tireur ; un projectile **traverse** son instanciateur sans le
+  blesser ni éclater.
+- `Snowball` réduit à `: Projectile` : ne garde que `Source => DamageSource.Snowball` et
+  l'éclatement visuel (`Disparaitre` → `Effets.Disparaitre`).
+- `Player.Lancer` appelle `Initialiser(this, _directionRegard)` **avant** `AddChild`
+  (corrige un bug latent : la direction était fixée après `_Ready`, la boule partait
+  toujours à droite).
+- `CLAUDE.md` mis à jour (`Entities/Damage/`).
+
+Vérification : `dotnet build` réussi (0 avertissement) + boot headless propre.
+
 ## Non fait / à noter
 - `project.godot` référence un autoload **non commité `TestManger` → `res://scripts/TestManger.cs`
   (inexistant)** : erreur au boot, hors périmètre (modif locale). À créer ou retirer.

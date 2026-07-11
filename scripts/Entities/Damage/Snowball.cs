@@ -1,54 +1,11 @@
 using Godot;
 
-// Projectile du lancer de boule de neige : vitesse constante, légère gravité,
-// éclate (fondu + agrandissement) au contact plutôt que d'utiliser des frames dédiées.
-public partial class Snowball : Area2D
+// Boule de neige : projectile du joueur qui éclate (fondu + agrandissement) au contact,
+// plutôt que d'utiliser des frames dédiées.
+public partial class Snowball : Projectile
 {
-	[Export] public float Vitesse = 320f;
-	[Export] public float Gravite = 480f;
-	[Export] public float DureeVie = 3f;
+	protected override DamageSource Source => DamageSource.Snowball;
 
-	public int Direction = 1;
-
-	private Vector2 _velocite;
-	private float _tempsRestant;
-	private bool _impact;
-
-	public override void _Ready()
-	{
-		_velocite = new Vector2(Direction * Vitesse, 0f);
-		_tempsRestant = DureeVie;
-		BodyEntered += OnBodyEntered;
-	}
-
-	public override void _PhysicsProcess(double delta)
-	{
-		if (_impact)
-			return;
-
-		var dt = (float)delta;
-		_velocite.Y += Gravite * dt;
-		Position += _velocite * dt;
-
-		_tempsRestant -= dt;
-		if (_tempsRestant <= 0f)
-			Eclater();
-	}
-
-	private void OnBodyEntered(Node body)
-	{
-		Degats.Infliger(body, DamageSource.Snowball);
-		Eclater();
-	}
-
-	private void Eclater()
-	{
-		if (_impact)
-			return;
-
-		_impact = true;
-		SetPhysicsProcess(false);
-
-		Effets.Disparaitre(this, Scale * 1.6f, 0.12f);
-	}
+	// Éclatement visuel : fondu + léger agrandissement (Effets.Disparaitre libère le nœud).
+	protected override void Disparaitre() => Effets.Disparaitre(this, Scale * 1.6f, 0.12f);
 }
