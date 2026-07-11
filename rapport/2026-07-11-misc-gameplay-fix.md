@@ -15,20 +15,31 @@ consommables (soin) — plus de ramassage dans le monde.
 - Suppression de l'entité `scripts/Entities/Poisson.cs` et de `scenes/poisson.tscn`.
 - Retrait des nœuds `Poisson` (+ ext_resources) dans `scenes/monde.tscn`.
 
-## 2. Salle de boss : barre visible seulement dans l'arène
+## 2. Boss : hiérarchie OO + salle de boss qui spawn le boss
 
-La barre de boss était affichée dès le début de partie ; elle n'apparaît
-désormais qu'à l'entrée du joueur dans l'arène.
+La barre n'apparaît plus qu'à l'entrée du joueur, et toute la logique boss est
+passée en hiérarchie objet réutilisable (générique) / spécifique (Cerf).
 
-- **`BossHudBarre`** : masquée par défaut ; ajout de `Afficher()` / `Masquer()`.
-- **`ZoneBoss`** (nouveau, `scripts/Core/ZoneBoss.cs`) : base **réutilisable et
-  héritable** de salle de boss (hérite de `DeclencheurZone`). À l'entrée du joueur,
-  révèle la barre, arme les PV du boss et lance la musique. Config par `[Export]` :
-  `CheminBoss`/`NomBoss` (le boss), `CheminBarre`, `PvBoss`, `Musique`. Hook
-  `DemarrerCombat(...)` surchargeable pour un comportement propre à chaque boss.
-- **`BossCerf`** : ajout de `DefinirPvMax(int)` (re-arme les PV + rafraîchit la barre).
-- **`monde.tscn`** : ajout d'un nœud `ZoneBoss` (Area2D + CollisionShape2D
-  réutilisant la forme de l'arène 2880×400) référençant `BossCerf` et `BossHudBarre`.
+### Hiérarchie `Boss`
+- **`Boss`** (nouveau, `scripts/Entities/Boss.cs`, abstraite) : base réutilisable —
+  PV, signaux `PvChanges`/`Vaincu`, `SubirDegats` (hooks `AjusterDegats`/`ApresDegats`),
+  séquence de mort `Mourir()`, `DefinirPvMax`, chargement d'anims par dossier.
+- **`BossCerf : Boss`** : ne garde que le spécifique Cerf (machine à états/patterns,
+  2 phases, cône de givre, stalactites, dégâts, animations, `PvMax=40`).
+
+### Salle de boss (spawn + barre)
+- **`ZoneBoss`** (`scripts/Core/ZoneBoss.cs`, hérite de `DeclencheurZone`) : base
+  réutilisable/héritable. À l'entrée du joueur : **fait apparaître (spawn)** le boss
+  (`SceneBoss`/`PositionApparition`), lie et révèle sa barre, arme ses PV, lance la
+  musique. Hooks `ConfigurerBoss`/`DemarrerCombat`. `[Export]` : `SceneBoss`,
+  `NomBoss`, `PositionApparition`, `CheminBarre`, `PvBoss`, `Musique`.
+- **`ZoneBossCerf : ZoneBoss`** (nouveau) : spécifique Cerf — bornes de charge de
+  l'arène + transition victoire → `ecran_fin.tscn` à la défaite.
+- **`BossHudBarre`** : masquée par défaut, `Afficher()`/`Masquer()`, liée
+  dynamiquement au boss spawné via `Lier(Boss)` (plus de `CheminBoss` statique).
+- **`monde.tscn`** : le `BossCerf` statique est retiré (spawné par la zone) ; le nœud
+  d'arène est un `ZoneBossCerf` (collision 2880×400) référençant `boss_cerf.tscn` et
+  `BossHudBarre`.
 
 ## 3. Nettoyage : suppression du générateur procédural mort
 
@@ -43,6 +54,9 @@ tscn puis débranché (racine sans script) → **code mort au runtime**.
 
 ## Reste à faire
 
-Passage manuel `godot` (F5) recommandé — non réalisable en headless — pour
-valider l'apparition de la barre à l'entrée de l'arène, l'armement des PV et
-l'usage des poissons.
+Passage manuel `godot` (F5) recommandé — non réalisable en headless — pour valider :
+l'apparition (spawn) du boss à l'entrée de l'arène, la barre qui s'affiche/se vide,
+la défaite qui enchaîne sur `ecran_fin.tscn`, et l'usage des poissons.
+
+Bug préexistant laissé tel quel : les 6 stalactites de l'arène ne sont pas dans le
+groupe `stalactites_boss`, donc le piétinement ne déclenche rien.

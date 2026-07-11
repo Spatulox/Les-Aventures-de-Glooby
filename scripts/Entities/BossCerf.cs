@@ -1,20 +1,16 @@
 using Godot;
 using System.Collections.Generic;
 
-// Rodolphe, le Cerf-boss : machine à états complète (intro, patterns, 2 phases,
-// sonné, défaite). Économie de génération assumée (voir DECISIONS.md) :
-// le piétinement réutilise "idle" (pas de pose de cabrage dédiée) et le
-// souffle de givre réutilise "charge" comme télégraphe - seul le résultat
-// gameplay (stalactites, cône de givre) est nouveau, pas l'animation.
-public partial class BossCerf : CharacterBody2D
+// Rodolphe, le Cerf-boss : sous-classe de Boss qui fournit l'IA spécifique —
+// machine à états complète (intro, patterns, 2 phases, sonné, défaite). Économie
+// de génération assumée (voir DECISIONS.md) : le piétinement réutilise "idle"
+// (pas de pose de cabrage dédiée) et le souffle de givre réutilise "charge" comme
+// télégraphe - seul le résultat gameplay (stalactites, cône de givre) est nouveau.
+public partial class BossCerf : Boss
 {
 	private enum Etat { Intro, Idle, Telegraphe, Charge, Etourdi, Pietinement, SouffleGivre, Vaincu }
 	private enum Pattern { Charge, Pietinement, SouffleGivre }
 
-	[Signal] public delegate void PvChangesEventHandler(int pv, int pvMax);
-	[Signal] public delegate void VaincuEventHandler();
-
-	[Export] public int PvMax = 40;
 	[Export] public float VitesseCharge = 260f;
 	[Export] public float DelaiTelegraphe = 0.8f;
 	[Export] public float DureeEtourdi = 2f;
@@ -22,10 +18,8 @@ public partial class BossCerf : CharacterBody2D
 	[Export] public float LimiteGauche = 80f;
 	[Export] public float LimiteDroite = 2800f;
 
-	public int Pv { get; private set; }
 	public int Phase { get; private set; } = 1;
 
-	private AnimatedSprite2D _sprite;
 	private Area2D _zoneChargeDegats;
 	private Etat _etat = Etat.Intro;
 	private float _timerEtat = 1.6f;
@@ -35,17 +29,28 @@ public partial class BossCerf : CharacterBody2D
 	private int _chargesRestantesEnchainement;
 	private readonly RandomNumberGenerator _rng = new();
 	private bool _vulnerableEtourdi;
+	private Pattern _patternChoisi;
 
-	public override void _Ready()
+	protected override void Initialiser()
 	{
-		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_zoneChargeDegats = GetNode<Area2D>("ZoneChargeDegats");
 		_zoneChargeDegats.BodyEntered += OnZoneChargeDegatsEntered;
-
-		ChargerAnimations();
-		Pv = PvMax;
 		_rng.Randomize();
-		_sprite.Play("idle");
+		Sprite.Play("idle");
+	}
+
+	protected override SpriteFrames ConstruireAnimations()
+	{
+		var frames = new SpriteFrames();
+		frames.RemoveAnimation("default");
+
+		AjouterAnimation(frames, "idle", "res://assets/boss_cerf/idle", 6f, true);
+		AjouterAnimation(frames, "patrouille", "res://assets/boss_cerf/patrouille", 8f, true);
+		AjouterAnimation(frames, "charge", "res://assets/boss_cerf/charge", 14f, true);
+		AjouterAnimation(frames, "etourdi", "res://assets/boss_cerf/etourdi", 8f, true);
+		AjouterAnimation(frames, "vaincu", "res://assets/boss_cerf/vaincu", 8f, false);
+
+		return frames;
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -61,7 +66,7 @@ public partial class BossCerf : CharacterBody2D
 				break;
 
 			case Etat.Idle:
-				_sprite.FlipH = _direction < 0;
+				Sprite.FlipH = _direction < 0;
 				if (_timerEtat <= 0f)
 					ChoisirPattern();
 				break;
@@ -94,39 +99,27 @@ public partial class BossCerf : CharacterBody2D
 		MoveAndSlide();
 	}
 
-	// (Re)définit les PV max et remet le boss à pleine vie. Sert à une ZoneBoss
-	// qui arme le combat à l'entrée du joueur ; émet PvChanges pour la barre.
-	public void DefinirPvMax(int pvMax)
+	// Coup ×3 pendant la fenêtre de vulnérabilité (boss sonné contre un mur).
+	protected override int AjusterDegats(int brut) => _vulnerableEtourdi ? brut * MultiplicateurDegatsEtourdi : brut;
+
+	// Bascule en phase 2 à mi-vie.
+	protected override void ApresDegats(int degats)
 	{
-		PvMax = Mathf.Max(1, pvMax);
-		Pv = PvMax;
-		EmitSignal(SignalName.PvChanges, Pv, PvMax);
-	}
-
-	public void SubirDegats(int quantite)
-	{
-		if (_etat == Etat.Vaincu)
-			return;
-
-		int total = _vulnerableEtourdi ? quantite * MultiplicateurDegatsEtourdi : quantite;
-		Pv = Mathf.Max(0, Pv - total);
-		EmitSignal(SignalName.PvChanges, Pv, PvMax);
-
-		if (Pv <= 0)
-		{
-			PasserEnVaincu();
-			return;
-		}
-
 		if (Phase == 1 && Pv <= PvMax / 2)
 			DeclencherTransitionPhase2();
+	}
+
+	protected override void Mourir()
+	{
+		_etat = Etat.Vaincu;
+		base.Mourir();
 	}
 
 	private void PasserEnIdle()
 	{
 		_etat = Etat.Idle;
 		_timerEtat = _rng.RandfRange(1.0f, 1.8f);
-		_sprite.Play("idle");
+		Sprite.Play("idle");
 	}
 
 	private void ChoisirPattern()
@@ -146,11 +139,9 @@ public partial class BossCerf : CharacterBody2D
 		if (joueur != null)
 			_direction = joueur.GlobalPosition.X >= GlobalPosition.X ? 1 : -1;
 
-		_sprite.Play(pattern == Pattern.SouffleGivre ? "charge" : "idle");
-		_sprite.FlipH = _direction < 0;
+		Sprite.Play(pattern == Pattern.SouffleGivre ? "charge" : "idle");
+		Sprite.FlipH = _direction < 0;
 	}
-
-	private Pattern _patternChoisi;
 
 	private void LancerPatternTelegraphie()
 	{
@@ -172,8 +163,8 @@ public partial class BossCerf : CharacterBody2D
 	{
 		_etat = Etat.Charge;
 		_dejaToucheCetteCharge = false;
-		_sprite.Play("charge");
-		_sprite.FlipH = _direction < 0;
+		Sprite.Play("charge");
+		Sprite.FlipH = _direction < 0;
 		Velocity = new Vector2(_direction * VitesseCharge, 0f);
 	}
 
@@ -193,7 +184,7 @@ public partial class BossCerf : CharacterBody2D
 		_vulnerableEtourdi = true;
 		_timerEtat = DureeEtourdi;
 		Velocity = Vector2.Zero;
-		_sprite.Play("etourdi");
+		Sprite.Play("etourdi");
 
 		if (Phase == 2 && _chargesRestantesEnchainement > 0)
 			_chargesRestantesEnchainement--;
@@ -217,7 +208,7 @@ public partial class BossCerf : CharacterBody2D
 	{
 		_etat = Etat.Pietinement;
 		_timerEtat = 1.6f;
-		_sprite.Play("idle");
+		Sprite.Play("idle");
 		DeclencherStalactites(Phase == 1 ? 3 : 5);
 	}
 
@@ -239,7 +230,7 @@ public partial class BossCerf : CharacterBody2D
 		_etat = Etat.SouffleGivre;
 		_timerEtat = 1.0f;
 		_dejaToucheCeSouffle = false;
-		_sprite.Play("charge");
+		Sprite.Play("charge");
 		CreerConeDeGivre();
 	}
 
@@ -294,49 +285,7 @@ public partial class BossCerf : CharacterBody2D
 		_chargesRestantesEnchainement = 1;
 
 		var tween = CreateTween();
-		tween.TweenProperty(_sprite, "modulate", new Color(1.3f, 1.3f, 1.6f), 0.3f);
-		tween.TweenProperty(_sprite, "modulate", Colors.White, 0.3f);
-	}
-
-	private void PasserEnVaincu()
-	{
-		_etat = Etat.Vaincu;
-		Velocity = Vector2.Zero;
-		_sprite.Play("vaincu");
-		SetPhysicsProcess(false);
-		GetNode<CollisionShape2D>("CollisionShape2D").SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-		EmitSignal(SignalName.Vaincu);
-	}
-
-	private void ChargerAnimations()
-	{
-		var frames = new SpriteFrames();
-		frames.RemoveAnimation("default");
-
-		AjouterAnimation(frames, "idle", "res://assets/boss_cerf/idle", 6f, true);
-		AjouterAnimation(frames, "patrouille", "res://assets/boss_cerf/patrouille", 8f, true);
-		AjouterAnimation(frames, "charge", "res://assets/boss_cerf/charge", 14f, true);
-		AjouterAnimation(frames, "etourdi", "res://assets/boss_cerf/etourdi", 8f, true);
-		AjouterAnimation(frames, "vaincu", "res://assets/boss_cerf/vaincu", 8f, false);
-
-		_sprite.SpriteFrames = frames;
-	}
-
-	private static void AjouterAnimation(SpriteFrames frames, string nom, string dossier, float fps, bool boucle)
-	{
-		frames.AddAnimation(nom);
-		frames.SetAnimationSpeed(nom, fps);
-		frames.SetAnimationLoop(nom, boucle);
-
-		var fichiers = new List<string>();
-		foreach (var fichier in DirAccess.GetFilesAt(dossier))
-		{
-			if (fichier.EndsWith(".png"))
-				fichiers.Add(fichier);
-		}
-		fichiers.Sort();
-
-		foreach (var fichier in fichiers)
-			frames.AddFrame(nom, GD.Load<Texture2D>($"{dossier}/{fichier}"));
+		tween.TweenProperty(Sprite, "modulate", new Color(1.3f, 1.3f, 1.6f), 0.3f);
+		tween.TweenProperty(Sprite, "modulate", Colors.White, 0.3f);
 	}
 }

@@ -1,24 +1,25 @@
 using Godot;
 
 // Barre de vie du boss : un simple rectangle qui se réduit, pas de nouvel asset.
-// Masquée par défaut ; c'est la ZoneBoss qui la révèle quand le joueur entre
-// dans l'arène (Afficher/Masquer).
+// Masquée par défaut ; c'est la ZoneBoss qui la lie au boss spawné (Lier) puis la
+// révèle (Afficher) quand le joueur entre dans l'arène.
 public partial class BossHudBarre : CanvasLayer
 {
-	[Export] public NodePath CheminBoss;
-
 	private ColorRect _fond;
 	private ColorRect _remplissage;
-	private BossCerf _boss;
 
 	public override void _Ready()
 	{
 		Visible = false;
 		_fond = GetNode<ColorRect>("Fond");
 		_remplissage = GetNode<ColorRect>("Fond/Remplissage");
-		_boss = GetNode<BossCerf>(CheminBoss);
-		_boss.PvChanges += OnPvChanges;
-		OnPvChanges(_boss.Pv, _boss.PvMax);
+	}
+
+	// Lie la barre à un boss (spawné par la ZoneBoss) et l'initialise à ses PV.
+	public void Lier(Boss boss)
+	{
+		boss.PvChanges += OnPvChanges;
+		OnPvChanges(boss.Pv, boss.PvMax);
 	}
 
 	public void Afficher() => Visible = true;
