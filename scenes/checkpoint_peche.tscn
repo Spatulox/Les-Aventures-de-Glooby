@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3]
 
-[ext_resource type="Script" path="res://scripts/Entities/Checkpoint.cs" id="1"]
+[ext_resource type="Script" path="res://scripts/Entities/Misc/Checkpoint.cs" id="1"]
 [ext_resource type="Texture2D" path="res://assets/props/trou_peche_inactif.png" id="2"]
 [ext_resource type="Texture2D" path="res://assets/props/trou_peche_actif.png" id="3"]
 [ext_resource type="Texture2D" path="res://assets/props/canne_a_peche.png" id="4"]
