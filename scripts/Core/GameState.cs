@@ -28,7 +28,11 @@ public partial class GameState : Node
 
 	[Export] public int PvMax = 5;
 
-	public int Poissons { get; private set; } = 0;
+	// Réserve fixe de poissons donnée en début de partie : ils ne se ramassent
+	// pas dans le monde, ils se consomment seulement (soin via ManagerPoisson).
+	public const int PoissonsDepart = 50;
+
+	public int Poissons { get; private set; } = PoissonsDepart;
 	public int Pv { get; private set; }
 
 	// Flags de progression (débloqués une fois pour toute la partie).
@@ -44,12 +48,6 @@ public partial class GameState : Node
 		Instance = this;
 		Pv = PvMax;
 		ConfigurerActionsParDefaut();
-	}
-
-	public void AjouterPoissons(int quantite = 1)
-	{
-		Poissons += quantite;
-		EmitSignal(SignalName.PoissonsChanges, Poissons);
 	}
 
 	public void Degats(int quantite = 1)
@@ -105,17 +103,6 @@ public partial class GameState : Node
 	public bool EstMurFondu(string idMur) => EstConsomme(idMur);
 
 	public void MarquerMurFondu(string idMur) => MarquerConsomme(idMur);
-
-	public bool EstPoissonRamasse(string idPoisson) => EstConsomme(idPoisson);
-
-	public void RamasserPoisson(string idPoisson)
-	{
-		if (EstConsomme(idPoisson))
-			return;
-
-		MarquerConsomme(idPoisson);
-		AjouterPoissons(1);
-	}
 
 	// Ne change plus de scène (monde continu) : Player se téléporte lui-même
 	// à CheckpointPosition après cet appel.

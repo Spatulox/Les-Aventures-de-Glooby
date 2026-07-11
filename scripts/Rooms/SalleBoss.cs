@@ -41,5 +41,16 @@ public static class SalleBoss
 		var barre = GD.Load<PackedScene>("res://scenes/boss_hud_barre.tscn").Instantiate<BossHudBarre>();
 		barre.CheminBoss = "../BossCerf";
 		Outils.Attacher(racine, barre);
+
+		// Salle de boss : la barre ne se révèle qu'à l'entrée du joueur dans l'arène.
+		var zoneBoss = new ZoneBoss { Barre = barre, UneSeuleFois = true };
+		Outils.Attacher(racine, zoneBoss);
+		var forme = new CollisionShape2D
+		{
+			Shape = new RectangleShape2D { Size = new Vector2(Largeur * TailleTuile, 400) },
+		};
+		zoneBoss.AddChild(forme);
+		forme.Owner = racine;
+		zoneBoss.Position = new Vector2(Largeur * TailleTuile / 2f, 200f) + dec;
 	}
 }
