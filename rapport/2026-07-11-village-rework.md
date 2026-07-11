@@ -48,6 +48,26 @@ animations au runtime.
   réintroduire dans les zones suivantes (les `.tscn`/scripts restent disponibles).
 - Le sol one-way n'a pas de tuiles `is_ice`/`is_fragile` (mécanique liée au tilemap absent).
 
+## Découpage Village / Banquise / Grotte
+Le grand endroit unique (ex-`Village`, x[0,2560]) est scindé en deux zones plus la grotte :
+- **`Village`** réduit à x[0,1280] — `ZoneVillage` passe de 2560×400 à **1280×400**
+  (centre 640). Contenu x<1280 (Sol1..Sol5, igloos/props proches, checkpoint, MurGauche).
+- **`Banquise`** (nouvel endroit) à x[1280,2560] — nouvelle **`ZoneBanquise`** 1280×400
+  (centre 1920). Reprend le contenu x 1280..2560 (plateformes, igloos isolés, props).
+- **`Grotte`** inchangée à x[2560,5120].
+- Zones **adjacentes sans chevauchement** (1280 / 2560).
+- Override caméra du joueur mis à `limit_right=1280`.
+
+**Fonds** : le conteneur de région `Fonds/village` est renommé **`banquise`** (biome
+partagé Village + Banquise) ; le trigger de retour devient `Banquise/Frontiere/VersBanquise`
+(`NomRegion="banquise"`). La grotte garde `VersGrotte` (`NomRegion="grotte"`).
+
+## Ajustements village
+- **Igloos orientés** : `flip_h = true` sur `Igloo2` et `Igloo4` (miroir horizontal) pour
+  qu'ils ne pointent pas tous vers la droite.
+- **Mur gauche** : `Village/Sol/MurGauche` — `StaticBody2D` + `CollisionShape2D` (32×600,
+  invisible, face droite à x=0) qui bloque la sortie par la gauche du village.
+
 ## Fonds multi-couches par région
 Système de fond en couches, une région = un conteneur Node2D sous `Fonds`
 (`BackgroundManager`), fondu croisé via `modulate:a` (hérité par les enfants) :

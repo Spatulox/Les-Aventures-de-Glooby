@@ -57,7 +57,7 @@ The scene is organized **one node per place** (`Village`, `Grotte`, and future b
 
 Adding a region later = drop a new container (e.g. `grotte` = `FondGrotte` + `DecorGrotte`) under `Fonds` and trigger it via a `RegionTrigger` calling `AfficherRegion`.
 
-The current level starts as a **penguin village** (igloos, props, a fishing-hole checkpoint) on the ice field and continues east into a **cave (grotte)**; the rest of the world is built out from there. Region backgrounds swap via `RegionTrigger` gates (grouped under `Frontieres`), and each area has its own non-overlapping `CameraZone`.
+The current level runs west→east as three places: a **penguin village** (igloos, props, a fishing-hole checkpoint), then the open **banquise** ice field, then a **cave (grotte)**; the rest is built out from there. Village and banquise share the `banquise` background region (same biome); the cave uses the `grotte` region. Region backgrounds swap via `RegionTrigger` gates (each place's `Frontiere` group), and each place has its own non-overlapping `CameraZone` (village & banquise 1280 wide, grotte 2560).
 
 Key pieces of the scene:
 - **`Sol` — the ground is built from reusable `PlateformeUnidirectionnelle` (one-way) platform instances**, tiled side by side (collision width 278 → step 278 for a seamless floor), *not* a `TileMapLayer`. The player can drop through with down+jump. (An earlier version used a baked `Terrain` `TileMapLayer` painted from `TileSetFabrique` Wang tiles — see the historical notes below; the `is_ice`/`is_fragile` tile mechanics in `Player.cs` only apply when such a tilemap in the `sol` group is present, which the village does not have.)
