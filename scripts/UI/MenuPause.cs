@@ -65,6 +65,6 @@ public partial class MenuPause : CanvasLayer
 	private void RetourMenuPrincipal()
 	{
 		GetTree().Paused = false;
-		GetTree().ChangeSceneToFile("res://scenes/menu_principal.tscn");
+		GetTree().ChangeSceneToFile("res://scenes/ui/menu_principal.tscn");
 	}
 }

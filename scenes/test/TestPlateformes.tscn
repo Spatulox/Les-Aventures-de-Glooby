@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeFixe.tscn" id="2_fixe"]
 [ext_resource type="Script" path="res://scripts/Test/TestPlateformesDebug.cs" id="3_debug"]
 [ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="4_trav"]

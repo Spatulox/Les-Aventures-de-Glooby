@@ -1,83 +1,72 @@
-[gd_scene format=4]
+[gd_scene format=4 uid="uid://67grwk8edwci"]
 
-[ext_resource type="Script" path="res://scripts/UI/MenuPause.cs" id="300_mpause"]
-[ext_resource type="Script" path="res://scripts/Core/BackgroundManager.cs" id="200_bgmgr"]
-[ext_resource type="PackedScene" path="res://scenes/region_trigger.tscn" id="201_regtrig"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/fond_crevasse.png" id="202_fcrev"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/fond_aurore_banquise.png" id="2_xrrpb"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/fond_aurore_banquise_b.png" id="3_6ak4c"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/fond_aurore_banquise_c.png" id="4_3u2fj"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/fond_grotte.png" id="5_alqpa"]
-[ext_resource type="Texture2D" path="res://assets/tiles/banquise_base.png" id="6_jxup2"]
-[ext_resource type="Texture2D" path="res://assets/tiles/banquise_glissante.png" id="7_m20lm"]
-[ext_resource type="Texture2D" path="res://assets/tiles/banquise_fragile.png" id="8_jomw7"]
-[ext_resource type="Texture2D" path="res://assets/tiles/grotte_base.png" id="9_yyd5k"]
-[ext_resource type="Texture2D" path="res://assets/tiles/banquise_neige_pastel.png" id="10_xhdj5"]
-[ext_resource type="Texture2D" path="res://assets/tiles/banquise_fissuree.png" id="11_v6ddx"]
-[ext_resource type="Script" path="res://scripts/Core/CameraZone.cs" id="12_qf4rj"]
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="13_0bkf4"]
-[ext_resource type="Script" path="res://scripts/Entities/Player/Player.cs" id="14_doadf"]
-[ext_resource type="PackedScene" path="res://scenes/boule_de_neige.tscn" id="15_i5qhp"]
-[ext_resource type="Texture2D" path="res://assets/player/course/00.png" id="16_tu6lk"]
-[ext_resource type="Texture2D" path="res://assets/player/course/01.png" id="17_l6rji"]
-[ext_resource type="Texture2D" path="res://assets/player/course/02.png" id="18_2o71x"]
-[ext_resource type="Texture2D" path="res://assets/player/course/03.png" id="19_c513v"]
-[ext_resource type="Texture2D" path="res://assets/player/course/04.png" id="20_0t0wy"]
-[ext_resource type="Texture2D" path="res://assets/player/course/05.png" id="21_vjpsv"]
-[ext_resource type="Texture2D" path="res://assets/player/course/06.png" id="22_3yy8v"]
-[ext_resource type="Texture2D" path="res://assets/player/course/07.png" id="23_cqnkc"]
-[ext_resource type="Texture2D" path="res://assets/player/degats/00.png" id="24_eo080"]
-[ext_resource type="Texture2D" path="res://assets/player/degats/01.png" id="25_4e0nh"]
-[ext_resource type="Texture2D" path="res://assets/player/degats/02.png" id="26_6g4h6"]
-[ext_resource type="Texture2D" path="res://assets/player/degats/03.png" id="27_lfw8v"]
-[ext_resource type="Texture2D" path="res://assets/player/degats/04.png" id="28_1qg3v"]
-[ext_resource type="Texture2D" path="res://assets/player/degats/05.png" id="29_4amk1"]
-[ext_resource type="Texture2D" path="res://assets/player/glissade/00.png" id="30_2dwbv"]
-[ext_resource type="Texture2D" path="res://assets/player/glissade/01.png" id="31_atkrl"]
-[ext_resource type="Texture2D" path="res://assets/player/glissade/02.png" id="32_m8ws0"]
-[ext_resource type="Texture2D" path="res://assets/player/glissade/03.png" id="33_4086m"]
-[ext_resource type="Texture2D" path="res://assets/player/glissade/04.png" id="34_fdmlu"]
-[ext_resource type="Texture2D" path="res://assets/player/glissade/05.png" id="35_8sbr7"]
-[ext_resource type="Texture2D" path="res://assets/player/idle/00.png" id="36_y373y"]
-[ext_resource type="Texture2D" path="res://assets/player/idle/01.png" id="37_oxpxh"]
-[ext_resource type="Texture2D" path="res://assets/player/idle/02.png" id="38_gaqhs"]
-[ext_resource type="Texture2D" path="res://assets/player/idle/03.png" id="39_je8da"]
-[ext_resource type="Texture2D" path="res://assets/player/lancer/00.png" id="40_brc8i"]
-[ext_resource type="Texture2D" path="res://assets/player/lancer/01.png" id="41_s0j7h"]
-[ext_resource type="Texture2D" path="res://assets/player/lancer/02.png" id="42_ayx8j"]
-[ext_resource type="Texture2D" path="res://assets/player/lancer/03.png" id="43_0npl6"]
-[ext_resource type="Texture2D" path="res://assets/player/lancer/04.png" id="44_ior8p"]
-[ext_resource type="Texture2D" path="res://assets/player/lancer/05.png" id="45_3lqxa"]
-[ext_resource type="Texture2D" path="res://assets/player/lancer/06.png" id="46_y2sd5"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/05.png" id="47_kllir"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/06.png" id="48_fvf45"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/07.png" id="49_phr8e"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/08.png" id="50_xlp7j"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/00.png" id="51_dy284"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/01.png" id="52_y35fy"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/02.png" id="53_ndv4f"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/03.png" id="54_8l0iu"]
-[ext_resource type="Texture2D" path="res://assets/player/saut/04.png" id="55_lai50"]
-[ext_resource type="Texture2D" path="res://assets/props/rocher_glace.png" id="56_evwpn"]
-[ext_resource type="Texture2D" path="res://assets/props/cristal_petit.png" id="57_2twl8"]
-[ext_resource type="Texture2D" path="res://assets/props/cristal_gros.png" id="58_w7d1o"]
-[ext_resource type="Texture2D" path="res://assets/props/stalactite.png" id="59_48ijp"]
-[ext_resource type="PackedScene" path="res://scenes/igloo.tscn" id="60_6hjd0"]
-[ext_resource type="Texture2D" path="res://assets/props/igloo_grand.png" id="61_4hj1r"]
-[ext_resource type="PackedScene" path="res://scenes/checkpoint_peche.tscn" id="62_pcjmn"]
-[ext_resource type="Script" path="res://scripts/Entities/Misc/Checkpoint.cs" id="63_kdph4"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/grotte_cathedrale.png" id="66_xqwlf"]
-[ext_resource type="PackedScene" path="res://scenes/mur_fondable.tscn" id="67_yccpo"]
-[ext_resource type="Script" path="res://scripts/Entities/Interactable/MurFondable.cs" id="68_4p37s"]
-[ext_resource type="PackedScene" path="res://scenes/stalactite_piege.tscn" id="69_g0owe"]
-[ext_resource type="Script" path="res://scripts/Entities/Interactable/StalactitePiege.cs" id="70_jtdoi"]
-[ext_resource type="PackedScene" path="res://scenes/pouvoir_chaleur_pickup.tscn" id="71_goiyb"]
-[ext_resource type="Script" path="res://scripts/Entities/Interactable/PouvoirChaleurPickup.cs" id="72_8r23n"]
-[ext_resource type="PackedScene" path="res://scenes/boss_cerf.tscn" id="73_5br1t"]
-[ext_resource type="PackedScene" path="res://scenes/boss_hud_barre.tscn" id="75_vvpnk"]
-[ext_resource type="Script" path="res://scripts/UI/BossHudBarre.cs" id="76_3ov84"]
-[ext_resource type="Script" path="res://scripts/Core/ZoneBossCerf.cs" id="77_zonebosscerf"]
-[ext_resource type="Texture2D" path="res://assets/props/grotte/fleur_givre.png" id="77_3dhh3"]
+[ext_resource type="Texture2D" uid="uid://c08u2sqvuxlol" path="res://assets/backgrounds/fond_aurore_banquise.png" id="2_xrrpb"]
+[ext_resource type="Texture2D" uid="uid://dh8td684cemsc" path="res://assets/backgrounds/fond_grotte.png" id="5_alqpa"]
+[ext_resource type="Texture2D" uid="uid://cr1gaapk6hwva" path="res://assets/tiles/banquise_base.png" id="6_jxup2"]
+[ext_resource type="Texture2D" uid="uid://ffrt1uexlbut" path="res://assets/tiles/banquise_glissante.png" id="7_m20lm"]
+[ext_resource type="Texture2D" uid="uid://by27trdqbbwci" path="res://assets/tiles/banquise_fragile.png" id="8_jomw7"]
+[ext_resource type="Texture2D" uid="uid://bakdccj8pq0qx" path="res://assets/tiles/grotte_base.png" id="9_yyd5k"]
+[ext_resource type="Texture2D" uid="uid://b8cnqgey1drba" path="res://assets/tiles/banquise_neige_pastel.png" id="10_xhdj5"]
+[ext_resource type="Texture2D" uid="uid://crgg3f56ms66r" path="res://assets/tiles/banquise_fissuree.png" id="11_v6ddx"]
+[ext_resource type="Script" uid="uid://b0l7t7soxrgar" path="res://scripts/Core/CameraZone.cs" id="12_qf4rj"]
+[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="13_0bkf4"]
+[ext_resource type="Texture2D" uid="uid://85dxovecr8hf" path="res://assets/player/course/00.png" id="16_tu6lk"]
+[ext_resource type="Texture2D" uid="uid://jidralqyfuhm" path="res://assets/player/course/01.png" id="17_l6rji"]
+[ext_resource type="Texture2D" uid="uid://c1itwyrqeg3o4" path="res://assets/player/course/02.png" id="18_2o71x"]
+[ext_resource type="Texture2D" uid="uid://cq7lxijmogffk" path="res://assets/player/course/03.png" id="19_c513v"]
+[ext_resource type="Texture2D" uid="uid://dmds7yydn8kbc" path="res://assets/player/course/04.png" id="20_0t0wy"]
+[ext_resource type="Texture2D" uid="uid://bge6j8yy728jd" path="res://assets/player/course/05.png" id="21_vjpsv"]
+[ext_resource type="Texture2D" uid="uid://c51vcqpfsp1o2" path="res://assets/player/course/06.png" id="22_3yy8v"]
+[ext_resource type="Texture2D" uid="uid://cx2uiwh5gk6ym" path="res://assets/player/course/07.png" id="23_cqnkc"]
+[ext_resource type="Texture2D" uid="uid://bm1x6ctlsrx1i" path="res://assets/player/degats/00.png" id="24_eo080"]
+[ext_resource type="Texture2D" uid="uid://c40kp7mcme43o" path="res://assets/player/degats/01.png" id="25_4e0nh"]
+[ext_resource type="Texture2D" uid="uid://bxecipqkdqtxr" path="res://assets/player/degats/02.png" id="26_6g4h6"]
+[ext_resource type="Texture2D" uid="uid://ci7a3v5uhihxg" path="res://assets/player/degats/03.png" id="27_lfw8v"]
+[ext_resource type="Texture2D" uid="uid://dwnif6112e6tx" path="res://assets/player/degats/04.png" id="28_1qg3v"]
+[ext_resource type="Texture2D" uid="uid://bkbg5d3067gkj" path="res://assets/player/degats/05.png" id="29_4amk1"]
+[ext_resource type="Texture2D" uid="uid://b142j3mgb6rv3" path="res://assets/player/glissade/00.png" id="30_2dwbv"]
+[ext_resource type="Texture2D" uid="uid://bcvfe6muu123h" path="res://assets/player/glissade/01.png" id="31_atkrl"]
+[ext_resource type="Texture2D" uid="uid://cxhyobsjbiie1" path="res://assets/player/glissade/02.png" id="32_m8ws0"]
+[ext_resource type="Texture2D" uid="uid://ehtfk6gl2sri" path="res://assets/player/glissade/03.png" id="33_4086m"]
+[ext_resource type="Texture2D" uid="uid://b4li8tuegi0ne" path="res://assets/player/glissade/04.png" id="34_fdmlu"]
+[ext_resource type="Texture2D" uid="uid://ci51aelg2hmwt" path="res://assets/player/glissade/05.png" id="35_8sbr7"]
+[ext_resource type="Texture2D" uid="uid://eshmqpfmqy1y" path="res://assets/player/idle/00.png" id="36_y373y"]
+[ext_resource type="Texture2D" uid="uid://xodm44r488mw" path="res://assets/player/idle/01.png" id="37_oxpxh"]
+[ext_resource type="Texture2D" uid="uid://bmhi3q8as3xoa" path="res://assets/player/idle/02.png" id="38_gaqhs"]
+[ext_resource type="Texture2D" uid="uid://d0kst38wkhp1g" path="res://assets/player/idle/03.png" id="39_je8da"]
+[ext_resource type="Texture2D" uid="uid://bj3bmmx7wbpyw" path="res://assets/player/lancer/00.png" id="40_brc8i"]
+[ext_resource type="Texture2D" uid="uid://58fibuiap241" path="res://assets/player/lancer/01.png" id="41_s0j7h"]
+[ext_resource type="Texture2D" uid="uid://com6a3nd3b7ua" path="res://assets/player/lancer/02.png" id="42_ayx8j"]
+[ext_resource type="Texture2D" uid="uid://cmf81a6oqg65i" path="res://assets/player/lancer/03.png" id="43_0npl6"]
+[ext_resource type="Texture2D" uid="uid://b2g8oxyriw3gh" path="res://assets/player/lancer/04.png" id="44_ior8p"]
+[ext_resource type="Texture2D" uid="uid://ctgjdfk5p4bh4" path="res://assets/player/lancer/05.png" id="45_3lqxa"]
+[ext_resource type="Texture2D" uid="uid://x0urvtxita41" path="res://assets/player/lancer/06.png" id="46_y2sd5"]
+[ext_resource type="Texture2D" uid="uid://cxvcamc8tnpij" path="res://assets/player/saut/05.png" id="47_kllir"]
+[ext_resource type="Texture2D" uid="uid://ryatlr36tga7" path="res://assets/player/saut/06.png" id="48_fvf45"]
+[ext_resource type="Texture2D" uid="uid://tiq2wmnc2civ" path="res://assets/player/saut/07.png" id="49_phr8e"]
+[ext_resource type="Texture2D" uid="uid://c05f36c706pko" path="res://assets/player/saut/08.png" id="50_xlp7j"]
+[ext_resource type="Texture2D" uid="uid://b3myqiblebn4v" path="res://assets/player/saut/00.png" id="51_dy284"]
+[ext_resource type="Texture2D" uid="uid://b41gjlabynxr3" path="res://assets/player/saut/01.png" id="52_y35fy"]
+[ext_resource type="Texture2D" uid="uid://7nws5w8d2pal" path="res://assets/player/saut/02.png" id="53_ndv4f"]
+[ext_resource type="Texture2D" uid="uid://cwtxmbtqgbq4o" path="res://assets/player/saut/03.png" id="54_8l0iu"]
+[ext_resource type="Texture2D" uid="uid://b8re8sps1ydr0" path="res://assets/player/saut/04.png" id="55_lai50"]
+[ext_resource type="PackedScene" path="res://scenes/decors/props/Rocher.tscn" id="56_evwpn"]
+[ext_resource type="PackedScene" path="res://scenes/decors/props/CristalPetit.tscn" id="57_2twl8"]
+[ext_resource type="PackedScene" path="res://scenes/decors/props/CristalGros.tscn" id="58_w7d1o"]
+[ext_resource type="PackedScene" path="res://scenes/decors/props/StalactiteDecor.tscn" id="59_48ijp"]
+[ext_resource type="PackedScene" path="res://scenes/decors/igloo.tscn" id="60_6hjd0"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="62_pcjmn"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/mur_fondable.tscn" id="67_yccpo"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="69_g0owe"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/pouvoir_chaleur_pickup.tscn" id="71_goiyb"]
+[ext_resource type="PackedScene" path="res://scenes/entites/boss_cerf.tscn" id="73_5br1t"]
+[ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="75_vvpnk"]
+[ext_resource type="PackedScene" path="res://scenes/decors/props/FleurGivre.tscn" id="77_3dhh3"]
+[ext_resource type="Script" uid="uid://6lo0e2meekiq" path="res://scripts/Core/ZoneBossCerf.cs" id="77_zonebosscerf"]
+[ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="200_bgmgr"]
+[ext_resource type="PackedScene" path="res://scenes/core/region_trigger.tscn" id="201_regtrig"]
+[ext_resource type="Texture2D" uid="uid://bh13ttbdmnjjf" path="res://assets/backgrounds/fond_crevasse.png" id="202_fcrev"]
+[ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="300_mpause"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uvb3i"]
 texture = ExtResource("6_jxup2")
@@ -554,46 +543,46 @@ size = Vector2(26, 14)
 
 [node name="Monde" type="Node2D" unique_id=365433828]
 
-[node name="Fonds" type="Node2D" parent="."]
+[node name="Fonds" type="Node2D" parent="." unique_id=211427573]
 script = ExtResource("200_bgmgr")
 
-[node name="banquise" type="Parallax2D" parent="Fonds"]
+[node name="banquise" type="Parallax2D" parent="Fonds" unique_id=904893938]
 scroll_scale = Vector2(0.15, 0.05)
 repeat_size = Vector2(720, 0)
 repeat_times = 20
 
-[node name="Sprite2D" type="Sprite2D" parent="Fonds/banquise"]
+[node name="Sprite2D" type="Sprite2D" parent="Fonds/banquise" unique_id=1409393102]
 position = Vector2(0, 180)
 scale = Vector2(2, 2)
 texture = ExtResource("2_xrrpb")
 
-[node name="grotte" type="Parallax2D" parent="Fonds"]
+[node name="grotte" type="Parallax2D" parent="Fonds" unique_id=1805941179]
 modulate = Color(1, 1, 1, 0)
 scroll_scale = Vector2(0.15, 0.05)
 repeat_size = Vector2(720, 0)
 repeat_times = 20
 
-[node name="Sprite2D" type="Sprite2D" parent="Fonds/grotte"]
+[node name="Sprite2D" type="Sprite2D" parent="Fonds/grotte" unique_id=43725523]
 position = Vector2(0, 180)
 scale = Vector2(2, 2)
 texture = ExtResource("5_alqpa")
 
-[node name="crevasse" type="Parallax2D" parent="Fonds"]
+[node name="crevasse" type="Parallax2D" parent="Fonds" unique_id=1684086363]
 modulate = Color(1, 1, 1, 0)
 scroll_scale = Vector2(0.15, 0.05)
 repeat_size = Vector2(720, 0)
 repeat_times = 20
 
-[node name="Sprite2D" type="Sprite2D" parent="Fonds/crevasse"]
+[node name="Sprite2D" type="Sprite2D" parent="Fonds/crevasse" unique_id=645642891]
 position = Vector2(0, 180)
 scale = Vector2(2, 2)
 texture = ExtResource("202_fcrev")
 
-[node name="FrontiereCrevasse" parent="." instance=ExtResource("201_regtrig")]
+[node name="FrontiereCrevasse" parent="." unique_id=278179790 instance=ExtResource("201_regtrig")]
 position = Vector2(4080, 400)
 NomRegion = "crevasse"
 
-[node name="FrontiereGrotte" parent="." instance=ExtResource("201_regtrig")]
+[node name="FrontiereGrotte" parent="." unique_id=2076636511 instance=ExtResource("201_regtrig")]
 position = Vector2(4192, 700)
 NomRegion = "grotte"
 
@@ -690,8 +679,6 @@ shape = SubResource("RectangleShape2D_7eib1")
 
 [node name="Joueur" parent="." unique_id=171061589 instance=ExtResource("13_0bkf4")]
 position = Vector2(80, 240.2444)
-script = ExtResource("14_doadf")
-SceneBouleDeNeige = ExtResource("15_i5qhp")
 
 [node name="AnimatedSprite2D" parent="Joueur" index="0"]
 sprite_frames = SubResource("SpriteFrames_fj74q")
@@ -701,179 +688,123 @@ animation = &"idle"
 shape = SubResource("CapsuleShape2D_debout")
 
 [node name="CollisionGlisse" parent="Joueur" index="2"]
-position = Vector2(0, 9)
 shape = SubResource("RectangleShape2D_glisse")
-disabled = true
 
 [node name="Camera2D" parent="Joueur" index="3"]
-limit_left = 0
-limit_top = 0
 limit_right = 2752
 limit_bottom = 400
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
 
-[node name="@Sprite2D@13" type="Sprite2D" parent="." unique_id=1441056953]
-z_index = -1
+[node name="Rocher" parent="." instance=ExtResource("56_evwpn")]
 position = Vector2(640, 232)
-texture = ExtResource("56_evwpn")
 
-[node name="@Sprite2D@14" type="Sprite2D" parent="." unique_id=1083482664]
-z_index = -1
+[node name="CristalPetit" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(832, 172)
-texture = ExtResource("57_2twl8")
 
-[node name="@Sprite2D@15" type="Sprite2D" parent="." unique_id=1192995046]
-z_index = -1
+[node name="CristalPetit2" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(1024, 172)
-texture = ExtResource("57_2twl8")
 
-[node name="@Sprite2D@16" type="Sprite2D" parent="." unique_id=256572546]
-z_index = -1
+[node name="CristalGros" parent="." instance=ExtResource("58_w7d1o")]
 position = Vector2(2112, 228)
-texture = ExtResource("58_w7d1o")
 
-[node name="@Sprite2D@17" type="Sprite2D" parent="." unique_id=924486950]
-z_index = -1
+[node name="StalactiteDecor" parent="." instance=ExtResource("59_48ijp")]
 position = Vector2(2368, 40)
-texture = ExtResource("59_48ijp")
 
-[node name="Igloo" type="Sprite2D" parent="." unique_id=2099016235 instance=ExtResource("60_6hjd0")]
-position = Vector2(110, 220)
-texture = ExtResource("61_4hj1r")
+[node name="Igloo" parent="." unique_id=2099016235 instance=ExtResource("60_6hjd0")]
+position = Vector2(110, 232)
 
-[node name="CheckpointPeche" type="Area2D" parent="." unique_id=2038967696 instance=ExtResource("62_pcjmn")]
+[node name="CheckpointPeche" parent="." unique_id=2038967696 instance=ExtResource("62_pcjmn")]
 position = Vector2(210, 242)
-script = ExtResource("63_kdph4")
 IdCheckpoint = "ecran01_campement"
 
-[node name="@Area2D@18" type="Area2D" parent="." unique_id=188525115 instance=ExtResource("62_pcjmn")]
+[node name="@Area2D@18" parent="." unique_id=188525115 instance=ExtResource("62_pcjmn")]
 position = Vector2(1344, 242)
-script = ExtResource("63_kdph4")
 IdCheckpoint = "ecran01_campement_2"
 
-[node name="@Sprite2D@22" type="Sprite2D" parent="." unique_id=392988591]
-z_index = -1
+[node name="CristalPetit3" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(3424, 236)
-texture = ExtResource("57_2twl8")
 
-[node name="@Sprite2D@23" type="Sprite2D" parent="." unique_id=1311737552]
-z_index = -1
+[node name="Rocher2" parent="." instance=ExtResource("56_evwpn")]
 position = Vector2(3712, 232)
-texture = ExtResource("56_evwpn")
 
-[node name="@Area2D@26" type="Area2D" parent="." unique_id=427601960 instance=ExtResource("62_pcjmn")]
+[node name="@Area2D@26" parent="." unique_id=427601960 instance=ExtResource("62_pcjmn")]
 position = Vector2(2832, 242)
-script = ExtResource("63_kdph4")
 IdCheckpoint = "ecran02_campement"
 
-[node name="@Sprite2D@27" type="Sprite2D" parent="." unique_id=941026176]
-z_index = -1
+[node name="CristalPetit4" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(4256, 576)
-texture = ExtResource("57_2twl8")
 
-[node name="@Sprite2D@28" type="Sprite2D" parent="." unique_id=1121381240]
-z_index = -1
+[node name="CristalGros2" parent="." instance=ExtResource("58_w7d1o")]
 position = Vector2(4128, 832)
-texture = ExtResource("58_w7d1o")
 
-[node name="@Sprite2D@30" type="Sprite2D" parent="." unique_id=2053972804]
-z_index = -1
+[node name="CristalPetit5" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(4512, 844)
-texture = ExtResource("57_2twl8")
 
-[node name="@Sprite2D@31" type="Sprite2D" parent="." unique_id=442223848]
-z_index = -1
+[node name="CristalPetit6" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(4736, 844)
-texture = ExtResource("57_2twl8")
 
-[node name="@Sprite2D@32" type="Sprite2D" parent="." unique_id=693267797]
-z_index = -1
+[node name="CristalGros3" parent="." instance=ExtResource("58_w7d1o")]
 position = Vector2(4864, 836)
-texture = ExtResource("58_w7d1o")
 
-[node name="@Sprite2D@33" type="Sprite2D" parent="." unique_id=1832434155]
-z_index = -1
+[node name="StalactiteDecor2" parent="." instance=ExtResource("59_48ijp")]
 position = Vector2(4512, 686)
-texture = ExtResource("59_48ijp")
 
-[node name="MurFondable" type="StaticBody2D" parent="." unique_id=1551442140 instance=ExtResource("67_yccpo")]
+[node name="MurFondable" parent="." unique_id=1551442140 instance=ExtResource("67_yccpo")]
 position = Vector2(4112, 848)
-script = ExtResource("68_4p37s")
 IdMur = "carrefour_mur_raccourci"
 
-[node name="@Sprite2D@34" type="Sprite2D" parent="." unique_id=428168257]
-z_index = -1
+[node name="CristalPetit7" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(5120, 1132)
-texture = ExtResource("57_2twl8")
 
-[node name="@StaticBody2D@35" type="StaticBody2D" parent="." unique_id=2028745510 instance=ExtResource("67_yccpo")]
+[node name="@StaticBody2D@35" parent="." unique_id=2028745510 instance=ExtResource("67_yccpo")]
 position = Vector2(4576, 1056)
-script = ExtResource("68_4p37s")
 IdMur = "chemin_pouvoir_raccourci"
 
-[node name="StalactitePiege" type="Area2D" parent="." unique_id=1866533116 instance=ExtResource("69_g0owe")]
+[node name="StalactitePiege" parent="." unique_id=1866533116 instance=ExtResource("69_g0owe")]
 position = Vector2(4672, 1124)
-script = ExtResource("70_jtdoi")
 
-[node name="PouvoirChaleurPickup" type="Area2D" parent="." unique_id=436007142 instance=ExtResource("71_goiyb")]
+[node name="PouvoirChaleurPickup" parent="." unique_id=436007142 instance=ExtResource("71_goiyb")]
 position = Vector2(5152, 1063.4973)
-script = ExtResource("72_8r23n")
 
-[node name="@Sprite2D@36" type="Sprite2D" parent="." unique_id=440376655]
-z_index = -1
+[node name="CristalGros4" parent="." instance=ExtResource("58_w7d1o")]
 position = Vector2(5184, 868)
-texture = ExtResource("58_w7d1o")
 
-[node name="@Sprite2D@37" type="Sprite2D" parent="." unique_id=727342721]
-z_index = -1
+[node name="Rocher3" parent="." instance=ExtResource("56_evwpn")]
 position = Vector2(5440, 872)
-texture = ExtResource("56_evwpn")
 
-[node name="@Sprite2D@38" type="Sprite2D" parent="." unique_id=1826221603]
-z_index = -1
+[node name="CristalPetit8" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(5632, 876)
-texture = ExtResource("57_2twl8")
 
-[node name="@Area2D@39" type="Area2D" parent="." unique_id=613814055 instance=ExtResource("62_pcjmn")]
+[node name="@Area2D@39" parent="." unique_id=613814055 instance=ExtResource("62_pcjmn")]
 position = Vector2(5628, 882)
-script = ExtResource("63_kdph4")
 IdCheckpoint = "chemin1_campement_avant_boss"
 
-[node name="@Area2D@45" type="Area2D" parent="." unique_id=1896869718 instance=ExtResource("69_g0owe")]
-groups = ["stalactites_boss"]
+[node name="@Area2D@45" parent="." unique_id=1896869718 instance=ExtResource("69_g0owe")]
 position = Vector2(6496, 720)
-script = ExtResource("70_jtdoi")
-
-[node name="@Area2D@46" type="Area2D" parent="." unique_id=95593365 instance=ExtResource("69_g0owe")]
 groups = ["stalactites_boss"]
+
+[node name="@Area2D@46" parent="." unique_id=95593365 instance=ExtResource("69_g0owe")]
 position = Vector2(6752, 720)
-script = ExtResource("70_jtdoi")
-
-[node name="@Area2D@47" type="Area2D" parent="." unique_id=2113151224 instance=ExtResource("69_g0owe")]
 groups = ["stalactites_boss"]
+
+[node name="@Area2D@47" parent="." unique_id=2113151224 instance=ExtResource("69_g0owe")]
 position = Vector2(7008, 720)
-script = ExtResource("70_jtdoi")
-
-[node name="@Area2D@48" type="Area2D" parent="." unique_id=1780708977 instance=ExtResource("69_g0owe")]
 groups = ["stalactites_boss"]
+
+[node name="@Area2D@48" parent="." unique_id=1780708977 instance=ExtResource("69_g0owe")]
 position = Vector2(7264, 720)
-script = ExtResource("70_jtdoi")
-
-[node name="@Area2D@49" type="Area2D" parent="." unique_id=1057027535 instance=ExtResource("69_g0owe")]
 groups = ["stalactites_boss"]
+
+[node name="@Area2D@49" parent="." unique_id=1057027535 instance=ExtResource("69_g0owe")]
 position = Vector2(7520, 720)
-script = ExtResource("70_jtdoi")
-
-[node name="@Area2D@50" type="Area2D" parent="." unique_id=783156928 instance=ExtResource("69_g0owe")]
 groups = ["stalactites_boss"]
+
+[node name="@Area2D@50" parent="." unique_id=783156928 instance=ExtResource("69_g0owe")]
 position = Vector2(7776, 720)
-script = ExtResource("70_jtdoi")
+groups = ["stalactites_boss"]
 
-[node name="BossHudBarre" type="CanvasLayer" parent="." unique_id=1855716595 instance=ExtResource("75_vvpnk")]
-script = ExtResource("76_3ov84")
+[node name="BossHudBarre" parent="." unique_id=1855716595 instance=ExtResource("75_vvpnk")]
 
-[node name="ZoneBossCerf" type="Area2D" parent="."]
+[node name="ZoneBossCerf" type="Area2D" parent="." unique_id=1252035445]
 position = Vector2(7232, 840)
 script = ExtResource("77_zonebosscerf")
 SceneBoss = ExtResource("73_5br1t")
@@ -881,24 +812,18 @@ NomBoss = "Boss Cerf (Rodolphe)"
 PositionApparition = Vector2(8032, 857.93304)
 CheminBarre = NodePath("../BossHudBarre")
 PvBoss = 40
-LimiteGauche = 5984.0
-LimiteDroite = 8480.0
 UneSeuleFois = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossCerf"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossCerf" unique_id=1062644137]
 shape = SubResource("RectangleShape2D_w5upp")
 
-[node name="@Sprite2D@51" type="Sprite2D" parent="." unique_id=1143423747]
-z_index = -1
+[node name="FleurGivre" parent="." instance=ExtResource("77_3dhh3")]
 position = Vector2(4640, 502)
-texture = ExtResource("77_3dhh3")
 
-[node name="@Sprite2D@52" type="Sprite2D" parent="." unique_id=1357329610]
-z_index = -1
+[node name="CristalPetit9" parent="." instance=ExtResource("57_2twl8")]
 position = Vector2(5056, 528)
-texture = ExtResource("57_2twl8")
 
-[node name="MenuPause" type="CanvasLayer" parent="."]
+[node name="MenuPause" type="CanvasLayer" parent="." unique_id=758964597]
 script = ExtResource("300_mpause")
 
 [editable path="Joueur"]

@@ -7,6 +7,6 @@ public partial class EcranFin : Node2D
 	public override void _UnhandledInput(InputEvent evenement)
 	{
 		if (evenement is InputEventKey { Pressed: true })
-			GetTree().ChangeSceneToFile("res://scenes/monde.tscn");
+			GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
 	}
 }

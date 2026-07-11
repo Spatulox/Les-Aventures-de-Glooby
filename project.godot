@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="Les Aventures de Glooby"
-run/main_scene="res://scenes/menu_principal.tscn"
+run/main_scene="res://scenes/ui/menu_principal.tscn"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameState="*res://scripts/Core/GameState.cs"
-Hud="*res://scenes/hud.tscn"
+Hud="*res://scenes/ui/hud.tscn"
 
 [display]
 

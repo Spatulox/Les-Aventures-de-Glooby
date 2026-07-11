@@ -24,6 +24,6 @@ public partial class ZoneBossCerf : ZoneBoss
 	private void SurVictoire()
 	{
 		var minuteur = GetTree().CreateTimer(2.5);
-		minuteur.Timeout += () => GetTree().ChangeSceneToFile("res://scenes/ecran_fin.tscn");
+		minuteur.Timeout += () => GetTree().ChangeSceneToFile("res://scenes/ui/ecran_fin.tscn");
 	}
 }

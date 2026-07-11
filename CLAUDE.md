@@ -45,9 +45,9 @@ There is **no test framework and no lint step**. Verification is done by compili
 
 ### Single continuous world (Hollow Knight style)
 
-There is **one gameplay scene: `scenes/monde.tscn`** (set as `run/main_scene`). The entire level lives in it — there is no scene reload during play (only the final victory → `ecran_fin.tscn`). This was a deliberate refactor away from 7 separate reloaded scenes.
+There is **one gameplay scene: `scenes/niveaux/monde.tscn`** (the game boots to `scenes/ui/menu_principal.tscn`, which is `run/main_scene`). The entire level lives in it — there is no scene reload during play (only the final victory → `scenes/ui/ecran_fin.tscn`). This was a deliberate refactor away from 7 separate reloaded scenes.
 
-**The whole map is authored directly in `scenes/monde.tscn`** (edited by hand in the Godot editor): the `Terrain` `TileMapLayer` and its baked tiles, all props/entities, the `CameraZone` regions, the boss, checkpoints, backgrounds. There is **no runtime world-assembly script** — the scene root has no build script; to add/move content, edit `monde.tscn` in the editor.
+**The whole map is authored directly in `scenes/niveaux/monde.tscn`** (edited by hand in the Godot editor): the `Terrain` `TileMapLayer` and its baked tiles, all props/entities, the `CameraZone` regions, the boss, checkpoints, backgrounds. There is **no runtime world-assembly script** — the scene root has no build script; to add/move content, edit `monde.tscn` in the editor.
 
 Key pieces of the scene:
 - One shared `TileMapLayer` named `Terrain`, whose `TileSet` is baked into `monde.tscn` (it was once built in code by `TileSetFabrique`, since unplugged — see below); tiles were painted into it and saved.
@@ -64,7 +64,7 @@ Key pieces of the scene:
 
 Two autoloads (`project.godot [autoload]`):
 - **`GameState`** (`scripts/Core/GameState.cs`) — singleton via `GameState.Instance`. Holds PV, poissons (a **fixed start reserve of `PoissonsDepart = 50`, consumed only** to heal — fish are not picked up in the world), progression flags (`PouvoirChaleurActif`), melted-wall id set, and checkpoint position. Communicates outward through `[Signal]` events (`PvChanges`, `JoueurMort`, `CheckpointActif`, …). Since the world never reloads, respawn = teleport the player to `CheckpointPosition`, not a scene change.
-- **`Hud`** (`scenes/hud.tscn`) — persistent HUD (hearts, fish counter), subscribes to `GameState` signals.
+- **`Hud`** (`scenes/ui/hud.tscn`) — persistent HUD (hearts, fish counter), subscribes to `GameState` signals.
 
 **Input actions are registered in code** in `GameState.ConfigurerActionsParDefaut()` (move_left/right, jump, slide, lancer, manger, pouvoir_chaleur) — *not* in `project.godot`. Change key bindings there.
 
@@ -83,7 +83,18 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 
 ## Assets layout
 
-`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `pnj/boss_cerf/`, `ui/`) — PNJ art (bosses) lives under `pnj/`. `scenes/` holds reusable `.tscn` (player, boule_de_neige, checkpoint_peche, mur_fondable, stalactite_piege, pickups…). `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `pnj/boss_cerf/`, `ui/`) — PNJ art (bosses) lives under `pnj/`. `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+
+**`scenes/` mirrors `scripts/`** — every reusable element of the world is a `.tscn` "GameObject" you can drop into a level from the Godot editor, filed by role (put new `.tscn` in the matching folder):
+- **`niveaux/`** — playable levels: `monde.tscn` (the single continuous world, `uid://bfmhiv7v30so8`).
+- **`entites/`** — living actors: `player.tscn`, `boss_cerf.tscn`.
+- **`interactifs/`** — interactables/hazards: `checkpoint_peche.tscn`, `mur_fondable.tscn`, `stalactite_piege.tscn`, `pouvoir_chaleur_pickup.tscn`.
+- **`projectiles/`** — `boule_de_neige.tscn`.
+- **`decors/`** — non-interactive décor: `igloo.tscn`, the `DecorBanquise`/`DecorGrotte` sets, and **`decors/props/`** — the small reusable décor props (`Rocher`, `CristalPetit`, `CristalGros`, `StalactiteDecor` [purely cosmetic, distinct from the `interactifs/stalactite_piege` trap], `FleurGivre`); each is a `Sprite2D` root at `z_index=-1`. `monde.tscn` instances these rather than embedding raw `Sprite2D` nodes, so editing a prop once updates every placement.
+- **`ui/`** — `hud.tscn`, `boss_hud_barre.tscn`, `menu_principal.tscn` (the boot scene, `run/main_scene`), `ecran_fin.tscn`.
+- **`core/`** — scene-driven zone helpers: `region_trigger.tscn`.
+- **`plateformes/`** — the platform GameObjects (`PlateformeFixe`, `PlateformeFragile`, …). Their default sprite + collision is now baked into the `.tscn` so they render in the editor; `PlateformeFixe.cs._Ready` still re-applies texture/collision from the `Taille` export at runtime (editor preview = the "Petite" default). **Note:** these are a parallel system — `monde.tscn` does **not** instance them; its walkable ground/ledges are collision tiles painted into the `Terrain` `TileMapLayer`. The `Plateforme*` scenes are currently only used in `test/TestPlateformes.tscn`.
+- **`test/`** — throwaway test scenes (`TestPlateformes.tscn`).
 
 `scripts/` is organized by role — put new C# in the matching folder (namespaces are not used; classes are global, so a file's folder is purely for humans):
 - **`Common/`** — shared, reusable helpers with no gameplay identity of their own: `Constantes` (`TailleTuile`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `DeclencheurZone`, the `DamageSource` enum (+ `MontantDegats` per source), the `Damageable` interface (`TakeDamage`/`IsInvincibleToDamage`) with its `Degats.Infliger(cible, source)` helper (single entry point that applies damage while respecting immunity), and the `FriendlyLivingEntity` marker interface (entities that implement it never take any damage, whatever the source).
