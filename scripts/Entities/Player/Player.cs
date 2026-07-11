@@ -32,6 +32,7 @@ public partial class Player : LivingEntity
 	private CollisionShape2D _colDebout;
 	private CollisionShape2D _colGlisse;
 	private TileMapLayer _coucheSol;
+	private Camera2D _camera;
 
 	private float _coyoteTimer;
 	private float _bufferSautTimer;
@@ -62,6 +63,7 @@ public partial class Player : LivingEntity
 		_colDebout = GetNode<CollisionShape2D>("CollisionDebout");
 		_colGlisse = GetNode<CollisionShape2D>("CollisionGlisse");
 		_colGlisse.Disabled = true;
+		_camera = GetNode<Camera2D>("Camera2D");
 
 		ChargerAnimations();
 		_coucheSol = GetTree().GetFirstNodeInGroup("sol") as TileMapLayer;
@@ -161,6 +163,17 @@ public partial class Player : LivingEntity
 		}
 
 		MettreAJourAnimation(auSol, direction);
+	}
+
+	// Appelée par la CameraZone active : applique les limites caméra de la salle
+	// courante et recale le filet anti-chute juste sous son bas (façon Hollow Knight).
+	public void DefinirZoneCamera(int gauche, int droite, int haut, int bas, float margeChute)
+	{
+		_camera.LimitLeft = gauche;
+		_camera.LimitRight = droite;
+		_camera.LimitTop = haut;
+		_camera.LimitBottom = bas;
+		SeuilChuteVide = bas + margeChute;
 	}
 
 	// Filet de sécurité : une chute manquée dans un trou ne doit jamais se

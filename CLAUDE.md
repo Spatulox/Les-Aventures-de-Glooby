@@ -45,13 +45,23 @@ There is **no test framework and no lint step**. Verification is done by compili
 
 ### Single continuous world (Hollow Knight style)
 
-There is **one gameplay scene: `scenes/monde.tscn`** (set as `run/main_scene`). The entire level lives in it — there is no scene reload during play (only the final victory → `ecran_fin.tscn`). This was a deliberate refactor away from 7 separate reloaded scenes.
+There is **one gameplay scene: `scenes/niveaux/monde.tscn`** (the game boots to `scenes/ui/menu_principal.tscn`, which is `run/main_scene`). The entire level lives in it — there is no scene reload during play (only the final victory → `scenes/ui/ecran_fin.tscn`). This was a deliberate refactor away from 7 separate reloaded scenes.
 
-**The whole map is authored directly in `scenes/monde.tscn`** (edited by hand in the Godot editor): the `Terrain` `TileMapLayer` and its baked tiles, all props/entities, the `CameraZone` regions, the boss, checkpoints, backgrounds. There is **no runtime world-assembly script** — the scene root has no build script; to add/move content, edit `monde.tscn` in the editor.
+**The whole map is authored directly in `scenes/niveaux/monde.tscn`** (edited by hand in the Godot editor): all props/entities, the `CameraZone` regions, checkpoints, backgrounds. There is **no runtime world-assembly script** — the scene root has no build script; to add/move content, edit `monde.tscn` in the editor.
+
+The scene is organized **one node per place** (`Village`, `Grotte`, and future boss arenas) so it stays hand-editable. **Each place node contains the same sub-groups**: `Sol` (the walkable ground), `Decor` (igloos + `decors/props`), `Interactifs` (checkpoints, hazards, pickups), `Camera` (the place's `CameraZone`), `Frontiere` (the `RegionTrigger` that reveals the place's background). Add content by instancing the matching reusable `.tscn` under the right sub-group; add a place by duplicating the pattern. Cross-cutting/global nodes stay at the root: `Fonds` (per-region backgrounds + `BackgroundManager`), `Joueur` (the player instance), `MenuPause`.
+
+**Layered backgrounds (`Fonds`).** `BackgroundManager` holds **one Node2D container per region** (e.g. `village`), and `AfficherRegion(nom)` cross-fades between them (`modulate:a`, which propagates to each container's children). Each region container stacks two reusable layers, back to front:
+- a **fixed far background** — `scenes/decors/FondBanquise.tscn` / `FondGrotte.tscn`: a `Parallax2D` with `scroll_scale = (0,0)` (pinned to the camera) and no repeat, at `z_index = -100` (a single non-tiling skybox image sized for the 640×360 viewport).
+- a **mid parallax décor** — `scenes/decors/DecorBanquise.tscn` / `DecorGrotte.tscn`: several `Parallax2D` layers (z −12…−3) that scroll at increasing speeds between the far background and the foreground.
+
+Adding a region later = drop a new container (e.g. `grotte` = `FondGrotte` + `DecorGrotte`) under `Fonds` and trigger it via a `RegionTrigger` calling `AfficherRegion`.
+
+The current level runs west→east as three places: a **penguin village** (igloos, props, a fishing-hole checkpoint), then the open **banquise** ice field, then a **cave (grotte)**; the rest is built out from there. Village and banquise share the `banquise` background region (same biome); the cave uses the `grotte` region. Region backgrounds swap via `RegionTrigger` gates (each place's `Frontiere` group), and each place has its own non-overlapping `CameraZone` (village & banquise 1280 wide, grotte 2560).
 
 Key pieces of the scene:
-- One shared `TileMapLayer` named `Terrain`, whose `TileSet` is baked into `monde.tscn` (it was once built in code by `TileSetFabrique`, since unplugged — see below); tiles were painted into it and saved.
-- **`CameraZone` (Area2D) regions** adjust the player `Camera2D` limits on room entry. Camera limits are per-zone, and the player's fall-death threshold (`SeuilChuteVide`) is **relative to the active zone**, not an absolute Y — a single global threshold would misfire in deep rooms.
+- **`Sol` — the ground is built from reusable `PlateformeUnidirectionnelle` (one-way) platform instances**, tiled side by side (collision width 278 → step 278 for a seamless floor), *not* a `TileMapLayer`. The player can drop through with down+jump. (An earlier version used a baked `Terrain` `TileMapLayer` painted from `TileSetFabrique` Wang tiles — see the historical notes below; the `is_ice`/`is_fragile` tile mechanics in `Player.cs` only apply when such a tilemap in the `sol` group is present, which the village does not have.)
+- **`CameraZone` regions** adjust the player `Camera2D` limits on room entry (the `Camera2D` is a child of the player, auto-following). Each zone is a **reusable GameObject** — an instance of `scenes/core/camera_zone.tscn` (drag it in, resize its rectangle). Its camera limits are **derived from its `CollisionShape2D` rectangle's world AABB** (`CameraZone.CalculerLimitesDepuisForme`), not hand-entered ints — the drawn rectangle *is* the room bounds. Zones overlap at transitions (last-entered wins). On entry, `CameraZone` calls `Player.DefinirZoneCamera(...)` (the only camera coupling — no hardcoded node path), which sets the four limits and the fall-death threshold `SeuilChuteVide = bas + MargeChuteVide` (`[Export]`, default 300). `SeuilChuteVide` is **relative to the active zone**, not an absolute Y — a single global threshold would misfire in deep rooms.
 - **`ZoneBoss` (Area2D)** covers a boss arena and reveals the boss HP bar / arms the boss on player entry (see Player & Boss).
 
 > Historical note: the map used to be generated procedurally by `scripts/Core/Monde.cs` (`_Ready`) painting one static `SalleXxx.Construire(...)` builder per room at a tile `Decalage`. That generator was run once, its result **baked into `monde.tscn`, then unplugged and removed** (`Monde.cs` + `scripts/Rooms/` no longer exist). If you see references to `SalleXxx`/`Decalage` in older reports, that's why.
@@ -64,7 +74,7 @@ Key pieces of the scene:
 
 Two autoloads (`project.godot [autoload]`):
 - **`GameState`** (`scripts/Core/GameState.cs`) — singleton via `GameState.Instance`. Holds PV, poissons (a **fixed start reserve of `PoissonsDepart = 50`, consumed only** to heal — fish are not picked up in the world), progression flags (`PouvoirChaleurActif`), melted-wall id set, and checkpoint position. Communicates outward through `[Signal]` events (`PvChanges`, `JoueurMort`, `CheckpointActif`, …). Since the world never reloads, respawn = teleport the player to `CheckpointPosition`, not a scene change.
-- **`Hud`** (`scenes/hud.tscn`) — persistent HUD (hearts, fish counter), subscribes to `GameState` signals.
+- **`Hud`** (`scenes/ui/hud.tscn`) — persistent HUD (hearts, fish counter), subscribes to `GameState` signals.
 
 **Input actions are registered in code** in `GameState.ConfigurerActionsParDefaut()` (move_left/right, jump, slide, lancer, manger, pouvoir_chaleur) — *not* in `project.godot`. Change key bindings there.
 
@@ -83,7 +93,18 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 
 ## Assets layout
 
-`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `pnj/boss_cerf/`, `ui/`) — PNJ art (bosses) lives under `pnj/`. `scenes/` holds reusable `.tscn` (player, boule_de_neige, checkpoint_peche, mur_fondable, stalactite_piege, pickups…). `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `pnj/boss_cerf/`, `ui/`) — PNJ art (bosses) lives under `pnj/`. `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+
+**`scenes/` mirrors `scripts/`** — every reusable element of the world is a `.tscn` "GameObject" you can drop into a level from the Godot editor, filed by role (put new `.tscn` in the matching folder):
+- **`niveaux/`** — playable levels: `monde.tscn` (the single continuous world, `uid://bfmhiv7v30so8`).
+- **`entites/`** — living actors: `player.tscn`, `boss_cerf.tscn`.
+- **`interactifs/`** — interactables/hazards: `checkpoint_peche.tscn`, `mur_fondable.tscn`, `stalactite_piege.tscn`, `pouvoir_chaleur_pickup.tscn`.
+- **`projectiles/`** — `boule_de_neige.tscn`.
+- **`decors/`** — non-interactive décor: `igloo.tscn`, the `DecorBanquise`/`DecorGrotte` sets, and **`decors/props/`** — the small reusable décor props (`Rocher`, `CristalPetit`, `CristalGros`, `StalactiteDecor` [purely cosmetic, distinct from the `interactifs/stalactite_piege` trap], `FleurGivre`); each is a `Sprite2D` root at `z_index=-1`. `monde.tscn` instances these rather than embedding raw `Sprite2D` nodes, so editing a prop once updates every placement.
+- **`ui/`** — `hud.tscn`, `boss_hud_barre.tscn`, `menu_principal.tscn` (the boot scene, `run/main_scene`), `ecran_fin.tscn`.
+- **`core/`** — scene-driven zone helpers: `region_trigger.tscn`, `camera_zone.tscn` (reusable camera-limit region; limits derive from its resized collision rectangle).
+- **`plateformes/`** — the platform GameObjects (`PlateformeFixe`, `PlateformeFragile`, …). Their default sprite + collision is now baked into the `.tscn` so they render in the editor; `PlateformeFixe.cs._Ready` still re-applies texture/collision from the `Taille` export at runtime (editor preview = the "Petite" default). **Note:** these are a parallel system — `monde.tscn` does **not** instance them; its walkable ground/ledges are collision tiles painted into the `Terrain` `TileMapLayer`. The `Plateforme*` scenes are currently only used in `test/TestPlateformes.tscn`.
+- **`test/`** — throwaway test scenes (`TestPlateformes.tscn`).
 
 `scripts/` is organized by role — put new C# in the matching folder (namespaces are not used; classes are global, so a file's folder is purely for humans):
 - **`Common/`** — shared, reusable helpers with no gameplay identity of their own: `Constantes` (`TailleTuile`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `DeclencheurZone`, the `DamageSource` enum (+ `MontantDegats` per source), the `Damageable` interface (`TakeDamage`/`IsInvincibleToDamage`) with its `Degats.Infliger(cible, source)` helper (single entry point that applies damage while respecting immunity), and the `FriendlyLivingEntity` marker interface (entities that implement it never take any damage, whatever the source).

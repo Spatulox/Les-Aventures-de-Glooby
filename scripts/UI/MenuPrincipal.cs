@@ -51,13 +51,13 @@ public partial class MenuPrincipal : Control
 	private void DemarrerNouvellePartie()
 	{
 		GameState.Instance.NouvellePartie();
-		GetTree().ChangeSceneToFile("res://scenes/monde.tscn");
+		GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
 	}
 
 	private void ContinuerPartie()
 	{
 		// Sauvegarde à implémenter : on reprend simplement le monde pour l'instant.
-		GetTree().ChangeSceneToFile("res://scenes/monde.tscn");
+		GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
 	}
 
 	// Place derrière tout le reste une image de fond tirée au hasard parmi celles
