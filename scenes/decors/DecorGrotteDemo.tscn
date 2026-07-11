@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/DecorGrotte.tscn" id="1_decor"]
+[ext_resource type="Script" path="res://scripts/decors/CameraDemoParallax.cs" id="2_cam"]
+
+[node name="DecorGrotteDemo" type="Node2D"]
+
+[node name="DecorGrotte" parent="." instance=ExtResource("1_decor")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, 180)
+script = ExtResource("2_cam")
+Amplitude = 1200.0
+DureeAllerRetour = 12.0

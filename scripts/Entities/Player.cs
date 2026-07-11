@@ -21,6 +21,7 @@ public partial class Player : CharacterBody2D
 	[Export] public float InvincibiliteDuree = 1.0f;
 	[Export] public float ClignoteInterval = 0.08f;
 	[Export] public float DelaiRuptureFragile = 0.4f;
+	[Export] public float DureeTraverseePlateforme = 0.3f;
 	// Ajusté dynamiquement par la CameraZone active (le monde continu a des
 	// salles à des profondeurs très différentes - un seuil absolu unique
 	// déclencherait le filet de sécurité en permanence dans les salles profondes).
@@ -50,6 +51,8 @@ public partial class Player : CharacterBody2D
 	private float _timerFragile;
 	private Vector2I _celluleFragileActuelle;
 	private bool _celluleFragileValide;
+
+	private float _traverseeTimer;
 
 	public override void _Ready()
 	{
@@ -92,12 +95,16 @@ public partial class Player : CharacterBody2D
 			_directionRegard = (int)Mathf.Sign(direction);
 
 		GererGlaceFragile(auSol, dt);
+		bool vientDeTraverser = GererTraverseePlateforme(auSol, dt);
 
 		if (_enGlissade)
 		{
 			_slideTimer -= dt;
 			velocity.X = _directionRegard * _slideVitesseActuelle;
-			if (_slideTimer <= 0f || (!auSol && velocity.Y > 0f))
+			// La glissade se termine uniquement à l'épuisement du minuteur : une
+			// glissade lancée au sol se poursuit en l'air (ex. tremplin/rebord)
+			// au lieu d'être coupée dès qu'on quitte le sol.
+			if (_slideTimer <= 0f)
 				FinirGlissade();
 		}
 		else
@@ -105,9 +112,9 @@ public partial class Player : CharacterBody2D
 			if (Mathf.Abs(direction) > 0.01f)
 				velocity.X = Mathf.MoveToward(velocity.X, direction * Speed, Acceleration * dt);
 			else
-				velocity.X = Mathf.MoveToward(velocity.X, 0f, Friction * dt);
+				velocity.X = Mathf.MoveToward(velocity.X, 0f, Friction * ObtenirFrictionSol(auSol) * dt);
 
-			if (_bufferSautTimer > 0f && _coyoteTimer > 0f)
+			if (_bufferSautTimer > 0f && _coyoteTimer > 0f && !vientDeTraverser)
 			{
 				velocity.Y = JumpVelocity;
 				_coyoteTimer = 0f;
@@ -307,6 +314,56 @@ public partial class Player : CharacterBody2D
 			_coucheSol.SetCell(coordsCellule, -1);
 			_celluleFragileValide = false;
 		}
+	}
+
+	// Bas + saut au sol : retire temporairement le layer des plateformes
+	// traversables du masque de collision, le temps de tomber au travers.
+	// Sans effet si le sol actuel n'est pas une plateforme traversable (le
+	// layer 1 du terrain normal n'est jamais concerné).
+	private bool GererTraverseePlateforme(bool auSol, float dt)
+	{
+		if (_traverseeTimer > 0f)
+		{
+			_traverseeTimer -= dt;
+			if (_traverseeTimer <= 0f)
+				CollisionMask |= Constantes.LayerPlateformesTraversables;
+			return true;
+		}
+
+		if (auSol && Input.IsActionPressed("bas") && Input.IsActionJustPressed("jump"))
+		{
+			CollisionMask &= ~Constantes.LayerPlateformesTraversables;
+			_traverseeTimer = DureeTraverseePlateforme;
+			_bufferSautTimer = 0f;
+			return true;
+		}
+
+		return false;
+	}
+
+	// Requête physique directe sous les pieds (comme UtiliserPouvoirChaleur),
+	// pas une lecture des dernières collisions de MoveAndSlide : évite un
+	// décalage d'une frame et fonctionne pour un objet autonome (pas une tuile).
+	private float ObtenirFrictionSol(bool auSol)
+	{
+		if (!auSol)
+			return 1f;
+
+		var espace = GetWorld2D().DirectSpaceState;
+		var param = new PhysicsPointQueryParameters2D
+		{
+			Position = GlobalPosition + new Vector2(0, 18f),
+			CollideWithBodies = true,
+			CollideWithAreas = false,
+		};
+
+		foreach (var resultat in espace.IntersectPoint(param))
+		{
+			if (resultat["collider"].As<GodotObject>() is PlateformeGlissante glissante)
+				return glissante.FacteurFriction;
+		}
+
+		return 1f;
 	}
 
 	private bool ObtenirDonneesSol(out bool estGlace, out bool estFragile, out Vector2I coordsCellule)

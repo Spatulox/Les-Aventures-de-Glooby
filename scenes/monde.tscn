@@ -74,10 +74,9 @@
 [ext_resource type="PackedScene" path="res://scenes/pouvoir_chaleur_pickup.tscn" id="71_goiyb"]
 [ext_resource type="Script" path="res://scripts/Entities/PouvoirChaleurPickup.cs" id="72_8r23n"]
 [ext_resource type="PackedScene" path="res://scenes/boss_cerf.tscn" id="73_5br1t"]
-[ext_resource type="Script" path="res://scripts/Entities/BossCerf.cs" id="74_v4qfc"]
 [ext_resource type="PackedScene" path="res://scenes/boss_hud_barre.tscn" id="75_vvpnk"]
 [ext_resource type="Script" path="res://scripts/UI/BossHudBarre.cs" id="76_3ov84"]
-[ext_resource type="Script" path="res://scripts/Core/ZoneBoss.cs" id="77_zoneboss"]
+[ext_resource type="Script" path="res://scripts/Core/ZoneBossCerf.cs" id="77_zonebosscerf"]
 [ext_resource type="Texture2D" path="res://assets/props/grotte/fleur_givre.png" id="77_3dhh3"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uvb3i"]
@@ -841,49 +840,52 @@ position = Vector2(5628, 882)
 script = ExtResource("63_kdph4")
 IdCheckpoint = "chemin1_campement_avant_boss"
 
-[node name="BossCerf" type="CharacterBody2D" parent="." unique_id=1704656185 instance=ExtResource("73_5br1t")]
-position = Vector2(8032, 857.93304)
-script = ExtResource("74_v4qfc")
-LimiteGauche = 5984.0
-LimiteDroite = 8480.0
-
 [node name="@Area2D@45" type="Area2D" parent="." unique_id=1896869718 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(6496, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@46" type="Area2D" parent="." unique_id=95593365 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(6752, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@47" type="Area2D" parent="." unique_id=2113151224 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7008, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@48" type="Area2D" parent="." unique_id=1780708977 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7264, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@49" type="Area2D" parent="." unique_id=1057027535 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7520, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@50" type="Area2D" parent="." unique_id=783156928 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7776, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="BossHudBarre" type="CanvasLayer" parent="." unique_id=1855716595 instance=ExtResource("75_vvpnk")]
 script = ExtResource("76_3ov84")
-CheminBoss = NodePath("../BossCerf")
 
-[node name="ZoneBoss" type="Area2D" parent="."]
+[node name="ZoneBossCerf" type="Area2D" parent="."]
 position = Vector2(7232, 840)
-script = ExtResource("77_zoneboss")
-CheminBoss = NodePath("../BossCerf")
+script = ExtResource("77_zonebosscerf")
+SceneBoss = ExtResource("73_5br1t")
 NomBoss = "Boss Cerf (Rodolphe)"
+PositionApparition = Vector2(8032, 857.93304)
 CheminBarre = NodePath("../BossHudBarre")
 PvBoss = 40
+LimiteGauche = 5984.0
+LimiteDroite = 8480.0
+UneSeuleFois = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBoss"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossCerf"]
 shape = SubResource("RectangleShape2D_w5upp")
 
 [node name="@Sprite2D@51" type="Sprite2D" parent="." unique_id=1143423747]

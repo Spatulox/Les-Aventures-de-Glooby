@@ -73,8 +73,11 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 ### Player & Boss
 
 - **`Player.cs`** (`scripts/Entities/`, `CharacterBody2D`) — timer-based controller: coyote time + jump buffer, accelerated slide (faster on `is_ice`), snowball throw, short post-hit invincibility, fragile-tile break delay, relative fall-death safety net. Tunables are `[Export]` fields at the top.
-- **`BossCerf.cs`** (`scripts/Entities/`) — explicit state machine (`enum Etat`: Intro/Idle/Telegraphe/Charge/Etourdi/Pietinement/SouffleGivre/Vaincu; `enum Pattern`). Two phases (transition at 50% HP), charge is dodgeable and stuns the boss (×3 damage window) into a wall. Piétinement and Souffle de Givre **reuse the idle/charge animations** (budget economy) — only the gameplay result is new. HP/damage numbers (`PvMax=40`, etc.) are unvalidated placeholders pending a real play-test (`DECISIONS.md`); a `ZoneBoss` can override `PvMax` at combat start via `DefinirPvMax`.
-- **`ZoneBoss.cs`** (`scripts/Core/`, extends `DeclencheurZone`) — reusable, **inheritable** boss-arena trigger. On player entry it reveals the boss HP bar (`BossHudBarre`, hidden by default), arms the boss's PV (`PvBoss`), and plays combat music (`Musique`) — all `[Export]` config, plus a `NomBoss`/`CheminBoss` reference. Subclass one per boss and override `DemarrerCombat(...)` for bespoke behavior. `BossHudBarre` is masked until a `ZoneBoss` calls `Afficher()`.
+**Boss OO hierarchy.** Bosses split generic scaffolding from per-boss content, and each boss has its own arena zone:
+- **`Boss.cs`** (`scripts/Entities/`, abstract `CharacterBody2D`) — the reusable base: holds `PvMax`/`Pv`/`EstVaincu`, the `PvChanges`/`Vaincu` signals, `SubirDegats` (with `AjusterDegats`/`ApresDegats` hooks), the death sequence `Mourir()` (plays `AnimationMort`, stops physics/collision, emits `Vaincu`), `DefinirPvMax`, and the generic `AjouterAnimation(...)` folder-loader. Subclasses supply `ConstruireAnimations()` + `Initialiser()` and their own AI; **nothing boss-specific lives here**.
+- **`BossCerf.cs`** (`: Boss`) — only Cerf specifics: `enum Etat`/`Pattern` state machine (`_PhysicsProcess`), two phases (transition at 50% HP), dodgeable charge that stuns the boss (`AjusterDegats` ×3 window) into a wall, piétinement (stalactites) + souffle de givre (which **reuse the idle/charge animations** for budget), and the tuning exports. HP/damage numbers (`PvMax=40`, etc.) are unvalidated placeholders (`DECISIONS.md`).
+- **`ZoneBoss.cs`** (`scripts/Core/`, extends `DeclencheurZone`) — reusable, **inheritable** arena trigger. On player entry it **spawns the boss** (`SceneBoss` at `PositionApparition`, a sibling of the zone), links & reveals its HP bar (`BossHudBarre.Lier` then `Afficher`), arms its PV (`PvBoss`), and plays music (`Musique`, currently no assets). Hooks: `ConfigurerBoss(boss)` (before `AddChild`) and `DemarrerCombat(joueur)`. `[Export]`: `SceneBoss`, `NomBoss`, `PositionApparition`, `CheminBarre`, `PvBoss`, `Musique`.
+- **`ZoneBossCerf.cs`** (`: ZoneBoss`) — Cerf arena: sets the boss's charge bounds (`LimiteGauche/Droite`) and, on `Vaincu`, transitions to `ecran_fin.tscn`. In `monde.tscn` the boss is **not placed statically** — the `ZoneBossCerf` node spawns it; `BossHudBarre` starts hidden and is bound at spawn.
 
 ## Assets layout
 
@@ -82,7 +85,7 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 
 `scripts/` is organized by role — put new C# in the matching folder (namespaces are not used; classes are global, so a file's folder is purely for humans):
 - **`Common/`** — shared, reusable helpers with no gameplay identity of their own: `Constantes` (`TailleTuile`), `Outils` (`Attacher`, `Instancier`, `AjouterDecor`, `PlacerFondRepete`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `DeclencheurZone`.
-- **`Core/`** — global systems & scene-driven zones: `GameState`, `BackgroundManager`, `CameraZone`, `ZoneBoss`, `RegionTrigger`.
-- **`Entities/`** — in-world actors and interactables: `Player`, `BossCerf`, `Snowball`, `Checkpoint`, `MurFondable`, `StalactitePiege`, `PouvoirChaleurPickup`, and the `ElementRamassable` base.
+- **`Core/`** — global systems & scene-driven zones: `GameState`, `BackgroundManager`, `CameraZone`, `ZoneBoss` + `ZoneBossCerf`, `RegionTrigger`.
+- **`Entities/`** — in-world actors and interactables: `Player`, the `Boss` base + `BossCerf`, `Snowball`, `Checkpoint`, `MurFondable`, `StalactitePiege`, `PouvoirChaleurPickup`, and the `ElementRamassable` base.
 - **`Terrain/`** — `TerrainPeintre` (`Segment` record + `PeindreSegments`/`PeindreBandeSol`) and `TileSetFabrique`.
 - **`UI/`** — `Hud`, `BossHudBarre`, `EcranFin`.
