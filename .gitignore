@@ -24,6 +24,7 @@ obj/
 
 # Config IDE locale
 .idea/
+*.DotSettings.user
 
 # Journal de suivi personnel de la conversation - jamais committé
 SUIVI_CONVERSATION.md

@@ -255,7 +255,7 @@ public partial class BossCerf : Boss
 			if (_dejaToucheCeSouffle || body is not Player joueur)
 				return;
 			_dejaToucheCeSouffle = true;
-			joueur.SubirDegats(_direction, 2);
+			joueur.Blesser(_direction, DamageSource.SouffleGivre);
 		};
 
 		var tween = CreateTween();
@@ -276,7 +276,7 @@ public partial class BossCerf : Boss
 			return;
 
 		_dejaToucheCetteCharge = true;
-		joueur.SubirDegats(_direction);
+		joueur.Blesser(_direction, DamageSource.ChargeBoss);
 	}
 
 	private void DeclencherTransitionPhase2()

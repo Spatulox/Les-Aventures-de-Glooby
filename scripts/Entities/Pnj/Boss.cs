@@ -1,20 +1,13 @@
 using Godot;
 using System.Collections.Generic;
 
-// Base commune à tous les boss (CharacterBody2D). Gère le générique — PV, signaux,
-// encaissement des dégâts, séquence de mort et chargement d'animations par dossier —
-// via des hooks. L'IA concrète, les patterns et le contenu (animations, nombres de
-// PV/dégâts) sont fournis par chaque sous-classe (ex. BossCerf).
-public abstract partial class Boss : CharacterBody2D, Damageable
+// Base commune à tous les boss : une LivingEntity animée (AnimatedSprite2D) qui charge
+// ses animations par dossier et joue une séquence de mort animée. Les PV, l'encaissement
+// des dégâts et les aides de déplacement viennent de LivingEntity ; l'IA, les patterns et
+// le contenu (animations, nombres de PV/dégâts) sont fournis par chaque sous-classe
+// (ex. BossCerf) via ConstruireAnimations()/Initialiser().
+public abstract partial class Boss : LivingEntity
 {
-	[Signal] public delegate void PvChangesEventHandler(int pv, int pvMax);
-	[Signal] public delegate void VaincuEventHandler();
-
-	[Export] public int PvMax = 1;
-
-	public int Pv { get; protected set; }
-	public bool EstVaincu { get; private set; }
-
 	protected AnimatedSprite2D Sprite;
 
 	public override void _Ready()
@@ -23,39 +16,6 @@ public abstract partial class Boss : CharacterBody2D, Damageable
 		Sprite.SpriteFrames = ConstruireAnimations();
 		Pv = PvMax;
 		Initialiser();
-	}
-
-	// (Re)définit les PV max et remet le boss à pleine vie. Sert à une ZoneBoss qui
-	// arme le combat à l'entrée du joueur ; émet PvChanges pour rafraîchir la barre.
-	public void DefinirPvMax(int pvMax)
-	{
-		PvMax = Mathf.Max(1, pvMax);
-		Pv = PvMax;
-		EmitSignal(SignalName.PvChanges, Pv, PvMax);
-	}
-
-	// Implémentation de Damageable : traduit la source en montant de dégâts.
-	public void TakeDamage(DamageSource source) => SubirDegats(source.MontantDegats());
-
-	// Un boss vaincu n'encaisse plus aucun dégât, quelle qu'en soit la source.
-	public bool IsInvincibleToDamage(DamageSource source) => EstVaincu;
-
-	public void SubirDegats(int quantite)
-	{
-		if (EstVaincu)
-			return;
-
-		int total = Mathf.Max(0, AjusterDegats(quantite));
-		Pv = Mathf.Max(0, Pv - total);
-		EmitSignal(SignalName.PvChanges, Pv, PvMax);
-
-		if (Pv <= 0)
-		{
-			Mourir();
-			return;
-		}
-
-		ApresDegats(total);
 	}
 
 	// Hook d'init des sous-classes (récupération de nœuds, RNG, état/anim de départ...).
@@ -67,23 +27,15 @@ public abstract partial class Boss : CharacterBody2D, Damageable
 	// Nom de l'animation jouée à la mort (surchargeable).
 	protected virtual string AnimationMort => "vaincu";
 
-	// Modifie les dégâts encaissés (ex. ×N en état vulnérable). Par défaut, aucun bonus.
-	protected virtual int AjusterDegats(int brut) => brut;
-
-	// Réaction après un coup non fatal (ex. transition de phase). Par défaut, rien.
-	protected virtual void ApresDegats(int degats) { }
-
-	// Séquence de mort générique : fige le boss, joue l'anim de mort, coupe la
-	// physique et la collision, puis signale la défaite.
-	protected virtual void Mourir()
+	// Séquence de mort animée : joue l'anim de mort, coupe la physique et la collision,
+	// puis délègue à la base (marque vaincu, stoppe et émet Vaincu).
+	protected override void Mourir()
 	{
-		EstVaincu = true;
-		Velocity = Vector2.Zero;
 		Sprite.Play(AnimationMort);
 		SetPhysicsProcess(false);
 		GetNodeOrNull<CollisionShape2D>("CollisionShape2D")?
 			.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-		EmitSignal(SignalName.Vaincu);
+		base.Mourir();
 	}
 
 	// Helper générique : ajoute à un SpriteFrames une animation depuis un dossier de
