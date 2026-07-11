@@ -56,7 +56,12 @@ tscn puis débranché (racine sans script) → **code mort au runtime**.
 
 Passage manuel `godot` (F5) recommandé — non réalisable en headless — pour valider :
 l'apparition (spawn) du boss à l'entrée de l'arène, la barre qui s'affiche/se vide,
-la défaite qui enchaîne sur `ecran_fin.tscn`, et l'usage des poissons.
+le piétinement qui fait tomber des stalactites, la défaite qui enchaîne sur
+`ecran_fin.tscn`, et l'usage des poissons.
 
-Bug préexistant laissé tel quel : les 6 stalactites de l'arène ne sont pas dans le
-groupe `stalactites_boss`, donc le piétinement ne déclenche rien.
+## 3. Correction : piétinement du boss (stalactites)
+
+Bug préexistant corrigé : les 6 stalactites de l'arène (`@Area2D@45`→`@50` dans
+`monde.tscn`) sont désormais assignées au groupe `stalactites_boss`, que
+`BossCerf.DeclencherStalactites` interroge — le piétinement fait donc tomber des
+stalactites (la 7ᵉ stalactite hors arène reste hors groupe).

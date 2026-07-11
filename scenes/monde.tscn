@@ -841,26 +841,32 @@ script = ExtResource("63_kdph4")
 IdCheckpoint = "chemin1_campement_avant_boss"
 
 [node name="@Area2D@45" type="Area2D" parent="." unique_id=1896869718 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(6496, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@46" type="Area2D" parent="." unique_id=95593365 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(6752, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@47" type="Area2D" parent="." unique_id=2113151224 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7008, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@48" type="Area2D" parent="." unique_id=1780708977 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7264, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@49" type="Area2D" parent="." unique_id=1057027535 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7520, 720)
 script = ExtResource("70_jtdoi")
 
 [node name="@Area2D@50" type="Area2D" parent="." unique_id=783156928 instance=ExtResource("69_g0owe")]
+groups = ["stalactites_boss"]
 position = Vector2(7776, 720)
 script = ExtResource("70_jtdoi")
 
