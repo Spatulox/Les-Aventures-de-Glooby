@@ -50,9 +50,6 @@ public partial class Snowball : Area2D
 		_impact = true;
 		SetPhysicsProcess(false);
 
-		var tween = CreateTween();
-		tween.TweenProperty(this, "scale", Scale * 1.6f, 0.12f);
-		tween.Parallel().TweenProperty(this, "modulate:a", 0f, 0.12f);
-		tween.TweenCallback(Callable.From(QueueFree));
+		Effets.Disparaitre(this, Scale * 1.6f, 0.12f);
 	}
 }

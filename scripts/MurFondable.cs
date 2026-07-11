@@ -23,10 +23,8 @@ public partial class MurFondable : StaticBody2D
 		var collision = GetNode<CollisionShape2D>("CollisionShape2D");
 		collision.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 
+		// Anime le sprite (fondu + affaissement vertical) mais libère le mur entier.
 		var sprite = GetNode<Sprite2D>("Sprite2D");
-		var tween = CreateTween();
-		tween.TweenProperty(sprite, "modulate:a", 0f, 0.6f);
-		tween.Parallel().TweenProperty(sprite, "scale:y", sprite.Scale.Y * 0.7f, 0.6f);
-		tween.TweenCallback(Callable.From(QueueFree));
+		Effets.Disparaitre(sprite, new Vector2(sprite.Scale.X, sprite.Scale.Y * 0.7f), 0.6f, this);
 	}
 }

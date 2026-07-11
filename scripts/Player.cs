@@ -219,9 +219,7 @@ public partial class Player : CharacterBody2D
 		if (GameState.Instance == null || !GameState.Instance.ManagerPoisson())
 			return;
 
-		var tween = CreateTween();
-		tween.TweenProperty(_sprite, "modulate", new Color(0.6f, 1f, 0.6f), 0.08f);
-		tween.TweenProperty(_sprite, "modulate", Colors.White, 0.25f);
+		Effets.FlashCouleur(_sprite, new Color(0.6f, 1f, 0.6f), 0.08f, 0.25f);
 	}
 
 	// Pouvoir de Chaleur : aura courte portée qui fait fondre les murs de
@@ -248,9 +246,7 @@ public partial class Player : CharacterBody2D
 				mur.Melt();
 		}
 
-		var tween = CreateTween();
-		tween.TweenProperty(_sprite, "modulate", new Color(1f, 0.7f, 0.3f), 0.1f);
-		tween.TweenProperty(_sprite, "modulate", Colors.White, 0.3f);
+		Effets.FlashCouleur(_sprite, new Color(1f, 0.7f, 0.3f), 0.1f, 0.3f);
 	}
 
 	private void DemarrerGlissade()
