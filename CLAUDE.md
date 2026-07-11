@@ -47,7 +47,7 @@ There is **no test framework and no lint step**. Verification is done by compili
 
 There is **one gameplay scene: `scenes/monde.tscn`** (set as `run/main_scene`). The entire level lives in it — there is no scene reload during play (only the final victory → `ecran_fin.tscn`). This was a deliberate refactor away from 7 separate reloaded scenes.
 
-`scripts/Monde.cs` (`_Ready`) assembles everything:
+`scripts/Core/Monde.cs` (`_Ready`) assembles everything:
 - One shared `TileMapLayer` named `Terrain`, whose `TileSet` is built in code by `TileSetFabrique.CreerMonde()`.
 - Each **room ("Salle") is painted at a tile offset (`Decalage`)** into that same layer — offsets are the `DecalageXxx` constants at the top of `Monde.cs`. Rooms do not overlap because of these offsets.
 - **`CameraZone` (Area2D) regions** adjust the player `Camera2D` limits on room entry. Camera limits are per-zone, and the player's fall-death threshold (`SeuilChuteVide`) is **relative to the active zone**, not an absolute Y — a single global threshold would misfire in deep rooms.
@@ -60,12 +60,12 @@ Terrain within a room is described declaratively (see `SalleDepart.Segments`) an
 
 ### TileSets built in code
 
-`TileSetFabrique.cs` builds `TileSet` resources programmatically from PixelLab 4×4 Wang tile sheets (32×32 tiles) instead of hand-authored `.tres` files. Sources are registered by a string key via `tileSet.SetMeta("banquise_plein", sourceId)` and looked up by rooms. Custom data layers `is_ice` and `is_fragile` drive gameplay (sliding, breakable ice); collision polygons are added per tile. **A source must be added to the TileSet before creating its tiles**, or custom-data layers won't exist yet on the `TileData`.
+`scripts/Terrain/TileSetFabrique.cs` builds `TileSet` resources programmatically from PixelLab 4×4 Wang tile sheets (32×32 tiles) instead of hand-authored `.tres` files. Sources are registered by a string key via `tileSet.SetMeta("banquise_plein", sourceId)` and looked up by rooms. Custom data layers `is_ice` and `is_fragile` drive gameplay (sliding, breakable ice); collision polygons are added per tile. **A source must be added to the TileSet before creating its tiles**, or custom-data layers won't exist yet on the `TileData`.
 
 ### Global state & autoloads
 
 Two autoloads (`project.godot [autoload]`):
-- **`GameState`** (`scripts/GameState.cs`) — singleton via `GameState.Instance`. Holds PV, poissons, progression flags (`PouvoirChaleurActif`), melted-wall / collected-fish id sets, and checkpoint position. Communicates outward through `[Signal]` events (`PvChanges`, `JoueurMort`, `CheckpointActif`, …). Since the world never reloads, respawn = teleport the player to `CheckpointPosition`, not a scene change.
+- **`GameState`** (`scripts/Core/GameState.cs`) — singleton via `GameState.Instance`. Holds PV, poissons, progression flags (`PouvoirChaleurActif`), melted-wall / collected-fish id sets, and checkpoint position. Communicates outward through `[Signal]` events (`PvChanges`, `JoueurMort`, `CheckpointActif`, …). Since the world never reloads, respawn = teleport the player to `CheckpointPosition`, not a scene change.
 - **`Hud`** (`scenes/hud.tscn`) — persistent HUD (hearts, fish counter), subscribes to `GameState` signals.
 
 **Input actions are registered in code** in `GameState.ConfigurerActionsParDefaut()` (move_left/right, jump, slide, lancer, manger, pouvoir_chaleur) — *not* in `project.godot`. Change key bindings there.
@@ -74,9 +74,17 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 
 ### Player & Boss
 
-- **`Player.cs`** (`CharacterBody2D`) — timer-based controller: coyote time + jump buffer, accelerated slide (faster on `is_ice`), snowball throw, short post-hit invincibility, fragile-tile break delay, relative fall-death safety net. Tunables are `[Export]` fields at the top.
-- **`BossCerf.cs`** — explicit state machine (`enum Etat`: Intro/Idle/Telegraphe/Charge/Etourdi/Pietinement/SouffleGivre/Vaincu; `enum Pattern`). Two phases (transition at 50% HP), charge is dodgeable and stuns the boss (×3 damage window) into a wall. Piétinement and Souffle de Givre **reuse the idle/charge animations** (budget economy) — only the gameplay result is new. HP/damage numbers (`PvMax=40`, etc.) are unvalidated placeholders pending a real play-test (`DECISIONS.md`).
+- **`Player.cs`** (`scripts/Entities/`, `CharacterBody2D`) — timer-based controller: coyote time + jump buffer, accelerated slide (faster on `is_ice`), snowball throw, short post-hit invincibility, fragile-tile break delay, relative fall-death safety net. Tunables are `[Export]` fields at the top.
+- **`BossCerf.cs`** (`scripts/Entities/`) — explicit state machine (`enum Etat`: Intro/Idle/Telegraphe/Charge/Etourdi/Pietinement/SouffleGivre/Vaincu; `enum Pattern`). Two phases (transition at 50% HP), charge is dodgeable and stuns the boss (×3 damage window) into a wall. Piétinement and Souffle de Givre **reuse the idle/charge animations** (budget economy) — only the gameplay result is new. HP/damage numbers (`PvMax=40`, etc.) are unvalidated placeholders pending a real play-test (`DECISIONS.md`).
 
 ## Assets layout
 
-`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `boss_cerf/`, `ui/`). `scenes/` holds reusable `.tscn` (player, boule_de_neige, poisson, checkpoint_peche, mur_fondable, stalactite_piege, pickups…). `scripts/` holds all C#. `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `boss_cerf/`, `ui/`). `scenes/` holds reusable `.tscn` (player, boule_de_neige, poisson, checkpoint_peche, mur_fondable, stalactite_piege, pickups…). `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+
+`scripts/` is organized by role — put new C# in the matching folder (namespaces are not used; classes are global, so a file's folder is purely for humans):
+- **`Common/`** — shared, reusable helpers with no gameplay identity of their own: `Constantes` (`TailleTuile`), `Outils` (`Attacher`, `Instancier`, `AjouterDecor`, `PlacerFondRepete`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `DeclencheurZone`.
+- **`Core/`** — world assembly & global systems: `Monde`, `GameState`, `BackgroundManager`, `CameraZone`, `RegionTrigger`.
+- **`Entities/`** — in-world actors and interactables: `Player`, `BossCerf`, `Poisson`, `Snowball`, `Checkpoint`, `MurFondable`, `StalactitePiege`, `PouvoirChaleurPickup`, and the `ElementRamassable` base.
+- **`Rooms/`** — one `SalleXxx` static builder per room (see below).
+- **`Terrain/`** — `TerrainPeintre` (`Segment` record + `PeindreSegments`/`PeindreBandeSol`) and `TileSetFabrique`.
+- **`UI/`** — `Hud`, `BossHudBarre`, `EcranFin`.
