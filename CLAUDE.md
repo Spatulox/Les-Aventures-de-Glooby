@@ -10,7 +10,7 @@ Pixel-art assets are generated with **PixelLab** under a per-mission generation 
 
 ## Coding conventions (required)
 
-- Code must be **as reusable as possible** — favor shared helpers over duplication: `Constantes` (`TailleTuile`), `Outils` (`Attacher`, `Instancier`, `AjouterDecor`, `PlacerFondRepete`), `TerrainPeintre` (`Segment` record + `PeindreSegments`/`PeindreBandeSol`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `TileSetFabrique`, and the `ElementRamassable` base for contact pickups. `GameState.EstConsomme/MarquerConsomme` is the generic persistent-element store.
+- Code must be **as reusable as possible** — favor shared helpers over duplication: `Constantes` (`TailleTuile`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), and the `ElementRamassable` base for contact pickups. `GameState.EstConsomme/MarquerConsomme` is the generic persistent-element store.
 - Code must be **visually readable by a human** — clear French naming, sensible structure.
 - **Every class must have a class-level comment** (describing its purpose), as is already the case throughout `scripts/`.
 
@@ -50,7 +50,7 @@ There is **one gameplay scene: `scenes/monde.tscn`** (set as `run/main_scene`). 
 **The whole map is authored directly in `scenes/monde.tscn`** (edited by hand in the Godot editor): the `Terrain` `TileMapLayer` and its baked tiles, all props/entities, the `CameraZone` regions, the boss, checkpoints, backgrounds. There is **no runtime world-assembly script** — the scene root has no build script; to add/move content, edit `monde.tscn` in the editor.
 
 Key pieces of the scene:
-- One shared `TileMapLayer` named `Terrain`, whose `TileSet` is built in code by `TileSetFabrique.CreerMonde()` (see below); tiles were painted into it and saved.
+- One shared `TileMapLayer` named `Terrain`, whose `TileSet` is baked into `monde.tscn` (it was once built in code by `TileSetFabrique`, since unplugged — see below); tiles were painted into it and saved.
 - **`CameraZone` (Area2D) regions** adjust the player `Camera2D` limits on room entry. Camera limits are per-zone, and the player's fall-death threshold (`SeuilChuteVide`) is **relative to the active zone**, not an absolute Y — a single global threshold would misfire in deep rooms.
 - **`ZoneBoss` (Area2D)** covers a boss arena and reveals the boss HP bar / arms the boss on player entry (see Player & Boss).
 
@@ -58,7 +58,7 @@ Key pieces of the scene:
 
 ### TileSets built in code
 
-`scripts/Terrain/TileSetFabrique.cs` builds the `Terrain` `TileSet` programmatically from PixelLab 4×4 Wang tile sheets (32×32 tiles) instead of hand-authored `.tres` files. Sources are registered by a string key via `tileSet.SetMeta("banquise_plein", sourceId)`. Custom data layers `is_ice` and `is_fragile` drive gameplay (sliding, breakable ice); collision polygons are added per tile. **A source must be added to the TileSet before creating its tiles**, or custom-data layers won't exist yet on the `TileData`.
+`scripts/Terrain/TileSetFabrique.cs` once built the `Terrain` `TileSet` programmatically from PixelLab 4×4 Wang tile sheets (32×32 tiles) instead of hand-authored `.tres` files; that `TileSet` is now baked into `monde.tscn` and the builder was unplugged, so the file is reduced to the two custom-data-layer key names (`is_ice`, `is_fragile`) still read by `Player.cs` to drive gameplay (sliding, breakable ice).
 
 ### Global state & autoloads
 
@@ -72,20 +72,21 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 
 ### Player & Boss
 
-- **`Player.cs`** (`scripts/Entities/`, `CharacterBody2D`) — timer-based controller: coyote time + jump buffer, accelerated slide (faster on `is_ice`), snowball throw, short post-hit invincibility, fragile-tile break delay, relative fall-death safety net. Tunables are `[Export]` fields at the top.
+- **`Player.cs`** (`scripts/Entities/Player/`, `CharacterBody2D`) — timer-based controller: coyote time + jump buffer, accelerated slide (faster on `is_ice`), snowball throw, short post-hit invincibility, fragile-tile break delay, relative fall-death safety net. Tunables are `[Export]` fields at the top.
 **Boss OO hierarchy.** Bosses split generic scaffolding from per-boss content, and each boss has its own arena zone:
-- **`Boss.cs`** (`scripts/Entities/`, abstract `CharacterBody2D`) — the reusable base: holds `PvMax`/`Pv`/`EstVaincu`, the `PvChanges`/`Vaincu` signals, `SubirDegats` (with `AjusterDegats`/`ApresDegats` hooks), the death sequence `Mourir()` (plays `AnimationMort`, stops physics/collision, emits `Vaincu`), `DefinirPvMax`, and the generic `AjouterAnimation(...)` folder-loader. Subclasses supply `ConstruireAnimations()` + `Initialiser()` and their own AI; **nothing boss-specific lives here**.
+- **`Boss.cs`** (`scripts/Entities/Pnj/`, abstract `CharacterBody2D`) — the reusable base: holds `PvMax`/`Pv`/`EstVaincu`, the `PvChanges`/`Vaincu` signals, `SubirDegats` (with `AjusterDegats`/`ApresDegats` hooks), the death sequence `Mourir()` (plays `AnimationMort`, stops physics/collision, emits `Vaincu`), `DefinirPvMax`, and the generic `AjouterAnimation(...)` folder-loader. Subclasses supply `ConstruireAnimations()` + `Initialiser()` and their own AI; **nothing boss-specific lives here**.
 - **`BossCerf.cs`** (`: Boss`) — only Cerf specifics: `enum Etat`/`Pattern` state machine (`_PhysicsProcess`), two phases (transition at 50% HP), dodgeable charge that stuns the boss (`AjusterDegats` ×3 window) into a wall, piétinement (stalactites) + souffle de givre (which **reuse the idle/charge animations** for budget), and the tuning exports. HP/damage numbers (`PvMax=40`, etc.) are unvalidated placeholders (`DECISIONS.md`).
 - **`ZoneBoss.cs`** (`scripts/Core/`, extends `DeclencheurZone`) — reusable, **inheritable** arena trigger. On player entry it **spawns the boss** (`SceneBoss` at `PositionApparition`, a sibling of the zone), links & reveals its HP bar (`BossHudBarre.Lier` then `Afficher`), arms its PV (`PvBoss`), and plays music (`Musique`, currently no assets). Hooks: `ConfigurerBoss(boss)` (before `AddChild`) and `DemarrerCombat(joueur)`. `[Export]`: `SceneBoss`, `NomBoss`, `PositionApparition`, `CheminBarre`, `PvBoss`, `Musique`.
 - **`ZoneBossCerf.cs`** (`: ZoneBoss`) — Cerf arena: sets the boss's charge bounds (`LimiteGauche/Droite`) and, on `Vaincu`, transitions to `ecran_fin.tscn`. In `monde.tscn` the boss is **not placed statically** — the `ZoneBossCerf` node spawns it; `BossHudBarre` starts hidden and is bound at spawn.
 
 ## Assets layout
 
-`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `boss_cerf/`, `ui/`). `scenes/` holds reusable `.tscn` (player, boule_de_neige, checkpoint_peche, mur_fondable, stalactite_piege, pickups…). `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `pnj/boss_cerf/`, `ui/`) — PNJ art (bosses) lives under `pnj/`. `scenes/` holds reusable `.tscn` (player, boule_de_neige, checkpoint_peche, mur_fondable, stalactite_piege, pickups…). `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
 
 `scripts/` is organized by role — put new C# in the matching folder (namespaces are not used; classes are global, so a file's folder is purely for humans):
-- **`Common/`** — shared, reusable helpers with no gameplay identity of their own: `Constantes` (`TailleTuile`), `Outils` (`Attacher`, `Instancier`, `AjouterDecor`, `PlacerFondRepete`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `DeclencheurZone`.
+- **`Common/`** — shared, reusable helpers with no gameplay identity of their own: `Constantes` (`TailleTuile`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `DeclencheurZone`, the `DamageSource` enum (+ `MontantDegats` per source) and the `Damageable` interface (`TakeDamage`/`IsInvincibleToDamage`).
 - **`Core/`** — global systems & scene-driven zones: `GameState`, `BackgroundManager`, `CameraZone`, `ZoneBoss` + `ZoneBossCerf`, `RegionTrigger`.
-- **`Entities/`** — in-world actors and interactables: `Player`, the `Boss` base + `BossCerf`, `Snowball`, `Checkpoint`, `MurFondable`, `StalactitePiege`, `PouvoirChaleurPickup`, and the `ElementRamassable` base.
-- **`Terrain/`** — `TerrainPeintre` (`Segment` record + `PeindreSegments`/`PeindreBandeSol`) and `TileSetFabrique`.
-- **`UI/`** — `Hud`, `BossHudBarre`, `EcranFin`.
+- **`Entities/`** — in-world actors and interactables, split by role into subfolders: `Pnj/` (the `Boss` base + `BossCerf`), `Player/` (`Player` and its powers `Snowball`, `PouvoirChaleurPickup`), `Interactable/` (`MurFondable`, `StalactitePiege`), and `Misc/` (`Checkpoint`, the `ElementRamassable` base). `Boss` and `Player` implement `Damageable`.
+- **`Plateformes/`** — platform behaviours: `PlateformeFixe`, `PlateformeMobile`, `PlateformeGlissante`, `PlateformeFragile`, `PlateformeUnidirectionnelle`.
+- **`Terrain/`** — `TileSetFabrique` (now just the baked TileSet's custom-data-layer key names).
+- **`UI/`** — `Hud`, `BossHudBarre`, `EcranFin`, and the menus `MenuPrincipal` + `MenuPause` built via the shared `MenuFabrique`.
