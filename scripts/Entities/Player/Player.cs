@@ -197,17 +197,13 @@ public partial class Player : LivingEntity
 
 	// Encaisse un coup d'une source avec recul directionnel (boss, pièges comme les
 	// stalactites...). Le montant vient de la source : toute forme de dégât = DamageSource.
-	public void Blesser(int direction, DamageSource source) => Encaisser(source.MontantDegats(), direction);
-
-	// Filet de sécurité si le pipeline générique en PV entiers est emprunté (recul neutre).
-	public override void SubirDegats(int quantite) => Encaisser(quantite, 0);
-
-	private void Encaisser(int quantite, int direction)
+	// Les PV du joueur vivent dans GameState (persistants, HUD, respawn).
+	public void Blesser(int direction, DamageSource source)
 	{
 		if (EstInvincible)
 			return;
 
-		GameState.Instance?.Degats(quantite);
+		GameState.Instance?.Degats(source.MontantDegats());
 		_enDegats = true;
 		_degatsTimer = DegatsDuree;
 		_invincibiliteTimer = InvincibiliteDuree;

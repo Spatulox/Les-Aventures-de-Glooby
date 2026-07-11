@@ -40,20 +40,17 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 	}
 
-	// Damageable : traduit la source en montant de dégâts. Surchargeable (ex. le
-	// joueur route vers GameState avec un recul).
-	public virtual void TakeDamage(DamageSource source) => SubirDegats(source.MontantDegats());
-
 	// Insensible aux dégâts une fois vaincue. Surchargeable (ex. invincibilité du joueur).
 	public virtual bool IsInvincibleToDamage(DamageSource source) => EstVaincu;
 
-	// Encaisse des dégâts : applique les hooks, met à jour les PV, déclenche la mort.
-	public virtual void SubirDegats(int quantite)
+	// Damageable : unique point d'encaissement. Applique les hooks, met à jour les PV et
+	// déclenche la mort. Surchargeable (ex. le joueur route vers GameState avec un recul).
+	public virtual void TakeDamage(DamageSource source)
 	{
 		if (EstVaincu)
 			return;
 
-		int total = Mathf.Max(0, AjusterDegats(quantite));
+		int total = Mathf.Max(0, AjusterDegats(source.MontantDegats()));
 		Pv = Mathf.Max(0, Pv - total);
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 

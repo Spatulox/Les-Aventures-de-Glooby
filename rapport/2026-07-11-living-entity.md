@@ -38,18 +38,17 @@ Mutualisation d'un socle entre le joueur et les boss (et tout futur PNJ).
 
 - Nouvelle classe abstraite `scripts/Entities/LivingEntity.cs` (`: CharacterBody2D, Damageable`) :
   - **PV** : `Pv`/`PvMax`/`EstVaincu`, signaux `PvChanges`/`Vaincu`, `DefinirPvMax`.
-  - **Dégâts** (`Damageable`) : `TakeDamage`, `SubirDegats(int)` + hooks `AjusterDegats`/
-    `ApresDegats`/`Mourir`.
+  - **Dégâts** (`Damageable`) : unique entrée `TakeDamage(DamageSource)` + hooks
+    `AjusterDegats`/`ApresDegats`/`Mourir`.
   - **Déplacement** : aides réutilisables `AppliquerGravite`, `AppliquerFriction`, `Sauter`
     (réglages `Gravity`/`MaxFallSpeed`/`Friction`/`JumpVelocity`).
 - `Boss` devient `: LivingEntity` — ne garde que la partie *animée* (chargement d'anims,
   mort animée qui surcharge `Mourir`). Tout le générique PV/dégâts est remonté dans la base.
 - `Player` devient `: LivingEntity` — utilise les aides de déplacement. Ses PV restent
-  dans `GameState` (persistants, HUD, respawn) : il **surcharge** `SubirDegats(int)` (route
-  vers `GameState`) et `IsInvincibleToDamage` (invincibilité post-coup). Son ancien
-  `SubirDegats(int direction, int quantite)` est renommé **`Blesser`** (évite la collision
-  de signature avec le pipeline générique) ; appelants mis à jour dans `BossCerf` (×2) et
-  `StalactitePiege` (×1).
+  dans `GameState` (persistants, HUD, respawn) : il **surcharge** `TakeDamage(DamageSource)`
+  (route vers `GameState`) et `IsInvincibleToDamage` (invincibilité post-coup). Le point
+  d'entrée directionnel `Blesser(int direction, DamageSource source)` porte le recul ;
+  appelants mis à jour dans `BossCerf` (×2) et `StalactitePiege` (×1).
 - `CLAUDE.md` mis à jour (section « LivingEntity, Player & Boss » + layout `Entities/`).
 - `ZoneBoss`/`BossHudBarre`/`ZoneBossCerf` inchangés : ils accèdent aux membres PV via le
   type `Boss`, désormais hérités de `LivingEntity`.
