@@ -2,30 +2,17 @@ using Godot;
 
 // Poisson ramassable : monnaie + consommable de soin (mangé via GameState.ManagerPoisson).
 // Disparaît définitivement une fois ramassé (état persistant dans GameState).
-public partial class Poisson : Area2D
+public partial class Poisson : ElementRamassable
 {
 	[Export] public string IdPoisson = "";
 
-	public override void _Ready()
+	protected override void Initialiser()
 	{
 		if (string.IsNullOrEmpty(IdPoisson))
 			IdPoisson = GetPath().ToString();
-
-		if (GameState.Instance.EstPoissonRamasse(IdPoisson))
-		{
-			QueueFree();
-			return;
-		}
-
-		BodyEntered += OnBodyEntered;
 	}
 
-	private void OnBodyEntered(Node2D body)
-	{
-		if (body is not Player)
-			return;
+	protected override bool EstDejaConsomme() => GameState.Instance.EstPoissonRamasse(IdPoisson);
 
-		GameState.Instance.RamasserPoisson(IdPoisson);
-		QueueFree();
-	}
+	protected override void Ramasser() => GameState.Instance.RamasserPoisson(IdPoisson);
 }

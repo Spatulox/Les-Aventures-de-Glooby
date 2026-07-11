@@ -6,8 +6,10 @@ public partial class GameState : Node
 {
 	public static GameState Instance { get; private set; }
 
-	private readonly HashSet<string> _mursFondus = new();
-	private readonly HashSet<string> _poissonsRamasses = new();
+	// Ensemble unique des éléments persistants déjà consommés (murs fondus,
+	// poissons ramassés...). Les identifiants doivent être uniques à travers
+	// tout le jeu (préfixés par salle/type) pour ne pas se télescoper.
+	private readonly HashSet<string> _elementsConsommes = new();
 
 	[Signal]
 	public delegate void PoissonsChangesEventHandler(int total);
@@ -94,18 +96,24 @@ public partial class GameState : Node
 		EmitSignal(SignalName.PouvoirChaleurObtenu);
 	}
 
-	public bool EstMurFondu(string idMur) => _mursFondus.Contains(idMur);
+	// API générique des éléments persistants (un seul ensemble de stockage).
+	public bool EstConsomme(string id) => _elementsConsommes.Contains(id);
 
-	public void MarquerMurFondu(string idMur) => _mursFondus.Add(idMur);
+	public void MarquerConsomme(string id) => _elementsConsommes.Add(id);
 
-	public bool EstPoissonRamasse(string idPoisson) => _poissonsRamasses.Contains(idPoisson);
+	// Wrappers nommés : gardent des appels métier lisibles côté nœuds.
+	public bool EstMurFondu(string idMur) => EstConsomme(idMur);
+
+	public void MarquerMurFondu(string idMur) => MarquerConsomme(idMur);
+
+	public bool EstPoissonRamasse(string idPoisson) => EstConsomme(idPoisson);
 
 	public void RamasserPoisson(string idPoisson)
 	{
-		if (_poissonsRamasses.Contains(idPoisson))
+		if (EstConsomme(idPoisson))
 			return;
 
-		_poissonsRamasses.Add(idPoisson);
+		MarquerConsomme(idPoisson);
 		AjouterPoissons(1);
 	}
 

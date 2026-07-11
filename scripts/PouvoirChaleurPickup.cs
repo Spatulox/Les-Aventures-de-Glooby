@@ -2,29 +2,11 @@ using Godot;
 
 // Pickup du Pouvoir de Chaleur : léger mouvement de flottaison procédural
 // (pas de nouvelle génération pour l'ambiance de la salle).
-public partial class PouvoirChaleurPickup : Area2D
+public partial class PouvoirChaleurPickup : ElementRamassable
 {
-	public override void _Ready()
-	{
-		if (GameState.Instance.PouvoirChaleurActif)
-		{
-			QueueFree();
-			return;
-		}
+	protected override bool EstDejaConsomme() => GameState.Instance.PouvoirChaleurActif;
 
-		BodyEntered += OnBodyEntered;
+	protected override void PreparerVisuel() => Effets.Flottaison(this, 6f, 0.8f);
 
-		var tween = CreateTween().SetLoops();
-		tween.TweenProperty(this, "position:y", Position.Y - 6f, 0.8f).SetTrans(Tween.TransitionType.Sine);
-		tween.TweenProperty(this, "position:y", Position.Y + 6f, 0.8f).SetTrans(Tween.TransitionType.Sine);
-	}
-
-	private void OnBodyEntered(Node2D body)
-	{
-		if (body is not Player)
-			return;
-
-		GameState.Instance.ObtenirPouvoirChaleur();
-		QueueFree();
-	}
+	protected override void Ramasser() => GameState.Instance.ObtenirPouvoirChaleur();
 }
