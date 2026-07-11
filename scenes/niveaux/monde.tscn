@@ -1,9 +1,12 @@
-[gd_scene load_steps=16 format=3 uid="uid://67grwk8edwci"]
+[gd_scene load_steps=20 format=3 uid="uid://67grwk8edwci"]
 
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
-[ext_resource type="Texture2D" uid="uid://c08u2sqvuxlol" path="res://assets/backgrounds/fond_aurore_banquise.png" id="bg_banquise"]
-[ext_resource type="Texture2D" uid="uid://dh8td684cemsc" path="res://assets/backgrounds/fond_grotte.png" id="bg_grotte"]
-[ext_resource type="Texture2D" uid="uid://bh13ttbdmnjjf" path="res://assets/backgrounds/fond_crevasse.png" id="bg_crevasse"]
+[ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
+[ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
+[ext_resource type="PackedScene" path="res://scenes/decors/FondGrotte.tscn" id="fond_grotte"]
+[ext_resource type="PackedScene" path="res://scenes/decors/DecorGrotte.tscn" id="decor_grotte"]
+[ext_resource type="PackedScene" path="res://scenes/decors/props/StalactiteDecor.tscn" id="stalactite"]
+[ext_resource type="PackedScene" path="res://scenes/core/region_trigger.tscn" id="region_trigger"]
 [ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="sol"]
 [ext_resource type="PackedScene" path="res://scenes/decors/igloo.tscn" id="igloo"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/Rocher.tscn" id="rocher"]
@@ -18,135 +21,212 @@
 [sub_resource type="RectangleShape2D" id="RectVillage"]
 size = Vector2(2560, 400)
 
+[sub_resource type="RectangleShape2D" id="RectGrotte"]
+size = Vector2(2560, 400)
+
 [node name="Monde" type="Node2D"]
 
 [node name="Fonds" type="Node2D" parent="."]
 script = ExtResource("bgmgr")
 
-[node name="banquise" type="Parallax2D" parent="Fonds"]
-scroll_scale = Vector2(0.15, 0.05)
-repeat_size = Vector2(720, 0)
-repeat_times = 20
+[node name="village" type="Node2D" parent="Fonds"]
 
-[node name="Sprite2D" type="Sprite2D" parent="Fonds/banquise"]
-position = Vector2(0, 180)
-scale = Vector2(2, 2)
-texture = ExtResource("bg_banquise")
+[node name="FondBanquise" parent="Fonds/village" instance=ExtResource("fond_banquise")]
 
-[node name="grotte" type="Parallax2D" parent="Fonds"]
+[node name="DecorBanquise" parent="Fonds/village" instance=ExtResource("decor_banquise")]
+
+[node name="grotte" type="Node2D" parent="Fonds"]
 modulate = Color(1, 1, 1, 0)
-scroll_scale = Vector2(0.15, 0.05)
-repeat_size = Vector2(720, 0)
-repeat_times = 20
 
-[node name="Sprite2D" type="Sprite2D" parent="Fonds/grotte"]
-position = Vector2(0, 180)
-scale = Vector2(2, 2)
-texture = ExtResource("bg_grotte")
+[node name="FondGrotte" parent="Fonds/grotte" instance=ExtResource("fond_grotte")]
 
-[node name="crevasse" type="Parallax2D" parent="Fonds"]
-modulate = Color(1, 1, 1, 0)
-scroll_scale = Vector2(0.15, 0.05)
-repeat_size = Vector2(720, 0)
-repeat_times = 20
+[node name="DecorGrotte" parent="Fonds/grotte" instance=ExtResource("decor_grotte")]
 
-[node name="Sprite2D" type="Sprite2D" parent="Fonds/crevasse"]
-position = Vector2(0, 180)
-scale = Vector2(2, 2)
-texture = ExtResource("bg_crevasse")
+[node name="Village" type="Node2D" parent="."]
 
-[node name="Sol" type="Node2D" parent="."]
+[node name="Sol" type="Node2D" parent="Village"]
 
-[node name="Sol1" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol1" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(0, 315)
 
-[node name="Sol2" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol2" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(278, 315)
 
-[node name="Sol3" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol3" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(556, 315)
 
-[node name="Sol4" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol4" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(834, 315)
 
-[node name="Sol5" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol5" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(1112, 315)
 
-[node name="Sol6" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol6" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(1390, 315)
 
-[node name="Sol7" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol7" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(1668, 315)
 
-[node name="Sol8" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol8" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(1946, 315)
 
-[node name="Sol9" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol9" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(2224, 315)
 
-[node name="Sol10" parent="Sol" instance=ExtResource("sol")]
+[node name="Sol10" parent="Village/Sol" instance=ExtResource("sol")]
 position = Vector2(2502, 315)
 
-[node name="Decor" type="Node2D" parent="."]
+[node name="Decor" type="Node2D" parent="Village"]
 
-[node name="Igloo" parent="Decor" instance=ExtResource("igloo")]
+[node name="Igloo" parent="Village/Decor" instance=ExtResource("igloo")]
 position = Vector2(250, 268)
 
-[node name="Igloo2" parent="Decor" instance=ExtResource("igloo")]
+[node name="Igloo2" parent="Village/Decor" instance=ExtResource("igloo")]
 position = Vector2(750, 268)
 
-[node name="Igloo3" parent="Decor" instance=ExtResource("igloo")]
+[node name="Igloo3" parent="Village/Decor" instance=ExtResource("igloo")]
 position = Vector2(1300, 268)
 
-[node name="Igloo4" parent="Decor" instance=ExtResource("igloo")]
+[node name="Igloo4" parent="Village/Decor" instance=ExtResource("igloo")]
 position = Vector2(1850, 268)
 
-[node name="Igloo5" parent="Decor" instance=ExtResource("igloo")]
+[node name="Igloo5" parent="Village/Decor" instance=ExtResource("igloo")]
 position = Vector2(2350, 268)
 
-[node name="Rocher" parent="Decor" instance=ExtResource("rocher")]
+[node name="Rocher" parent="Village/Decor" instance=ExtResource("rocher")]
 position = Vector2(500, 252)
 
-[node name="Rocher2" parent="Decor" instance=ExtResource("rocher")]
+[node name="Rocher2" parent="Village/Decor" instance=ExtResource("rocher")]
 position = Vector2(1600, 252)
 
-[node name="CristalGros" parent="Decor" instance=ExtResource("cristalg")]
+[node name="CristalGros" parent="Village/Decor" instance=ExtResource("cristalg")]
 position = Vector2(980, 268)
 
-[node name="CristalGros2" parent="Decor" instance=ExtResource("cristalg")]
+[node name="CristalGros2" parent="Village/Decor" instance=ExtResource("cristalg")]
 position = Vector2(2200, 268)
 
-[node name="CristalPetit" parent="Decor" instance=ExtResource("cristalp")]
+[node name="CristalPetit" parent="Village/Decor" instance=ExtResource("cristalp")]
 position = Vector2(620, 284)
 
-[node name="CristalPetit2" parent="Decor" instance=ExtResource("cristalp")]
+[node name="CristalPetit2" parent="Village/Decor" instance=ExtResource("cristalp")]
 position = Vector2(1080, 284)
 
-[node name="CristalPetit3" parent="Decor" instance=ExtResource("cristalp")]
+[node name="CristalPetit3" parent="Village/Decor" instance=ExtResource("cristalp")]
 position = Vector2(2080, 284)
 
-[node name="FleurGivre" parent="Decor" instance=ExtResource("fleur")]
+[node name="FleurGivre" parent="Village/Decor" instance=ExtResource("fleur")]
 position = Vector2(360, 284)
 
-[node name="FleurGivre2" parent="Decor" instance=ExtResource("fleur")]
+[node name="FleurGivre2" parent="Village/Decor" instance=ExtResource("fleur")]
 position = Vector2(1500, 284)
 
-[node name="FleurGivre3" parent="Decor" instance=ExtResource("fleur")]
+[node name="FleurGivre3" parent="Village/Decor" instance=ExtResource("fleur")]
 position = Vector2(2420, 284)
 
-[node name="Interactifs" type="Node2D" parent="."]
+[node name="Interactifs" type="Node2D" parent="Village"]
 
-[node name="CheckpointVillage" parent="Interactifs" instance=ExtResource("checkpoint")]
+[node name="CheckpointVillage" parent="Village/Interactifs" instance=ExtResource("checkpoint")]
 position = Vector2(400, 284)
 IdCheckpoint = "village_depart"
 
-[node name="ZonesCamera" type="Node2D" parent="."]
+[node name="Camera" type="Node2D" parent="Village"]
 
-[node name="ZoneVillage" parent="ZonesCamera" instance=ExtResource("camzone")]
+[node name="ZoneVillage" parent="Village/Camera" instance=ExtResource("camzone")]
 position = Vector2(1280, 200)
 
-[node name="CollisionShape2D" parent="ZonesCamera/ZoneVillage" index="0"]
+[node name="CollisionShape2D" parent="Village/Camera/ZoneVillage" index="0"]
 shape = SubResource("RectVillage")
+
+[node name="Frontiere" type="Node2D" parent="Village"]
+
+[node name="VersVillage" parent="Village/Frontiere" instance=ExtResource("region_trigger")]
+position = Vector2(2500, 200)
+NomRegion = "village"
+
+[node name="Grotte" type="Node2D" parent="."]
+
+[node name="Sol" type="Node2D" parent="Grotte"]
+
+[node name="Sol1" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(2780, 315)
+
+[node name="Sol2" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(3058, 315)
+
+[node name="Sol3" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(3336, 315)
+
+[node name="Sol4" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(3614, 315)
+
+[node name="Sol5" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(3892, 315)
+
+[node name="Sol6" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(4170, 315)
+
+[node name="Sol7" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(4448, 315)
+
+[node name="Sol8" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(4726, 315)
+
+[node name="Sol9" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(5004, 315)
+
+[node name="Sol10" parent="Grotte/Sol" instance=ExtResource("sol")]
+position = Vector2(5282, 315)
+
+[node name="Decor" type="Node2D" parent="Grotte"]
+
+[node name="StalactiteDecor" parent="Grotte/Decor" instance=ExtResource("stalactite")]
+position = Vector2(2800, 60)
+
+[node name="StalactiteDecor2" parent="Grotte/Decor" instance=ExtResource("stalactite")]
+position = Vector2(3400, 55)
+
+[node name="StalactiteDecor3" parent="Grotte/Decor" instance=ExtResource("stalactite")]
+position = Vector2(4000, 65)
+
+[node name="StalactiteDecor4" parent="Grotte/Decor" instance=ExtResource("stalactite")]
+position = Vector2(4700, 55)
+
+[node name="CristalGros" parent="Grotte/Decor" instance=ExtResource("cristalg")]
+position = Vector2(3100, 268)
+
+[node name="CristalGros2" parent="Grotte/Decor" instance=ExtResource("cristalg")]
+position = Vector2(4300, 268)
+
+[node name="CristalPetit" parent="Grotte/Decor" instance=ExtResource("cristalp")]
+position = Vector2(3300, 284)
+
+[node name="CristalPetit2" parent="Grotte/Decor" instance=ExtResource("cristalp")]
+position = Vector2(3800, 284)
+
+[node name="CristalPetit3" parent="Grotte/Decor" instance=ExtResource("cristalp")]
+position = Vector2(4500, 284)
+
+[node name="Rocher" parent="Grotte/Decor" instance=ExtResource("rocher")]
+position = Vector2(3600, 252)
+
+[node name="Rocher2" parent="Grotte/Decor" instance=ExtResource("rocher")]
+position = Vector2(4900, 252)
+
+[node name="Interactifs" type="Node2D" parent="Grotte"]
+
+[node name="Camera" type="Node2D" parent="Grotte"]
+
+[node name="ZoneGrotte" parent="Grotte/Camera" instance=ExtResource("camzone")]
+position = Vector2(3840, 200)
+
+[node name="CollisionShape2D" parent="Grotte/Camera/ZoneGrotte" index="0"]
+shape = SubResource("RectGrotte")
+
+[node name="Frontiere" type="Node2D" parent="Grotte"]
+
+[node name="VersGrotte" parent="Grotte/Frontiere" instance=ExtResource("region_trigger")]
+position = Vector2(2620, 200)
+NomRegion = "grotte"
 
 [node name="Joueur" parent="." instance=ExtResource("player")]
 position = Vector2(120, 260)
