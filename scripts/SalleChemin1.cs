@@ -1,11 +1,10 @@
 using Godot;
+using static Constantes;
 
 // Chemin 1 : corridor principal, praticable immédiatement, mène à l'arène du
 // Boss Cerf. Checkpoint juste avant l'arène (mort = re-tentative immédiate).
 public static class SalleChemin1
 {
-	private const int TailleTuile = 32;
-
 	public const int Largeur = 27;
 
 	public static void Construire(TileMapLayer couche, TileSet tileSet, Node2D racine, Vector2I decalage)

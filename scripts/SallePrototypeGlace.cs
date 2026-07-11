@@ -1,4 +1,5 @@
 using Godot;
+using static Constantes;
 
 // Petite zone bonus reconstruite depuis un croquis fait avec l'éditeur visuel
 // pixellab.ai/maps (mur à échancrure, plateforme flottante, structure en L,
@@ -6,11 +7,7 @@ using Godot;
 // jusqu'ici qu'une impasse vide.
 public static class SallePrototypeGlace
 {
-	private const int TailleTuile = 32;
-
-	private record Segment(int ColDebut, int ColFin, int Rangee, string Source, int Profondeur);
-
-	private static readonly Segment[] Segments =
+	private static readonly TerrainPeintre.Segment[] Segments =
 	{
 		// Mur à échancrure (bonus discret en arrière, à gauche de l'arrivée).
 		new(0, 5, 2, "banquise_neige_pastel", 2),
@@ -34,11 +31,7 @@ public static class SallePrototypeGlace
 
 	public static void Construire(TileMapLayer couche, TileSet tileSet, Node2D racine, Vector2I decalage)
 	{
-		foreach (var segment in Segments)
-		{
-			int sourceId = (int)tileSet.GetMeta(segment.Source);
-			TerrainPeintre.PeindreBandeSol(couche, sourceId, segment.ColDebut + decalage.X, segment.ColFin + decalage.X, segment.Rangee + decalage.Y, segment.Profondeur);
-		}
+		TerrainPeintre.PeindreSegments(couche, tileSet, Segments, decalage);
 
 		var dec = new Vector2(decalage.X * TailleTuile, decalage.Y * TailleTuile);
 		Outils.AjouterDecor(racine, "res://assets/props/grotte/fleur_givre.png", new Vector2(4 * TailleTuile, 0 * TailleTuile - 10) + dec);

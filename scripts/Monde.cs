@@ -1,4 +1,5 @@
 using Godot;
+using static Constantes;
 
 // Générateur d'origine du monde continu (façon Hollow Knight) : peint chaque
 // salle à un décalage (en tuiles) dans un même TileMapLayer et crée les
@@ -9,7 +10,6 @@ using Godot;
 // recapturer, mais il ne tourne plus au lancement du jeu.
 public partial class Monde : Node2D
 {
-	private const int TailleTuile = 32;
 
 	// Décalages (colonnes, rangées) de chaque salle dans le monde partagé.
 	private static readonly Vector2I DecalageDepart = new(0, 0);

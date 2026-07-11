@@ -1,15 +1,12 @@
 using Godot;
+using static Constantes;
 
 // Chemin du Pouvoir : défi (stalactite-piège + couloir), escalade en escalier,
 // salle de récompense avec le pickup et un mur fondable bloquant un raccourci
 // visible dès l'entrée - inutilisable au premier passage.
 public static class SalleCheminPouvoir
 {
-	private const int TailleTuile = 32;
-
-	private record Segment(int ColDebut, int ColFin, int Rangee, string Source, int Profondeur);
-
-	private static readonly Segment[] Segments =
+	private static readonly TerrainPeintre.Segment[] Segments =
 	{
 		new(0, 1, 2, "grotte_plein", 1),
 		new(3, 4, 2, "grotte_plein", 1),
@@ -23,11 +20,7 @@ public static class SalleCheminPouvoir
 
 	public static void Construire(TileMapLayer couche, TileSet tileSet, Node2D racine, Vector2I decalage)
 	{
-		foreach (var segment in Segments)
-		{
-			int sourceId = (int)tileSet.GetMeta(segment.Source);
-			TerrainPeintre.PeindreBandeSol(couche, sourceId, segment.ColDebut + decalage.X, segment.ColFin + decalage.X, segment.Rangee + decalage.Y, segment.Profondeur);
-		}
+		TerrainPeintre.PeindreSegments(couche, tileSet, Segments, decalage);
 
 		var dec = new Vector2(decalage.X * TailleTuile, decalage.Y * TailleTuile);
 
