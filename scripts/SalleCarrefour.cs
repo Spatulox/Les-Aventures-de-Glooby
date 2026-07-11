@@ -1,14 +1,11 @@
 using Godot;
+using static Constantes;
 
 // Le Carrefour de Glace : salle-hub à trois embranchements. Le mur de glace
 // fondable est visible dès l'entrée (verrou mémoire du metroidvania).
 public static class SalleCarrefour
 {
-	private const int TailleTuile = 32;
-
-	private record Segment(int ColDebut, int ColFin, int Rangee, string Source, int Profondeur);
-
-	private static readonly Segment[] Segments =
+	private static readonly TerrainPeintre.Segment[] Segments =
 	{
 		new(4, 14, 10, "grotte_plein", 3),
 		new(18, 28, 10, "grotte_plein", 3),
@@ -23,11 +20,7 @@ public static class SalleCarrefour
 
 	public static void Construire(TileMapLayer couche, TileSet tileSet, Node2D racine, Vector2I decalage)
 	{
-		foreach (var segment in Segments)
-		{
-			int sourceId = (int)tileSet.GetMeta(segment.Source);
-			TerrainPeintre.PeindreBandeSol(couche, sourceId, segment.ColDebut + decalage.X, segment.ColFin + decalage.X, segment.Rangee + decalage.Y, segment.Profondeur);
-		}
+		TerrainPeintre.PeindreSegments(couche, tileSet, Segments, decalage);
 
 		var dec = new Vector2(decalage.X * TailleTuile, decalage.Y * TailleTuile);
 
@@ -38,8 +31,7 @@ public static class SalleCarrefour
 			ZIndex = -3,
 			Position = new Vector2(480, 320) + dec,
 		};
-		racine.AddChild(fond);
-		fond.Owner = racine;
+		Outils.Attacher(racine, fond);
 
 		Outils.AjouterDecor(racine, "res://assets/props/cristal_petit.png", new Vector2(16 * TailleTuile, 9 * TailleTuile - 20) + dec);
 		Outils.AjouterDecor(racine, "res://assets/props/cristal_petit.png", new Vector2(23 * TailleTuile, 9 * TailleTuile - 20) + dec);

@@ -1,14 +1,11 @@
 using Godot;
+using static Constantes;
 
 // Salle "Le Départ" (banquise) : igloo, campements, poissons, jusqu'à l'entrée
 // de la grotte. Construite à un décalage (en tuiles) dans le monde continu.
 public static class SalleDepart
 {
-	private const int TailleTuile = 32;
-
-	private record Segment(int ColDebut, int ColFin, int Rangee, string Source, int Profondeur);
-
-	private static readonly Segment[] Segments =
+	private static readonly TerrainPeintre.Segment[] Segments =
 	{
 		new(0, 14, 8, "banquise_plein", 3),
 		new(18, 24, 8, "banquise_plein", 3),
@@ -34,11 +31,7 @@ public static class SalleDepart
 
 	public static void Construire(TileMapLayer couche, TileSet tileSet, Node2D racine, Node2D parallaxe, Vector2I decalage)
 	{
-		foreach (var segment in Segments)
-		{
-			int sourceId = (int)tileSet.GetMeta(segment.Source);
-			TerrainPeintre.PeindreBandeSol(couche, sourceId, segment.ColDebut + decalage.X, segment.ColFin + decalage.X, segment.Rangee + decalage.Y, segment.Profondeur);
-		}
+		TerrainPeintre.PeindreSegments(couche, tileSet, Segments, decalage);
 
 		var dec = new Vector2(decalage.X * TailleTuile, decalage.Y * TailleTuile);
 
@@ -86,16 +79,6 @@ public static class SalleDepart
 		int largeurNiveau = (Segments[^1].ColFin + 1) * TailleTuile;
 		int nombrePanneaux = Mathf.CeilToInt(largeurNiveau / largeurPanneau) + 1;
 
-		for (int i = 0; i < nombrePanneaux; i++)
-		{
-			var panneau = new Sprite2D
-			{
-				Texture = GD.Load<Texture2D>(VariantesAurore[i % VariantesAurore.Length]),
-				Scale = new Vector2(2f, 2f),
-				Position = new Vector2(i * largeurPanneau + largeurPanneau / 2f, 180) + dec,
-			};
-			parallaxe.AddChild(panneau);
-			panneau.Owner = racine;
-		}
+		Outils.PlacerFondRepete(parallaxe, VariantesAurore, nombrePanneaux, largeurPanneau, 180f, 2f, 0, dec, racine);
 	}
 }

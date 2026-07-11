@@ -1,10 +1,10 @@
 using Godot;
+using static Constantes;
 
 // Arène du Boss Cerf : grande salle plate (~3 écrans de large), fond
 // cathédrale répété, plafond garni de stalactites, deux plateformes latérales.
 public static class SalleBoss
 {
-	private const int TailleTuile = 32;
 	public const int Largeur = 90;
 
 	public static void Construire(TileMapLayer couche, TileSet tileSet, Node2D racine, Vector2I decalage)
@@ -16,24 +16,12 @@ public static class SalleBoss
 
 		var dec = new Vector2(decalage.X * TailleTuile, decalage.Y * TailleTuile);
 
-		var texture = GD.Load<Texture2D>("res://assets/backgrounds/grotte_cathedrale.png");
+		string[] fond = { "res://assets/backgrounds/grotte_cathedrale.png" };
 		int nombrePanneaux = Mathf.CeilToInt(Largeur * TailleTuile / 720f) + 1;
-		for (int i = 0; i < nombrePanneaux; i++)
-		{
-			var panneau = new Sprite2D
-			{
-				Texture = texture,
-				Scale = new Vector2(2f, 2f),
-				Position = new Vector2(i * 720f + 360f, 260) + dec,
-				ZIndex = -3,
-			};
-			racine.AddChild(panneau);
-			panneau.Owner = racine;
-		}
+		Outils.PlacerFondRepete(racine, fond, nombrePanneaux, 720f, 260f, 2f, -3, dec, racine);
 
 		var boss = GD.Load<PackedScene>("res://scenes/boss_cerf.tscn").Instantiate<BossCerf>();
-		racine.AddChild(boss);
-		boss.Owner = racine;
+		Outils.Attacher(racine, boss);
 		boss.Position = new Vector2(2240, 250) + dec;
 		boss.LimiteGauche = 6 * TailleTuile + dec.X;
 		boss.LimiteDroite = (Largeur - 6) * TailleTuile + dec.X;
@@ -52,7 +40,6 @@ public static class SalleBoss
 
 		var barre = GD.Load<PackedScene>("res://scenes/boss_hud_barre.tscn").Instantiate<BossHudBarre>();
 		barre.CheminBoss = "../BossCerf";
-		racine.AddChild(barre);
-		barre.Owner = racine;
+		Outils.Attacher(racine, barre);
 	}
 }
