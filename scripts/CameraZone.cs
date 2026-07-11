@@ -3,23 +3,15 @@ using Godot;
 // Zone de caméra façon Hollow Knight : ajuste les limites de la Camera2D du
 // joueur en entrant dans la salle, sans recharger de scène. Les zones se
 // chevauchent volontairement aux transitions - la dernière traversée gagne.
-public partial class CameraZone : Area2D
+public partial class CameraZone : DeclencheurZone
 {
 	[Export] public int LimGauche;
 	[Export] public int LimDroite;
 	[Export] public int LimHaut;
 	[Export] public int LimBas;
 
-	public override void _Ready()
+	protected override void SurEntreeJoueur(Player joueur)
 	{
-		BodyEntered += OnBodyEntered;
-	}
-
-	private void OnBodyEntered(Node2D body)
-	{
-		if (body is not Player joueur)
-			return;
-
 		var camera = joueur.GetNode<Camera2D>("Camera2D");
 		camera.LimitLeft = LimGauche;
 		camera.LimitRight = LimDroite;

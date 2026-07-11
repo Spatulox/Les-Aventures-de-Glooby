@@ -1,31 +1,28 @@
 using Godot;
 
 // Base des objets ramassés au contact du joueur (poisson, pickup de pouvoir).
-// Factorise le squelette commun : si l'objet est déjà consommé, il se retire
-// au chargement ; sinon il se connecte au contact et se ramasse une seule fois.
-// Les sous-classes ne fournissent que la condition « déjà consommé » et l'effet
-// du ramassage.
-public abstract partial class ElementRamassable : Area2D
+// Étend DeclencheurZone : si l'objet est déjà consommé, il se retire au
+// chargement ; sinon il se ramasse une seule fois à l'entrée du joueur. Les
+// sous-classes ne fournissent que la condition « déjà consommé » et l'effet du
+// ramassage.
+public abstract partial class ElementRamassable : DeclencheurZone
 {
-	public override void _Ready()
+	protected override bool PreparerDeclencheur()
 	{
 		Initialiser();
 
 		if (EstDejaConsomme())
 		{
 			QueueFree();
-			return;
+			return false;
 		}
 
 		PreparerVisuel();
-		BodyEntered += OnBodyEntered;
+		return true;
 	}
 
-	private void OnBodyEntered(Node2D body)
+	protected override void SurEntreeJoueur(Player joueur)
 	{
-		if (body is not Player)
-			return;
-
 		Ramasser();
 		QueueFree();
 	}

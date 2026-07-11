@@ -2,14 +2,14 @@ using Godot;
 
 // Campement de pêche : point de sauvegarde visuel et fonctionnel (pas de pêche jouable).
 // Un seul campement actif à la fois ; les autres basculent en inactif via GameState.
-public partial class Checkpoint : Area2D
+public partial class Checkpoint : DeclencheurZone
 {
 	[Export] public string IdCheckpoint = "";
 
 	private Sprite2D _spriteInactif;
 	private Sprite2D _spriteActif;
 
-	public override void _Ready()
+	protected override bool PreparerDeclencheur()
 	{
 		_spriteInactif = GetNode<Sprite2D>("TrouInactif");
 		_spriteActif = GetNode<Sprite2D>("TrouActif");
@@ -19,7 +19,7 @@ public partial class Checkpoint : Area2D
 
 		AfficherEtat(GameState.Instance.CheckpointIdActif == IdCheckpoint);
 		GameState.Instance.CheckpointActif += OnCheckpointActif;
-		BodyEntered += OnBodyEntered;
+		return true;
 	}
 
 	private void OnCheckpointActif(string idCheckpoint)
@@ -27,11 +27,9 @@ public partial class Checkpoint : Area2D
 		AfficherEtat(idCheckpoint == IdCheckpoint);
 	}
 
-	private void OnBodyEntered(Node2D body)
+	protected override void SurEntreeJoueur(Player joueur)
 	{
 		if (GameState.Instance.CheckpointIdActif == IdCheckpoint)
-			return;
-		if (body is not Player)
 			return;
 
 		GameState.Instance.ActiverCheckpoint(IdCheckpoint, GlobalPosition + new Vector2(-20, 0));
