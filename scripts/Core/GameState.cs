@@ -135,6 +135,7 @@ public partial class GameState : Node
 		AjouterAction("move_right", Key.D, Key.Right);
 		AjouterAction("jump", Key.Space);
 		AjouterAction("slide", Key.Shift);
+		AjouterAction("bas", Key.S, Key.Down);
 		AjouterAction("lancer", Key.J, Key.Ctrl);
 		AjouterAction("manger", Key.E);
 		AjouterAction("pouvoir_chaleur", Key.F);

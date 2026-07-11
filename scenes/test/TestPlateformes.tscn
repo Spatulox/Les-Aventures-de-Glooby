@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeFixe.tscn" id="2_fixe"]
+[ext_resource type="Script" path="res://scripts/Test/TestPlateformesDebug.cs" id="3_debug"]
+[ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="4_trav"]
+[ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeMobile.tscn" id="5_mob"]
+[ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeFragile.tscn" id="6_frag"]
+[ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeGlissante.tscn" id="7_gliss"]
+
+[node name="TestPlateformes" type="Node2D"]
+script = ExtResource("3_debug")
+
+[node name="Joueur" parent="." instance=ExtResource("1_player")]
+position = Vector2(300, 250)
+
+[node name="PlateformeFixePetite" parent="." instance=ExtResource("2_fixe")]
+position = Vector2(300, 388)
+
+[node name="PlateformeFixeMoyenne" parent="." instance=ExtResource("2_fixe")]
+position = Vector2(900, 362)
+Taille = 1
+
+[node name="PlateformeFixeGrande" parent="." instance=ExtResource("2_fixe")]
+position = Vector2(1500, 364)
+Taille = 2
+
+[node name="PlateformeUnidirectionnelle" parent="." instance=ExtResource("4_trav")]
+position = Vector2(2100, 330)
+
+[node name="PlateformeMobile" parent="." instance=ExtResource("5_mob")]
+position = Vector2(2700, 364)
+
+[node name="PlateformeFragile" parent="." instance=ExtResource("6_frag")]
+position = Vector2(3300, 388)
+
+[node name="PlateformeGlissante" parent="." instance=ExtResource("7_gliss")]
+position = Vector2(3900, 388)

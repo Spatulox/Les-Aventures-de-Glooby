@@ -14,6 +14,7 @@ public partial class MenuPrincipal : Control
 		("move_right", "Aller à droite"),
 		("jump", "Sauter"),
 		("slide", "Glisser"),
+		("bas", "Descendre / traverser une plateforme"),
 		("lancer", "Lancer une boule de neige"),
 		("manger", "Manger un poisson"),
 		("pouvoir_chaleur", "Pouvoir de chaleur"),

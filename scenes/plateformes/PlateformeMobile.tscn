@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/Plateformes/PlateformeMobile.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/plateformes/mobile.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top"]
+size = Vector2(176, 36)
+
+[sub_resource type="Curve2D" id="Curve2D_defaut"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 260, 0)
+}
+
+[node name="PlateformeMobile" type="AnimatableBody2D"]
+script = ExtResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-3, -46)
+shape = SubResource("RectangleShape2D_top")
+
+[node name="Path2D" type="Path2D" parent="."]
+curve = SubResource("Curve2D_defaut")
