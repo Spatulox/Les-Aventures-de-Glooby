@@ -1,17 +1,34 @@
 using Godot;
 
-// Salle de boss : Area2D couvrant l'arène d'un boss. La barre de vie reste
-// masquée tant que le joueur n'y est pas entré, puis s'affiche à l'entrée.
-// Réutilisable pour tout boss : on lui confie simplement la barre à révéler
-// (point d'extension : combat, musique, portes... peuvent se brancher ici).
+// Salle de boss : Area2D couvrant l'arène. Base RÉUTILISABLE ET HÉRITABLE de
+// tout combat de boss — à l'entrée du joueur, elle révèle la barre de vie,
+// arme les PV du boss et lance la musique de combat. Deux façons de s'en servir :
+//   - directement dans la scène (renseigner les [Export]) ;
+//   - par héritage (une sous-classe par boss) en surchargeant DemarrerCombat
+//     pour un comportement propre (patterns, portes, cinématique, phases...).
 public partial class ZoneBoss : DeclencheurZone
 {
-	// Barre à révéler quand le joueur pénètre dans l'arène. À fixer AVANT
-	// l'ajout dans l'arbre (cf. Outils : _Ready lit la valeur immédiatement).
-	public BossHudBarre Barre;
+	// Le boss : par référence (CheminBoss) et/ou par nom lisible (NomBoss).
+	[Export] public NodePath CheminBoss;
+	[Export] public string NomBoss = "";
+
+	// Barre de vie à révéler à l'entrée (masquée tant que le joueur n'est pas là).
+	[Export] public NodePath CheminBarre;
+
+	// PV du boss pour ce combat (0 = garder le PvMax par défaut du boss).
+	[Export] public int PvBoss;
+
+	// Musique de combat (optionnelle) jouée à l'entrée du joueur.
+	[Export] public AudioStream Musique;
+
+	protected BossCerf Boss;
+	protected BossHudBarre Barre;
+	private AudioStreamPlayer _lecteurMusique;
 
 	protected override bool PreparerDeclencheur()
 	{
+		Boss = GetNodeOrNull<BossCerf>(CheminBoss);
+		Barre = GetNodeOrNull<BossHudBarre>(CheminBarre);
 		Barre?.Masquer();
 		return true;
 	}
@@ -19,5 +36,25 @@ public partial class ZoneBoss : DeclencheurZone
 	protected override void SurEntreeJoueur(Player joueur)
 	{
 		Barre?.Afficher();
+		JouerMusique();
+		DemarrerCombat(joueur);
+	}
+
+	// Hook d'héritage : appelé une fois le joueur entré dans l'arène. Par défaut,
+	// arme les PV du boss ; une sous-classe peut l'étendre (base.DemarrerCombat).
+	protected virtual void DemarrerCombat(Player joueur)
+	{
+		if (PvBoss > 0)
+			Boss?.DefinirPvMax(PvBoss);
+	}
+
+	private void JouerMusique()
+	{
+		if (Musique == null)
+			return;
+
+		_lecteurMusique = new AudioStreamPlayer { Stream = Musique };
+		AddChild(_lecteurMusique);
+		_lecteurMusique.Play();
 	}
 }
