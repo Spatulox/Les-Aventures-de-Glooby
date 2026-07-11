@@ -14,6 +14,16 @@ Pixel-art assets are generated with **PixelLab** under a per-mission generation 
 - Code must be **visually readable by a human** — clear French naming, sensible structure.
 - **Every class must have a class-level comment** (describing its purpose), as is already the case throughout `scripts/`.
 
+## Reports
+
+- When the user asks for a report, write it as a file in the project's **`rapport/`** folder (create the folder if it doesn't exist). Do not put requested reports elsewhere or only in chat.
+- A report **concisely summarizes the changes actually made** in the conversation — a quick, scannable recap, not a verbose narrative.
+- **One report per conversation**: reuse/update the same report file across the conversation instead of creating a new one each time.
+
+## Git
+
+- **Never commit during a task.** Only `git commit` when the user explicitly asks for it, each time. Finishing a change, verifying a build, or completing a plan step is **not** a signal to commit — leave the work uncommitted and let the user request it.
+
 ## Commands
 
 Godot binary is at `/usr/local/bin/godot` (Godot 4.6.3 mono).
