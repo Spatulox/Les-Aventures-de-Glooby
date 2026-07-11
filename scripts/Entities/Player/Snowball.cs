@@ -37,8 +37,7 @@ public partial class Snowball : Area2D
 
 	private void OnBodyEntered(Node body)
 	{
-		if (body is Damageable cible)
-			cible.TakeDamage(DamageSource.Snowball);
+		Degats.Infliger(body, DamageSource.Snowball);
 		Eclater();
 	}
 
