@@ -1,10 +1,16 @@
-// Origine d'un dégât (boule de neige, feu...). Chaque source porte son montant
-// de dégâts, centralisé ici pour éviter d'éparpiller des nombres magiques dans
-// les entités qui infligent des dégâts.
+// Origine d'un dégât. Toute forme de dégât du jeu est un DamageSource (boule de
+// neige, feu, stalactite, attaques du boss...) : chaque source porte son montant,
+// centralisé ici pour éviter d'éparpiller des nombres magiques dans les entités.
 public enum DamageSource
 {
+	// Infligés par le joueur.
 	Snowball,
 	Fire,
+
+	// Subis par le joueur (pièges, attaques du boss).
+	Stalactite,
+	ChargeBoss,
+	SouffleGivre,
 }
 
 // Helpers de DamageSource : associe à chaque source son montant de dégâts.
@@ -16,6 +22,9 @@ public static class DamageSourceExtensions
 	{
 		DamageSource.Snowball => 2,
 		DamageSource.Fire => 1,
+		DamageSource.Stalactite => 1,
+		DamageSource.ChargeBoss => 1,
+		DamageSource.SouffleGivre => 2,
 		_ => 1,
 	};
 }

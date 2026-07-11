@@ -61,7 +61,7 @@ public partial class StalactitePiege : Area2D
 			return;
 
 		if (body is Player joueur)
-			joueur.SubirDegats(0);
+			joueur.Blesser(0, DamageSource.Stalactite);
 		QueueFree();
 	}
 

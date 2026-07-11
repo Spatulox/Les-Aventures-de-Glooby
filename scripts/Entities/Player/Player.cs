@@ -1,14 +1,14 @@
 using Godot;
 using System.Collections.Generic;
 
-public partial class Player : CharacterBody2D, Damageable
+// Le héros jouable (LivingEntity) : contrôleur à minuteurs — coyote time + tampon de
+// saut, glissade accélérée (plus vive sur la glace), lancer de boule de neige, courte
+// invincibilité post-coup, rupture de tuile fragile, filet anti-chute relatif à la zone.
+// PV/gravité/friction/saut/dégâts viennent de LivingEntity ; ses PV vivent dans GameState.
+public partial class Player : LivingEntity
 {
 	[Export] public float Speed = 220f;
 	[Export] public float Acceleration = 1600f;
-	[Export] public float Friction = 1400f;
-	[Export] public float JumpVelocity = -420f;
-	[Export] public float Gravity = 1200f;
-	[Export] public float MaxFallSpeed = 900f;
 	[Export] public float CoyoteTime = 0.12f;
 	[Export] public float JumpBufferTime = 0.12f;
 	[Export] public float SlideSpeed = 420f;
@@ -88,7 +88,7 @@ public partial class Player : CharacterBody2D, Damageable
 		if (_lancerCooldownTimer > 0f)
 			_lancerCooldownTimer -= dt;
 
-		velocity.Y = Mathf.Min(velocity.Y + Gravity * dt, MaxFallSpeed);
+		AppliquerGravite(ref velocity, dt);
 
 		var direction = Input.GetAxis("move_left", "move_right");
 		if (Mathf.Abs(direction) > 0.01f)
@@ -112,11 +112,11 @@ public partial class Player : CharacterBody2D, Damageable
 			if (Mathf.Abs(direction) > 0.01f)
 				velocity.X = Mathf.MoveToward(velocity.X, direction * Speed, Acceleration * dt);
 			else
-				velocity.X = Mathf.MoveToward(velocity.X, 0f, Friction * ObtenirFrictionSol(auSol) * dt);
+				AppliquerFriction(ref velocity, dt, ObtenirFrictionSol(auSol));
 
 			if (_bufferSautTimer > 0f && _coyoteTimer > 0f && !vientDeTraverser)
 			{
-				velocity.Y = JumpVelocity;
+				Sauter(ref velocity);
 				_coyoteTimer = 0f;
 				_bufferSautTimer = 0f;
 			}
@@ -187,14 +187,22 @@ public partial class Player : CharacterBody2D, Damageable
 	public bool EstInvincible => _invincibiliteTimer > 0f;
 	public bool EstEnGlissade => _enGlissade;
 
-	// Implémentation de Damageable : traduit la source en montant de dégâts
-	// (recul neutre, sans direction imposée).
-	public void TakeDamage(DamageSource source) => SubirDegats(0, source.MontantDegats());
+	// LivingEntity : les PV du joueur vivent dans GameState (persistants, HUD, respawn),
+	// donc tout coup y est routé. Pendant l'invincibilité post-coup, le joueur ignore
+	// toute source de dégâts.
+	public override bool IsInvincibleToDamage(DamageSource source) => EstInvincible;
 
-	// Pendant l'invincibilité post-coup, le joueur ignore toute source de dégâts.
-	public bool IsInvincibleToDamage(DamageSource source) => EstInvincible;
+	// Damageable : coup non directionnel (recul neutre).
+	public override void TakeDamage(DamageSource source) => Blesser(0, source);
 
-	public void SubirDegats(int direction, int quantite = 1)
+	// Encaisse un coup d'une source avec recul directionnel (boss, pièges comme les
+	// stalactites...). Le montant vient de la source : toute forme de dégât = DamageSource.
+	public void Blesser(int direction, DamageSource source) => Encaisser(source.MontantDegats(), direction);
+
+	// Filet de sécurité si le pipeline générique en PV entiers est emprunté (recul neutre).
+	public override void SubirDegats(int quantite) => Encaisser(quantite, 0);
+
+	private void Encaisser(int quantite, int direction)
 	{
 		if (EstInvincible)
 			return;
