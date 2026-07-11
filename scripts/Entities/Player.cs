@@ -101,7 +101,10 @@ public partial class Player : CharacterBody2D
 		{
 			_slideTimer -= dt;
 			velocity.X = _directionRegard * _slideVitesseActuelle;
-			if (_slideTimer <= 0f || (!auSol && velocity.Y > 0f))
+			// La glissade se termine uniquement à l'épuisement du minuteur : une
+			// glissade lancée au sol se poursuit en l'air (ex. tremplin/rebord)
+			// au lieu d'être coupée dès qu'on quitte le sol.
+			if (_slideTimer <= 0f)
 				FinirGlissade();
 		}
 		else
