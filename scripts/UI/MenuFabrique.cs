@@ -19,17 +19,30 @@ public static class MenuFabrique
 	}
 
 	// Crée une colonne centrée (titre optionnel puis boutons) et renvoie la
-	// boîte verticale prête à recevoir des boutons via AjouterBouton.
-	public static VBoxContainer AjouterColonne(Control parent, string titre = null)
+	// boîte verticale prête à recevoir des boutons via AjouterBouton. Avec
+	// avecPanneau = true, la colonne est posée sur un panneau semi-opaque : utile
+	// quand le fond est transparent (menu pause) pour garder le texte lisible.
+	public static VBoxContainer AjouterColonne(Control parent, string titre = null, bool avecPanneau = false)
 	{
 		var centre = new CenterContainer();
 		centre.SetAnchorsPreset(Control.LayoutPreset.FullRect);
 		centre.MouseFilter = Control.MouseFilterEnum.Ignore;
 		parent.AddChild(centre);
 
+		// Le panneau s'intercale entre le centrage et la colonne : il se
+		// dimensionne au contenu et l'entoure d'une plaque sombre arrondie.
+		Control hote = centre;
+		if (avecPanneau)
+		{
+			var panneau = new PanelContainer();
+			panneau.AddThemeStyleboxOverride("panel", StyleBoxPanneau());
+			centre.AddChild(panneau);
+			hote = panneau;
+		}
+
 		var colonne = new VBoxContainer();
 		colonne.AddThemeConstantOverride("separation", 12);
-		centre.AddChild(colonne);
+		hote.AddChild(colonne);
 
 		if (titre != null)
 		{
@@ -59,6 +72,20 @@ public static class MenuFabrique
 			bouton.Pressed += surClic;
 		colonne.AddChild(bouton);
 		return bouton;
+	}
+
+	// Plaque sombre semi-opaque derrière une colonne de menu : fond noir ~70 %,
+	// marges internes confortables et coins arrondis pour détacher le texte du
+	// décor visible en transparence.
+	private static StyleBoxFlat StyleBoxPanneau()
+	{
+		var style = new StyleBoxFlat { BgColor = new Color(0f, 0f, 0f, 0.7f) };
+		style.ContentMarginLeft = 24;
+		style.ContentMarginRight = 24;
+		style.ContentMarginTop = 24;
+		style.ContentMarginBottom = 24;
+		style.SetCornerRadiusAll(8);
+		return style;
 	}
 
 	// Ajoute une ligne de texte centrée à une colonne (ex. rappel des touches).

@@ -21,6 +21,9 @@ public partial class MenuPrincipal : Control
 		("menu", "Menu / Pause"),
 	};
 
+	// Dossier des images de fond piochées au hasard pour l'arrière-plan du menu.
+	private const string DossierFonds = "res://assets/backgrounds";
+
 	private Control _panneauParametres;
 
 	public override void _Ready()
@@ -30,7 +33,11 @@ public partial class MenuPrincipal : Control
 		// Le HUD (autoload) ne doit pas s'afficher par-dessus le menu.
 		GetNodeOrNull<Hud>("/root/Hud")?.Masquer();
 
-		MenuFabrique.AjouterFond(this, new Color(0.06f, 0.08f, 0.14f));
+		// Image de fond aléatoire (rejouée à chaque affichage : la scène du menu
+		// se recharge en y revenant), puis un voile sombre semi-transparent
+		// par-dessus pour garder titre et boutons lisibles.
+		AjouterFondAleatoire();
+		MenuFabrique.AjouterFond(this, new Color(0.06f, 0.08f, 0.14f, 0.5f));
 
 		var colonne = MenuFabrique.AjouterColonne(this, "Les Aventures de Glooby");
 		MenuFabrique.AjouterBouton(colonne, "Créer une partie", DemarrerNouvellePartie);
@@ -51,6 +58,59 @@ public partial class MenuPrincipal : Control
 	{
 		// Sauvegarde à implémenter : on reprend simplement le monde pour l'instant.
 		GetTree().ChangeSceneToFile("res://scenes/monde.tscn");
+	}
+
+	// Place derrière tout le reste une image de fond tirée au hasard parmi celles
+	// de assets/backgrounds, étirée pour couvrir l'écran sans déformation.
+	private void AjouterFondAleatoire()
+	{
+		var chemin = FondAleatoire();
+		if (chemin == null)
+			return;
+
+		var fond = new TextureRect
+		{
+			Texture = GD.Load<Texture2D>(chemin),
+			ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize,
+			StretchMode = TextureRect.StretchModeEnum.KeepAspectCovered,
+			MouseFilter = Control.MouseFilterEnum.Ignore
+		};
+		fond.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+		AddChild(fond);
+	}
+
+	// Chemin d'un PNG au hasard dans DossierFonds, ou null si le dossier est vide
+	// ou introuvable. GD.Randomize garantit un tirage différent à chaque ouverture.
+	private static string FondAleatoire()
+	{
+		using var dossier = DirAccess.Open(DossierFonds);
+		if (dossier == null)
+			return null;
+
+		var fichiers = new List<string>();
+		foreach (var nom in dossier.GetFiles())
+			if (nom.EndsWith(".png"))
+				fichiers.Add(nom);
+
+		if (fichiers.Count == 0)
+			return null;
+
+		GD.Randomize();
+		return $"{DossierFonds}/{fichiers[(int)(GD.Randi() % (uint)fichiers.Count)]}";
+	}
+
+	// Échap ferme le sous-menu ouvert (retour au menu précédent). Au menu racine,
+	// il n'y a pas de menu précédent : on ne fait rien.
+	public override void _UnhandledInput(InputEvent evenement)
+	{
+		if (!evenement.IsActionPressed("menu"))
+			return;
+
+		if (_panneauParametres.Visible)
+		{
+			AfficherParametres(false);
+			GetViewport().SetInputAsHandled();
+		}
 	}
 
 	// Écran Paramètres : superposé et masqué au départ, il liste les touches.

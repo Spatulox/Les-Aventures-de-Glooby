@@ -1,9 +1,10 @@
 using Godot;
 
-// Menu pause en jeu : voile semi-transparent qui met la partie en pause et
-// propose Continuer / Retour au menu principal. S'ouvre et se ferme avec la
-// touche "menu" (Échap). Construit via MenuFabrique, comme le menu principal.
-// Placé dans scenes/monde.tscn (le monde ne recharge jamais de scène).
+// Menu pause en jeu : fond transparent (le jeu reste visible net derrière) avec
+// un panneau semi-opaque derrière les boutons pour la lisibilité. Met la partie
+// en pause et propose Continuer / Retour au menu principal. S'ouvre et se ferme
+// avec la touche "menu" (Échap). Construit via MenuFabrique, comme le menu
+// principal. Placé dans scenes/monde.tscn (le monde ne recharge jamais de scène).
 public partial class MenuPause : CanvasLayer
 {
 	private Control _racine;
@@ -23,9 +24,9 @@ public partial class MenuPause : CanvasLayer
 		_racine.SetAnchorsPreset(Control.LayoutPreset.FullRect);
 		AddChild(_racine);
 
-		MenuFabrique.AjouterFond(_racine, new Color(0f, 0f, 0f, 0.55f));
-
-		var colonne = MenuFabrique.AjouterColonne(_racine, "Pause");
+		// Pas de voile plein écran : le fond reste transparent, seul le panneau
+		// des boutons assombrit ce qu'il recouvre.
+		var colonne = MenuFabrique.AjouterColonne(_racine, "Pause", avecPanneau: true);
 		MenuFabrique.AjouterBouton(colonne, "Continuer", Fermer);
 		MenuFabrique.AjouterBouton(colonne, "Retour au menu principal", RetourMenuPrincipal);
 	}
