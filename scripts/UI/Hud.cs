@@ -9,6 +9,10 @@ public partial class Hud : CanvasLayer
 
 	public override void _Ready()
 	{
+		// Autoload persistant : masqué par défaut, il ne s'affiche qu'en jeu
+		// (MenuPause.Afficher à l'entrée du monde, MenuPrincipal.Masquer au menu).
+		Visible = false;
+
 		_coeurs = GetNode<HBoxContainer>("Coeurs");
 		_labelPoissons = GetNode<Label>("Poissons/LabelPoissons");
 
@@ -61,4 +65,8 @@ public partial class Hud : CanvasLayer
 	}
 
 	private void MettreAJourPoissons(int total) => _labelPoissons.Text = $"x {total}";
+
+	public void Afficher() => Visible = true;
+
+	public void Masquer() => Visible = false;
 }

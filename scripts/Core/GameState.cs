@@ -35,6 +35,9 @@ public partial class GameState : Node
 	public int Poissons { get; private set; } = PoissonsDepart;
 	public int Pv { get; private set; }
 
+	// Sauvegarde à implémenter : tant qu'il n'y en a pas, "Continuer" reste grisé.
+	public bool SauvegardeExiste => false;
+
 	// Flags de progression (débloqués une fois pour toute la partie).
 	public bool PouvoirChaleurActif { get; private set; }
 
@@ -48,6 +51,18 @@ public partial class GameState : Node
 		Instance = this;
 		Pv = PvMax;
 		ConfigurerActionsParDefaut();
+	}
+
+	// Réinitialise toute la progression pour une nouvelle partie. Le monde ne
+	// se recharge pas seul : à appeler avant de charger scenes/monde.tscn.
+	public void NouvellePartie()
+	{
+		Pv = PvMax;
+		Poissons = PoissonsDepart;
+		PouvoirChaleurActif = false;
+		_elementsConsommes.Clear();
+		CheckpointIdActif = "";
+		CheckpointPosition = Vector2.Zero;
 	}
 
 	public void Degats(int quantite = 1)
@@ -123,6 +138,7 @@ public partial class GameState : Node
 		AjouterAction("lancer", Key.J, Key.Ctrl);
 		AjouterAction("manger", Key.E);
 		AjouterAction("pouvoir_chaleur", Key.F);
+		AjouterAction("menu", Key.Escape);
 	}
 
 	private static void AjouterAction(string nom, params Key[] touches)
