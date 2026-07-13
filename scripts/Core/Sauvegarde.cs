@@ -5,7 +5,7 @@ using Godot;
 // fichier, pas le contenu métier (c'est DonneesSauvegarde qui sait se sérialiser).
 public static class Sauvegarde
 {
-	private const string Chemin = "user://sauvegarde.json";
+	private const string Chemin = "user://pantalon.json";
 
 	// Vrai si une sauvegarde existe sur disque.
 	public static bool Existe() => FileAccess.FileExists(Chemin);
