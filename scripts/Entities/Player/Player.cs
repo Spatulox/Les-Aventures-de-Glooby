@@ -485,47 +485,18 @@ public partial class Player : LivingEntity
 		var frames = new SpriteFrames();
 		frames.RemoveAnimation("default");
 
-		EnregistrerAnimation(frames, "idle", ChargerFrames("res://assets/player/idle"), 6f, true);
-		EnregistrerAnimation(frames, "course", ChargerFrames("res://assets/player/course"), 12f, true);
-		EnregistrerAnimation(frames, "glissade", ChargerFrames("res://assets/player/glissade"), 14f, true);
-		EnregistrerAnimation(frames, "lancer", ChargerFrames("res://assets/player/lancer"), 16f, false);
-		EnregistrerAnimation(frames, "degats", ChargerFrames("res://assets/player/degats"), 10f, false);
+		AnimationsSprite.EnregistrerAnimation(frames, "idle", AnimationsSprite.ChargerFrames("res://assets/player/idle"), 6f, true);
+		AnimationsSprite.EnregistrerAnimation(frames, "course", AnimationsSprite.ChargerFrames("res://assets/player/course"), 12f, true);
+		AnimationsSprite.EnregistrerAnimation(frames, "glissade", AnimationsSprite.ChargerFrames("res://assets/player/glissade"), 14f, true);
+		AnimationsSprite.EnregistrerAnimation(frames, "lancer", AnimationsSprite.ChargerFrames("res://assets/player/lancer"), 16f, false);
+		AnimationsSprite.EnregistrerAnimation(frames, "degats", AnimationsSprite.ChargerFrames("res://assets/player/degats"), 10f, false);
 
-		var sautFrames = ChargerFrames("res://assets/player/saut");
+		var sautFrames = AnimationsSprite.ChargerFrames("res://assets/player/saut");
 		int findeMontee = Mathf.Min(4, sautFrames.Length - 1);
-		EnregistrerAnimation(frames, "saut_montee", sautFrames, 12f, false, 0, findeMontee);
-		EnregistrerAnimation(frames, "saut_chute", sautFrames, 10f, true, findeMontee + 1, sautFrames.Length - 1);
+		AnimationsSprite.EnregistrerAnimation(frames, "saut_montee", sautFrames, 12f, false, 0, findeMontee);
+		AnimationsSprite.EnregistrerAnimation(frames, "saut_chute", sautFrames, 10f, true, findeMontee + 1, sautFrames.Length - 1);
 
 		_sprite.SpriteFrames = frames;
 		_sprite.Play("idle");
-	}
-
-	private static Texture2D[] ChargerFrames(string dossier)
-	{
-		var fichiers = new List<string>();
-		foreach (var fichier in DirAccess.GetFilesAt(dossier))
-		{
-			if (fichier.EndsWith(".png"))
-				fichiers.Add(fichier);
-		}
-		fichiers.Sort();
-
-		var textures = new Texture2D[fichiers.Count];
-		for (int i = 0; i < fichiers.Count; i++)
-			textures[i] = GD.Load<Texture2D>($"{dossier}/{fichiers[i]}");
-		return textures;
-	}
-
-	private static void EnregistrerAnimation(SpriteFrames frames, string nom, Texture2D[] toutesLesFrames, float fps, bool boucle, int debut = 0, int fin = -1)
-	{
-		if (fin < 0)
-			fin = toutesLesFrames.Length - 1;
-
-		frames.AddAnimation(nom);
-		frames.SetAnimationSpeed(nom, fps);
-		frames.SetAnimationLoop(nom, boucle);
-
-		for (int i = debut; i <= fin; i++)
-			frames.AddFrame(nom, toutesLesFrames[i]);
 	}
 }
