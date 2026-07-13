@@ -25,8 +25,8 @@ Chaque frame, le `Player` détecte par position la `CameraZone` qui le contient 
   - Retrait des 2 instances `RegionTrigger` (`GrotteVersBanquise`, `BanquiseVersGrotte`) et
     de l'`ext_resource` `region_trigger` inutilisé (nœuds `Frontiere` vides conservés).
 - **`scripts/Core/BackgroundManager.cs`** + **`CLAUDE.md`** : commentaires/notes à jour.
-- `RegionTrigger.cs`/`region_trigger.tscn` **conservés** comme composant réutilisable non
-  instancié (comme les scènes `Plateforme*`).
+- `RegionTrigger.cs` (+`.uid`) et `region_trigger.tscn` **supprimés** (plus aucune
+  référence : `CameraZone.NomRegion` remplace entièrement leur rôle).
 
 Emprises mesurées (rect 256) : Village [0,634] · Banquise [636,2574] · Grotte [2621,5027]
 — non chevauchantes, d'où le besoin d'hystérésis pour traverser les petits trous.
