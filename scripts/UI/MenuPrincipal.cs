@@ -136,7 +136,16 @@ public partial class MenuPrincipal : Control
 		var touches = new List<string>();
 		foreach (var evenement in InputMap.ActionGetEvents(action))
 			if (evenement is InputEventKey touche)
-				touches.Add(OS.GetKeycodeString(touche.PhysicalKeycode));
+			{
+				// Les actions sont liées en touche physique (position QWERTY) pour rester
+				// stables quel que soit le clavier. Pour l'affichage on traduit cette
+				// position vers l'étiquette réelle du clavier de l'utilisateur
+				// (ex. W physique → « Z » en AZERTY) ; sinon on retombe sur la position brute.
+				var etiquette = DisplayServer.KeyboardGetLabelFromPhysical(touche.PhysicalKeycode);
+				if (etiquette == Key.None)
+					etiquette = touche.PhysicalKeycode;
+				touches.Add(OS.GetKeycodeString(etiquette));
+			}
 		return touches.Count > 0 ? string.Join(" / ", touches) : "-";
 	}
 }
