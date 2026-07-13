@@ -103,6 +103,7 @@ position = Vector2(360, 284)
 
 [node name="Pingouin" parent="Village/Decor" unique_id=700000001 instance=ExtResource("pingouin")]
 position = Vector2(250, 272)
+Lignes = PackedStringArray("Coin coin ! Bienvenue chez les manchots, Glooby.", "Tu descends vers la grotte ? Couvre-toi bien.")
 
 [node name="Pingouin2" parent="Village/Decor" unique_id=700000002 instance=ExtResource("pingouin")]
 position = Vector2(720, 272)
@@ -248,6 +249,7 @@ position = Vector2(4900, 252)
 
 [node name="LutinNoel" parent="Grotte/Decor" unique_id=700000003 instance=ExtResource("lutin")]
 position = Vector2(3100, 272)
+Lignes = PackedStringArray("Hihi ! Un lutin du Pere Noel, perdu dans la grotte...", "Le Boss Cerf garde la sortie. Bonne chance, Glooby !")
 
 [node name="LutinNoel2" parent="Grotte/Decor" unique_id=700000004 instance=ExtResource("lutin")]
 position = Vector2(4600, 272)

@@ -33,6 +33,26 @@ avec placeholders et comportement de déambulation.
   chargés (Sprite2D résolu, physique active) — OK.
 - F5 manuel recommandé pour le rendu (déambulation, gabarits relatifs).
 
+## Dialogue : PNJ bavards au cas par cas (interface `Talkative` existante)
+
+Réutilisation du système de dialogue déjà en place (`Talkative` + `DeclencheurDialogue` +
+`BulleDialogue`, patron `PanneauBavard`) plutôt que d'en créer un nouveau.
+
+- **`PnjAmical`** implémente désormais l'interface existante **`Talkative`** (comme
+  `PanneauBavard`) : champs `[Export]` `Lignes` / `AncrageBulle` / `AuPassage` /
+  `UneSeuleFois` / `IdDialogue`, plus `Dialogue`, `PointBulle`, `PeutParler()`,
+  `SurDebutDialogue`/`SurFinDialogue`. Le PNJ **s'immobilise** pendant la conversation
+  (`_enConversation`) et reprend sa déambulation à la fin.
+- La capacité est portée par la **classe** (tous les PNJ sont `Talkative`), mais c'est
+  **l'instance** qui décide : un PNJ est bavard uniquement si on lui renseigne des `Lignes`
+  dans `monde.tscn`. Sinon il reste muet (le `DeclencheurDialogue` ne se déclenche pas si
+  `Lignes` est vide). C'est le patron « Option A », calqué sur `Damageable`.
+- **`pingouin.tscn` / `lutin_noel.tscn`** : ajout d'un enfant `DeclencheurDialogue` (Area2D
+  + zone de proximité) — comme `panneau_bavard.tscn` — pour que toute instance puisse
+  parler dès qu'on remplit ses `Lignes`.
+- **`monde.tscn`** : un pingouin (village) et un lutin (grotte) rendus bavards via `Lignes` ;
+  les autres restent muets.
+
 ## Hors périmètre
 - Vraies animations / pixel-art PixelLab (code d'anim laissé commenté).
-- Dialogues / interactions joueur↔PNJ.
+- Déclencheur/UI de dialogue : **déjà fournis** par l'existant (réutilisés, non recréés).

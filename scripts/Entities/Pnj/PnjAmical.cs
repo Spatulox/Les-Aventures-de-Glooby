@@ -92,4 +92,45 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 		// --- Animation (à activer avec le pipeline ci-dessus) ---
 		// anim.Play(Mathf.Abs(velocite.X) > 1f ? "marche" : "idle");
 	}
+
+	// ---- Dialogue (Talkative) ----
+	// Répliques du PNJ (vide = muet). Renseignées au cas par cas dans monde.tscn : c'est
+	// ce qui distingue un PNJ bavard d'un PNJ muet, tous deux de la même classe.
+	[Export] public string[] Lignes { get; set; } = Array.Empty<string>();
+
+	// Ancrage (local) de la bulle au-dessus de la tête du carré placeholder.
+	[Export] public Vector2 AncrageBulle = new(0f, -30f);
+
+	// Vrai : le dialogue démarre au simple passage du joueur (sinon : sur la touche).
+	[Export] public bool AuPassage;
+
+	// Vrai : dialogue à usage unique pour toute la partie (mémorisé via GameState).
+	[Export] public bool UneSeuleFois;
+
+	// Identifiant persistant du dialogue (requis si UneSeuleFois ; unique dans le jeu).
+	[Export] public string IdDialogue = "";
+
+	public IReadOnlyList<string> Dialogue => Lignes;
+
+	public Vector2 PointBulle => ToGlobal(AncrageBulle);
+
+	public bool DeclencheAuPassage => AuPassage;
+
+	public bool PeutParler()
+	{
+		if (UneSeuleFois && !string.IsNullOrEmpty(IdDialogue))
+			return !GameState.Instance.EstConsomme(IdDialogue);
+		return true;
+	}
+
+	// Début de conversation : le PNJ s'immobilise et fait face au joueur.
+	public void SurDebutDialogue() => _enConversation = true;
+
+	// Fin de conversation : le PNJ reprend sa déambulation ; mémorise le dialogue à usage unique.
+	public void SurFinDialogue()
+	{
+		_enConversation = false;
+		if (UneSeuleFois && !string.IsNullOrEmpty(IdDialogue))
+			GameState.Instance.MarquerConsomme(IdDialogue);
+	}
 }
