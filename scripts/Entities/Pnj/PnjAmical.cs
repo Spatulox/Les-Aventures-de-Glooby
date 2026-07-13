@@ -101,6 +101,9 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 	// Ancrage (local) de la bulle au-dessus de la tête du carré placeholder.
 	[Export] public Vector2 AncrageBulle = new(0f, -30f);
 
+	// Vrai : afficher UNE seule réplique tirée au hasard au lieu de tout faire défiler.
+	[Export] public bool Aleatoire { get; set; }
+
 	// Vrai : le dialogue démarre au simple passage du joueur (sinon : sur la touche).
 	[Export] public bool AuPassage;
 
