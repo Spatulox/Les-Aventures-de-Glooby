@@ -11,7 +11,9 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondGrotte.tscn" id="fond_grotte"]
 [ext_resource type="PackedScene" path="res://scenes/decors/igloo.tscn" id="igloo"]
+[ext_resource type="PackedScene" path="res://scenes/entites/lutin_noel.tscn" id="lutin"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
+[ext_resource type="PackedScene" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
 [ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/core/region_trigger.tscn" id="region_trigger"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/Rocher.tscn" id="rocher"]
@@ -98,6 +100,12 @@ position = Vector2(1080, 284)
 [node name="FleurGivre" parent="Village/Decor" unique_id=643500453 instance=ExtResource("fleur")]
 position = Vector2(360, 284)
 
+[node name="Pingouin" parent="Village/Decor" unique_id=700000001 instance=ExtResource("pingouin")]
+position = Vector2(250, 272)
+
+[node name="Pingouin2" parent="Village/Decor" unique_id=700000002 instance=ExtResource("pingouin")]
+position = Vector2(720, 272)
+
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
 [node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1926955540 instance=ExtResource("checkpoint")]
@@ -107,7 +115,7 @@ IdCheckpoint = "village_depart"
 [node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
 
 [node name="ZoneVillage" parent="Village/Camera" unique_id=132868656 instance=ExtResource("camzone")]
-position = Vector2(319, 202)
+position = Vector2(317, 202)
 scale = Vector2(2.4799964, 1)
 
 [node name="Frontiere" type="Node2D" parent="Village" unique_id=1612957047]
@@ -231,6 +239,12 @@ position = Vector2(3600, 252)
 
 [node name="Rocher2" parent="Grotte/Decor" unique_id=401579510 instance=ExtResource("rocher")]
 position = Vector2(4900, 252)
+
+[node name="LutinNoel" parent="Grotte/Decor" unique_id=700000003 instance=ExtResource("lutin")]
+position = Vector2(3100, 272)
+
+[node name="LutinNoel2" parent="Grotte/Decor" unique_id=700000004 instance=ExtResource("lutin")]
+position = Vector2(4600, 272)
 
 [node name="Interactifs" type="Node2D" parent="Grotte" unique_id=1375720744]
 
