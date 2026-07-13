@@ -70,6 +70,11 @@ public partial class Player : LivingEntity
 		GameState.Instance.JoueurMort += OnJoueurMort;
 
 		JouerApparition();
+
+		// Partie chargée depuis le menu (le monde ne se recharge pas) : replace le
+		// joueur à son checkpoint. Nouvelle partie => position zéro, on garde le spawn.
+		if (GameState.Instance.CheckpointIdActif != "" && GameState.Instance.CheckpointPosition != Vector2.Zero)
+			TeleporterAuCheckpoint();
 	}
 
 	public override void _PhysicsProcess(double delta)

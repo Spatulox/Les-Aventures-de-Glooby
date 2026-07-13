@@ -56,7 +56,9 @@ public partial class MenuPrincipal : Control
 
 	private void ContinuerPartie()
 	{
-		// Sauvegarde à implémenter : on reprend simplement le monde pour l'instant.
+		// Restaure la progression sauvegardée avant de charger le monde : le joueur
+		// se replace ensuite à son checkpoint (voir Player._Ready).
+		GameState.Instance.Charger();
 		GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
 	}
 
