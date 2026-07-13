@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 // Gère les fonds par région (pas par écran) : un seul Parallax2D visible à
 // la fois parmi ceux enregistrés, fondu croisé de 0.5s au changement de
-// région plutôt qu'une bascule brute. Les RegionTrigger appellent
-// AfficherRegion() quand le joueur change de zone.
+// région plutôt qu'une bascule brute. Les CameraZone appellent AfficherRegion()
+// (via leur NomRegion) quand le joueur entre dans leur salle.
 public partial class BackgroundManager : Node2D
 {
 	public static BackgroundManager Instance { get; private set; }

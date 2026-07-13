@@ -16,7 +16,6 @@
 [ext_resource type="PackedScene" uid="uid://cpb7v2glby8x1" path="res://scenes/interactifs/panneau_bavard.tscn" id="panneau"]
 [ext_resource type="PackedScene" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
 [ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="player"]
-[ext_resource type="PackedScene" path="res://scenes/core/region_trigger.tscn" id="region_trigger"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/Rocher.tscn" id="rocher"]
 [ext_resource type="PackedScene" uid="uid://c0hqmgvti2q03" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="sol"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/StalactiteDecor.tscn" id="stalactite"]
@@ -124,6 +123,7 @@ IdDialogue = "village_panneau_accueil"
 [node name="ZoneVillage" parent="Village/Camera" unique_id=132868656 instance=ExtResource("camzone")]
 position = Vector2(317, 202)
 scale = Vector2(2.4799964, 1)
+NomRegion = "banquise"
 
 [node name="Frontiere" type="Node2D" parent="Village" unique_id=1612957047]
 
@@ -168,15 +168,11 @@ position = Vector2(2420, 284)
 [node name="Camera" type="Node2D" parent="Banquise" unique_id=989063594]
 
 [node name="ZoneBanquise" parent="Banquise/Camera" unique_id=841426661 instance=ExtResource("camzone")]
-position = Vector2(1605.0001, 195)
-scale = Vector2(7.5679502, 0.9498781)
+position = Vector2(1628.0001, 195)
+scale = Vector2(7.7279525, 0.9498781)
+NomRegion = "banquise"
 
 [node name="Frontiere" type="Node2D" parent="Banquise" unique_id=482695684]
-
-[node name="GrotteVersBanquise" parent="Banquise/Frontiere" unique_id=1465350486 instance=ExtResource("region_trigger")]
-position = Vector2(2583, 207)
-scale = Vector2(0.19203782, 1)
-NomRegion = "banquise"
 
 [node name="Grotte" type="Node2D" parent="." unique_id=1201709441]
 
@@ -261,13 +257,9 @@ position = Vector2(4600, 272)
 [node name="ZoneGrotte" parent="Grotte/Camera" unique_id=2005198318 instance=ExtResource("camzone")]
 position = Vector2(3824, 200)
 scale = Vector2(9.399998, 1)
+NomRegion = "grotte"
 
 [node name="Frontiere" type="Node2D" parent="Grotte" unique_id=2102435091]
-
-[node name="BanquiseVersGrotte" parent="Grotte/Frontiere" unique_id=55501036 instance=ExtResource("region_trigger")]
-position = Vector2(2605, 201)
-scale = Vector2(0.19999999, 1)
-NomRegion = "grotte"
 
 [node name="Joueur" parent="." unique_id=1975658094 instance=ExtResource("player")]
 position = Vector2(183.26, 272.805)

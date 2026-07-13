@@ -33,6 +33,7 @@ public partial class Player : LivingEntity
 	private CollisionShape2D _colGlisse;
 	private TileMapLayer _coucheSol;
 	private Camera2D _camera;
+	private CameraZone _zoneCameraActive;
 
 	private float _coyoteTimer;
 	private float _bufferSautTimer;
@@ -163,6 +164,8 @@ public partial class Player : LivingEntity
 		Velocity = velocity;
 		MoveAndSlide();
 
+		MettreAJourZoneCamera();
+
 		if (GlobalPosition.Y > SeuilChuteVide)
 		{
 			TomberDansLeVide();
@@ -201,7 +204,34 @@ public partial class Player : LivingEntity
 	{
 		GlobalPosition = GameState.Instance.CheckpointPosition;
 		Velocity = Vector2.Zero;
+		MettreAJourZoneCamera();
 		JouerApparition();
+	}
+
+	// Détection continue de la salle : chaque frame, on applique la CameraZone
+	// (limites caméra + fond de région) qui contient le joueur. Remplace le
+	// déclenchement par BodyEntered, qui ratait les téléportations (respawn) et
+	// imposait des RegionTrigger séparés pour le fond.
+	//
+	// Hystérésis : tant que la zone courante contient encore le joueur, on ne
+	// touche à rien (requête de groupe évitée). Sinon on cherche une nouvelle
+	// zone ; si aucune ne le contient (petit trou entre zones, saut au-dessus,
+	// chute), on GARDE la zone courante - on ne réassigne qu'en cas de match.
+	private void MettreAJourZoneCamera()
+	{
+		if (_zoneCameraActive != null && IsInstanceValid(_zoneCameraActive)
+			&& _zoneCameraActive.Contient(GlobalPosition))
+			return;
+
+		foreach (var noeud in GetTree().GetNodesInGroup(CameraZone.Groupe))
+		{
+			if (noeud is CameraZone zone && zone.Contient(GlobalPosition))
+			{
+				_zoneCameraActive = zone;
+				zone.Appliquer(this);
+				return;
+			}
+		}
 	}
 
 	public bool EstInvincible => _invincibiliteTimer > 0f;
