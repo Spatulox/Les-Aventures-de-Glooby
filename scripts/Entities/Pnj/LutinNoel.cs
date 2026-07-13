@@ -3,8 +3,8 @@ using Godot;
 // PNJ amical « Lutin du Père Noël » : plus petit que le joueur, présent dans la grotte.
 // Il déambule (logique héritée de PnjAmical) et est un bavard automatique : au passage du
 // joueur, sa bulle défile toute seule (sans appui de touche) en piochant une réplique au
-// hasard. Visuel = carré placeholder vert ; les animations réelles viendront de
-// res://assets/pnj/lutin_noel/.
+// hasard. Visuel = carré placeholder vert tant que res://assets/pnj/lutin_noel/{idle,marche}
+// est vide ; dès que les frames y seront déposées, l'AnimatedSprite2D prend le relais.
 public partial class LutinNoel : PnjAmical, TalkativeAutomatique
 {
 	// Délai (secondes) entre deux répliques en défilement automatique.
@@ -22,13 +22,15 @@ public partial class LutinNoel : PnjAmical, TalkativeAutomatique
 
 	public void Cacher() { }
 
-	// --- Animations (à décommenter quand les frames existeront) ---
-	// protected SpriteFrames ConstruireAnimations()
-	// {
-	//     var frames = new SpriteFrames();
-	//     frames.RemoveAnimation("default");
-	//     AjouterAnimation(frames, "idle", "res://assets/pnj/lutin_noel/idle", 6f, true);
-	//     AjouterAnimation(frames, "marche", "res://assets/pnj/lutin_noel/marche", 8f, true);
-	//     return frames;
-	// }
+	// Animations du lutin. Les dossiers sont encore vides : ConstruireAnimations renvoie
+	// des animations sans frame, donc PnjAmical garde le carré placeholder jusqu'à ce que
+	// les PNG soient déposés dans res://assets/pnj/lutin_noel/{idle,marche}.
+	protected override SpriteFrames ConstruireAnimations()
+	{
+		var frames = new SpriteFrames();
+		frames.RemoveAnimation("default");
+		AjouterAnimation(frames, "idle", "res://assets/pnj/lutin_noel/idle", 6f, true);
+		AjouterAnimation(frames, "marche", "res://assets/pnj/lutin_noel/marche", 8f, true);
+		return frames;
+	}
 }

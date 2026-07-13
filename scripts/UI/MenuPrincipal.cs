@@ -45,6 +45,14 @@ public partial class MenuPrincipal : Control
 		MenuFabrique.AjouterBouton(colonne, "Paramètres", () => AfficherParametres(true));
 		MenuFabrique.AjouterBouton(colonne, "Quitter", () => GetTree().Quit());
 
+		// La colonne, centrée par défaut, est ramenée vers la gauche pour laisser la
+		// moitié droite de l'écran au pingouin (on réduit la zone de centrage à la
+		// partie gauche de l'écran, ce qui recentre le menu dedans).
+		if (colonne.GetParent() is Control zoneColonne)
+			zoneColonne.AnchorRight = 0.72f;
+
+		AjouterPingouinIdle();
+
 		ConstruireParametres();
 	}
 
@@ -60,6 +68,51 @@ public partial class MenuPrincipal : Control
 		// se replace ensuite à son checkpoint (voir Player._Ready).
 		GameState.Instance.Charger();
 		GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
+	}
+
+	// Affiche à droite du menu le pingouin du joueur en animation « idle », purement
+	// décoratif (non contrôlable) : on ne réutilise pas la scène player.tscn (qui
+	// embarque physique, caméra et script de contrôle) mais uniquement ses frames
+	// idle, montées sur un AnimatedSprite2D posé dans la moitié droite de l'écran.
+	private void AjouterPingouinIdle()
+	{
+		var frames = ChargerFramesIdle();
+		if (frames == null)
+			return;
+
+		// Ancré au centre-droit de l'écran : le pingouin suit ce coin quel que soit
+		// le redimensionnement de la fenêtre. L'AnimatedSprite2D (nœud 2D) est posé
+		// à l'origine de cette ancre, décalé vers la gauche du bord.
+		var ancre = new Control { MouseFilter = Control.MouseFilterEnum.Ignore };
+		ancre.SetAnchorsPreset(Control.LayoutPreset.CenterRight);
+		AddChild(ancre);
+
+		// Le sprite idle regarde vers la droite par défaut : on le retourne pour
+		// qu'il fasse face au menu, situé à sa gauche.
+		var sprite = new AnimatedSprite2D
+		{
+			SpriteFrames = frames,
+			Position = new Vector2(-160, 0),
+			Scale = new Vector2(2.5f, 2.5f),
+			FlipH = true
+		};
+		ancre.AddChild(sprite);
+		sprite.Play("idle");
+	}
+
+	// Frames de l'animation « idle » du joueur (mêmes PNG que Player, via le helper
+	// partagé AnimationsSprite), ou null si le dossier est vide. Bouclées à la même
+	// cadence (6 fps) que dans le jeu.
+	private static SpriteFrames ChargerFramesIdle()
+	{
+		var idle = AnimationsSprite.ChargerFrames("res://assets/player/idle");
+		if (idle.Length == 0)
+			return null;
+
+		var frames = new SpriteFrames();
+		frames.RemoveAnimation("default");
+		AnimationsSprite.EnregistrerAnimation(frames, "idle", idle, 6f, true);
+		return frames;
 	}
 
 	// Place derrière tout le reste une image de fond tirée au hasard parmi celles
