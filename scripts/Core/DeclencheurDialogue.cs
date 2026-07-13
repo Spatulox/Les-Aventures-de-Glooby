@@ -15,10 +15,14 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	[Export] public string LibelleTouche = "Espace";
 
 	private Talkative _parlant;
+	// Non nul si la cible défile toute seule (bavardage d'ambiance) : voir TalkativeAutomatique.
+	private TalkativeAutomatique _auto;
 	private BulleDialogue _bulle;
 	private bool _joueurProche;
 	private bool _enDialogue;
 	private int _ligne;
+	private float _minuteurAuto;
+	private readonly RandomNumberGenerator _rng = new();
 
 	// Hook DeclencheurZone (avant le branchement de l'entrée) : résout le Talkative
 	// et prépare la bulle. Retourne false — donc le déclencheur reste inerte — si
@@ -31,6 +35,9 @@ public partial class DeclencheurDialogue : DeclencheurZone
 			GD.PushWarning($"DeclencheurDialogue ({GetPath()}) : aucun Talkative trouvé (parent ou Cible).");
 			return false;
 		}
+
+		_auto = _parlant as TalkativeAutomatique;   // défilement automatique si la cible l'implémente
+		_rng.Randomize();
 
 		_bulle = new BulleDialogue();
 		AddChild(_bulle);
@@ -56,7 +63,9 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		if (!_parlant.PeutParler() || _parlant.Dialogue.Count == 0)
 			return;
 
-		if (_parlant.DeclencheAuPassage)
+		// Un bavard automatique démarre toujours au passage (son défilement ne dépend
+		// pas de la touche) ; sinon on suit le mode déclaré par le Talkative.
+		if (_parlant.DeclencheAuPassage || _auto != null)
 			DemarrerDialogue();
 		else
 			AfficherRappel();
@@ -72,7 +81,22 @@ public partial class DeclencheurDialogue : DeclencheurZone
 
 	public override void _Process(double delta)
 	{
-		if (!_joueurProche || _parlant == null || !Input.IsActionJustPressed("action"))
+		if (!_joueurProche || _parlant == null)
+			return;
+
+		// Défilement automatique : la bulle avance sur minuteur, sans appui de touche.
+		if (_enDialogue && _auto != null)
+		{
+			_minuteurAuto -= (float)delta;
+			if (_minuteurAuto <= 0f)
+			{
+				_minuteurAuto = _auto.IntervalleAuto;
+				LigneSuivante();
+			}
+			return;
+		}
+
+		if (!Input.IsActionJustPressed("action"))
 			return;
 
 		if (_enDialogue)
@@ -92,21 +116,53 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	private void DemarrerDialogue()
 	{
 		_enDialogue = true;
-		_ligne = 0;
-		GameState.Instance.DialogueDisponible = true;
+		_ligne = _parlant.Aleatoire ? _rng.RandiRange(0, _parlant.Dialogue.Count - 1) : 0;
 		_parlant.SurDebutDialogue();
 		_bulle.Position = ToLocal(_parlant.PointBulle);
+
+		if (_auto != null)
+		{
+			// Bavardage automatique : minuteur armé, pas de détournement de la touche de saut.
+			_minuteurAuto = _auto.IntervalleAuto;
+			_auto.Incrementer();
+		}
+		else
+		{
+			GameState.Instance.DialogueDisponible = true;
+		}
+
 		_bulle.AfficherDialogue(_parlant.Dialogue[_ligne]);
 	}
 
 	private void LigneSuivante()
 	{
-		_ligne++;
-		if (_ligne >= _parlant.Dialogue.Count)
+		// Mode aléatoire manuel : une seule réplique, puis fin.
+		if (_parlant.Aleatoire && _auto == null)
 		{
 			TerminerDialogue(sortie: false);
 			return;
 		}
+
+		// Choix de la ligne suivante : nouvelle réplique au hasard, ou ligne d'après.
+		if (_parlant.Aleatoire)
+		{
+			_ligne = _rng.RandiRange(0, _parlant.Dialogue.Count - 1);
+		}
+		else
+		{
+			_ligne++;
+			if (_ligne >= _parlant.Dialogue.Count)
+			{
+				if (_auto == null)
+				{
+					TerminerDialogue(sortie: false);
+					return;
+				}
+				_ligne = 0;   // bavardage automatique : on boucle tant que le joueur est là
+			}
+		}
+
+		_auto?.Incrementer();
 		_bulle.AfficherDialogue(_parlant.Dialogue[_ligne]);
 	}
 
@@ -127,6 +183,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 			return;
 		}
 
+		_auto?.Cacher();
 		_bulle?.Cacher();
 		GameState.Instance.DialogueDisponible = false;
 	}

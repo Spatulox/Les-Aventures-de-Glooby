@@ -12,6 +12,10 @@ public interface Talkative
 	// Point d'ancrage MONDE au-dessus duquel dessiner la bulle (souvent la tête).
 	Vector2 PointBulle { get; }
 
+	// Vrai : afficher UNE seule réplique tirée au hasard plutôt que de faire défiler
+	// toutes les lignes. (Champ [Export] côté implémentations : visible dans l'inspecteur.)
+	bool Aleatoire { get; }
+
 	// Vrai : le dialogue démarre automatiquement au passage du joueur. Faux : il
 	// démarre sur la touche d'action quand le joueur est proche (un rappel de touche
 	// s'affiche par défaut pour signaler qu'on peut parler).
