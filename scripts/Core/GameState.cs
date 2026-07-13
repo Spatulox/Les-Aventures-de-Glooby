@@ -46,6 +46,11 @@ public partial class GameState : Node
 	public Vector2 CheckpointPosition { get; private set; } = Vector2.Zero;
 	public string CheckpointIdActif { get; private set; } = "";
 
+	// Vrai quand le joueur est à portée d'un élément parlant (Talkative) : la touche
+	// de saut, partagée avec l'action "action", est alors captée par le dialogue et
+	// ne fait pas sauter le joueur (voir Player._PhysicsProcess et DeclencheurDialogue).
+	public bool DialogueDisponible { get; set; }
+
 	public override void _Ready()
 	{
 		Instance = this;
@@ -131,14 +136,20 @@ public partial class GameState : Node
 	// pour ne pas dépendre d'un mapping figé dans project.godot.
 	private static void ConfigurerActionsParDefaut()
 	{
-		AjouterAction("move_left", Key.A, Key.Left);
-		AjouterAction("move_right", Key.D, Key.Right);
+		// Déplacement
+		AjouterAction("move_left", Key.Left);
+		AjouterAction("move_right", Key.Right);
 		AjouterAction("jump", Key.Space);
 		AjouterAction("slide", Key.Shift);
-		AjouterAction("bas", Key.S, Key.Down);
-		AjouterAction("lancer", Key.J, Key.Ctrl);
-		AjouterAction("manger", Key.E);
-		AjouterAction("pouvoir_chaleur", Key.F);
+		AjouterAction("bas", Key.Down);
+
+		// Actions
+		AjouterAction("lancer", Key.D);
+		AjouterAction("manger", Key.W);
+		AjouterAction("pouvoir_chaleur", Key.A);
+		
+		// Interactions
+		AjouterAction("action", Key.Enter, Key.Space);
 		AjouterAction("menu", Key.Escape);
 	}
 

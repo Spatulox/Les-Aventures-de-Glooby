@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/igloo.tscn" id="igloo"]
 [ext_resource type="PackedScene" path="res://scenes/entites/lutin_noel.tscn" id="lutin"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
+[ext_resource type="PackedScene" uid="uid://cpb7v2glby8x1" path="res://scenes/interactifs/panneau_bavard.tscn" id="panneau"]
 [ext_resource type="PackedScene" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
 [ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/core/region_trigger.tscn" id="region_trigger"]
@@ -111,6 +112,11 @@ position = Vector2(720, 272)
 [node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1926955540 instance=ExtResource("checkpoint")]
 position = Vector2(327, 284)
 IdCheckpoint = "village_depart"
+
+[node name="PanneauAccueil" parent="Village/Interactifs" unique_id=700000010 instance=ExtResource("panneau")]
+position = Vector2(612, 296)
+Lignes = PackedStringArray("Bienvenue au village, Glooby !", "Appuie sur Espace ou Entree pour discuter avec les habitants... et lire les panneaux comme moi.", "Vers l\'est, la banquise puis la grotte t\'attendent. Prudence !")
+IdDialogue = "village_panneau_accueil"
 
 [node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
 
