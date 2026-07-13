@@ -6,7 +6,7 @@ using Godot;
 // model, le rappel de touche par défaut, et le défilement des lignes à l'appui de l'action.
 // Deux déclenchements (selon Talkative.DeclencheAuPassage) : automatique au passage, ou
 // sur touche quand le joueur est proche. Aucune logique propre au PNJ ne vit ici.
-public partial class DeclencheurDialogue : Area2D
+public partial class DeclencheurDialogue : DeclencheurZone
 {
 	// Nœud parlant ciblé ; par défaut le parent s'il implémente Talkative.
 	[Export] public NodePath Cible;
@@ -20,21 +20,24 @@ public partial class DeclencheurDialogue : Area2D
 	private bool _enDialogue;
 	private int _ligne;
 
-	public override void _Ready()
+	// Hook DeclencheurZone (avant le branchement de l'entrée) : résout le Talkative
+	// et prépare la bulle. Retourne false — donc le déclencheur reste inerte — si
+	// rien de parlant n'est trouvé, ce qui évite un NullReference à l'entrée.
+	protected override bool PreparerDeclencheur()
 	{
 		_parlant = ResoudreParlant();
 		if (_parlant == null)
 		{
 			GD.PushWarning($"DeclencheurDialogue ({GetPath()}) : aucun Talkative trouvé (parent ou Cible).");
-			return;
+			return false;
 		}
 
 		_bulle = new BulleDialogue();
 		AddChild(_bulle);
 		_bulle.Position = ToLocal(_parlant.PointBulle);
 
-		BodyEntered += OnBodyEntered;
-		BodyExited += OnBodyExited;
+		BodyExited += OnBodyExited;   // la sortie n'est pas couverte par DeclencheurZone
+		return true;
 	}
 
 	private Talkative ResoudreParlant()
@@ -44,10 +47,10 @@ public partial class DeclencheurDialogue : Area2D
 		return GetParent() as Talkative;
 	}
 
-	private void OnBodyEntered(Node2D corps)
+	// Entrée du joueur (hook DeclencheurZone) : dialogue au passage, ou rappel de
+	// touche en mode interaction. _parlant est garanti non nul ici (voir Preparer).
+	protected override void SurEntreeJoueur(Player joueur)
 	{
-		if (corps is not Player || _parlant == null)
-			return;
 		_joueurProche = true;
 
 		if (!_parlant.PeutParler() || _parlant.Dialogue.Count == 0)
