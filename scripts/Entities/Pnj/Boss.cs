@@ -1,5 +1,4 @@
 using Godot;
-using System.Collections.Generic;
 
 // Base commune à tous les boss : une LivingEntity animée (AnimatedSprite2D) qui charge
 // ses animations par dossier et joue une séquence de mort animée. Les PV, l'encaissement
@@ -39,22 +38,11 @@ public abstract partial class Boss : LivingEntity
 	}
 
 	// Helper générique : ajoute à un SpriteFrames une animation depuis un dossier de
-	// PNG (triés par nom). Réutilisable par tous les boss.
+	// PNG (triés par nom). Réutilisable par tous les boss et PNJ. Simple façade
+	// « depuis un dossier » au-dessus de AnimationsSprite (chargement + registre
+	// partagés avec le Player et l'UI).
 	protected static void AjouterAnimation(SpriteFrames frames, string nom, string dossier, float fps, bool boucle)
 	{
-		frames.AddAnimation(nom);
-		frames.SetAnimationSpeed(nom, fps);
-		frames.SetAnimationLoop(nom, boucle);
-
-		var fichiers = new List<string>();
-		foreach (var fichier in DirAccess.GetFilesAt(dossier))
-		{
-			if (fichier.EndsWith(".png"))
-				fichiers.Add(fichier);
-		}
-		fichiers.Sort();
-
-		foreach (var fichier in fichiers)
-			frames.AddFrame(nom, GD.Load<Texture2D>($"{dossier}/{fichier}"));
+		AnimationsSprite.EnregistrerAnimation(frames, nom, AnimationsSprite.ChargerFrames(dossier), fps, boucle);
 	}
 }
