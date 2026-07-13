@@ -102,10 +102,11 @@ position = Vector2(360, 284)
 
 [node name="Pingouin" parent="Village/Decor" unique_id=700000001 instance=ExtResource("pingouin")]
 position = Vector2(250, 272)
-Lignes = PackedStringArray("Coin coin ! Bienvenue chez les manchots, Glooby.", "Tu descends vers la grotte ? Couvre-toi bien.")
+Lignes = PackedStringArray("Oh ! Salut Glooby !", "J\'adore ton Pantalon !")
 
 [node name="Pingouin2" parent="Village/Decor" unique_id=700000002 instance=ExtResource("pingouin")]
-position = Vector2(720, 272)
+position = Vector2(721, 272)
+Lignes = PackedStringArray("Huummff")
 
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
