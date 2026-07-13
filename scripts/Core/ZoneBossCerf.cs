@@ -23,6 +23,10 @@ public partial class ZoneBossCerf : ZoneBoss
 
 	private void SurVictoire()
 	{
+		// Persiste la défaite : la zone ne respawnera plus ce boss après chargement.
+		GameState.Instance.MarquerBossVaincu(NomBoss);
+		GameState.Instance.Sauvegarder();
+
 		var minuteur = GetTree().CreateTimer(2.5);
 		minuteur.Timeout += () => GetTree().ChangeSceneToFile("res://scenes/ui/ecran_fin.tscn");
 	}

@@ -33,6 +33,10 @@ public partial class ZoneBoss : DeclencheurZone
 
 	protected override void SurEntreeJoueur(Player joueur)
 	{
+		// Boss déjà vaincu (partie chargée) : ne pas le faire réapparaître, barre masquée.
+		if (GameState.Instance.EstBossVaincu(NomBoss))
+			return;
+
 		Boss = FaireApparaitreBoss();
 		if (Boss != null)
 		{

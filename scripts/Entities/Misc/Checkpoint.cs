@@ -29,10 +29,12 @@ public partial class Checkpoint : DeclencheurZone
 
 	protected override void SurEntreeJoueur(Player joueur)
 	{
-		if (GameState.Instance.CheckpointIdActif == IdCheckpoint)
-			return;
+		if (GameState.Instance.CheckpointIdActif != IdCheckpoint)
+			GameState.Instance.ActiverCheckpoint(IdCheckpoint, GlobalPosition + new Vector2(-20, 0));
 
-		GameState.Instance.ActiverCheckpoint(IdCheckpoint, GlobalPosition + new Vector2(-20, 0));
+		// Sauvegarde à chaque contact d'un campement, même déjà actif : capture
+		// l'état courant (poissons consommés, murs fondus, pouvoir, position).
+		GameState.Instance.Sauvegarder();
 	}
 
 	private void AfficherEtat(bool actif)
