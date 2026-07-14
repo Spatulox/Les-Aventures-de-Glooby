@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://d3rg5fxvb8scq"]
+[gd_scene format=3 uid="uid://d3rg5fxvb8scq"]
 
 [ext_resource type="Script" uid="uid://bcuxilxsasl8e" path="res://scripts/Plateformes/PlateformeFixe.cs" id="1"]
-[ext_resource type="Texture2D" uid="uid://c2u1aale7y1q8" path="res://assets/plateformes/fixe_petite.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://c2u1aale7y1q8" path="res://assets/plateformes/fragile_etat1.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top"]
 size = Vector2(266, 52)
@@ -14,5 +14,5 @@ scale = Vector2(2, 2)
 texture = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1412056324]
-position = Vector2(-4, -62)
+position = Vector2(3, -4)
 shape = SubResource("RectangleShape2D_top")

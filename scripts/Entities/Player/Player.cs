@@ -33,14 +33,14 @@ public partial class Player : LivingEntity
 	// que le joueur avance, au lieu de s'empiler sur place).
 	[Export] public float IntervallePoseGlace = 0.22f;
 	[Export] public float OffsetPoseGlaceX = 40f;
-	[Export] public float OffsetPoseGlaceY = 22f;
+	[Export] public float OffsetPoseGlaceY = 40f;
 
 	private AnimatedSprite2D _sprite;
 	private CollisionShape2D _colDebout;
 	private CollisionShape2D _colGlisse;
 	private TileMapLayer _coucheSol;
 	private Camera2D _camera;
-	private CameraZone _zoneCameraActive;
+	private IZoneCamera _zoneCameraActive;
 
 	private float _coyoteTimer;
 	private float _bufferSautTimer;
@@ -222,8 +222,9 @@ public partial class Player : LivingEntity
 		JouerApparition();
 	}
 
-	// Détection continue de la salle : chaque frame, on applique la CameraZone
-	// (limites caméra + fond de région) qui contient le joueur. Remplace le
+	// Détection continue de la salle : chaque frame, on applique la zone caméra
+	// (limites caméra + fond de région) qui contient le joueur. Toute IZoneCamera
+	// compte - CameraZone (salle normale) comme ZoneBoss (arène). Remplace le
 	// déclenchement par BodyEntered, qui ratait les téléportations (respawn) et
 	// imposait des RegionTrigger séparés pour le fond.
 	//
@@ -233,13 +234,13 @@ public partial class Player : LivingEntity
 	// chute), on GARDE la zone courante - on ne réassigne qu'en cas de match.
 	private void MettreAJourZoneCamera()
 	{
-		if (_zoneCameraActive != null && IsInstanceValid(_zoneCameraActive)
+		if (_zoneCameraActive is Node courant && IsInstanceValid(courant)
 			&& _zoneCameraActive.Contient(GlobalPosition))
 			return;
 
 		foreach (var noeud in GetTree().GetNodesInGroup(CameraZone.Groupe))
 		{
-			if (noeud is CameraZone zone && zone.Contient(GlobalPosition))
+			if (noeud is IZoneCamera zone && zone.Contient(GlobalPosition))
 			{
 				_zoneCameraActive = zone;
 				zone.Appliquer(this);

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" uid="uid://c2smw15se8pxl" path="res://assets/props/grotte/champignon_lumineux.png" id="1"]
+
+[node name="ChampignonLumineux" type="Sprite2D"]
+z_index = -1
+texture = ExtResource("1")

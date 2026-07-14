@@ -31,11 +31,16 @@ Ajout d'un second pouvoir, bâti sur la même base que le Pouvoir de Chaleur
 **`scripts/Entities/Player/Player.cs` + `scenes/entites/player.tscn`**
 - Export `ScenePlateformeGlace` (→ `PlateformeGlace.tscn`), cadence `IntervallePoseGlace=0.22s`.
 - `UtiliserPouvoirGlace()` : maintien de la touche → pose une plateforme devant
-  (offset direction/regard), consomme du mana, flash bleu. Rien si mana à sec.
+  (offsets `OffsetPoseGlaceX=40`, `OffsetPoseGlaceY=40`), consomme du mana, flash
+  bleu. Rien si mana à sec.
+- Ajustement : `OffsetPoseGlaceY` 22 → **40** pour poser les plateformes plus bas
+  (elles apparaissaient trop haut).
 
 **`scripts/Entities/Interactable/PouvoirGlacePickup.cs` + `scenes/interactifs/pouvoir_glace_pickup.tscn`** (nouveaux)
 - Copie stricte du pickup de chaleur (`: ElementRamassable`). Sprite réutilisé =
-  `assets/props/cristal_petit.png`. **Non placé dans `monde.tscn`** (à poser dans l'éditeur).
+  `assets/props/cristal_petit.png`.
+- **Placé dans `monde.tscn`** à la sortie est du village (`Village/Interactifs`,
+  position `(1180, 276)`), sur le dernier bout de sol avant le trou de la banquise.
 
 **`scripts/UI/Hud.cs` + `scenes/ui/hud.tscn`** — jauge de mana (ColorRect fond +
 remplissage) sous le compteur de poissons, cachée tant que le pouvoir n'est pas
