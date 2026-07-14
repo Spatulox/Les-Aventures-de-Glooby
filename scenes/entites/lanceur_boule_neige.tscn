@@ -1,0 +1,31 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/Entities/Pnj/LanceurBouleNeige.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/pnj/lanceur_boule_neige/placeholder.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/boule_de_neige.tscn" id="3"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
+radius = 6.0
+height = 22.0
+
+[sub_resource type="RectangleShape2D" id="RectContact"]
+size = Vector2(24, 24)
+
+[node name="LanceurBouleNeige" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 16
+script = ExtResource("1")
+SceneBouleDeNeige = ExtResource("3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_1")
+
+[node name="ZoneContact" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneContact"]
+shape = SubResource("RectContact")
