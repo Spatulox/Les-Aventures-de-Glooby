@@ -69,3 +69,17 @@ Reste une seule `CollisionShape2D` inline : le **trigger `ZoneBossCerf`** (Area2
 
 ## Vérification (v3)
 - Build C# → **0 erreur** (nouveau `BlocGrotte.cs` compile). Boot `monde.tscn` headless → **aucune erreur** sur `BlocGrotte`/labyrinthe ; aucune référence pendante aux sub_resources supprimées.
+
+---
+
+# Révision 4 — fond de l'arène du Boss Cerf + nettoyage du menu
+
+**Fond de l'arène** (via le système de région caméra existant, pas de bricolage) :
+- `scenes/boss/FondBossCerf.tscn` restructuré en **`Parallax2D` épinglé à la caméra** (`scroll_scale (0,0)`, `z=-100`, Sprite2D 320,180 ×2) — même pattern que `FondBanquise`/`FondGrotte` (il était un `Sprite2D` fixe qui n'aurait pas suivi la caméra).
+- Nouveau conteneur de région **`Fonds/boss_cerf`** (Node2D, `modulate:a=0`) contenant `FondBossCerf` — enregistré automatiquement par `BackgroundManager`.
+- `ZoneGrotte.NomRegion` passé de `grotte` → **`boss_cerf`** : en entrant dans la grotte (arène), la caméra déclenche `AfficherRegion("boss_cerf")` → cross-fade vers le fond du boss. Le labyrinthe garde la région `grotte` (cave).
+
+**Menu principal** : `MenuPrincipal.FondAleatoire` exclut désormais tout fond contenant « boss » du tirage aléatoire de l'écran-titre → `fond_boss_cerf.png` réservé au combat, plus défloré au menu.
+
+## Vérification (v4)
+- Build C# → **0 erreur**. Boot `monde.tscn` headless → **aucune erreur** (région `boss_cerf` chargée). Le cross-fade en entrant dans l'arène est à confirmer en **F5**.
