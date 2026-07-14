@@ -11,6 +11,9 @@ public enum DamageSource
 	Stalactite,
 	ChargeBoss,
 	SouffleGivre,
+
+	// Subis par le joueur au contact d'un PNJ méchant (contact simple ou charge).
+	ContactMechant,
 }
 
 // Helpers de DamageSource : associe à chaque source son montant de dégâts.
@@ -25,6 +28,7 @@ public static class DamageSourceExtensions
 		DamageSource.Stalactite => 1,
 		DamageSource.ChargeBoss => 1,
 		DamageSource.SouffleGivre => 2,
+		DamageSource.ContactMechant => 1,
 		_ => 1,
 	};
 }
