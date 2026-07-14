@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/decors/usine/usine_mur.png" id="1_mur"]
+[ext_resource type="Texture2D" path="res://assets/decors/usine/usine_poutres.png" id="2_poutres"]
+
+[node name="FondUsine" type="Node2D"]
+
+[node name="Mur" type="Parallax2D" parent="."]
+z_index = -8
+scroll_scale = Vector2(0.1, 0.03)
+repeat_size = Vector2(720, 0)
+repeat_times = 20
+
+[node name="Sprite2D" type="Sprite2D" parent="Mur"]
+position = Vector2(0, 180)
+scale = Vector2(2, 2)
+texture = ExtResource("1_mur")
+
+[node name="Poutres" type="Parallax2D" parent="."]
+z_index = -4
+scroll_scale = Vector2(0.3, 0.08)
+repeat_size = Vector2(720, 0)
+repeat_times = 20
+
+[node name="Sprite2D" type="Sprite2D" parent="Poutres"]
+position = Vector2(0, 180)
+scale = Vector2(2, 2)
+texture = ExtResource("2_poutres")
