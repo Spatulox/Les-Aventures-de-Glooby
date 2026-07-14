@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b7pn8bois0po1"]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/Entities/PanneauBois.cs" id="1"]
 [ext_resource type="Script" path="res://scripts/Core/DeclencheurDialogue.cs" id="2"]
@@ -7,7 +7,7 @@
 size = Vector2(140, 100)
 
 [sub_resource type="RectangleShape2D" id="RectProximite"]
-size = Vector2(96, 120)
+size = Vector2(160, 140)
 
 [sub_resource type="LabelSettings" id="LabelSettings_texte"]
 font_size = 10
@@ -37,5 +37,5 @@ shape = SubResource("RectangleShape2D_zone")
 script = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue"]
-position = Vector2(0, -24)
+position = Vector2(0, 40)
 shape = SubResource("RectProximite")
