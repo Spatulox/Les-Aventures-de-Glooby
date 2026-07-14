@@ -25,7 +25,24 @@ public partial class GameState : Node
 	[Signal]
 	public delegate void PouvoirChaleurObtenuEventHandler();
 
+	[Signal]
+	public delegate void PouvoirGlaceObtenuEventHandler();
+
+	[Signal]
+	public delegate void ManaGlaceChangesEventHandler(float mana, float max);
+
 	[Export] public int PvMax = 5;
+
+	// Pouvoir de Glace : jauge de mana transient (non sauvegardée, régénérée à
+	// chaque session). Chaque plateforme de glace posée coûte du mana ; après la
+	// dernière pose, la régénération ne reprend qu'après DelaiRegenGlace, puis
+	// remonte progressivement (0 -> ManaGlaceMax en DureeRegenGlace secondes).
+	[Export] public float ManaGlaceMax = 100f;
+	[Export] public float DureeRegenGlace = 30f;
+	[Export] public float DelaiRegenGlace = 5f;
+	[Export] public float CoutPlateformeGlace = 12f;
+	public float ManaGlace { get; private set; }
+	private float _delaiRegenTimer;
 
 	// Réserve fixe de poissons donnée en début de partie : ils ne se ramassent
 	// pas dans le monde, ils se consomment seulement (soin via ManagerPoisson).
@@ -39,6 +56,7 @@ public partial class GameState : Node
 
 	// Flags de progression (débloqués une fois pour toute la partie).
 	public bool PouvoirChaleurActif { get => _donnees.PouvoirChaleurActif; private set => _donnees.PouvoirChaleurActif = value; }
+	public bool PouvoirGlaceActif { get => _donnees.PouvoirGlaceActif; private set => _donnees.PouvoirGlaceActif = value; }
 
 	// Un seul monde continu (façon Hollow Knight) : plus de scène à recharger,
 	// juste une position où replacer le joueur.
@@ -54,7 +72,26 @@ public partial class GameState : Node
 	{
 		Instance = this;
 		Pv = PvMax;
+		ManaGlace = ManaGlaceMax;
 		ConfigurerActionsParDefaut();
+	}
+
+	// Régénération du mana de glace : rien pendant DelaiRegenGlace après la
+	// dernière pose, puis remontée progressive jusqu'au plein. Le signal n'est
+	// émis qu'en cas de changement effectif (pas une émission par frame à plein).
+	public override void _Process(double delta)
+	{
+		if (_delaiRegenTimer > 0f)
+		{
+			_delaiRegenTimer -= (float)delta;
+			return;
+		}
+
+		if (ManaGlace >= ManaGlaceMax)
+			return;
+
+		ManaGlace = Mathf.Min(ManaGlaceMax, ManaGlace + ManaGlaceMax / DureeRegenGlace * (float)delta);
+		EmitSignal(SignalName.ManaGlaceChanges, ManaGlace, ManaGlaceMax);
 	}
 
 	// Réinitialise toute la progression pour une nouvelle partie. Le monde ne
@@ -62,6 +99,7 @@ public partial class GameState : Node
 	public void NouvellePartie()
 	{
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
+		ManaGlace = ManaGlaceMax;
 	}
 
 	public void Degats(int quantite = 1)
@@ -106,6 +144,26 @@ public partial class GameState : Node
 
 		PouvoirChaleurActif = true;
 		EmitSignal(SignalName.PouvoirChaleurObtenu);
+	}
+
+	public void ObtenirPouvoirGlace()
+	{
+		if (PouvoirGlaceActif)
+			return;
+
+		PouvoirGlaceActif = true;
+		EmitSignal(SignalName.PouvoirGlaceObtenu);
+	}
+
+	// Le pouvoir de glace ne se déclenche que débloqué et avec assez de mana.
+	public bool PeutUtiliserPouvoirGlace(float cout) => PouvoirGlaceActif && ManaGlace >= cout;
+
+	// Consomme du mana (pose d'une plateforme) et relance le délai avant régen.
+	public void ConsommerManaGlace(float cout)
+	{
+		ManaGlace = Mathf.Max(0f, ManaGlace - cout);
+		_delaiRegenTimer = DelaiRegenGlace;
+		EmitSignal(SignalName.ManaGlaceChanges, ManaGlace, ManaGlaceMax);
 	}
 
 	// API générique des éléments persistants (un seul ensemble de stockage).
@@ -168,6 +226,7 @@ public partial class GameState : Node
 		AjouterAction("lancer", Key.D);
 		AjouterAction("manger", Key.W);
 		AjouterAction("pouvoir_chaleur", Key.A);
+		AjouterAction("pouvoir_glace", Key.S);
 		
 		// Interactions
 		AjouterAction("action", Key.Enter, Key.Space);
