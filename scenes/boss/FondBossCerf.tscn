@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/backgrounds/fond_boss_cerf.png" id="1"]
+
+[node name="FondBossCerf" type="Sprite2D"]
+z_index = -3
+scale = Vector2(2, 2)
+texture = ExtResource("1")
