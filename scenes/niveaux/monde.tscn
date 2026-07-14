@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://67grwk8edwci"]
 
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
+[ext_resource type="PackedScene" path="res://scenes/plateformes/BlocGrotte.tscn" id="bloc_grotte"]
 [ext_resource type="PackedScene" path="res://scenes/entites/boss_cerf.tscn" id="boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="boss_hud"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
@@ -11,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorGrotte.tscn" id="decor_grotte"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/FleurGivre.tscn" id="fleur"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
+[ext_resource type="PackedScene" path="res://scenes/boss/FondBossCerf.tscn" id="fond_boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondGrotte.tscn" id="fond_grotte"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/ChampignonLumineux.tscn" id="g_champi"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/ChampignonGeant.tscn" id="g_champi_geant"]
@@ -29,13 +31,12 @@
 [ext_resource type="PackedScene" path="res://scenes/entites/lutin_noel.tscn" id="lutin"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/mur_fondable.tscn" id="mur_fondable"]
-[ext_resource type="PackedScene" uid="uid://b7pn8bois0po1" path="res://scenes/props/PanneauBois.tscn" id="panneau"]
+[ext_resource type="PackedScene" path="res://scenes/props/PanneauBois.tscn" id="panneau"]
 [ext_resource type="PackedScene" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
 [ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/pouvoir_chaleur_pickup.tscn" id="pouvoir"]
 [ext_resource type="PackedScene" uid="uid://du38rqxpol3j8" path="res://scenes/decors/props/Rocher.tscn" id="rocher"]
 [ext_resource type="PackedScene" uid="uid://c0hqmgvti2q03" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="sol"]
-[ext_resource type="PackedScene" path="res://scenes/plateformes/BlocGrotte.tscn" id="bloc_grotte"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/StalactiteDecor.tscn" id="stalactite"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="stalactite_piege"]
 [ext_resource type="Script" uid="uid://6lo0e2meekiq" path="res://scripts/Core/ZoneBossCerf.cs" id="zonebosscerf"]
@@ -63,6 +64,11 @@ modulate = Color(1, 1, 1, 0)
 [node name="FondGrotte" parent="Fonds/grotte" unique_id=1347233713 instance=ExtResource("fond_grotte")]
 
 [node name="DecorGrotte" parent="Fonds/grotte" unique_id=1385095757 instance=ExtResource("decor_grotte")]
+
+[node name="boss_cerf" type="Node2D" parent="Fonds" unique_id=1524421378]
+modulate = Color(1, 1, 1, 0)
+
+[node name="FondBossCerf" parent="Fonds/boss_cerf" unique_id=1677797526 instance=ExtResource("fond_boss_cerf")]
 
 [node name="Village" type="Node2D" parent="." unique_id=681150130]
 
@@ -138,9 +144,10 @@ position = Vector2(327, 284)
 IdCheckpoint = "village_depart"
 
 [node name="panneau_poteau" parent="Village/Interactifs" unique_id=700000010 instance=ExtResource("panneau")]
-position = Vector2(612, 296)
+position = Vector2(612, 268)
 scale = Vector2(0.5, 0.5)
 Texte = "Village des pingouins"
+Lignes = PackedStringArray("Village des pingouins")
 
 [node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
 
@@ -446,7 +453,7 @@ shape = SubResource("RectZoneBoss")
 [node name="ZoneGrotte" parent="Grotte/Camera" unique_id=2005198318 instance=ExtResource("camzone")]
 position = Vector2(4115, 200)
 scale = Vector2(11.4453, 1)
-NomRegion = "grotte"
+NomRegion = "boss_cerf"
 
 [node name="Frontiere" type="Node2D" parent="Grotte" unique_id=2102435091]
 
@@ -454,27 +461,27 @@ NomRegion = "grotte"
 
 [node name="Sol" type="Node2D" parent="Labyrinthe" unique_id=2035059689]
 
-[node name="MurGauche" parent="Labyrinthe/Sol" instance=ExtResource("bloc_grotte")]
+[node name="MurGauche" parent="Labyrinthe/Sol" unique_id=1523992232 instance=ExtResource("bloc_grotte")]
 position = Vector2(1450, 610)
 Taille = Vector2(48, 540)
 
-[node name="MurDroit" parent="Labyrinthe/Sol" instance=ExtResource("bloc_grotte")]
+[node name="MurDroit" parent="Labyrinthe/Sol" unique_id=703535614 instance=ExtResource("bloc_grotte")]
 position = Vector2(2650, 610)
 Taille = Vector2(48, 540)
 
-[node name="CorridorL1" parent="Labyrinthe/Sol" instance=ExtResource("bloc_grotte")]
+[node name="CorridorL1" parent="Labyrinthe/Sol" unique_id=204253254 instance=ExtResource("bloc_grotte")]
 position = Vector2(2198, 450)
 Taille = Vector2(876, 40)
 
-[node name="CorridorL2" parent="Labyrinthe/Sol" instance=ExtResource("bloc_grotte")]
+[node name="CorridorL2" parent="Labyrinthe/Sol" unique_id=1012770287 instance=ExtResource("bloc_grotte")]
 position = Vector2(1903, 580)
 Taille = Vector2(876, 40)
 
-[node name="CorridorL3" parent="Labyrinthe/Sol" instance=ExtResource("bloc_grotte")]
+[node name="CorridorL3" parent="Labyrinthe/Sol" unique_id=413531711 instance=ExtResource("bloc_grotte")]
 position = Vector2(2198, 710)
 Taille = Vector2(876, 40)
 
-[node name="PlancherBas" parent="Labyrinthe/Sol" instance=ExtResource("bloc_grotte")]
+[node name="PlancherBas" parent="Labyrinthe/Sol" unique_id=55994715 instance=ExtResource("bloc_grotte")]
 position = Vector2(2050, 850)
 Taille = Vector2(1170, 40)
 
