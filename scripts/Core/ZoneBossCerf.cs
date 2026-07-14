@@ -4,15 +4,15 @@ using Godot;
 // de l'arène et la fin de partie (écran de fin) à la défaite du boss.
 public partial class ZoneBossCerf : ZoneBoss
 {
-	[Export] public float LimiteGauche = 5984f;
-	[Export] public float LimiteDroite = 8480f;
-
 	protected override void ConfigurerBoss(Boss boss)
 	{
-		if (boss is BossCerf cerf)
+		// Bornes de charge du Cerf = rectangle de l'arène (plus de LimiteGauche/Droite
+		// à saisir) : le boss ne peut pas sortir de sa zone. Elles suivent la taille
+		// du rectangle dessiné dans l'éditeur, comme les limites caméra.
+		if (boss is BossCerf cerf && CalculerLimitesDepuisForme(out int g, out int d, out int _, out int _))
 		{
-			cerf.LimiteGauche = LimiteGauche;
-			cerf.LimiteDroite = LimiteDroite;
+			cerf.LimiteGauche = g;
+			cerf.LimiteDroite = d;
 		}
 	}
 

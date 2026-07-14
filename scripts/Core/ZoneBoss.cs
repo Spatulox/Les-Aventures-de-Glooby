@@ -2,14 +2,22 @@ using Godot;
 
 // Salle de boss générique (Area2D). À l'entrée du joueur : fait apparaître (spawn)
 // le boss dans l'arène, révèle et lie sa barre de vie, arme ses PV et lance la
-// musique. Base RÉUTILISABLE ET HÉRITABLE : une sous-classe par boss (ZoneBossCerf)
-// fournit le contenu spécifique via ConfigurerBoss/DemarrerCombat.
-public partial class ZoneBoss : DeclencheurZone
+// musique. C'est AUSSI une salle caméra (IZoneCamera) : son rectangle verrouille la
+// Camera2D du joueur sur l'arène (aucun défilement une fois entré) et sert de bornes
+// au boss (il ne peut pas en sortir) - plus aucune taille à saisir à la main.
+// Base RÉUTILISABLE ET HÉRITABLE : une sous-classe par boss (ZoneBossCerf) fournit
+// le contenu spécifique via ConfigurerBoss/DemarrerCombat.
+public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 {
 	// Le boss : scène à instancier + nom lisible.
 	[Export] public PackedScene SceneBoss;
 	[Export] public string NomBoss = "";
 	[Export] public Vector2 PositionApparition;
+
+	// Salle caméra : fond de région à afficher dans l'arène (ex. "grotte", "banquise")
+	// et marge sous le sol pour le filet anti-chute - exactement comme une CameraZone.
+	[Export] public string NomRegion = "";
+	[Export] public float MargeChuteVide = 300f;
 
 	// Barre de vie à révéler et lier au boss spawné.
 	[Export] public NodePath CheminBarre;
@@ -28,8 +36,16 @@ public partial class ZoneBoss : DeclencheurZone
 	{
 		Barre = GetNodeOrNull<BossHudBarre>(CheminBarre);
 		Barre?.Masquer();
+		// Aussi salle caméra : le Player la trouve par sondage (comme une CameraZone)
+		// et verrouille la caméra sur l'arène. On garde BodyEntered (retour true) pour
+		// déclencher l'apparition du boss à l'entrée du joueur.
+		AddToGroup(CameraZone.Groupe);
 		return true;
 	}
+
+	// IZoneCamera : verrouille la caméra du joueur sur l'arène (limites = rectangle de
+	// la zone) et affiche le fond de région. Appelé par le Player par sondage.
+	public void Appliquer(Player joueur) => AppliquerCommeSalle(joueur, NomRegion, MargeChuteVide);
 
 	protected override void SurEntreeJoueur(Player joueur)
 	{
