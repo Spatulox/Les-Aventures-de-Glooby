@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Texture2D" uid="uid://cnhu7yvjv5amv" path="res://assets/props/grotte/fissure_lumineuse.png" id="1"]
+
+[node name="FissureLumineuse" type="Sprite2D"]
+z_index = -1
+texture = ExtResource("1")
