@@ -22,6 +22,10 @@ public partial class Player : LivingEntity
 	[Export] public float ClignoteInterval = 0.08f;
 	[Export] public float DelaiRuptureFragile = 0.4f;
 	[Export] public float DureeTraverseePlateforme = 0.3f;
+	// Hauteur (en pixels) au-dessus du checkpoint où le joueur réapparaît : le
+	// campement est au sol, respawn un peu plus haut évite un chevauchement avec
+	// le sol/décor et laisse le joueur retomber proprement sur le point d'appui.
+	[Export] public float OffsetRespawnY = 48f;
 	// Ajusté dynamiquement par la CameraZone active (le monde continu a des
 	// salles à des profondeurs très différentes - un seuil absolu unique
 	// déclencherait le filet de sécurité en permanence dans les salles profondes).
@@ -216,7 +220,7 @@ public partial class Player : LivingEntity
 
 	private void TeleporterAuCheckpoint()
 	{
-		GlobalPosition = GameState.Instance.CheckpointPosition;
+		GlobalPosition = GameState.Instance.CheckpointPosition - new Vector2(0f, OffsetRespawnY);
 		Velocity = Vector2.Zero;
 		MettreAJourZoneCamera();
 		JouerApparition();
