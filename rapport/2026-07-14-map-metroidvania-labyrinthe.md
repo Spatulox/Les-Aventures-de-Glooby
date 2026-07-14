@@ -54,3 +54,18 @@ Retours user : (1) le labyrinthe affichait le fond **banquise (ciel) sous terre*
 ## Vérification (v2)
 - Build C# → **0 erreur**. Boot `monde.tscn` headless → **aucune erreur** sur les nouveaux props/corridors/zones/boss. Seules erreurs : `pingouin`/`lutin_noel` (dossiers d'anims PNJ absents) — **préexistant**.
 - Toujours **F5 recommandé** pour caler le ressenti des sauts de la chicane (espacements posés à ~65px, sous le max, mais le feel se valide manette en main).
+
+---
+
+# Révision 3 — sols du labyrinthe invisibles → GameObject réutilisable
+
+Retour user : les corridors/parois du labyrinthe étaient des `StaticBody2D`+`CollisionShape2D` **inline sans sprite** (sols invisibles), ce qui viole aussi la règle « tout élément de niveau doit être un `.tscn` réutilisable ».
+
+**Nouveau GameObject réutilisable `scenes/plateformes/BlocGrotte.tscn`** (+ `scripts/Plateformes/BlocGrotte.cs`) : bloc de roche **solide (4 côtés) et VISIBLE**, redimensionnable via l'export `Taille` — la texture `assets/tiles/grotte_base.png` (128×128) est **tuilée** (region_rect + texture_repeat) pour couvrir n'importe quelle taille ; collision pleine de mêmes dimensions ; `z_index=-2` (devant les couches parallax, derrière les props et le joueur).
+
+**Labyrinthe reconstruit sans aucune collision inline** : les 2 parois + 3 corridors + plancher sont désormais **6 instances de `BlocGrotte`** (parois 48×540, corridors 876×40, plancher 1170×40). Ledges de remontée repositionnés dans les gouffres (climb diagonal ~40px latéral + ~65px vertical sur corridors solides). Sub_resources inline (`RectMurLabV/RectCorridor/RectPlancherBas`) supprimées.
+
+Reste une seule `CollisionShape2D` inline : le **trigger `ZoneBossCerf`** (Area2D) — zone de détection invisible par nature (pas un sol), pattern documenté dans l'architecture ; laissée telle quelle.
+
+## Vérification (v3)
+- Build C# → **0 erreur** (nouveau `BlocGrotte.cs` compile). Boot `monde.tscn` headless → **aucune erreur** sur `BlocGrotte`/labyrinthe ; aucune référence pendante aux sub_resources supprimées.
