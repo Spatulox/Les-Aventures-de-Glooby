@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="1_fond"]
+[ext_resource type="PackedScene" path="res://scenes/props/noel/TapisRoulant.tscn" id="2_tapis"]
+[ext_resource type="PackedScene" path="res://scenes/props/noel/BancTravail.tscn" id="3_banc"]
+[ext_resource type="PackedScene" path="res://scenes/props/noel/LutinUsine.tscn" id="4_lutin"]
+[ext_resource type="PackedScene" path="res://scenes/props/noel/GuirlandeNoel.tscn" id="5_guirlande"]
+[ext_resource type="PackedScene" path="res://scenes/decors/SolBanquise.tscn" id="6_sol"]
+
+[node name="DemoUsine" type="Node2D"]
+
+[node name="FondUsine" parent="." instance=ExtResource("1_fond")]
+
+[node name="Sol1" parent="." instance=ExtResource("6_sol")]
+position = Vector2(272, 420)
+
+[node name="Sol2" parent="." instance=ExtResource("6_sol")]
+position = Vector2(616, 420)
+Type = 1
+
+[node name="TapisRoulant" parent="." instance=ExtResource("2_tapis")]
+position = Vector2(240, 320)
+NombreSegments = 3
+Vitesse = 80.0
+
+[node name="BancSimple" parent="." instance=ExtResource("3_banc")]
+position = Vector2(120, 342)
+
+[node name="BancEncombre" parent="." instance=ExtResource("3_banc")]
+position = Vector2(680, 342)
+Variante = 1
+
+[node name="LutinUsine" parent="." instance=ExtResource("4_lutin")]
+position = Vector2(600, 340)
+
+[node name="GuirlandeNoel" parent="." instance=ExtResource("5_guirlande")]
+position = Vector2(120, 120)
+NombreSegments = 3
