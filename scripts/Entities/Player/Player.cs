@@ -27,6 +27,13 @@ public partial class Player : LivingEntity
 	// déclencherait le filet de sécurité en permanence dans les salles profondes).
 	public float SeuilChuteVide = 700f;
 	[Export] public PackedScene SceneBouleDeNeige;
+	[Export] public PackedScene ScenePlateformeGlace;
+	// Cadence de pose des plateformes de glace tant que la touche est tenue :
+	// espace les plateformes dans le temps (elles se juxtaposent en pont pendant
+	// que le joueur avance, au lieu de s'empiler sur place).
+	[Export] public float IntervallePoseGlace = 0.22f;
+	[Export] public float OffsetPoseGlaceX = 40f;
+	[Export] public float OffsetPoseGlaceY = 22f;
 
 	private AnimatedSprite2D _sprite;
 	private CollisionShape2D _colDebout;
@@ -55,6 +62,8 @@ public partial class Player : LivingEntity
 	private bool _celluleFragileValide;
 
 	private float _traverseeTimer;
+
+	private float _glaceSpawnTimer;
 
 	public override void _Ready()
 	{
@@ -97,6 +106,8 @@ public partial class Player : LivingEntity
 			_slideCooldownTimer -= dt;
 		if (_lancerCooldownTimer > 0f)
 			_lancerCooldownTimer -= dt;
+		if (_glaceSpawnTimer > 0f)
+			_glaceSpawnTimer -= dt;
 
 		AppliquerGravite(ref velocity, dt);
 
@@ -144,6 +155,9 @@ public partial class Player : LivingEntity
 
 			if (Input.IsActionJustPressed("pouvoir_chaleur"))
 				UtiliserPouvoirChaleur();
+
+			if (Input.IsActionPressed("pouvoir_glace"))
+				UtiliserPouvoirGlace();
 		}
 
 		if (_enLancer)
@@ -315,6 +329,27 @@ public partial class Player : LivingEntity
 		}
 
 		Effets.FlashCouleur(_sprite, new Color(1f, 0.7f, 0.3f), 0.1f, 0.3f);
+	}
+
+	// Pouvoir de Glace : touche maintenue, pose une plateforme de glace éphémère
+	// devant le joueur à cadence régulée (IntervallePoseGlace). En avançant, les
+	// plateformes se juxtaposent en pont pour combler un trou. Chaque pose
+	// consomme du mana ; à sec, plus rien ne se pose (voir GameState).
+	private void UtiliserPouvoirGlace()
+	{
+		if (_glaceSpawnTimer > 0f || ScenePlateformeGlace == null)
+			return;
+		if (GameState.Instance?.PeutUtiliserPouvoirGlace(GameState.Instance.CoutPlateformeGlace) != true)
+			return;
+
+		_glaceSpawnTimer = IntervallePoseGlace;
+
+		var plateforme = ScenePlateformeGlace.Instantiate<Node2D>();
+		GetParent().AddChild(plateforme);
+		plateforme.GlobalPosition = GlobalPosition + new Vector2(_directionRegard * OffsetPoseGlaceX, OffsetPoseGlaceY);
+
+		GameState.Instance.ConsommerManaGlace(GameState.Instance.CoutPlateformeGlace);
+		Effets.FlashCouleur(_sprite, new Color(0.6f, 0.85f, 1f), 0.06f, 0.2f);
 	}
 
 	private void DemarrerGlissade()

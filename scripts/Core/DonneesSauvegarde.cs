@@ -16,6 +16,7 @@ public class DonneesSauvegarde
 	public int Pv;                                   // réglé à PvMax par GameState
 	public int Poissons = GameState.PoissonsDepart;
 	public bool PouvoirChaleurActif;
+	public bool PouvoirGlaceActif;
 	public string CheckpointIdActif = "";
 	public Vector2 CheckpointPosition = Vector2.Zero;
 
@@ -34,6 +35,7 @@ public class DonneesSauvegarde
 			["pv"] = Pv,
 			["poissons"] = Poissons,
 			["pouvoirChaleur"] = PouvoirChaleurActif,
+			["pouvoirGlace"] = PouvoirGlaceActif,
 			["checkpointId"] = CheckpointIdActif,
 			["posX"] = CheckpointPosition.X,
 			["posY"] = CheckpointPosition.Y,
@@ -54,6 +56,7 @@ public class DonneesSauvegarde
 		if (d.TryGetValue("pv", out var pv)) donnees.Pv = (int)pv;
 		if (d.TryGetValue("poissons", out var poissons)) donnees.Poissons = (int)poissons;
 		if (d.TryGetValue("pouvoirChaleur", out var pouvoir)) donnees.PouvoirChaleurActif = (bool)pouvoir;
+		if (d.TryGetValue("pouvoirGlace", out var pouvoirGlace)) donnees.PouvoirGlaceActif = (bool)pouvoirGlace;
 		if (d.TryGetValue("checkpointId", out var id)) donnees.CheckpointIdActif = (string)id;
 
 		float x = d.TryGetValue("posX", out var px) ? (float)px : 0f;
