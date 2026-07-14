@@ -6,6 +6,9 @@ public partial class Hud : CanvasLayer
 {
 	private HBoxContainer _coeurs;
 	private Label _labelPoissons;
+	private Control _manaGlace;
+	private ColorRect _manaRemplissage;
+	private float _manaLargeurMax;
 
 	public override void _Ready()
 	{
@@ -15,13 +18,30 @@ public partial class Hud : CanvasLayer
 
 		_coeurs = GetNode<HBoxContainer>("Coeurs");
 		_labelPoissons = GetNode<Label>("Poissons/LabelPoissons");
+		_manaGlace = GetNode<Control>("ManaGlace");
+		_manaRemplissage = GetNode<ColorRect>("ManaGlace/Remplissage");
+		_manaLargeurMax = _manaRemplissage.Size.X;
 
 		var etat = GameState.Instance;
 		ConstruirePv(etat.Pv, etat.PvMax);
 		MettreAJourPoissons(etat.Poissons);
 
+		// La jauge de mana ne s'affiche qu'une fois le pouvoir de glace débloqué.
+		_manaGlace.Visible = etat.PouvoirGlaceActif;
+		MettreAJourManaGlace(etat.ManaGlace, etat.ManaGlaceMax);
+
 		etat.PvChanges += OnPvChanges;
 		etat.PoissonsChanges += OnPoissonsChanges;
+		etat.PouvoirGlaceObtenu += OnPouvoirGlaceObtenu;
+		etat.ManaGlaceChanges += MettreAJourManaGlace;
+	}
+
+	private void OnPouvoirGlaceObtenu() => _manaGlace.Visible = true;
+
+	private void MettreAJourManaGlace(float mana, float max)
+	{
+		float ratio = max > 0f ? Mathf.Clamp(mana / max, 0f, 1f) : 0f;
+		_manaRemplissage.Size = new Vector2(_manaLargeurMax * ratio, _manaRemplissage.Size.Y);
 	}
 
 	private void OnPvChanges(int pv, int pvMax)
