@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4rxldg6k5ox6"
-path="res://.godot/imported/04.png-2d996e96ccabf74c41702866a507f763.ctex"
+uid="uid://t7je8fn8i2cn"
+path="res://.godot/imported/02.png-270de2c16f4786dc93fba6bda111afde.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pnj/pingouin_ancien/idle/04.png"
-dest_files=["res://.godot/imported/04.png-2d996e96ccabf74c41702866a507f763.ctex"]
+source_file="res://assets/pnj/pingouin/parler/02.png"
+dest_files=["res://.godot/imported/02.png-270de2c16f4786dc93fba6bda111afde.ctex"]
 
 [params]
 

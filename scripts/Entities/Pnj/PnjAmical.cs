@@ -13,7 +13,7 @@ using Godot;
 //
 // Tout PNJ est aussi Talkative : la capacité est portée par la classe, mais c'est
 // l'instance qui décide si elle parle. Un PNJ est bavard uniquement si on lui renseigne
-// des Lignes ET qu'on lui ajoute un DeclencheurDialogue enfant (comme PanneauBavard) ;
+// des Lignes ET qu'on lui ajoute un DeclencheurDialogue enfant (comme PanneauBois) ;
 // sinon il reste muet. Il s'immobilise pendant une conversation.
 public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Talkative
 {
@@ -21,6 +21,10 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 	[Export] public float DistancePatrouille = 60f; // amplitude du va-et-vient autour du point de départ
 	[Export] public float VitessePatrouille = 30f;  // vitesse horizontale de marche
 	[Export] public float TempsPause = 1.2f;         // pause à chaque extrémité
+
+	// Sens dans lequel l'art du PNJ est dessiné, avant tout miroir. Les sprites PNJ du projet
+	// (ex. pingouin) regardent à gauche par défaut ; passer à true pour un art tourné à droite.
+	[Export] public bool ArtRegardeADroite;
 
 	// Carré placeholder, affiché tant qu'aucune frame d'animation n'est disponible.
 	protected Sprite2D Sprite;
@@ -87,6 +91,12 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 			_minuteurPause -= dt;
 			velocite.X = 0f;
 		}
+		else if (DistancePatrouille <= 0f)
+		{
+			// PNJ statique (gréviste tenant sa pancarte, Père Noël...) : aucune
+			// déambulation, il reste planté sur son point de départ en idle.
+			velocite.X = 0f;
+		}
 		else
 		{
 			velocite.X = _direction * VitessePatrouille;
@@ -104,17 +114,34 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 				_minuteurPause = TempsPause;
 			}
 
-			Sprite.FlipH = _direction < 0;
+			// Miroir selon le sens de marche ET l'orientation native de l'art : un art tourné
+			// à gauche doit être retourné pour aller à droite (et inversement).
+			bool flip = ArtRegardeADroite ? _direction < 0 : _direction > 0;
+			Sprite.FlipH = flip;
 			if (_anim != null)
-				_anim.FlipH = _direction < 0;
+				_anim.FlipH = flip;
 		}
 
 		Velocity = velocite;
 		MoveAndSlide();
 
-		// Anime le PNJ selon qu'il marche ou non (sans effet tant que _anim est null).
+		// Anime le PNJ selon son état (sans effet tant que _anim est null).
 		if (_anim != null)
-			_anim.Play(Mathf.Abs(velocite.X) > 1f ? "marche" : "idle");
+			_anim.Play(ChoisirAnimation(velocite));
+	}
+
+	// Choisit l'animation à jouer en se limitant à ce que le jeu de frames fournit vraiment :
+	// "parler" pendant une conversation si elle existe (ex. pingouin qui bavarde), sinon
+	// "marche" quand le PNJ avance et qu'un dossier marche non vide existe, à défaut "idle".
+	// Ce repli évite de jouer une animation vide pour les PNJ statiques (sans marche/parler).
+	private string ChoisirAnimation(Vector2 velocite)
+	{
+		var frames = _anim.SpriteFrames;
+		if (_enConversation && frames.HasAnimation("parler"))
+			return "parler";
+		if (Mathf.Abs(velocite.X) > 1f && frames.GetFrameCount("marche") > 0)
+			return "marche";
+		return "idle";
 	}
 
 	// ---- Dialogue (Talkative) ----
