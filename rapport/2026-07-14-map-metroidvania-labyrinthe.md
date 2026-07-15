@@ -83,3 +83,17 @@ Reste une seule `CollisionShape2D` inline : le **trigger `ZoneBossCerf`** (Area2
 
 ## Vérification (v4)
 - Build C# → **0 erreur**. Boot `monde.tscn` headless → **aucune erreur** (région `boss_cerf` chargée). Le cross-fade en entrant dans l'arène est à confirmer en **F5**.
+
+---
+
+# Révision 5 — arène boss trop grande (fond activé trop tôt)
+
+Retour user : le fond `boss_cerf` s'activait sur **toute la grotte** (dès l'entrée à x2650) alors que le boss n'apparaît qu'à x5900 → énorme vide entre le changement de fond et le boss.
+
+**Scission de la caméra de grotte en deux `CameraZone`** (raccordées à x5560, même y72-328, tuilage propre pour l'hystérésis) :
+- **`ZoneGrotte`** (approche, x2650→5560) : `NomRegion="banquise"` — fond banquise avant l'arène.
+- **`ZoneArenaBoss`** (nouvelle, x5560→6300) : `NomRegion="boss_cerf"` — le fond du boss ne s'active qu'au niveau du boss (trigger x5580, spawn x5900). La région `grotte` (cave) reste sur le labyrinthe.
+
+## Vérification (v5)
+- Build C# → **0 erreur**. Boot headless → **aucune erreur sur les zones/fonds**.
+- ⚠️ Préexistant (hors sujet, non introduit ici) : le PNJ **pingouin** spamme une `NullReferenceException` (`PnjAmical.cs:57`, `Sprite.Play("idle")`) car `assets/pnj/pingouin/idle` est vide/absent — même trou d'asset placeholder que `lutin_noel`. Un garde-fou (`if (Sprite.SpriteFrames.HasAnimation("idle"))`) ou les frames manquantes le corrigerait.

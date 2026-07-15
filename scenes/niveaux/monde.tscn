@@ -451,8 +451,13 @@ shape = SubResource("RectZoneBoss")
 [node name="Camera" type="Node2D" parent="Grotte" unique_id=1111418208]
 
 [node name="ZoneGrotte" parent="Grotte/Camera" unique_id=2005198318 instance=ExtResource("camzone")]
-position = Vector2(4115, 200)
-scale = Vector2(11.4453, 1)
+position = Vector2(4105, 200)
+scale = Vector2(11.367, 1)
+NomRegion = "banquise"
+
+[node name="ZoneArenaBoss" parent="Grotte/Camera" instance=ExtResource("camzone")]
+position = Vector2(5930, 200)
+scale = Vector2(2.891, 1)
 NomRegion = "boss_cerf"
 
 [node name="Frontiere" type="Node2D" parent="Grotte" unique_id=2102435091]
