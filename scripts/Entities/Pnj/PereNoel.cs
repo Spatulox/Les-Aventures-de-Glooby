@@ -3,8 +3,8 @@ using Godot;
 // PNJ amical « Père Noël » : le grand patron, planté sur place (statique, DistancePatrouille
 // = 0). Comme tout PnjAmical, son dialogue passe par le moteur partagé Talkative/
 // DeclencheurDialogue ; il accueille le joueur à son passage. Visuel via l'AnimatedSprite2D
-// de PnjAmical chargé depuis res://assets/pnj/pere_noel/idle (repli sur le carré placeholder
-// tant que le dossier est vide).
+// de la scène chargé depuis res://assets/pnj/pere_noel/idle (invisible tant que ce dossier
+// est vide).
 public partial class PereNoel : PnjAmical
 {
 	// Père Noël immobile.

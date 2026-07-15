@@ -1,8 +1,8 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://bme20tm43ulhf"]
 
-[ext_resource type="Script" path="res://scripts/Entities/Player/Player.cs" id="1"]
+[ext_resource type="Script" uid="uid://dd0nu4h84xvuy" path="res://scripts/Entities/Player/Player.cs" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/projectiles/boule_de_neige.tscn" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/plateformes/PlateformeGlace.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://cc554bace5c53" path="res://scenes/plateformes/PlateformeGlace.tscn" id="3"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_debout"]
 radius = 8.0
@@ -11,27 +11,26 @@ height = 32.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_glisse"]
 size = Vector2(26, 14)
 
-[node name="Player" type="CharacterBody2D"]
-collision_layer = 1
+[node name="Player" type="CharacterBody2D" unique_id=1583126489]
 collision_mask = 17
 script = ExtResource("1")
 SceneBouleDeNeige = ExtResource("2")
 ScenePlateformeGlace = ExtResource("3")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=535745162]
 
-[node name="CollisionDebout" type="CollisionShape2D" parent="."]
+[node name="CollisionDebout" type="CollisionShape2D" parent="." unique_id=145259083]
 shape = SubResource("CapsuleShape2D_debout")
 
-[node name="CollisionGlisse" type="CollisionShape2D" parent="."]
+[node name="CollisionGlisse" type="CollisionShape2D" parent="." unique_id=1004984052]
 position = Vector2(0, 9)
 shape = SubResource("RectangleShape2D_glisse")
 disabled = true
 
-[node name="Camera2D" type="Camera2D" parent="."]
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1011165119]
 limit_left = 0
 limit_top = 0
 limit_right = 10000
 limit_bottom = 10000
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0

@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/Entities/Pnj/PereNoel.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/pnj/pere_noel/placeholder.png" id="2"]
 [ext_resource type="Script" path="res://scripts/Core/DeclencheurDialogue.cs" id="3"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
@@ -18,8 +17,7 @@ script = ExtResource("1")
 Lignes = PackedStringArray("Ho ho ho ! Te voilà enfin, petit !")
 AuPassage = true
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_1")

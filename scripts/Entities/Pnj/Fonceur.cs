@@ -2,8 +2,8 @@ using Godot;
 
 // PNJ méchant « Fonceur » : patrouille tranquillement, mais dès que le joueur entre dans sa
 // portée il se rue sur lui à vive allure (et le blesse au contact via la ZoneContact héritée).
-// Visuel = carré placeholder orange tant que res://assets/pnj/fonceur/{idle,marche} est vide ;
-// dès que les frames y seront déposées, l'AnimatedSprite2D prend le relais.
+// Frames chargées depuis res://assets/pnj/fonceur/{idle,marche} dans l'AnimatedSprite2D de la
+// scène (invisible tant que les dossiers restent vides).
 public partial class Fonceur : PnjMechant
 {
 	// Vitesse horizontale de la ruée (bien plus rapide que la patrouille).
@@ -22,9 +22,9 @@ public partial class Fonceur : PnjMechant
 		velocite.X = direction * VitesseCharge;
 	}
 
-	// Animations du fonceur. Les dossiers sont encore vides : ConstruireAnimations renvoie
-	// des animations sans frame, donc PnjMechant garde le carré placeholder jusqu'à ce que
-	// les PNG soient déposés dans res://assets/pnj/fonceur/{idle,marche}.
+	// Animations du fonceur depuis res://assets/pnj/fonceur/{idle,marche}. Dossiers encore
+	// vides : ConstruireAnimations renvoie des animations sans frame (fonceur invisible)
+	// jusqu'à ce que les PNG y soient déposés.
 	protected override SpriteFrames ConstruireAnimations()
 	{
 		var frames = new SpriteFrames();

@@ -3,8 +3,8 @@ using Godot;
 // PNJ méchant « Lanceur de boules de neige » : patrouille tranquillement, mais dès que le
 // joueur entre dans sa portée il s'arrête, lui fait face et lui envoie des boules de neige
 // (la même boule_de_neige.tscn que le joueur, réutilisée) à intervalle régulier.
-// Visuel = carré placeholder rouge tant que res://assets/pnj/lanceur_boule_neige/{idle,marche}
-// est vide ; dès que les frames y seront déposées, l'AnimatedSprite2D prend le relais.
+// Frames chargées depuis res://assets/pnj/lanceur_boule_neige/{idle,marche} dans
+// l'AnimatedSprite2D de la scène (invisible tant que les dossiers restent vides).
 public partial class LanceurBouleNeige : PnjMechant
 {
 	// Scène du projectile lancé (réutilise boule_de_neige.tscn, comme le joueur).
@@ -54,9 +54,9 @@ public partial class LanceurBouleNeige : PnjMechant
 		boule.GlobalPosition = GlobalPosition + new Vector2(direction * 18f, -4f);
 	}
 
-	// Animations du lanceur. Les dossiers sont encore vides : ConstruireAnimations renvoie
-	// des animations sans frame, donc PnjMechant garde le carré placeholder jusqu'à ce que
-	// les PNG soient déposés dans res://assets/pnj/lanceur_boule_neige/{idle,marche}.
+	// Animations du lanceur depuis res://assets/pnj/lanceur_boule_neige/{idle,marche}. Dossiers
+	// encore vides : ConstruireAnimations renvoie des animations sans frame (lanceur invisible)
+	// jusqu'à ce que les PNG y soient déposés.
 	protected override SpriteFrames ConstruireAnimations()
 	{
 		var frames = new SpriteFrames();

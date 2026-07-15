@@ -4,8 +4,8 @@ using Godot;
 // (logique héritée de PnjAmical) et est un bavard automatique : au passage du joueur, sa
 // bulle défile toute seule (sans appui de touche) en piochant une réplique au hasard, et il
 // joue son animation « parler » pendant la conversation (repli automatique sur idle sinon).
-// Visuel = carré placeholder noir tant que res://assets/pnj/pingouin/{idle,marche,parler} est
-// vide ; dès que les frames y sont déposées, l'AnimatedSprite2D prend le relais automatiquement.
+// Frames chargées depuis res://assets/pnj/pingouin/{idle,marche,parler} dans l'AnimatedSprite2D
+// de la scène (invisible tant qu'un dossier reste vide).
 public partial class Pingouin : PnjAmical, TalkativeAutomatique
 {
 	// Délai (secondes) entre deux répliques en défilement automatique.
@@ -25,7 +25,7 @@ public partial class Pingouin : PnjAmical, TalkativeAutomatique
 
 	// Animations du pingouin, chargées depuis res://assets/pnj/pingouin/{idle,marche,parler}.
 	// « parler » (fusionnée depuis l'ancien pingouin) est jouée automatiquement par PnjAmical
-	// pendant les dialogues. Dossiers vides => PnjAmical garde le carré placeholder.
+	// pendant les dialogues. Dossier vide => animation sans frame (pingouin invisible).
 	protected override SpriteFrames ConstruireAnimations()
 	{
 		var frames = new SpriteFrames();

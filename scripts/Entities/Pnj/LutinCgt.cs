@@ -6,8 +6,8 @@ using System.Collections.Generic;
 // PnjAmical il déambulerait, mais ici il reste immobile ; le dialogue passe par le moteur
 // partagé Talkative/DeclencheurDialogue. En plus, un slogan est affiché en Label Godot sur
 // l'aplat vide de sa pancarte — jamais dessiné dans le sprite, donc changeable par instance
-// ("EN GRÈVE", "Non à la hotte 35h"...). Visuel via l'AnimatedSprite2D de PnjAmical, chargé
-// depuis le dossier de la pose choisie (repli carré placeholder si le dossier est vide).
+// ("EN GRÈVE", "Non à la hotte 35h"...). Visuel via l'AnimatedSprite2D de la scène, chargé
+// depuis le dossier de la pose choisie (invisible si ce dossier est vide).
 public partial class LutinCgt : PnjAmical
 {
 	public enum PoseLutin { BrasCroises, PancarteLevee, AssisCaisse }
