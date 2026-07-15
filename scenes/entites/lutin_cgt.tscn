@@ -1,42 +1,40 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://civtsuvy2xvd8"]
 
-[ext_resource type="Script" path="res://scripts/Entities/Pnj/LutinCgt.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/pnj/lutin_cgt/placeholder.png" id="2"]
-[ext_resource type="Script" path="res://scripts/Core/DeclencheurDialogue.cs" id="3"]
+[ext_resource type="Script" uid="uid://barjyieyb7efu" path="res://scripts/Entities/Pnj/LutinCgt.cs" id="1"]
+[ext_resource type="Script" uid="uid://bnskcw6i56nex" path="res://scripts/Core/DeclencheurDialogue.cs" id="3"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
 radius = 6.0
 height = 22.0
 
-[sub_resource type="RectangleShape2D" id="RectProximite"]
-size = Vector2(72, 80)
-
 [sub_resource type="LabelSettings" id="LabelSettings_slogan"]
 font_size = 9
 font_color = Color(0.55, 0.1, 0.08, 1)
 
-[node name="LutinCgt" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectProximite"]
+size = Vector2(72, 80)
+
+[node name="LutinCgt" type="CharacterBody2D" unique_id=1187403218]
 collision_layer = 4
 collision_mask = 16
 script = ExtResource("1")
 Lignes = PackedStringArray("On lâche rien. Même pas les jouets.")
 AuPassage = true
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2069205080]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1265671173]
 shape = SubResource("CapsuleShape2D_1")
 
-[node name="Slogan" type="Label" parent="."]
+[node name="Slogan" type="Label" parent="." unique_id=990887194]
 label_settings = SubResource("LabelSettings_slogan")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="DeclencheurDialogue" type="Area2D" parent="."]
+[node name="DeclencheurDialogue" type="Area2D" parent="." unique_id=1761683833]
 script = ExtResource("3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue" unique_id=1104909488]
 position = Vector2(0, -6)
 shape = SubResource("RectProximite")

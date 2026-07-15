@@ -4,10 +4,10 @@ using Godot;
 // Pendant amical de PnjAmical : une LivingEntity qui déambule en va-et-vient sur le sol,
 // mais qui, elle, blesse le joueur au contact via une Area2D « ZoneContact » posée en
 // enfant dans sa scène. Le pipeline d'animation est actif (comme le Player et les Boss) :
-// chaque sous-classe pointe ConstruireAnimations() vers ses dossiers de frames. Tant que
-// ces dossiers sont vides, aucune frame n'est chargée et on retombe automatiquement sur le
-// carré placeholder (Sprite2D) ; dès que les PNG existeront, l'AnimatedSprite2D prend le
-// relais sans autre changement.
+// la scène porte un AnimatedSprite2D « AnimatedSprite2D » dont les SpriteFrames sont chargés
+// au démarrage depuis les dossiers pointés par ConstruireAnimations(). Tant qu'un dossier est
+// vide, l'animation correspondante n'a aucune frame (méchant invisible) ; dès que les PNG y
+// sont déposés, ils s'affichent sans autre changement.
 //
 // Le comportement d'attaque propre à chaque méchant (lancer, foncer...) est branché en
 // surchargeant DeciderMouvement() ; par défaut, un méchant se contente de patrouiller.
@@ -21,12 +21,8 @@ public abstract partial class PnjMechant : LivingEntity
 	// Distance (px) en deçà de laquelle le méchant « voit » le joueur et peut l'attaquer.
 	[Export] public float PorteeDetection = 160f;
 
-	// Carré placeholder, affiché tant qu'aucune frame d'animation n'est disponible.
-	protected Sprite2D Sprite;
-
-	// AnimatedSprite2D construit à la volée quand ConstruireAnimations() fournit de
-	// vraies frames ; reste null tant que les dossiers d'assets sont vides (repli carré).
-	private AnimatedSprite2D _anim;
+	// AnimatedSprite2D de la scène : ses SpriteFrames sont chargés au démarrage (comme Boss).
+	protected AnimatedSprite2D Sprite;
 
 	private float _xDepart;
 	private int _direction = 1;   // 1 = vers la droite, -1 = vers la gauche
@@ -34,7 +30,7 @@ public abstract partial class PnjMechant : LivingEntity
 
 	public override void _Ready()
 	{
-		Sprite = GetNode<Sprite2D>("Sprite2D");
+		Sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		Pv = PvMax;
 		AddToGroup("pnj");
 		_xDepart = GlobalPosition.X;
@@ -47,16 +43,11 @@ public abstract partial class PnjMechant : LivingEntity
 
 		Initialiser();
 
-		// Pipeline d'animation : on ne monte l'AnimatedSprite2D que si les frames "idle"
-		// existent réellement. Sinon (dossiers encore vides) on garde le carré placeholder.
-		var frames = ConstruireAnimations();
-		if (frames != null && frames.GetFrameCount("idle") > 0)
-		{
-			_anim = new AnimatedSprite2D { SpriteFrames = frames };
-			AddChild(_anim);
-			_anim.Play("idle");
-			Sprite.Visible = false;
-		}
+		// Charge les animations dans l'AnimatedSprite2D de la scène puis lance l'idle
+		// (sans effet tant que le dossier idle est vide : le méchant reste alors invisible).
+		Sprite.SpriteFrames = ConstruireAnimations();
+		if (Sprite.SpriteFrames.GetFrameCount("idle") > 0)
+			Sprite.Play("idle");
 	}
 
 	// Hook d'init des sous-classes (récupération de nœuds, état de départ...).
@@ -64,7 +55,7 @@ public abstract partial class PnjMechant : LivingEntity
 
 	// Construit les animations du méchant (idle, marche...) via AnimationsSprite, en pointant
 	// vers res://assets/pnj/<nom>/{idle,marche}. Fournie par chaque sous-classe ; peut pointer
-	// vers des dossiers vides (aucune frame => carré placeholder conservé).
+	// vers des dossiers vides (aucune frame => animation vide, méchant invisible).
 	protected abstract SpriteFrames ConstruireAnimations();
 
 	// Ajoute une animation à un SpriteFrames depuis un dossier de PNG (façade partagée avec
@@ -92,9 +83,8 @@ public abstract partial class PnjMechant : LivingEntity
 		if (Mathf.Abs(velocite.X) > 1f)
 			DefinirOrientation(velocite.X < 0f);
 
-		// Anime le méchant selon qu'il marche ou non (sans effet tant que _anim est null).
-		if (_anim != null)
-			_anim.Play(Mathf.Abs(velocite.X) > 1f ? "marche" : "idle");
+		// Anime le méchant selon qu'il marche ou non.
+		Sprite.Play(Mathf.Abs(velocite.X) > 1f && Sprite.SpriteFrames.GetFrameCount("marche") > 0 ? "marche" : "idle");
 	}
 
 	// Décide du déplacement horizontal de la frame. Par défaut : patrouille en va-et-vient.
@@ -130,12 +120,10 @@ public abstract partial class PnjMechant : LivingEntity
 		}
 	}
 
-	// Oriente le placeholder et l'AnimatedSprite2D éventuel vers la gauche/droite.
+	// Oriente l'AnimatedSprite2D vers la gauche/droite.
 	protected void DefinirOrientation(bool versLaGauche)
 	{
 		Sprite.FlipH = versLaGauche;
-		if (_anim != null)
-			_anim.FlipH = versLaGauche;
 	}
 
 	// Renvoie le joueur le plus proche (groupe "joueur") et sa distance, ou null s'il n'y en a pas.

@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://tg6kvvtc5hoy"]
 
-[ext_resource type="Script" path="res://scripts/Entities/Pnj/LanceurBouleNeige.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/pnj/lanceur_boule_neige/placeholder.png" id="2"]
+[ext_resource type="Script" uid="uid://cysvjdwcq5kmw" path="res://scripts/Entities/Pnj/LanceurBouleNeige.cs" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/projectiles/boule_de_neige.tscn" id="3"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
@@ -11,21 +10,19 @@ height = 22.0
 [sub_resource type="RectangleShape2D" id="RectContact"]
 size = Vector2(24, 24)
 
-[node name="LanceurBouleNeige" type="CharacterBody2D"]
+[node name="LanceurBouleNeige" type="CharacterBody2D" unique_id=1045879546]
 collision_layer = 4
 collision_mask = 16
 script = ExtResource("1")
 SceneBouleDeNeige = ExtResource("3")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2")
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=957696368]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=134260294]
 shape = SubResource("CapsuleShape2D_1")
 
-[node name="ZoneContact" type="Area2D" parent="."]
+[node name="ZoneContact" type="Area2D" parent="." unique_id=580709492]
 collision_layer = 0
-collision_mask = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneContact"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneContact" unique_id=1851069522]
 shape = SubResource("RectContact")

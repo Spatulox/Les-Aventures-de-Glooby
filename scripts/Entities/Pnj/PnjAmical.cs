@@ -5,11 +5,12 @@ using Godot;
 // Base commune à tous les PNJ amicaux (pingouin, lutin...). Une LivingEntity marquée
 // FriendlyLivingEntity (donc insensible à tous les dégâts) qui déambule tranquillement
 // en va-et-vient sur le sol. Le pipeline d'animation est actif (via AnimationsSprite,
-// comme le Player et les Boss) : chaque sous-classe pointe ConstruireAnimations() vers
-// ses dossiers de frames. Tant que ces dossiers sont vides, aucune frame n'est chargée
-// et on retombe automatiquement sur le carré placeholder (Sprite2D) ; dès que les PNG
-// existeront, l'AnimatedSprite2D prend le relais sans autre changement. Chaque type de
-// PNJ dérive cette classe.
+// comme le Player et les Boss) : la scène porte un AnimatedSprite2D « AnimatedSprite2D »
+// dont les SpriteFrames sont chargés au démarrage depuis les dossiers pointés par
+// ConstruireAnimations() (res://assets/pnj/<nom>/{idle,marche,...}). Tant qu'un dossier
+// est vide, l'animation correspondante n'a aucune frame (le PNJ reste invisible) ; dès
+// que les PNG y sont déposés, ils s'affichent sans autre changement. Chaque type de PNJ
+// dérive cette classe.
 //
 // Tout PNJ est aussi Talkative : la capacité est portée par la classe, mais c'est
 // l'instance qui décide si elle parle. Un PNJ est bavard uniquement si on lui renseigne
@@ -26,12 +27,8 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 	// (ex. pingouin) regardent à gauche par défaut ; passer à true pour un art tourné à droite.
 	[Export] public bool ArtRegardeADroite;
 
-	// Carré placeholder, affiché tant qu'aucune frame d'animation n'est disponible.
-	protected Sprite2D Sprite;
-
-	// AnimatedSprite2D construit à la volée quand ConstruireAnimations() fournit de
-	// vraies frames ; reste null tant que les dossiers d'assets sont vides (repli carré).
-	private AnimatedSprite2D _anim;
+	// AnimatedSprite2D de la scène : ses SpriteFrames sont chargés au démarrage (comme Boss).
+	protected AnimatedSprite2D Sprite;
 
 	private float _xDepart;
 	private int _direction = 1;   // 1 = vers la droite, -1 = vers la gauche
@@ -40,22 +37,17 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 
 	public override void _Ready()
 	{
-		Sprite = GetNode<Sprite2D>("Sprite2D");
+		Sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		Pv = PvMax;
 		AddToGroup("pnj");
 		_xDepart = GlobalPosition.X;
 		Initialiser();
 
-		// Pipeline d'animation : on ne monte l'AnimatedSprite2D que si les frames "idle"
-		// existent réellement. Sinon (dossiers encore vides) on garde le carré placeholder.
-		var frames = ConstruireAnimations();
-		if (frames != null && frames.GetFrameCount("idle") > 0)
-		{
-			_anim = new AnimatedSprite2D { SpriteFrames = frames };
-			AddChild(_anim);
-			_anim.Play("idle");
-			Sprite.Visible = false;
-		}
+		// Charge les animations dans l'AnimatedSprite2D de la scène puis lance l'idle
+		// (sans effet tant que le dossier idle est vide : le PNJ reste alors invisible).
+		Sprite.SpriteFrames = ConstruireAnimations();
+		if (Sprite.SpriteFrames.GetFrameCount("idle") > 0)
+			Sprite.Play("idle");
 	}
 
 	// Hook d'init des sous-classes (récupération de nœuds, état de départ...).
@@ -63,7 +55,7 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 
 	// Construit les animations du PNJ (idle, marche...) via AnimationsSprite, en pointant
 	// vers res://assets/pnj/<nom>/{idle,marche}. Fournie par chaque sous-classe ; peut
-	// pointer vers des dossiers vides (aucune frame => carré placeholder conservé).
+	// pointer vers des dossiers vides (aucune frame => animation vide, PNJ invisible).
 	protected abstract SpriteFrames ConstruireAnimations();
 
 	// Ajoute une animation à un SpriteFrames depuis un dossier de PNG (façade partagée
@@ -116,28 +108,24 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 
 			// Miroir selon le sens de marche ET l'orientation native de l'art : un art tourné
 			// à gauche doit être retourné pour aller à droite (et inversement).
-			bool flip = ArtRegardeADroite ? _direction < 0 : _direction > 0;
-			Sprite.FlipH = flip;
-			if (_anim != null)
-				_anim.FlipH = flip;
+			Sprite.FlipH = ArtRegardeADroite ? _direction < 0 : _direction > 0;
 		}
 
 		Velocity = velocite;
 		MoveAndSlide();
 
-		// Anime le PNJ selon son état (sans effet tant que _anim est null).
-		if (_anim != null)
-			_anim.Play(ChoisirAnimation(velocite));
+		// Anime le PNJ selon son état.
+		Sprite.Play(ChoisirAnimation(velocite));
 	}
 
 	// Choisit l'animation à jouer en se limitant à ce que le jeu de frames fournit vraiment :
-	// "parler" pendant une conversation si elle existe (ex. pingouin qui bavarde), sinon
+	// "parler" pendant une conversation si elle a des frames (ex. pingouin qui bavarde), sinon
 	// "marche" quand le PNJ avance et qu'un dossier marche non vide existe, à défaut "idle".
 	// Ce repli évite de jouer une animation vide pour les PNJ statiques (sans marche/parler).
 	private string ChoisirAnimation(Vector2 velocite)
 	{
-		var frames = _anim.SpriteFrames;
-		if (_enConversation && frames.HasAnimation("parler"))
+		var frames = Sprite.SpriteFrames;
+		if (_enConversation && frames.GetFrameCount("parler") > 0)
 			return "parler";
 		if (Mathf.Abs(velocite.X) > 1f && frames.GetFrameCount("marche") > 0)
 			return "marche";
@@ -149,7 +137,7 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 	// ce qui distingue un PNJ bavard d'un PNJ muet, tous deux de la même classe.
 	[Export] public string[] Lignes { get; set; } = Array.Empty<string>();
 
-	// Ancrage (local) de la bulle au-dessus de la tête du carré placeholder.
+	// Ancrage (local) de la bulle au-dessus de la tête du PNJ.
 	[Export] public Vector2 AncrageBulle = new(0f, -30f);
 
 	// Vrai : afficher UNE seule réplique tirée au hasard au lieu de tout faire défiler.
