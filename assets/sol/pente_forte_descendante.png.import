@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxydara75q6fa"
-path="res://.godot/imported/pente_forte_montante.png-d4b6a687f45d6b0428c535488739a42d.ctex"
+uid="uid://d3i72jjin6hv7"
+path="res://.godot/imported/pente_forte_descendante.png-2d4d4c4840632f993a504b1c4a28acdf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/sol/pente_forte_montante.png"
-dest_files=["res://.godot/imported/pente_forte_montante.png-d4b6a687f45d6b0428c535488739a42d.ctex"]
+source_file="res://assets/sol/pente_forte_descendante.png"
+dest_files=["res://.godot/imported/pente_forte_descendante.png-2d4d4c4840632f993a504b1c4a28acdf.ctex"]
 
 [params]
 

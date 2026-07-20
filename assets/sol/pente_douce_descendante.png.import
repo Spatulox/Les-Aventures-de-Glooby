@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://birlc1vlmq88x"
-path="res://.godot/imported/sol_embout_droit.png-d871226c99608e3f9c8456500886e972.ctex"
+uid="uid://doespr71oo0p5"
+path="res://.godot/imported/pente_douce_descendante.png-d0db4d4f4b796554b4d786e728e361a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/sol/sol_embout_droit.png"
-dest_files=["res://.godot/imported/sol_embout_droit.png-d871226c99608e3f9c8456500886e972.ctex"]
+source_file="res://assets/sol/pente_douce_descendante.png"
+dest_files=["res://.godot/imported/pente_douce_descendante.png-d0db4d4f4b796554b4d786e728e361a5.ctex"]
 
 [params]
 

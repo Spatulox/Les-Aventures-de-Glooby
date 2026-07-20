@@ -26,7 +26,9 @@ public static class AnimationsSprite
 
 	// Enregistre une animation nommée dans un SpriteFrames (cadence + boucle), en
 	// n'en prenant qu'une tranche de frames [debut..fin] (fin < 0 => jusqu'au bout).
-	public static void EnregistrerAnimation(SpriteFrames frames, string nom, Texture2D[] toutesLesFrames, float fps, bool boucle, int debut = 0, int fin = -1)
+	// `inverse` joue la tranche à l'envers : permet de dériver le mouvement retour
+	// d'une animation existante (se relever = s'allonger à l'envers) sans nouvel asset.
+	public static void EnregistrerAnimation(SpriteFrames frames, string nom, Texture2D[] toutesLesFrames, float fps, bool boucle, int debut = 0, int fin = -1, bool inverse = false)
 	{
 		if (fin < 0)
 			fin = toutesLesFrames.Length - 1;
@@ -35,7 +37,15 @@ public static class AnimationsSprite
 		frames.SetAnimationSpeed(nom, fps);
 		frames.SetAnimationLoop(nom, boucle);
 
-		for (int i = debut; i <= fin; i++)
-			frames.AddFrame(nom, toutesLesFrames[i]);
+		if (inverse)
+		{
+			for (int i = fin; i >= debut; i--)
+				frames.AddFrame(nom, toutesLesFrames[i]);
+		}
+		else
+		{
+			for (int i = debut; i <= fin; i++)
+				frames.AddFrame(nom, toutesLesFrames[i]);
+		}
 	}
 }

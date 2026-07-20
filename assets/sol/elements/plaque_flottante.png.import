@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://doespr71oo0p5"
-path="res://.godot/imported/pente_douce_descendante.png-36e8870b185fdcde8c29184e45dc9634.ctex"
+uid="uid://ff0jcnunxcvx"
+path="res://.godot/imported/plaque_flottante.png-83afaf7192fbe2393d5abcc516d91bc5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/sol/pente_douce_descendante.png"
-dest_files=["res://.godot/imported/pente_douce_descendante.png-36e8870b185fdcde8c29184e45dc9634.ctex"]
+source_file="res://assets/sol/elements/plaque_flottante.png"
+dest_files=["res://.godot/imported/plaque_flottante.png-83afaf7192fbe2393d5abcc516d91bc5.ctex"]
 
 [params]
 

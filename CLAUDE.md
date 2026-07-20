@@ -93,7 +93,7 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 
 ## Assets layout
 
-`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `pnj/boss_cerf/`, `ui/`) — PNJ art (bosses) lives under `pnj/`. `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
+`assets/` holds generated PNGs (`tiles/`, `backgrounds/`, `props/`, `player/`, `pnj/boss_cerf/`, `ui/`) — PNJ art (bosses) lives under `pnj/`. **Ground art lives in `assets/sol/`** (the 3 tileable centre segments + 2 embouts + 4 pentes, and `assets/sol/elements/` for the small ice blocks), mirroring `scenes/sol/` and `scripts/sol/` — it is *not* décor. `assets/decors/banquise/` keeps only the `parallax/` layers. `.godot/` is generated (git-ignored); `.claude/` and `.idea/` are local-only.
 
 **`scenes/` mirrors `scripts/`** — every reusable element of the world is a `.tscn` "GameObject" you can drop into a level from the Godot editor, filed by role (put new `.tscn` in the matching folder):
 - **`niveaux/`** — playable levels: `monde.tscn` (the single continuous world, `uid://bfmhiv7v30so8`).
@@ -104,6 +104,7 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 - **`ui/`** — `hud.tscn`, `boss_hud_barre.tscn`, `menu_principal.tscn` (the boot scene, `run/main_scene`), `ecran_fin.tscn`.
 - **`core/`** — scene-driven zone helpers: `camera_zone.tscn` (reusable camera-limit region; limits derive from its resized collision rectangle, and its `NomRegion` drives the background).
 - **`plateformes/`** — the platform GameObjects (`PlateformeFixe`, `PlateformeFragile`, …). Their default sprite + collision is now baked into the `.tscn` so they render in the editor; `PlateformeFixe.cs._Ready` still re-applies texture/collision from the `Taille` export at runtime (editor preview = the "Petite" default). **Note:** these are a parallel system — `monde.tscn` does **not** instance them; its walkable ground/ledges are collision tiles painted into the `Terrain` `TileMapLayer`. The `Plateforme*` scenes are currently only used in `test/TestPlateformes.tscn`.
+- **`sol/`** — the **solid ground** GameObjects, distinct from `decors/` (they carry collision) and from `plateformes/` (they are never traversable): `SolBanquise.tscn` (one ground segment, `Type` = CentreA/B/C or embout gauche/droit; walking surface always at local y = −50), `SolBanquiseLigne.tscn` (composes N segments + embouts into a continuous shelf), `PenteBanquise.tscn` (slope segment, `CollisionPolygon2D`), `PlateformeBanquise.tscn` (small raised ice block — plaque/bloc/congère). **All of them stay on the default collision layer 1**, so `bas`+`saut` cannot drop through them — only `plateformes/PlateformeUnidirectionnelle` (layer 5, `Constantes.LayerPlateformesTraversables`) is traversable. Scripts mirror this in `scripts/sol/`.
 - **`test/`** — throwaway test scenes (`TestPlateformes.tscn`).
 
 `scripts/` is organized by role — put new C# in the matching folder (namespaces are not used; classes are global, so a file's folder is purely for humans):
@@ -111,5 +112,6 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 - **`Core/`** — global systems & scene-driven zones: `GameState`, `BackgroundManager`, `CameraZone` (its `NomRegion` drives the background region — the old `RegionTrigger` was removed), `ZoneBoss` + `ZoneBossCerf`.
 - **`Entities/`** — in-world actors and interactables. The shared base `LivingEntity` lives at the folder root; the rest is split by role into subfolders: `Pnj/` (the `Boss` base + `BossCerf`), `Player/` (`Player`), `Damage/` (damage-dealing entities: the `Projectile` base + `Snowball`), `Interactable/` (`MurFondable`, `StalactitePiege`, the `PouvoirChaleurPickup` ramassable), and `Misc/` (`Checkpoint`, the `ElementRamassable` base). `Boss` and `Player` both extend `LivingEntity` (which implements `Damageable`).
 - **`Plateformes/`** — platform behaviours: `PlateformeFixe`, `PlateformeMobile`, `PlateformeGlissante`, `PlateformeFragile`, `PlateformeUnidirectionnelle`.
+- **`sol/`** — solid ground behaviours (mirrors `scenes/sol/`): `SolBanquise`, `SolBanquiseLigne`, `PenteBanquise`, `PlateformeBanquise`. They configure texture + collision at runtime from a `Type` export and never touch `CollisionLayer` (layer 1 = non-traversable).
 - **`Terrain/`** — `TileSetFabrique` (now just the baked TileSet's custom-data-layer key names).
 - **`UI/`** — `Hud`, `BossHudBarre`, `EcranFin`, and the menus `MenuPrincipal` + `MenuPause` built via the shared `MenuFabrique`.

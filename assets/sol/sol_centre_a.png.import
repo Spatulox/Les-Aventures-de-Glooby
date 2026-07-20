@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbqybein7gjbq"
-path="res://.godot/imported/sol_centre_b.png-36c445cb7548b2c882d32676186a8be9.ctex"
+uid="uid://csjp177d0hutg"
+path="res://.godot/imported/sol_centre_a.png-fd4594969d4ce424c55c5d1982953178.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/sol/sol_centre_b.png"
-dest_files=["res://.godot/imported/sol_centre_b.png-36c445cb7548b2c882d32676186a8be9.ctex"]
+source_file="res://assets/sol/sol_centre_a.png"
+dest_files=["res://.godot/imported/sol_centre_a.png-fd4594969d4ce424c55c5d1982953178.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cpgrt424f3xgj"
-path="res://.godot/imported/bloc_empilable.png-61005637c26b8c6afea545b6c497f392.ctex"
+uid="uid://birlc1vlmq88x"
+path="res://.godot/imported/sol_embout_droit.png-1f6d08717e16d266c58b0ed3a2a8f7b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/banquise/elements/bloc_empilable.png"
-dest_files=["res://.godot/imported/bloc_empilable.png-61005637c26b8c6afea545b6c497f392.ctex"]
+source_file="res://assets/sol/sol_embout_droit.png"
+dest_files=["res://.godot/imported/sol_embout_droit.png-1f6d08717e16d266c58b0ed3a2a8f7b8.ctex"]
 
 [params]
 

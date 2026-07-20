@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://67grwk8edwci"]
 
+[ext_resource type="PackedScene" path="res://scenes/sol/SolBanquiseEmboutDroit.tscn" id="20_1vuit"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
-[ext_resource type="PackedScene" path="res://scenes/plateformes/MurSolide.tscn" id="mur_solide"]
-[ext_resource type="PackedScene" path="res://scenes/entites/boss_cerf.tscn" id="boss_cerf"]
+[ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss_cerf.tscn" id="boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="boss_hud"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="checkpoint"]
@@ -28,18 +28,20 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/TasPierres.tscn" id="g_pierres"]
 [ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/VeineCristalMur.tscn" id="g_veine"]
 [ext_resource type="PackedScene" path="res://scenes/decors/igloo.tscn" id="igloo"]
-[ext_resource type="PackedScene" path="res://scenes/entites/lutin_noel.tscn" id="lutin"]
+[ext_resource type="PackedScene" uid="uid://cfuc5gb01g7jn" path="res://scenes/entites/lutin_noel.tscn" id="lutin"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/mur_fondable.tscn" id="mur_fondable"]
+[ext_resource type="PackedScene" path="res://scenes/plateformes/MurSolide.tscn" id="mur_solide"]
 [ext_resource type="PackedScene" path="res://scenes/props/PanneauBois.tscn" id="panneau"]
-[ext_resource type="PackedScene" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
-[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="player"]
+[ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseDouceDescendante.tscn" id="pente_descendante"]
+[ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseDouceMontante.tscn" id="pente_montante"]
+[ext_resource type="PackedScene" uid="uid://jj522styq8rs" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/pouvoir_chaleur_pickup.tscn" id="pouvoir"]
 [ext_resource type="PackedScene" uid="uid://du38rqxpol3j8" path="res://scenes/decors/props/Rocher.tscn" id="rocher"]
 [ext_resource type="PackedScene" uid="uid://c0hqmgvti2q03" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="sol"]
-[ext_resource type="PackedScene" path="res://scenes/decors/SolBanquiseLigne.tscn" id="sol_banquise_ligne"]
-[ext_resource type="PackedScene" path="res://scenes/decors/PlateformeBanquise.tscn" id="plat_banquise"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/StalactiteDecor.tscn" id="stalactite"]
+[ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/SolBanquise.tscn" id="sol_banquise"]
+[ext_resource type="PackedScene" path="res://scenes/sol/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="stalactite_piege"]
 [ext_resource type="Script" uid="uid://6lo0e2meekiq" path="res://scripts/Core/ZoneBossCerf.cs" id="zonebosscerf"]
 
@@ -47,7 +49,7 @@
 size = Vector2(32, 600)
 
 [sub_resource type="RectangleShape2D" id="RectZoneBoss"]
-size = Vector2(640, 256)
+size = Vector2(640, 360)
 
 [node name="Monde" type="Node2D" unique_id=1188086045]
 
@@ -74,22 +76,32 @@ modulate = Color(1, 1, 1, 0)
 
 [node name="Village" type="Node2D" parent="." unique_id=681150130]
 
+[node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
+visible = false
+
+[node name="ZoneVillage" parent="Village/Camera" unique_id=132868656 instance=ExtResource("camzone")]
+position = Vector2(321, 145.00003)
+scale = Vector2(2.4799972, 1.40625)
+MargeChuteVide = 196.0
+NomRegion = "banquise"
+
 [node name="Sol" type="Node2D" parent="Village" unique_id=675078096]
 
-[node name="Sol1" parent="Village/Sol" unique_id=891891511 instance=ExtResource("sol")]
-position = Vector2(0, 390)
+[node name="Sol1" parent="Village/Sol" unique_id=891891511 instance=ExtResource("sol_embout_g")]
+position = Vector2(-35, 326)
+scale = Vector2(1, 1.0399988)
 
-[node name="Sol2" parent="Village/Sol" unique_id=1974415156 instance=ExtResource("sol")]
-position = Vector2(278, 315)
+[node name="Sol2" parent="Village/Sol" unique_id=1974415156 instance=ExtResource("sol_banquise")]
+position = Vector2(308, 329)
 
-[node name="Sol3" parent="Village/Sol" unique_id=938652459 instance=ExtResource("sol")]
-position = Vector2(556, 315)
+[node name="Sol3" parent="Village/Sol" unique_id=938652459 instance=ExtResource("sol_banquise")]
+position = Vector2(562, 329)
 
-[node name="Sol4" parent="Village/Sol" unique_id=107459954 instance=ExtResource("sol")]
-position = Vector2(834, 315)
+[node name="Sol4" parent="Village/Sol" unique_id=107459954 instance=ExtResource("sol_banquise")]
+position = Vector2(818, 329)
 
-[node name="Sol5" parent="Village/Sol" unique_id=1484744424 instance=ExtResource("sol")]
-position = Vector2(1112, 315)
+[node name="Sol5" parent="Village/Sol" unique_id=1484744424 instance=ExtResource("sol_banquise")]
+position = Vector2(1074, 329)
 
 [node name="MurGauche" type="StaticBody2D" parent="Village/Sol" unique_id=207661249]
 position = Vector2(-16, 200)
@@ -142,7 +154,7 @@ Lignes = PackedStringArray("Huummff")
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
 [node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1926955540 instance=ExtResource("checkpoint")]
-position = Vector2(327, 284)
+position = Vector2(327, 293)
 IdCheckpoint = "village_depart"
 
 [node name="panneau_poteau" parent="Village/Interactifs" unique_id=700000010 instance=ExtResource("panneau")]
@@ -151,493 +163,459 @@ scale = Vector2(0.5, 0.5)
 Texte = "Village des pingouins"
 Lignes = PackedStringArray("Village des pingouins")
 
-[node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
-
-[node name="ZoneVillage" parent="Village/Camera" unique_id=132868656 instance=ExtResource("camzone")]
-position = Vector2(317, 202)
-scale = Vector2(2.4799964, 1)
-NomRegion = "banquise"
-
 [node name="Frontiere" type="Node2D" parent="Village" unique_id=1612957047]
 
 [node name="Banquise" type="Node2D" parent="." unique_id=858809779]
 
+[node name="Camera" type="Node2D" parent="Banquise" unique_id=989063594]
+visible = false
+
+[node name="ZoneBanquise" parent="Banquise/Camera" unique_id=841426661 instance=ExtResource("camzone")]
+position = Vector2(3098.0002, 111.99999)
+scale = Vector2(19.12795, 1.6637502)
+NomRegion = "banquise"
+
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=2118285159]
+position = Vector2(1, 0)
 
-[node name="SolOuest" parent="Banquise/Sol" instance=ExtResource("sol_banquise_ligne")]
-position = Vector2(1379, 350)
-NombreSegments = 0
+[node name="RampeOuest" parent="Banquise/Sol" unique_id=967974687 instance=ExtResource("pente_montante")]
+position = Vector2(1418, 329)
 
-[node name="SolEst" parent="Banquise/Sol" instance=ExtResource("sol_banquise_ligne")]
-position = Vector2(2200, 350)
-NombreSegments = 0
+[node name="RampeEst" parent="Banquise/Sol" unique_id=518875373 instance=ExtResource("pente_descendante")]
+position = Vector2(1762, 193)
 
-[node name="MarcheCongere" parent="Banquise/Sol" instance=ExtResource("plat_banquise")]
-position = Vector2(1810, 288)
-Type = 2
+[node name="SolBanquiseEmboutDroit" parent="Banquise/Sol" unique_id=1865036209 instance=ExtResource("20_1vuit")]
+position = Vector2(2105, 329)
 
-[node name="Pas1" parent="Banquise/Sol" instance=ExtResource("plat_banquise")]
-position = Vector2(1915, 326)
-Type = 0
+[node name="SolBanquiseEmboutGauche" parent="Banquise/Sol" unique_id=1758720072 instance=ExtResource("sol_embout_g")]
+position = Vector2(2466, 325)
+scale = Vector2(1, 1.04)
 
-[node name="Pas2" parent="Banquise/Sol" instance=ExtResource("plat_banquise")]
-position = Vector2(1990, 312)
-Type = 1
+[node name="Sol1" parent="Banquise/Sol" unique_id=662512016 instance=ExtResource("sol_banquise")]
+position = Vector2(2808, 329)
 
-[node name="Pas3" parent="Banquise/Sol" instance=ExtResource("plat_banquise")]
-position = Vector2(2065, 326)
-Type = 0
+[node name="Sol2" parent="Banquise/Sol" unique_id=1345073846 instance=ExtResource("sol_banquise")]
+position = Vector2(3135, 329)
+
+[node name="Sol3" parent="Banquise/Sol" unique_id=1626383360 instance=ExtResource("sol_banquise")]
+position = Vector2(3462, 329)
+
+[node name="Sol4" parent="Banquise/Sol" unique_id=530617684 instance=ExtResource("sol_banquise")]
+position = Vector2(3789, 329)
+
+[node name="Sol5" parent="Banquise/Sol" unique_id=1628453768 instance=ExtResource("sol_banquise")]
+position = Vector2(4116, 329)
+
+[node name="Sol6" parent="Banquise/Sol" unique_id=656043778 instance=ExtResource("sol_banquise")]
+position = Vector2(4443, 329)
+
+[node name="Sol7" parent="Banquise/Sol" unique_id=1221332376 instance=ExtResource("sol_banquise")]
+position = Vector2(4770, 329)
+
+[node name="Sol8" parent="Banquise/Sol" unique_id=693569575 instance=ExtResource("sol_banquise")]
+position = Vector2(5097, 329)
+
+[node name="Sol9" parent="Banquise/Sol" unique_id=445068061 instance=ExtResource("sol_banquise")]
+position = Vector2(5424, 329)
+
+[node name="LedgeGrotte1" parent="Banquise/Sol" unique_id=1145702156 instance=ExtResource("sol_banquise")]
+position = Vector2(3500, 272)
+
+[node name="LedgeGrotte2" parent="Banquise/Sol" unique_id=592972945 instance=ExtResource("sol_banquise")]
+position = Vector2(4550, 272)
 
 [node name="Decor" type="Node2D" parent="Banquise" unique_id=819138525]
 
 [node name="Rocher" parent="Banquise/Decor" unique_id=2016734448 instance=ExtResource("rocher")]
-position = Vector2(1600, 252)
+position = Vector2(2150, 252)
 
 [node name="CristalGros" parent="Banquise/Decor" unique_id=1195526778 instance=ExtResource("cristalg")]
-position = Vector2(2200, 268)
+position = Vector2(2620, 268)
 
 [node name="CristalPetit" parent="Banquise/Decor" unique_id=1617416377 instance=ExtResource("cristalp")]
-position = Vector2(1750, 284)
+position = Vector2(2218, 276)
 
 [node name="FleurGivre" parent="Banquise/Decor" unique_id=242948217 instance=ExtResource("fleur")]
-position = Vector2(1500, 284)
+position = Vector2(2450, 284)
 
 [node name="FleurGivre2" parent="Banquise/Decor" unique_id=85913560 instance=ExtResource("fleur")]
-position = Vector2(2420, 284)
+position = Vector2(2700, 284)
 
-[node name="Interactifs" type="Node2D" parent="Banquise" unique_id=1713257003]
-
-[node name="Camera" type="Node2D" parent="Banquise" unique_id=989063594]
-
-[node name="ZoneBanquise" parent="Banquise/Camera" unique_id=841426661 instance=ExtResource("camzone")]
-position = Vector2(1628.0001, 195)
-scale = Vector2(7.7279525, 0.9498781)
-NomRegion = "banquise"
-
-[node name="Frontiere" type="Node2D" parent="Banquise" unique_id=482695684]
-
-[node name="Grotte" type="Node2D" parent="." unique_id=1201709441]
-
-[node name="Sol" type="Node2D" parent="Grotte" unique_id=870484074]
-
-[node name="Sol1" parent="Grotte/Sol" unique_id=1118075099 instance=ExtResource("sol")]
-position = Vector2(2780, 315)
-
-[node name="Sol2" parent="Grotte/Sol" unique_id=833317608 instance=ExtResource("sol")]
-position = Vector2(3058, 315)
-
-[node name="Sol3" parent="Grotte/Sol" unique_id=1066003374 instance=ExtResource("sol")]
-position = Vector2(3336, 315)
-
-[node name="Sol4" parent="Grotte/Sol" unique_id=1402419270 instance=ExtResource("sol")]
-position = Vector2(3614, 315)
-
-[node name="Sol5" parent="Grotte/Sol" unique_id=1885695959 instance=ExtResource("sol")]
-position = Vector2(3892, 315)
-
-[node name="Sol6" parent="Grotte/Sol" unique_id=263911442 instance=ExtResource("sol")]
-position = Vector2(4170, 315)
-
-[node name="Sol7" parent="Grotte/Sol" unique_id=1722078648 instance=ExtResource("sol")]
-position = Vector2(4448, 315)
-
-[node name="Sol8" parent="Grotte/Sol" unique_id=1227902446 instance=ExtResource("sol")]
-position = Vector2(4726, 315)
-
-[node name="Sol9" parent="Grotte/Sol" unique_id=1609587303 instance=ExtResource("sol")]
-position = Vector2(5004, 315)
-
-[node name="Sol10" parent="Grotte/Sol" unique_id=300963387 instance=ExtResource("sol")]
-position = Vector2(5282, 315)
-
-[node name="Sol11" parent="Grotte/Sol" unique_id=265272361 instance=ExtResource("sol")]
-position = Vector2(5560, 315)
-
-[node name="Sol12" parent="Grotte/Sol" unique_id=94525458 instance=ExtResource("sol")]
-position = Vector2(5838, 315)
-
-[node name="Sol13" parent="Grotte/Sol" unique_id=511612886 instance=ExtResource("sol")]
-position = Vector2(6116, 315)
-
-[node name="LedgeGrotte1" parent="Grotte/Sol" unique_id=670178256 instance=ExtResource("sol")]
-position = Vector2(3500, 258)
-
-[node name="LedgeGrotte2" parent="Grotte/Sol" unique_id=595151864 instance=ExtResource("sol")]
-position = Vector2(4550, 258)
-
-[node name="LedgeGrotte3" parent="Grotte/Sol" unique_id=1738649118 instance=ExtResource("sol")]
-position = Vector2(5600, 258)
-
-[node name="Decor" type="Node2D" parent="Grotte" unique_id=669849264]
-
-[node name="StalactiteDecor" parent="Grotte/Decor" unique_id=1218418113 instance=ExtResource("stalactite")]
-position = Vector2(2800, 60)
-
-[node name="StalactiteDecor2" parent="Grotte/Decor" unique_id=1592867309 instance=ExtResource("stalactite")]
-position = Vector2(3400, 55)
-
-[node name="StalactiteDecor3" parent="Grotte/Decor" unique_id=711081243 instance=ExtResource("stalactite")]
-position = Vector2(4000, 65)
-
-[node name="StalactiteDecor4" parent="Grotte/Decor" unique_id=874666509 instance=ExtResource("stalactite")]
-position = Vector2(4700, 55)
-
-[node name="CristalGros" parent="Grotte/Decor" unique_id=1937939991 instance=ExtResource("cristalg")]
+[node name="CristalGros2" parent="Banquise/Decor" unique_id=1937939991 instance=ExtResource("cristalg")]
 position = Vector2(3100, 268)
 
-[node name="CristalGros2" parent="Grotte/Decor" unique_id=1796972081 instance=ExtResource("cristalg")]
+[node name="CristalGros3" parent="Banquise/Decor" unique_id=1796972081 instance=ExtResource("cristalg")]
 position = Vector2(4300, 268)
 
-[node name="CristalPetit" parent="Grotte/Decor" unique_id=5326416 instance=ExtResource("cristalp")]
+[node name="CristalPetit2" parent="Banquise/Decor" unique_id=5326416 instance=ExtResource("cristalp")]
 position = Vector2(3300, 284)
 
-[node name="CristalPetit2" parent="Grotte/Decor" unique_id=1595708465 instance=ExtResource("cristalp")]
+[node name="CristalPetit3" parent="Banquise/Decor" unique_id=1595708465 instance=ExtResource("cristalp")]
 position = Vector2(3800, 284)
 
-[node name="CristalPetit3" parent="Grotte/Decor" unique_id=1148796574 instance=ExtResource("cristalp")]
+[node name="CristalPetit4" parent="Banquise/Decor" unique_id=1148796574 instance=ExtResource("cristalp")]
 position = Vector2(4500, 284)
 
-[node name="Rocher" parent="Grotte/Decor" unique_id=1606535264 instance=ExtResource("rocher")]
+[node name="Rocher2" parent="Banquise/Decor" unique_id=1606535264 instance=ExtResource("rocher")]
 position = Vector2(3600, 252)
 
-[node name="Rocher2" parent="Grotte/Decor" unique_id=401579510 instance=ExtResource("rocher")]
+[node name="Rocher3" parent="Banquise/Decor" unique_id=401579510 instance=ExtResource("rocher")]
 position = Vector2(4900, 252)
 
-[node name="LutinNoel" parent="Grotte/Decor" unique_id=700000003 instance=ExtResource("lutin")]
+[node name="LutinNoel" parent="Banquise/Decor" unique_id=700000003 instance=ExtResource("lutin")]
 position = Vector2(3100, 272)
 Lignes = PackedStringArray("Hihi ! Un lutin du Pere Noel, perdu dans la grotte...", "Le Boss Cerf garde la sortie. Bonne chance, Glooby !")
 
-[node name="LutinNoel2" parent="Grotte/Decor" unique_id=700000004 instance=ExtResource("lutin")]
+[node name="LutinNoel2" parent="Banquise/Decor" unique_id=700000004 instance=ExtResource("lutin")]
 position = Vector2(4600, 272)
 
-[node name="ColonneGlace1" parent="Grotte/Decor" unique_id=1778159670 instance=ExtResource("g_colonne")]
+[node name="ColonneGlace1" parent="Banquise/Decor" unique_id=1778159670 instance=ExtResource("g_colonne")]
 position = Vector2(2950, 254)
 
-[node name="ColonneGlace2" parent="Grotte/Decor" unique_id=1845187423 instance=ExtResource("g_colonne")]
+[node name="ColonneGlace2" parent="Banquise/Decor" unique_id=1845187423 instance=ExtResource("g_colonne")]
 position = Vector2(3720, 254)
 
-[node name="ColonneGlace3" parent="Grotte/Decor" unique_id=1573782724 instance=ExtResource("g_colonne")]
+[node name="ColonneGlace3" parent="Banquise/Decor" unique_id=1573782724 instance=ExtResource("g_colonne")]
 position = Vector2(5380, 254)
 
-[node name="ColonneGlace4" parent="Grotte/Decor" unique_id=533667475 instance=ExtResource("g_colonne")]
-position = Vector2(5950, 254)
-
-[node name="ChampiGeant1" parent="Grotte/Decor" unique_id=1152396756 instance=ExtResource("g_champi_geant")]
+[node name="ChampiGeant1" parent="Banquise/Decor" unique_id=1152396756 instance=ExtResource("g_champi_geant")]
 position = Vector2(3250, 268)
 
-[node name="ChampiGeant2" parent="Grotte/Decor" unique_id=2130756598 instance=ExtResource("g_champi_geant")]
+[node name="ChampiGeant2" parent="Banquise/Decor" unique_id=2130756598 instance=ExtResource("g_champi_geant")]
 position = Vector2(5100, 268)
 
-[node name="Champi1" parent="Grotte/Decor" unique_id=1910463905 instance=ExtResource("g_champi")]
+[node name="Champi1" parent="Banquise/Decor" unique_id=1910463905 instance=ExtResource("g_champi")]
 position = Vector2(2900, 282)
 
-[node name="Champi2" parent="Grotte/Decor" unique_id=1142381795 instance=ExtResource("g_champi")]
+[node name="Champi2" parent="Banquise/Decor" unique_id=1142381795 instance=ExtResource("g_champi")]
 position = Vector2(4200, 282)
 
-[node name="Champi3" parent="Grotte/Decor" unique_id=1674662838 instance=ExtResource("g_champi")]
-position = Vector2(5620, 282)
-
-[node name="Champi4" parent="Grotte/Decor" unique_id=1559196436 instance=ExtResource("g_champi")]
+[node name="Champi4" parent="Banquise/Decor" unique_id=1559196436 instance=ExtResource("g_champi")]
 position = Vector2(4950, 282)
 
-[node name="Grappe1" parent="Grotte/Decor" unique_id=377977314 instance=ExtResource("g_grappe")]
+[node name="Grappe1" parent="Banquise/Decor" unique_id=377977314 instance=ExtResource("g_grappe")]
 position = Vector2(3560, 278)
 
-[node name="Grappe2" parent="Grotte/Decor" unique_id=1610122729 instance=ExtResource("g_grappe")]
+[node name="Grappe2" parent="Banquise/Decor" unique_id=1610122729 instance=ExtResource("g_grappe")]
 position = Vector2(4880, 278)
 
-[node name="Grappe3" parent="Grotte/Decor" unique_id=300413515 instance=ExtResource("g_grappe")]
-position = Vector2(6020, 278)
-
-[node name="Geode1" parent="Grotte/Decor" unique_id=2087572625 instance=ExtResource("g_geode")]
+[node name="Geode1" parent="Banquise/Decor" unique_id=2087572625 instance=ExtResource("g_geode")]
 position = Vector2(4120, 278)
 
-[node name="Geode2" parent="Grotte/Decor" unique_id=1181957771 instance=ExtResource("g_geode")]
+[node name="Geode2" parent="Banquise/Decor" unique_id=1181957771 instance=ExtResource("g_geode")]
 position = Vector2(5300, 278)
 
-[node name="Lac1" parent="Grotte/Decor" unique_id=1392608718 instance=ExtResource("g_lac")]
+[node name="Lac1" parent="Banquise/Decor" unique_id=1392608718 instance=ExtResource("g_lac")]
 position = Vector2(3820, 286)
 
-[node name="Lac2" parent="Grotte/Decor" unique_id=682630809 instance=ExtResource("g_lac")]
+[node name="Lac2" parent="Banquise/Decor" unique_id=682630809 instance=ExtResource("g_lac")]
 position = Vector2(4680, 286)
 
-[node name="Lac3" parent="Grotte/Decor" unique_id=1594723993 instance=ExtResource("g_lac")]
-position = Vector2(5720, 286)
-
-[node name="Congere1" parent="Grotte/Decor" unique_id=309431022 instance=ExtResource("g_congere")]
+[node name="Congere1" parent="Banquise/Decor" unique_id=309431022 instance=ExtResource("g_congere")]
 position = Vector2(3140, 286)
 
-[node name="Congere2" parent="Grotte/Decor" unique_id=464561138 instance=ExtResource("g_congere")]
+[node name="Congere2" parent="Banquise/Decor" unique_id=464561138 instance=ExtResource("g_congere")]
 position = Vector2(5020, 286)
 
-[node name="Flaque1" parent="Grotte/Decor" unique_id=2069144568 instance=ExtResource("g_flaque")]
+[node name="Flaque1" parent="Banquise/Decor" unique_id=2069144568 instance=ExtResource("g_flaque")]
 position = Vector2(4420, 286)
 
-[node name="Flaque2" parent="Grotte/Decor" unique_id=2135867173 instance=ExtResource("g_flaque")]
-position = Vector2(5880, 286)
-
-[node name="ColonneBrisee1" parent="Grotte/Decor" unique_id=1918144948 instance=ExtResource("g_colonne_brisee")]
+[node name="ColonneBrisee1" parent="Banquise/Decor" unique_id=1918144948 instance=ExtResource("g_colonne_brisee")]
 position = Vector2(4760, 286)
 
-[node name="ColonneBrisee2" parent="Grotte/Decor" unique_id=357808324 instance=ExtResource("g_colonne_brisee")]
-position = Vector2(5980, 286)
-
-[node name="Pierres1" parent="Grotte/Decor" unique_id=1514931407 instance=ExtResource("g_pierres")]
+[node name="Pierres1" parent="Banquise/Decor" unique_id=1514931407 instance=ExtResource("g_pierres")]
 position = Vector2(3920, 286)
 
-[node name="Pierres2" parent="Grotte/Decor" unique_id=579425358 instance=ExtResource("g_pierres")]
+[node name="Pierres2" parent="Banquise/Decor" unique_id=579425358 instance=ExtResource("g_pierres")]
 position = Vector2(5220, 286)
 
-[node name="Glace1" parent="Grotte/Decor" unique_id=1402786529 instance=ExtResource("g_glace")]
+[node name="Glace1" parent="Banquise/Decor" unique_id=1402786529 instance=ExtResource("g_glace")]
 position = Vector2(3360, 284)
 
-[node name="Glace2" parent="Grotte/Decor" unique_id=1515278526 instance=ExtResource("g_glace")]
+[node name="Glace2" parent="Banquise/Decor" unique_id=1515278526 instance=ExtResource("g_glace")]
 position = Vector2(5460, 284)
 
-[node name="VeineMur1" parent="Grotte/Decor" unique_id=746917375 instance=ExtResource("g_veine")]
+[node name="VeineMur1" parent="Banquise/Decor" unique_id=746917375 instance=ExtResource("g_veine")]
 position = Vector2(2830, 130)
 
-[node name="VeineMur2" parent="Grotte/Decor" unique_id=9569320 instance=ExtResource("g_veine")]
-position = Vector2(6180, 140)
-
-[node name="Fissure1" parent="Grotte/Decor" unique_id=1781981918 instance=ExtResource("g_fissure")]
+[node name="Fissure1" parent="Banquise/Decor" unique_id=1781981918 instance=ExtResource("g_fissure")]
 position = Vector2(3650, 110)
 
-[node name="Fissure2" parent="Grotte/Decor" unique_id=1939018732 instance=ExtResource("g_fissure")]
+[node name="Fissure2" parent="Banquise/Decor" unique_id=1939018732 instance=ExtResource("g_fissure")]
 position = Vector2(4850, 110)
 
-[node name="Fissure3" parent="Grotte/Decor" unique_id=294092093 instance=ExtResource("g_fissure")]
+[node name="Interactifs" type="Node2D" parent="Banquise" unique_id=1713257003]
+
+[node name="Frontiere" type="Node2D" parent="Banquise" unique_id=482695684]
+
+[node name="ZoneBossCerf" type="Node2D" parent="." unique_id=1201709441]
+
+[node name="Camera" type="Node2D" parent="ZoneBossCerf" unique_id=1111418208]
+visible = false
+
+[node name="ZoneArenaBoss" parent="ZoneBossCerf/Camera" unique_id=1662387802 instance=ExtResource("camzone")]
+position = Vector2(5930, 154)
+scale = Vector2(2.891, 1.40625)
+MargeChuteVide = 196.0
+NomRegion = "boss_cerf"
+
+[node name="Sol" type="Node2D" parent="ZoneBossCerf" unique_id=870484074]
+
+[node name="Sol1" parent="ZoneBossCerf/Sol" unique_id=879518816 instance=ExtResource("sol_banquise")]
+position = Vector2(5751, 329)
+
+[node name="Sol2" parent="ZoneBossCerf/Sol" unique_id=826651753 instance=ExtResource("sol_banquise")]
+position = Vector2(6078, 329)
+
+[node name="LedgeGrotte3" parent="ZoneBossCerf/Sol" unique_id=1624036658 instance=ExtResource("sol_banquise")]
+position = Vector2(5600, 272)
+
+[node name="Decor" type="Node2D" parent="ZoneBossCerf" unique_id=669849264]
+
+[node name="ColonneGlace4" parent="ZoneBossCerf/Decor" unique_id=533667475 instance=ExtResource("g_colonne")]
+position = Vector2(5950, 254)
+
+[node name="Champi3" parent="ZoneBossCerf/Decor" unique_id=1674662838 instance=ExtResource("g_champi")]
+position = Vector2(5620, 282)
+
+[node name="Grappe3" parent="ZoneBossCerf/Decor" unique_id=300413515 instance=ExtResource("g_grappe")]
+position = Vector2(6020, 278)
+
+[node name="Lac3" parent="ZoneBossCerf/Decor" unique_id=1594723993 instance=ExtResource("g_lac")]
+position = Vector2(5720, 286)
+
+[node name="Flaque2" parent="ZoneBossCerf/Decor" unique_id=2135867173 instance=ExtResource("g_flaque")]
+position = Vector2(5880, 286)
+
+[node name="VeineMur2" parent="ZoneBossCerf/Decor" unique_id=9569320 instance=ExtResource("g_veine")]
+position = Vector2(6180, 140)
+
+[node name="ColonneBrisee2" parent="ZoneBossCerf/Decor" unique_id=357808324 instance=ExtResource("g_colonne_brisee")]
+position = Vector2(5980, 286)
+
+[node name="Fissure3" parent="ZoneBossCerf/Decor" unique_id=294092093 instance=ExtResource("g_fissure")]
 position = Vector2(5650, 110)
 
-[node name="Interactifs" type="Node2D" parent="Grotte" unique_id=1375720744]
+[node name="Interactifs" type="Node2D" parent="ZoneBossCerf" unique_id=1375720744]
 
-[node name="MurGlace" parent="Grotte/Interactifs" unique_id=70044992 instance=ExtResource("mur_fondable")]
+[node name="MurGlace" parent="ZoneBossCerf/Interactifs" unique_id=70044992 instance=ExtResource("mur_fondable")]
 position = Vector2(2700, 255)
 IdMur = "mur_glace_grotte"
 
-[node name="CheckpointGrotte" parent="Grotte/Interactifs" unique_id=2019026174 instance=ExtResource("checkpoint")]
+[node name="CheckpointGrotte" parent="ZoneBossCerf/Interactifs" unique_id=2019026174 instance=ExtResource("checkpoint")]
 position = Vector2(2860, 296)
 IdCheckpoint = "grotte_entree"
 
-[node name="StalactitePiege1" parent="Grotte/Interactifs" unique_id=1800415455 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege1" parent="ZoneBossCerf/Interactifs" unique_id=1800415455 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(5610, 75)
 
-[node name="StalactitePiege2" parent="Grotte/Interactifs" unique_id=1638343555 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege2" parent="ZoneBossCerf/Interactifs" unique_id=1638343555 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(5690, 75)
 
-[node name="StalactitePiege3" parent="Grotte/Interactifs" unique_id=691519195 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege3" parent="ZoneBossCerf/Interactifs" unique_id=691519195 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(5770, 75)
 
-[node name="StalactitePiege4" parent="Grotte/Interactifs" unique_id=451168110 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege4" parent="ZoneBossCerf/Interactifs" unique_id=451168110 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(5850, 75)
 
-[node name="StalactitePiege5" parent="Grotte/Interactifs" unique_id=1656164890 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege5" parent="ZoneBossCerf/Interactifs" unique_id=1656164890 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(5930, 75)
 
-[node name="StalactitePiege6" parent="Grotte/Interactifs" unique_id=382785612 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege6" parent="ZoneBossCerf/Interactifs" unique_id=382785612 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(6010, 75)
 
-[node name="StalactitePiege7" parent="Grotte/Interactifs" unique_id=1184308626 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege7" parent="ZoneBossCerf/Interactifs" unique_id=1184308626 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(6090, 75)
 
-[node name="StalactitePiege8" parent="Grotte/Interactifs" unique_id=1758139163 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
+[node name="StalactitePiege8" parent="ZoneBossCerf/Interactifs" unique_id=1758139163 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(6170, 75)
 
-[node name="BossHudBarre" parent="Grotte/Interactifs" unique_id=976306309 instance=ExtResource("boss_hud")]
+[node name="BossHudBarre" parent="ZoneBossCerf/Interactifs" unique_id=976306309 instance=ExtResource("boss_hud")]
 
-[node name="ZoneBossCerf" type="Area2D" parent="Grotte/Interactifs" unique_id=1743602004]
-position = Vector2(5900, 200)
+[node name="ZoneBossCerf" type="Area2D" parent="ZoneBossCerf/Interactifs" unique_id=1743602004]
+position = Vector2(5900, 252)
 script = ExtResource("zonebosscerf")
 SceneBoss = ExtResource("boss_cerf")
 NomBoss = "Boss Cerf (Rodolphe)"
 PositionApparition = Vector2(5900, 280)
 NomRegion = "grotte"
+MargeChuteVide = 196.0
 CheminBarre = NodePath("../BossHudBarre")
 PvBoss = 40
 UneSeuleFois = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Grotte/Interactifs/ZoneBossCerf" unique_id=400706869]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossCerf/Interactifs/ZoneBossCerf" unique_id=400706869]
+position = Vector2(0, -95)
 shape = SubResource("RectZoneBoss")
 
-[node name="Camera" type="Node2D" parent="Grotte" unique_id=1111418208]
+[node name="Frontiere" type="Node2D" parent="ZoneBossCerf" unique_id=2102435091]
 
-[node name="ZoneGrotte" parent="Grotte/Camera" unique_id=2005198318 instance=ExtResource("camzone")]
-position = Vector2(4105, 200)
-scale = Vector2(11.367, 1)
-NomRegion = "banquise"
+[node name="Grotte" type="Node2D" parent="." unique_id=960315107]
 
-[node name="ZoneArenaBoss" parent="Grotte/Camera" instance=ExtResource("camzone")]
-position = Vector2(5930, 200)
-scale = Vector2(2.891, 1)
-NomRegion = "boss_cerf"
+[node name="Camera" type="Node2D" parent="Grotte" unique_id=1994032986]
 
-[node name="Frontiere" type="Node2D" parent="Grotte" unique_id=2102435091]
+[node name="ZoneGrotte" parent="Grotte/Camera" unique_id=1851448665 instance=ExtResource("camzone")]
+position = Vector2(3345.0002, 1029)
+scale = Vector2(15.003221, 5.5333786)
+NomRegion = "grotte"
 
-[node name="Labyrinthe" type="Node2D" parent="." unique_id=960315107]
+[node name="Sol" type="Node2D" parent="Grotte" unique_id=2035059689]
 
-[node name="Sol" type="Node2D" parent="Labyrinthe" unique_id=2035059689]
-
-[node name="MurGauche" parent="Labyrinthe/Sol" unique_id=1523992232 instance=ExtResource("mur_solide")]
+[node name="MurGauche" parent="Grotte/Sol" unique_id=1523992232 instance=ExtResource("mur_solide")]
 position = Vector2(1450, 610)
-Taille = Vector2(48, 540)
 
-[node name="MurDroit" parent="Labyrinthe/Sol" unique_id=703535614 instance=ExtResource("mur_solide")]
+[node name="MurDroit" parent="Grotte/Sol" unique_id=703535614 instance=ExtResource("mur_solide")]
 position = Vector2(2650, 610)
-Taille = Vector2(48, 540)
 
-[node name="CorridorL1_1" parent="Labyrinthe/Sol" unique_id=204253254 instance=ExtResource("sol")]
-position = Vector2(1899, 445)
+[node name="CorridorL1_1" parent="Grotte/Sol" unique_id=204253254 instance=ExtResource("sol")]
+position = Vector2(1901, 470)
 
-[node name="CorridorL1_2" parent="Labyrinthe/Sol" unique_id=204253255 instance=ExtResource("sol")]
-position = Vector2(2098, 445)
+[node name="CorridorL1_2" parent="Grotte/Sol" unique_id=204253255 instance=ExtResource("sol")]
+position = Vector2(2100, 470)
 
-[node name="CorridorL1_3" parent="Labyrinthe/Sol" unique_id=204253256 instance=ExtResource("sol")]
-position = Vector2(2298, 445)
+[node name="CorridorL1_3" parent="Grotte/Sol" unique_id=204253256 instance=ExtResource("sol")]
+position = Vector2(2311, 446)
 
-[node name="CorridorL1_4" parent="Labyrinthe/Sol" unique_id=204253257 instance=ExtResource("sol")]
+[node name="CorridorL1_4" parent="Grotte/Sol" unique_id=204253257 instance=ExtResource("sol")]
 position = Vector2(2497, 445)
 
-[node name="CorridorL2_1" parent="Labyrinthe/Sol" unique_id=1012770287 instance=ExtResource("sol")]
+[node name="CorridorL2_1" parent="Grotte/Sol" unique_id=1012770287 instance=ExtResource("sol")]
 position = Vector2(1604, 575)
 
-[node name="CorridorL2_2" parent="Labyrinthe/Sol" unique_id=1012770288 instance=ExtResource("sol")]
+[node name="CorridorL2_2" parent="Grotte/Sol" unique_id=1012770288 instance=ExtResource("sol")]
 position = Vector2(1803, 575)
 
-[node name="CorridorL2_3" parent="Labyrinthe/Sol" unique_id=1012770289 instance=ExtResource("sol")]
+[node name="CorridorL2_3" parent="Grotte/Sol" unique_id=1012770289 instance=ExtResource("sol")]
 position = Vector2(2003, 575)
 
-[node name="CorridorL2_4" parent="Labyrinthe/Sol" unique_id=1012770290 instance=ExtResource("sol")]
+[node name="CorridorL2_4" parent="Grotte/Sol" unique_id=1012770290 instance=ExtResource("sol")]
 position = Vector2(2202, 575)
 
-[node name="CorridorL3_1" parent="Labyrinthe/Sol" unique_id=413531711 instance=ExtResource("sol")]
+[node name="CorridorL3_1" parent="Grotte/Sol" unique_id=413531711 instance=ExtResource("sol")]
 position = Vector2(1899, 705)
 
-[node name="CorridorL3_2" parent="Labyrinthe/Sol" unique_id=413531712 instance=ExtResource("sol")]
+[node name="CorridorL3_2" parent="Grotte/Sol" unique_id=413531712 instance=ExtResource("sol")]
 position = Vector2(2098, 705)
 
-[node name="CorridorL3_3" parent="Labyrinthe/Sol" unique_id=413531713 instance=ExtResource("sol")]
+[node name="CorridorL3_3" parent="Grotte/Sol" unique_id=413531713 instance=ExtResource("sol")]
 position = Vector2(2298, 705)
 
-[node name="CorridorL3_4" parent="Labyrinthe/Sol" unique_id=413531714 instance=ExtResource("sol")]
+[node name="CorridorL3_4" parent="Grotte/Sol" unique_id=413531714 instance=ExtResource("sol")]
 position = Vector2(2497, 705)
 
-[node name="PlancherBas_1" parent="Labyrinthe/Sol" unique_id=55994715 instance=ExtResource("sol")]
+[node name="PlancherBas_1" parent="Grotte/Sol" unique_id=55994715 instance=ExtResource("sol")]
 position = Vector2(1604, 845)
 
-[node name="PlancherBas_2" parent="Labyrinthe/Sol" unique_id=55994716 instance=ExtResource("sol")]
+[node name="PlancherBas_2" parent="Grotte/Sol" unique_id=55994716 instance=ExtResource("sol")]
 position = Vector2(1827, 845)
 
-[node name="PlancherBas_3" parent="Labyrinthe/Sol" unique_id=55994717 instance=ExtResource("sol")]
+[node name="PlancherBas_3" parent="Grotte/Sol" unique_id=55994717 instance=ExtResource("sol")]
 position = Vector2(2050, 845)
 
-[node name="PlancherBas_4" parent="Labyrinthe/Sol" unique_id=55994718 instance=ExtResource("sol")]
+[node name="PlancherBas_4" parent="Grotte/Sol" unique_id=55994718 instance=ExtResource("sol")]
 position = Vector2(2273, 845)
 
-[node name="PlancherBas_5" parent="Labyrinthe/Sol" unique_id=55994719 instance=ExtResource("sol")]
+[node name="PlancherBas_5" parent="Grotte/Sol" unique_id=55994719 instance=ExtResource("sol")]
 position = Vector2(2496, 845)
 
-[node name="LedgeEntree" parent="Labyrinthe/Sol" unique_id=189177354 instance=ExtResource("sol")]
-position = Vector2(2000, 380)
+[node name="LedgeEntree" parent="Grotte/Sol" unique_id=189177354 instance=ExtResource("sol")]
+position = Vector2(2292, 372)
 
-[node name="LedgeA" parent="Labyrinthe/Sol" unique_id=294057916 instance=ExtResource("sol")]
+[node name="LedgeA" parent="Grotte/Sol" unique_id=294057916 instance=ExtResource("sol")]
 position = Vector2(1720, 510)
 
-[node name="LedgeB" parent="Labyrinthe/Sol" unique_id=413252394 instance=ExtResource("sol")]
+[node name="LedgeB" parent="Grotte/Sol" unique_id=413252394 instance=ExtResource("sol")]
 position = Vector2(2380, 640)
 
-[node name="LedgeC" parent="Labyrinthe/Sol" unique_id=2022463936 instance=ExtResource("sol")]
+[node name="LedgeC" parent="Grotte/Sol" unique_id=2022463936 instance=ExtResource("sol")]
 position = Vector2(1720, 775)
 
-[node name="Decor" type="Node2D" parent="Labyrinthe" unique_id=639584269]
+[node name="Decor" type="Node2D" parent="Grotte" unique_id=639584269]
 
-[node name="ColonneGlaceL1" parent="Labyrinthe/Decor" unique_id=1496608036 instance=ExtResource("g_colonne")]
+[node name="ColonneGlaceL1" parent="Grotte/Decor" unique_id=1496608036 instance=ExtResource("g_colonne")]
 position = Vector2(2550, 382)
 
-[node name="GrappeL1" parent="Labyrinthe/Decor" unique_id=1294837655 instance=ExtResource("g_grappe")]
+[node name="GrappeL1" parent="Grotte/Decor" unique_id=1294837655 instance=ExtResource("g_grappe")]
 position = Vector2(2450, 406)
 
-[node name="GeodeL1" parent="Labyrinthe/Decor" unique_id=1812505741 instance=ExtResource("g_geode")]
+[node name="GeodeL1" parent="Grotte/Decor" unique_id=1812505741 instance=ExtResource("g_geode")]
 position = Vector2(2350, 406)
 
-[node name="ChampiL1" parent="Labyrinthe/Decor" unique_id=739557550 instance=ExtResource("g_champi")]
+[node name="ChampiL1" parent="Grotte/Decor" unique_id=739557550 instance=ExtResource("g_champi")]
 position = Vector2(2600, 414)
 
-[node name="ChampiGeantL2" parent="Labyrinthe/Decor" unique_id=1745034388 instance=ExtResource("g_champi_geant")]
+[node name="ChampiGeantL2" parent="Grotte/Decor" unique_id=1745034388 instance=ExtResource("g_champi_geant")]
 position = Vector2(1560, 532)
 
-[node name="ColonneGlaceL2" parent="Labyrinthe/Decor" unique_id=1640436095 instance=ExtResource("g_colonne")]
+[node name="ColonneGlaceL2" parent="Grotte/Decor" unique_id=1640436095 instance=ExtResource("g_colonne")]
 position = Vector2(1620, 512)
 
-[node name="GrappeL2" parent="Labyrinthe/Decor" unique_id=1477038393 instance=ExtResource("g_grappe")]
+[node name="GrappeL2" parent="Grotte/Decor" unique_id=1477038393 instance=ExtResource("g_grappe")]
 position = Vector2(2050, 536)
 
-[node name="CongereL2" parent="Labyrinthe/Decor" unique_id=1157552597 instance=ExtResource("g_congere")]
+[node name="CongereL2" parent="Grotte/Decor" unique_id=1157552597 instance=ExtResource("g_congere")]
 position = Vector2(1850, 544)
 
-[node name="ChampiL2" parent="Labyrinthe/Decor" unique_id=981909386 instance=ExtResource("g_champi")]
+[node name="ChampiL2" parent="Grotte/Decor" unique_id=981909386 instance=ExtResource("g_champi")]
 position = Vector2(2200, 544)
 
-[node name="ColonneBriseeL3" parent="Labyrinthe/Decor" unique_id=389940883 instance=ExtResource("g_colonne_brisee")]
+[node name="ColonneBriseeL3" parent="Grotte/Decor" unique_id=389940883 instance=ExtResource("g_colonne_brisee")]
 position = Vector2(2550, 674)
 
-[node name="GeodeL3" parent="Labyrinthe/Decor" unique_id=1560712694 instance=ExtResource("g_geode")]
+[node name="GeodeL3" parent="Grotte/Decor" unique_id=1560712694 instance=ExtResource("g_geode")]
 position = Vector2(2450, 666)
 
-[node name="FlaqueL3" parent="Labyrinthe/Decor" unique_id=1239855487 instance=ExtResource("g_flaque")]
+[node name="FlaqueL3" parent="Grotte/Decor" unique_id=1239855487 instance=ExtResource("g_flaque")]
 position = Vector2(2200, 674)
 
-[node name="ChampiL3" parent="Labyrinthe/Decor" unique_id=1327440281 instance=ExtResource("g_champi")]
+[node name="ChampiL3" parent="Grotte/Decor" unique_id=1327440281 instance=ExtResource("g_champi")]
 position = Vector2(1950, 674)
 
-[node name="GlaceL3" parent="Labyrinthe/Decor" unique_id=1324126793 instance=ExtResource("g_glace")]
+[node name="GlaceL3" parent="Grotte/Decor" unique_id=1324126793 instance=ExtResource("g_glace")]
 position = Vector2(2350, 670)
 
-[node name="ColonneGlaceL4" parent="Labyrinthe/Decor" unique_id=1096512265 instance=ExtResource("g_colonne")]
+[node name="ColonneGlaceL4" parent="Grotte/Decor" unique_id=1096512265 instance=ExtResource("g_colonne")]
 position = Vector2(1600, 782)
 
-[node name="LacL4" parent="Labyrinthe/Decor" unique_id=788354812 instance=ExtResource("g_lac")]
+[node name="LacL4" parent="Grotte/Decor" unique_id=788354812 instance=ExtResource("g_lac")]
 position = Vector2(1800, 814)
 
-[node name="PierresL4" parent="Labyrinthe/Decor" unique_id=530906053 instance=ExtResource("g_pierres")]
+[node name="PierresL4" parent="Grotte/Decor" unique_id=530906053 instance=ExtResource("g_pierres")]
 position = Vector2(1950, 814)
 
-[node name="ChampiL4" parent="Labyrinthe/Decor" unique_id=338077744 instance=ExtResource("g_champi")]
+[node name="ChampiL4" parent="Grotte/Decor" unique_id=338077744 instance=ExtResource("g_champi")]
 position = Vector2(2150, 814)
 
-[node name="GrappeL4" parent="Labyrinthe/Decor" unique_id=1494166196 instance=ExtResource("g_grappe")]
+[node name="GrappeL4" parent="Grotte/Decor" unique_id=1494166196 instance=ExtResource("g_grappe")]
 position = Vector2(2300, 806)
 
-[node name="ChampiGeantL4" parent="Labyrinthe/Decor" unique_id=1139321663 instance=ExtResource("g_champi_geant")]
+[node name="ChampiGeantL4" parent="Grotte/Decor" unique_id=1139321663 instance=ExtResource("g_champi_geant")]
 position = Vector2(2450, 802)
 
-[node name="VeineMurGauche" parent="Labyrinthe/Decor" unique_id=1728980456 instance=ExtResource("g_veine")]
+[node name="VeineMurGauche" parent="Grotte/Decor" unique_id=1728980456 instance=ExtResource("g_veine")]
 position = Vector2(1472, 520)
 
-[node name="VeineMurDroit" parent="Labyrinthe/Decor" unique_id=36463618 instance=ExtResource("g_veine")]
+[node name="VeineMurDroit" parent="Grotte/Decor" unique_id=36463618 instance=ExtResource("g_veine")]
 position = Vector2(2628, 660)
 
-[node name="FissureGauche" parent="Labyrinthe/Decor" unique_id=281393888 instance=ExtResource("g_fissure")]
+[node name="FissureGauche" parent="Grotte/Decor" unique_id=281393888 instance=ExtResource("g_fissure")]
 position = Vector2(1480, 700)
 
-[node name="FissureDroite" parent="Labyrinthe/Decor" unique_id=361338025 instance=ExtResource("g_fissure")]
+[node name="FissureDroite" parent="Grotte/Decor" unique_id=361338025 instance=ExtResource("g_fissure")]
 position = Vector2(2620, 480)
 
-[node name="Interactifs" type="Node2D" parent="Labyrinthe" unique_id=425688669]
+[node name="Interactifs" type="Node2D" parent="Grotte" unique_id=425688669]
 
-[node name="PouvoirChaleur" parent="Labyrinthe/Interactifs" unique_id=1494707600 instance=ExtResource("pouvoir")]
+[node name="PouvoirChaleur" parent="Grotte/Interactifs" unique_id=1494707600 instance=ExtResource("pouvoir")]
 position = Vector2(2500, 805)
-
-[node name="Camera" type="Node2D" parent="Labyrinthe" unique_id=1994032986]
-
-[node name="ZoneLabyrinthe" parent="Labyrinthe/Camera" unique_id=1851448665 instance=ExtResource("camzone")]
-position = Vector2(2050, 618)
-scale = Vector2(4.805, 2.355)
-NomRegion = "grotte"
 
 [node name="Joueur" parent="." unique_id=1975658094 instance=ExtResource("player")]
 position = Vector2(183.26, 272.805)
 
-[node name="Camera2D" parent="Joueur" index="3"]
+[node name="CollisionGlisse" parent="Joueur" index="3" unique_id=1004984052]
+position = Vector2(0, 9)
+
+[node name="Camera2D" parent="Joueur" index="4" unique_id=1011165119]
 limit_right = 1280
 limit_bottom = 400
 

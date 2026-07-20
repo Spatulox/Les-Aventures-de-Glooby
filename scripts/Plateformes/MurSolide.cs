@@ -16,6 +16,10 @@ public partial class MurSolide : StaticBody2D
 
 	public override void _Ready()
 	{
+		// Layer 1 (vu par le joueur) + layer sol des PNJ, sinon les PNJ, qui ne
+		// masquent plus le layer 1, traverseraient les murs. Voir Constantes.
+		CollisionLayer |= Constantes.LayerSolPnj;
+
 		var sprite = GetNode<Sprite2D>("Sprite2D");
 		if (Texture != null)
 			sprite.Texture = Texture;

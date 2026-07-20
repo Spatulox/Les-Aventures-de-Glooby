@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfyqa7ml3vbsw"
-path="res://.godot/imported/sol_centre_c.png-cea14f6e6dd0b6f7eb69be5e00719e80.ctex"
+uid="uid://b3pab1pdmpbp0"
+path="res://.godot/imported/pente_douce_montante.png-68add325bc8f04bf67eb0907a708532f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/sol/sol_centre_c.png"
-dest_files=["res://.godot/imported/sol_centre_c.png-cea14f6e6dd0b6f7eb69be5e00719e80.ctex"]
+source_file="res://assets/sol/pente_douce_montante.png"
+dest_files=["res://.godot/imported/pente_douce_montante.png-68add325bc8f04bf67eb0907a708532f.ctex"]
 
 [params]
 
