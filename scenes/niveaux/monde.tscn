@@ -29,6 +29,7 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/VeineCristalMur.tscn" id="g_veine"]
 [ext_resource type="PackedScene" path="res://scenes/decors/igloo.tscn" id="igloo"]
 [ext_resource type="PackedScene" uid="uid://cfuc5gb01g7jn" path="res://scenes/entites/lutin_noel.tscn" id="lutin"]
+[ext_resource type="PackedScene" path="res://scenes/meteo/blizzard.tscn" id="meteo"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/mur_fondable.tscn" id="mur_fondable"]
 [ext_resource type="PackedScene" path="res://scenes/plateformes/MurSolide.tscn" id="mur_solide"]
@@ -467,6 +468,7 @@ visible = false
 position = Vector2(3345.0002, 1029)
 scale = Vector2(15.003221, 5.5333786)
 NomRegion = "grotte"
+Type = 1
 
 [node name="Sol" type="Node2D" parent="Grotte" unique_id=2035059689]
 
@@ -624,6 +626,8 @@ position = Vector2(183.26, 272.805)
 [node name="Camera2D" parent="Joueur" index="4" unique_id=1011165119]
 limit_right = 1280
 limit_bottom = 400
+
+[node name="Meteo" parent="." instance=ExtResource("meteo")]
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")

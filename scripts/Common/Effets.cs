@@ -26,6 +26,15 @@ public static class Effets
 		tween.TweenProperty(cible, "modulate", Colors.White, dureeRetour);
 	}
 
+	// Fondu de l'alpha vers une cible SANS libérer le nœud : contrairement à
+	// Disparaitre, l'effet est réversible (voile de météo qui apparaît puis
+	// repart, élément qu'on masque temporairement).
+	public static void Fondu(CanvasItem cible, float alphaCible, float duree)
+	{
+		var tween = cible.CreateTween();
+		tween.TweenProperty(cible, "modulate:a", alphaCible, duree);
+	}
+
 	// Flottaison verticale en boucle (objets à ramasser) : oscillation douce
 	// autour de la position de repos actuelle.
 	public static void Flottaison(Node2D cible, float amplitude, float duree)
