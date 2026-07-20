@@ -15,6 +15,22 @@ public partial class Player : LivingEntity
 	[Export] public float SlideSpeedBonusGlace = 1.4f;
 	[Export] public float SlideDuration = 0.35f;
 	[Export] public float SlideCooldown = 0.4f;
+	// Cadence de l'animation de relevé (glissade jouée à l'envers) ; la durée du
+	// minuteur en est dérivée dans ChargerAnimations.
+	[Export] public float FpsRelever = 18f;
+	// Élan de pente : en glissade sur une pente descendante, le minuteur de
+	// glissade est gelé (on dévale tant que ça descend) et la distance parcourue
+	// est cumulée. Au retour sur le plat elle est reconvertie en durée de
+	// glissade — ratio 0,4 = 40 % de la distance dévalée poursuivie sur le plat.
+	[Export] public float RatioElanPente = 0.4f;
+	// Plafond de sécurité : une très longue descente ne doit pas rendre le
+	// contrôle au joueur au bout de plusieurs secondes de glissade subie.
+	[Export] public float DureeElanPenteMax = 0.5f;
+	// Inclinaison du sprite sur la pente pendant la glissade : vitesse de
+	// rappel (rad/s) vers l'angle du sol, puis vers 0 une fois la glissade finie.
+	[Export] public float VitesseInclinaison = 12f;
+	// Garde-fou visuel : au-delà, le pingouin part trop à plat sur les pentes fortes.
+	[Export] public float InclinaisonMaxDegres = 50f;
 	[Export] public float LancerCooldown = 0.5f;
 	[Export] public float LancerDuree = 0.35f;
 	[Export] public float DegatsDuree = 0.4f;
@@ -57,6 +73,10 @@ public partial class Player : LivingEntity
 	private float _invincibiliteTimer;
 	private float _clignoteTimer;
 	private bool _enGlissade;
+	private float _releverTimer;
+	private float _dureeRelever = 0.33f;
+	private float _distancePente;
+	private bool _surPenteDescendante;
 	private bool _enLancer;
 	private bool _enDegats;
 	private int _directionRegard = 1;
@@ -124,7 +144,10 @@ public partial class Player : LivingEntity
 		AppliquerGravite(ref velocity, dt);
 
 		var direction = Input.GetAxis("move_left", "move_right");
-		if (Mathf.Abs(direction) > 0.01f)
+		// La glissade est engagée : la direction est verrouillée pour toute sa
+		// durée. Sans ça, un demi-tour clavier en pleine glissade inversait
+		// instantanément la vitesse (et l'élan de pente dévalé).
+		if (!_enGlissade && Mathf.Abs(direction) > 0.01f)
 			_directionRegard = (int)Mathf.Sign(direction);
 
 		GererGlaceFragile(auSol, dt);
@@ -132,13 +155,31 @@ public partial class Player : LivingEntity
 
 		if (_enGlissade)
 		{
-			_slideTimer -= dt;
 			velocity.X = _directionRegard * _slideVitesseActuelle;
-			// La glissade se termine uniquement à l'épuisement du minuteur : une
-			// glissade lancée au sol se poursuit en l'air (ex. tremplin/rebord)
-			// au lieu d'être coupée dès qu'on quitte le sol.
-			if (_slideTimer <= 0f)
-				FinirGlissade();
+
+			// Sauter en pleine glissade la coupe net : c'est la seule sortie
+			// volontaire, et elle sacrifie l'élan de pente accumulé (pas de relevé
+			// non plus, l'animation de saut prend la main).
+			// Contrairement au saut debout, on exige un contact sol RÉEL (auSol) et
+			// non le coyote time : une glissade qui a quitté le sol (tremplin, bout
+			// de pente) se poursuit en l'air sans pouvoir se relancer d'un saut.
+			if (_bufferSautTimer > 0f && auSol && !vientDeTraverser)
+			{
+				FinirGlissade(false);
+				Sauter(ref velocity);
+				_coyoteTimer = 0f;
+				_bufferSautTimer = 0f;
+			}
+			else
+			{
+				GererElanPente(auSol, velocity.X, dt);
+
+				// La glissade se termine uniquement à l'épuisement du minuteur : une
+				// glissade lancée au sol se poursuit en l'air (ex. tremplin/rebord)
+				// au lieu d'être coupée dès qu'on quitte le sol.
+				if (_slideTimer <= 0f)
+					FinirGlissade(true);
+			}
 		}
 		else
 		{
@@ -184,6 +225,8 @@ public partial class Player : LivingEntity
 			if (_degatsTimer <= 0f)
 				_enDegats = false;
 		}
+		if (_releverTimer > 0f)
+			_releverTimer -= dt;
 
 		GererInvincibilite(dt);
 
@@ -198,6 +241,7 @@ public partial class Player : LivingEntity
 			return;
 		}
 
+		MettreAJourInclinaison(auSol, dt);
 		MettreAJourAnimation(auSol, direction);
 	}
 
@@ -370,6 +414,9 @@ public partial class Player : LivingEntity
 		_enGlissade = true;
 		_slideTimer = SlideDuration;
 		_slideVitesseActuelle = SlideSpeed;
+		_distancePente = 0f;
+		_surPenteDescendante = false;
+		_releverTimer = 0f;
 
 		if (ObtenirDonneesSol(out var estGlace, out _, out _) && estGlace)
 			_slideVitesseActuelle *= SlideSpeedBonusGlace;
@@ -378,12 +425,52 @@ public partial class Player : LivingEntity
 		_colGlisse.Disabled = false;
 	}
 
-	private void FinirGlissade()
+	// jouerRelever = false quand la glissade est coupée par un saut : l'animation
+	// de saut doit prendre la main immédiatement, pas un relevé au sol.
+	private void FinirGlissade(bool jouerRelever)
 	{
 		_enGlissade = false;
 		_slideCooldownTimer = SlideCooldown;
 		_colDebout.Disabled = false;
 		_colGlisse.Disabled = true;
+		if (jouerRelever)
+			_releverTimer = _dureeRelever;
+	}
+
+	// Tant que la glissade dévale une pente descendante, le minuteur est gelé :
+	// on glisse aussi longtemps que ça descend. La distance dévalée est cumulée,
+	// puis convertie en durée de glissade au retour sur le plat (le joueur
+	// continue sur sa lancée au lieu de s'arrêter net en bas de la pente).
+	private void GererElanPente(bool auSol, float vitesseX, float dt)
+	{
+		var surPente = auSol && EstPenteDescendante();
+
+		if (surPente)
+		{
+			_distancePente += Mathf.Abs(vitesseX) * dt;
+		}
+		else
+		{
+			if (_surPenteDescendante && _slideVitesseActuelle > 0f)
+			{
+				// Max : une pente courte ne doit jamais raccourcir la glissade de base.
+				var elan = Mathf.Min(_distancePente * RatioElanPente / _slideVitesseActuelle, DureeElanPenteMax);
+				_slideTimer = Mathf.Max(_slideTimer, elan);
+				_distancePente = 0f;
+			}
+			_slideTimer -= dt;
+		}
+
+		_surPenteDescendante = surPente;
+	}
+
+	// Pente descendante dans le sens du déplacement : la normale du sol penche du
+	// même côté que la direction suivie. Seuil 0.05 pour ignorer le bruit de
+	// normale d'un sol plat (et les micro-marches entre segments).
+	private bool EstPenteDescendante()
+	{
+		var normale = GetFloorNormal();
+		return Mathf.Abs(normale.X) > 0.05f && Mathf.Sign(normale.X) == _directionRegard;
 	}
 
 	private void Lancer()
@@ -497,6 +584,23 @@ public partial class Player : LivingEntity
 		return true;
 	}
 
+	// Aligne le sprite sur la pente pendant la glissade (le pingouin épouse la
+	// neige au lieu de rester droit sur une diagonale), et le remet d'aplomb
+	// dès qu'elle se termine. Seul le sprite tourne : la collision, elle, doit
+	// rester verticale, sinon la hitbox de glissade dépasserait de la pente.
+	private void MettreAJourInclinaison(bool auSol, float dt)
+	{
+		var cible = 0f;
+		if (_enGlissade && auSol)
+		{
+			// Normale du sol -> angle de la surface (sol plat : normale (0,-1) -> 0).
+			var limite = Mathf.DegToRad(InclinaisonMaxDegres);
+			cible = Mathf.Clamp(GetFloorNormal().Angle() + Mathf.Pi / 2f, -limite, limite);
+		}
+
+		_sprite.Rotation = Mathf.LerpAngle(_sprite.Rotation, cible, Mathf.Min(1f, VitesseInclinaison * dt));
+	}
+
 	private void MettreAJourAnimation(bool auSol, float direction)
 	{
 		_sprite.FlipH = _directionRegard < 0;
@@ -510,6 +614,10 @@ public partial class Player : LivingEntity
 			animation = "lancer";
 		else if (!auSol)
 			animation = Velocity.Y < 0f ? "saut_montee" : "saut_chute";
+		// Le relevé passe avant course/idle (sinon repartir aussitôt le masquerait
+		// complètement), mais reste sous saut/dégâts/lancer qui sont prioritaires.
+		else if (_releverTimer > 0f)
+			animation = "glissade_relever";
 		else if (Mathf.Abs(direction) > 0.01f)
 			animation = "course";
 		else
@@ -535,9 +643,20 @@ public partial class Player : LivingEntity
 
 		AnimationsSprite.EnregistrerAnimation(frames, "idle", AnimationsSprite.ChargerFrames("res://assets/player/idle"), 6f, true);
 		AnimationsSprite.EnregistrerAnimation(frames, "course", AnimationsSprite.ChargerFrames("res://assets/player/course"), 12f, true);
-		AnimationsSprite.EnregistrerAnimation(frames, "glissade", AnimationsSprite.ChargerFrames("res://assets/player/glissade"), 14f, true);
 		AnimationsSprite.EnregistrerAnimation(frames, "lancer", AnimationsSprite.ChargerFrames("res://assets/player/lancer"), 16f, false);
 		AnimationsSprite.EnregistrerAnimation(frames, "degats", AnimationsSprite.ChargerFrames("res://assets/player/degats"), 10f, false);
+
+		// Glissade "inversée" : entrer en glissade SNAPPE directement sur la pose
+		// couchée (dernière frame tenue) — la mise à plat ne se joue plus, elle
+		// mangeait le début de la glissade. C'est la SORTIE qui joue le mouvement,
+		// à l'envers, et devient l'animation de relevé. Aucun nouvel asset.
+		var glissadeFrames = AnimationsSprite.ChargerFrames("res://assets/player/glissade");
+		int poseCouchee = glissadeFrames.Length - 1;
+		AnimationsSprite.EnregistrerAnimation(frames, "glissade", glissadeFrames, 14f, false, poseCouchee, poseCouchee);
+		AnimationsSprite.EnregistrerAnimation(frames, "glissade_relever", glissadeFrames, FpsRelever, false, 0, poseCouchee, true);
+		// Durée dérivée des frames réelles : le minuteur de relevé reste synchro
+		// avec l'animation même si des frames sont ajoutées au dossier.
+		_dureeRelever = glissadeFrames.Length / FpsRelever;
 
 		var sautFrames = AnimationsSprite.ChargerFrames("res://assets/player/saut");
 		int findeMontee = Mathf.Min(4, sautFrames.Length - 1);

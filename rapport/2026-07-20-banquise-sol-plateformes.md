@@ -491,3 +491,97 @@ sous un obstacle » est préservé.
 `MenuPrincipal.ToucheDe` sont préexistantes — API clavier non supportée en
 headless). **Test manuel F5 encore à faire** : glisser sur une plateforme
 traversable et laisser la glissade se terminer dessus.
+
+## Glissade — animation inversée + élan de pente
+
+### 1. Animation de glissade inversée
+
+Avant : `glissade` = les 6 frames en boucle → le pingouin rejouait « s'allonger »
+en continu pendant toute la glissade.
+
+Maintenant (`Player.ChargerAnimations`) :
+
+- **`glissade`** = la *dernière* frame seule, tenue → entrer en glissade **snappe**
+  directement sur la pose couchée, la mise à plat ne mange plus le début.
+- **`glissade_relever`** = les mêmes frames **à l'envers** (05→00, `FpsRelever = 18`,
+  non bouclée) → jouée à la *sortie* de glissade, elle devient le « se remettre
+  debout ». Aucun nouvel asset généré.
+
+Support ajouté dans le helper partagé `AnimationsSprite.EnregistrerAnimation` :
+paramètre `inverse` qui enregistre la tranche de frames à l'envers — réutilisable
+pour tout mouvement retour (`scripts/Common/AnimationsSprite.cs`).
+
+Priorité dans `MettreAJourAnimation` : le relevé passe **avant** course/idle (sinon
+repartir aussitôt le masquerait) mais **après** saut/dégâts/lancer. Sa durée
+`_dureeRelever` est dérivée du nombre réel de frames, pas codée en dur.
+
+### 2. Élan de pente
+
+Nouveau comportement, dans `GererElanPente` :
+
+- En glissade sur une **pente descendante** (`EstPenteDescendante()` : normale du
+  sol penchée du même côté que la direction suivie, seuil 0.05 pour ignorer le
+  bruit d'un sol plat), le minuteur de glissade est **gelé** → on dévale tant que
+  ça descend, quelle que soit `SlideDuration`.
+- La distance dévalée est cumulée, puis **convertie en durée de glissade au retour
+  sur le plat** : `distance × RatioElanPente / vitesse`, plafonnée par
+  `DureeElanPenteMax`. Le joueur continue donc sur sa lancée au sol au lieu de
+  s'arrêter net en bas de la pente.
+- `Mathf.Max` avec le minuteur restant : une pente courte ne peut jamais
+  *raccourcir* la glissade de base.
+
+Nouveaux exports : `FpsRelever` (18), `RatioElanPente` (1 = autant de distance sur
+le plat qu'en pente), `DureeElanPenteMax` (1,2 s, garde-fou pour ne pas rendre le
+contrôle après plusieurs secondes de glissade subie).
+
+### 3. Saut en pleine glissade
+
+`jump` pendant la glissade la **coupe net** (seule sortie volontaire) : l'élan de
+pente accumulé est sacrifié et aucun relevé n'est joué — `FinirGlissade(false)`,
+l'animation de saut prend la main. Auparavant le saut était simplement ignoré
+pendant la glissade (branche `else`).
+
+**Vérifié** : compilation propre, run headless sans nouvelle erreur. **Test manuel
+F5 à faire** : snap immédiat en glissade, relevé visible en fin de glissade,
+glissade prolongée en descendant une `PenteBanquise` + lancée conservée sur le
+plat, et saut mid-pente qui coupe bien la glissade.
+
+## Glissade — ajustements (élan, direction verrouillée, inclinaison)
+
+### Élan de pente réduit
+
+`RatioElanPente` 1 → **0,4** (40 % de la distance dévalée poursuivie sur le plat)
+et `DureeElanPenteMax` 1,2 s → **0,5 s**. La lancée reste lisible sans confisquer
+le contrôle en bas de pente.
+
+### Direction verrouillée pendant la glissade
+
+`_directionRegard` n'est plus mis à jour depuis l'input tant que `_enGlissade`.
+Un demi-tour clavier en pleine glissade inversait instantanément la vitesse (la
+glissade lit `_directionRegard` chaque frame) et retournait l'élan dévalé. La
+glissade s'engage désormais dans une direction et s'y tient — `jump` reste la
+seule sortie volontaire.
+
+### Inclinaison sur la pente
+
+Nouvelle méthode `MettreAJourInclinaison` : pendant la glissade au sol, le sprite
+s'aligne sur l'angle de la surface (`GetFloorNormal().Angle() + PI/2`, sol plat →
+0), avec rappel `Mathf.LerpAngle` et retour à l'aplomb dès la fin de la glissade.
+
+- **Seul le sprite tourne**, jamais la collision : une hitbox de glissade inclinée
+  dépasserait de la pente.
+- Clamp `InclinaisonMaxDegres` (50°) pour que les pentes fortes (~45°) ne couchent
+  pas complètement le pingouin.
+- Nouveaux exports : `VitesseInclinaison` (12 rad/s), `InclinaisonMaxDegres` (50).
+
+**Vérifié** : compilation propre, run headless sans nouvelle erreur. Réglages
+(0,4 / 0,5 s / 12 / 50°) à valider en test manuel.
+
+## Glissade — saut conditionné au contact sol
+
+La sortie de glissade par `jump` exigeait `_coyoteTimer > 0f` (comme le saut
+debout). Elle exige désormais un **contact sol réel** (`auSol`) : une glissade
+qui a quitté le sol (tremplin, bout de pente) se poursuit en l'air sans pouvoir
+se relancer d'un saut. Le coyote time reste inchangé pour le saut normal.
+
+**Vérifié** : compilation propre, run headless sans nouvelle erreur.
