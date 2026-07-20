@@ -10,7 +10,8 @@ size = Vector2(51, 50)
 size = Vector2(22, 37)
 
 [node name="BossCerf" type="CharacterBody2D" unique_id=1487169835]
-collision_mask = 18
+collision_layer = 4
+collision_mask = 17
 script = ExtResource("1")
 PvMax = 40
 
@@ -26,6 +27,8 @@ position = Vector2(-6.5, -5)
 shape = SubResource("RectangleShape2D_1")
 
 [node name="ZoneChargeDegats" type="Area2D" parent="." unique_id=2135928903]
+collision_layer = 0
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneChargeDegats" unique_id=374888429]
 position = Vector2(27, 0.5)

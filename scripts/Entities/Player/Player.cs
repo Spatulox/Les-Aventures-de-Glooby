@@ -99,6 +99,12 @@ public partial class Player : LivingEntity
 	{
 		AddToGroup("joueur");
 
+		// Le joueur a son propre layer, distinct du terrain : c'est ce qui permet
+		// aux PNJ de masquer le terrain (pour marcher dessus) sans le heurter lui.
+		// Il masque exactement la même chose qu'un PNJ (Constantes.MasqueMarcheur).
+		CollisionLayer = Constantes.LayerJoueur;
+		CollisionMask = Constantes.MasqueMarcheur;
+
 		// Pentes (PenteBanquise) : le snap par défaut de Godot (1px) ne recolle
 		// pas le joueur au sol en descente. À Speed=220 il avance 3,67px par
 		// frame, soit déjà 1,45px de chute sur une pente douce (21,6°) : sans
@@ -390,6 +396,7 @@ public partial class Player : LivingEntity
 			Transform = new Transform2D(0, GlobalPosition + new Vector2(_directionRegard * 24f, 0)),
 			CollideWithBodies = true,
 			CollideWithAreas = false,
+			CollisionMask = Constantes.LayerTerrain,
 		};
 
 		foreach (var resultat in espace.IntersectShape(param))
@@ -590,6 +597,7 @@ public partial class Player : LivingEntity
 			Position = GlobalPosition + new Vector2(0, 18f),
 			CollideWithBodies = true,
 			CollideWithAreas = false,
+			CollisionMask = Constantes.LayerTerrain,
 		};
 
 		foreach (var resultat in espace.IntersectPoint(param))

@@ -12,7 +12,7 @@ size = Vector2(88, 96)
 
 [node name="PereNoel" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 16
+collision_mask = 17
 script = ExtResource("1")
 Lignes = PackedStringArray("Ho ho ho ! Te voilà enfin, petit !")
 AuPassage = true
@@ -23,6 +23,8 @@ AuPassage = true
 shape = SubResource("CapsuleShape2D_1")
 
 [node name="DeclencheurDialogue" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue"]

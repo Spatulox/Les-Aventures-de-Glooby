@@ -33,6 +33,13 @@ window/stretch/scale_mode="integer"
 
 project/assembly_name="Les Aventures de Glooby"
 
+[layer_names]
+
+2d_physics/layer_1="Terrain"
+2d_physics/layer_2="Joueur"
+2d_physics/layer_3="PNJ"
+2d_physics/layer_5="Plateformes traversables"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"

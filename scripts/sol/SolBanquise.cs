@@ -18,11 +18,4 @@ public partial class SolBanquise : StaticBody2D
 
 	// Largeur d'un emplacement dans une ligne (172px natif x2).
 	public const float LargeurSegment = 344f;
-
-	public override void _Ready()
-	{
-		// Seul réglage encore fait en code : la géométrie vient de la scène.
-		// Layer 1 (terrain, vu par le joueur) + layer sol des PNJ. Voir Constantes.
-		CollisionLayer |= Constantes.LayerSolPnj;
-	}
 }

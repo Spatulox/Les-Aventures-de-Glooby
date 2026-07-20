@@ -23,6 +23,18 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 	// Impulsion de saut (vers le haut).
 	protected void Sauter(ref Vector2 velocite) => velocite.Y = JumpVelocity;
 
+	// ---- Collisions ----
+	// Applique la convention de collision d'un PNJ : il voit le terrain et les
+	// plateformes traversables, mais ni le joueur ni les autres PNJ (personne ne
+	// masque les layers joueur/PNJ). Posé ici, en code, plutôt que laissé à chaque
+	// scène : un nouveau PNJ est correct même si son .tscn est mal réglé, et
+	// l'invariant « aucune collision entre PNJ » ne peut plus se perdre en route.
+	protected void AppliquerCollisionsPnj()
+	{
+		CollisionLayer = Constantes.LayerPnj;
+		CollisionMask = Constantes.MasqueMarcheur;
+	}
+
 	// ---- Aperçu éditeur ----
 	// Chaque scène d'entité porte un Sprite2D « Apercu » figé sur la 1re frame de son idle,
 	// uniquement pour que l'entité soit visible/positionnable dans l'éditeur Godot. En jeu,

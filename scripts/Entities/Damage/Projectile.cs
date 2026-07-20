@@ -30,6 +30,12 @@ public abstract partial class Projectile : Area2D
 
 	public override void _Ready()
 	{
+		// Un projectile ne se déclare sur aucun layer (rien ne doit le heurter) et
+		// masque le terrain (pour éclater) plus le joueur et les PNJ (pour blesser).
+		// Posé en code pour que toute scène de projectile soit correcte d'office.
+		CollisionLayer = 0;
+		CollisionMask = Constantes.MasqueProjectile;
+
 		_tempsRestant = DureeVie;
 		BodyEntered += OnBodyEntered;
 	}

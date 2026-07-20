@@ -12,7 +12,7 @@ size = Vector2(24, 24)
 
 [node name="LanceurBouleNeige" type="CharacterBody2D" unique_id=1045879546]
 collision_layer = 4
-collision_mask = 18
+collision_mask = 17
 script = ExtResource("1")
 SceneBouleDeNeige = ExtResource("3")
 
@@ -23,6 +23,7 @@ shape = SubResource("CapsuleShape2D_1")
 
 [node name="ZoneContact" type="Area2D" parent="." unique_id=580709492]
 collision_layer = 0
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneContact" unique_id=1851069522]
 shape = SubResource("RectContact")

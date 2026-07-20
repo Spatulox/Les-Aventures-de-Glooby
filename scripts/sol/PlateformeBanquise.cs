@@ -12,10 +12,4 @@ public partial class PlateformeBanquise : StaticBody2D
 	public enum TypeElement { Plaque, Bloc, Congere }
 
 	[Export] public TypeElement Type = TypeElement.Plaque;
-
-	public override void _Ready()
-	{
-		// Layer 1 (terrain, vu par le joueur) + layer sol des PNJ. Voir Constantes.
-		CollisionLayer |= Constantes.LayerSolPnj;
-	}
 }

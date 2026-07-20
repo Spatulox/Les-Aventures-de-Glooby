@@ -28,12 +28,14 @@ autowrap_mode = 2
 
 [node name="ZoneDetection" type="Area2D" parent="."]
 collision_layer = 0
-collision_mask = 1
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection"]
 shape = SubResource("RectangleShape2D_zone")
 
 [node name="DeclencheurDialogue" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue"]

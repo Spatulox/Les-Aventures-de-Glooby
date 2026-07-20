@@ -34,12 +34,4 @@ public partial class PenteBanquise : StaticBody2D
 	// Écart de hauteur (en pixels écran) entre les deux extrémités : la pièce
 	// suivante côté haut se place DeniveleTotal plus haut que côté bas.
 	public float DeniveleTotal => Configs[Type].Denivele * 2f;
-
-	public override void _Ready()
-	{
-		// Seul réglage encore fait en code : sprite et polygone viennent de la
-		// scène, qui est la seule source de vérité (voir SolBanquise).
-		// Layer 1 (terrain, vu par le joueur) + layer sol des PNJ. Voir Constantes.
-		CollisionLayer |= Constantes.LayerSolPnj;
-	}
 }
