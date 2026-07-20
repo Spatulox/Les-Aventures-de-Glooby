@@ -627,7 +627,7 @@ position = Vector2(183.26, 272.805)
 limit_right = 1280
 limit_bottom = 400
 
-[node name="Meteo" parent="." instance=ExtResource("meteo")]
+[node name="Meteo" parent="." unique_id=2107469772 instance=ExtResource("meteo")]
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")

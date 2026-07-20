@@ -24,6 +24,17 @@ public partial class MenuPrincipal : Control
 	// Dossier des images de fond piochées au hasard pour l'arrière-plan du menu.
 	private const string DossierFonds = "res://assets/backgrounds";
 
+	// Dossiers où chercher les mobs affichables sur l'écran-titre : le joueur et
+	// chaque PNJ. Un mob est retenu s'il possède un sous-dossier d'animation « idle ».
+	private const string DossierJoueur = "res://assets/player";
+	private const string DossierPnj = "res://assets/pnj";
+	private const string NomAnimationIdle = "idle";
+
+	// Hauteur à l'écran imposée à tous les mobs, quelle que soit la taille de leurs
+	// frames (64 à 96 px) : 96 px * l'échelle 2.5 d'origine, pour que le joueur garde
+	// exactement la taille qu'il avait avant le tirage aléatoire.
+	private const float HauteurMob = 240f;
+
 	private Control _panneauParametres;
 
 	public override void _Ready()
@@ -46,12 +57,12 @@ public partial class MenuPrincipal : Control
 		MenuFabrique.AjouterBouton(colonne, "Quitter", () => GetTree().Quit());
 
 		// La colonne, centrée par défaut, est ramenée vers la gauche pour laisser la
-		// moitié droite de l'écran au pingouin (on réduit la zone de centrage à la
+		// moitié droite de l'écran au mob (on réduit la zone de centrage à la
 		// partie gauche de l'écran, ce qui recentre le menu dedans).
 		if (colonne.GetParent() is Control zoneColonne)
 			zoneColonne.AnchorRight = 0.72f;
 
-		AjouterPingouinIdle();
+		AjouterMobAleatoire();
 
 		ConstruireParametres();
 	}
@@ -70,48 +81,96 @@ public partial class MenuPrincipal : Control
 		GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
 	}
 
-	// Affiche à droite du menu le pingouin du joueur en animation « idle », purement
-	// décoratif (non contrôlable) : on ne réutilise pas la scène player.tscn (qui
-	// embarque physique, caméra et script de contrôle) mais uniquement ses frames
-	// idle, montées sur un AnimatedSprite2D posé dans la moitié droite de l'écran.
-	private void AjouterPingouinIdle()
+	// Affiche à droite du menu un mob tiré au hasard (joueur ou PNJ) en animation
+	// « idle », purement décoratif (non contrôlable) : on ne réutilise pas les scènes
+	// d'entités (qui embarquent physique, collisions et scripts de comportement) mais
+	// uniquement leurs frames idle, montées sur un AnimatedSprite2D posé dans la
+	// moitié droite de l'écran. Le tirage est rejoué à chaque affichage du menu.
+	private void AjouterMobAleatoire()
 	{
-		var frames = ChargerFramesIdle();
+		var dossier = MobAleatoire();
+		if (dossier == null)
+			return;
+
+		var frames = ChargerFramesIdle(dossier);
 		if (frames == null)
 			return;
 
-		// Ancré au centre-droit de l'écran : le pingouin suit ce coin quel que soit
+		// Ancré au centre-droit de l'écran : le mob suit ce coin quel que soit
 		// le redimensionnement de la fenêtre. L'AnimatedSprite2D (nœud 2D) est posé
 		// à l'origine de cette ancre, décalé vers la gauche du bord.
 		var ancre = new Control { MouseFilter = Control.MouseFilterEnum.Ignore };
 		ancre.SetAnchorsPreset(Control.LayoutPreset.CenterRight);
 		AddChild(ancre);
 
-		// Le sprite idle regarde vers la droite par défaut : on le retourne pour
-		// qu'il fasse face au menu, situé à sa gauche.
+		// Les frames ne font pas toutes la même taille (64 à 96 px) : on met chaque mob
+		// à l'échelle pour qu'il occupe la même hauteur à l'écran. Le sprite étant
+		// centré sur sa frame, la position reste au centre de l'ancre : tous les mobs
+		// partagent alors la même ligne de sol, celle du joueur avant ce changement.
+		float echelle = HauteurMob / frames.GetFrameTexture(NomAnimationIdle, 0).GetHeight();
+
+		// Les sprites idle regardent vers la droite : on les retourne pour qu'ils
+		// fassent face au menu, situé à leur gauche.
 		var sprite = new AnimatedSprite2D
 		{
 			SpriteFrames = frames,
 			Position = new Vector2(-160, 0),
-			Scale = new Vector2(2.5f, 2.5f),
+			Scale = new Vector2(echelle, echelle),
 			FlipH = true
 		};
 		ancre.AddChild(sprite);
-		sprite.Play("idle");
+		sprite.Play(NomAnimationIdle);
 	}
 
-	// Frames de l'animation « idle » du joueur (mêmes PNG que Player, via le helper
-	// partagé AnimationsSprite), ou null si le dossier est vide. Bouclées à la même
-	// cadence (6 fps) que dans le jeu.
-	private static SpriteFrames ChargerFramesIdle()
+	// Dossier d'un mob tiré au hasard parmi ceux qui ont une animation « idle »
+	// exploitable, ou null s'il n'y en a aucun.
+	private static string MobAleatoire()
 	{
-		var idle = AnimationsSprite.ChargerFrames("res://assets/player/idle");
+		var mobs = MobsDisponibles();
+		if (mobs.Count == 0)
+			return null;
+
+		GD.Randomize();
+		return mobs[(int)(GD.Randi() % (uint)mobs.Count)];
+	}
+
+	// Dossiers des mobs affichables : le joueur et chaque PNJ possédant un sous-dossier
+	// « idle » d'au moins deux frames. La liste est déduite du disque plutôt que codée
+	// en dur — ajouter un PNJ animé suffit à le faire apparaître dans le tirage. Le
+	// seuil de deux frames écarte les PNJ dont l'idle n'est qu'un placeholder figé.
+	private static List<string> MobsDisponibles()
+	{
+		var candidats = new List<string> { DossierJoueur };
+
+		using var pnj = DirAccess.Open(DossierPnj);
+		if (pnj != null)
+			foreach (var nom in pnj.GetDirectories())
+				candidats.Add($"{DossierPnj}/{nom}");
+
+		// On vérifie l'existence du dossier avant d'appeler ChargerFrames : celui-ci
+		// journalise une erreur Godot sur un chemin absent (plusieurs PNJ n'ont qu'un
+		// placeholder à plat, sans dossier d'animation).
+		var mobs = new List<string>();
+		foreach (var dossier in candidats)
+		{
+			var idle = $"{dossier}/{NomAnimationIdle}";
+			if (DirAccess.DirExistsAbsolute(idle) && AnimationsSprite.ChargerFrames(idle).Length >= 2)
+				mobs.Add(dossier);
+		}
+		return mobs;
+	}
+
+	// Frames de l'animation « idle » d'un mob (via le helper partagé AnimationsSprite),
+	// ou null si le dossier est vide. Bouclées à la même cadence (6 fps) que dans le jeu.
+	private static SpriteFrames ChargerFramesIdle(string dossierMob)
+	{
+		var idle = AnimationsSprite.ChargerFrames($"{dossierMob}/{NomAnimationIdle}");
 		if (idle.Length == 0)
 			return null;
 
 		var frames = new SpriteFrames();
 		frames.RemoveAnimation("default");
-		AnimationsSprite.EnregistrerAnimation(frames, "idle", idle, 6f, true);
+		AnimationsSprite.EnregistrerAnimation(frames, NomAnimationIdle, idle, 6f, true);
 		return frames;
 	}
 
