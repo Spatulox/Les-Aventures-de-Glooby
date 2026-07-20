@@ -79,8 +79,8 @@ modulate = Color(1, 1, 1, 0)
 [node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
 
 [node name="ZoneVillage" parent="Village/Camera" unique_id=132868656 instance=ExtResource("camzone")]
-position = Vector2(321.00003, 167.00002)
-scale = Vector2(2.5199971, 1.40625)
+position = Vector2(321, 145.00003)
+scale = Vector2(2.4799972, 1.40625)
 MargeChuteVide = 196.0
 NomRegion = "banquise"
 
@@ -167,10 +167,11 @@ Lignes = PackedStringArray("Village des pingouins")
 [node name="Banquise" type="Node2D" parent="." unique_id=858809779]
 
 [node name="Camera" type="Node2D" parent="Banquise" unique_id=989063594]
+visible = false
 
 [node name="ZoneBanquise" parent="Banquise/Camera" unique_id=841426661 instance=ExtResource("camzone")]
-position = Vector2(3090.0002, 156)
-scale = Vector2(19.12795, 1.7437494)
+position = Vector2(3098.0002, 111.99999)
+scale = Vector2(19.12795, 1.6637502)
 NomRegion = "banquise"
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=2118285159]
@@ -348,9 +349,10 @@ position = Vector2(4850, 110)
 [node name="ZoneBossCerf" type="Node2D" parent="." unique_id=1201709441]
 
 [node name="Camera" type="Node2D" parent="ZoneBossCerf" unique_id=1111418208]
+visible = false
 
 [node name="ZoneArenaBoss" parent="ZoneBossCerf/Camera" unique_id=1662387802 instance=ExtResource("camzone")]
-position = Vector2(5930, 252)
+position = Vector2(5930, 154)
 scale = Vector2(2.891, 1.40625)
 MargeChuteVide = 196.0
 NomRegion = "boss_cerf"
@@ -441,6 +443,7 @@ PvBoss = 40
 UneSeuleFois = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossCerf/Interactifs/ZoneBossCerf" unique_id=400706869]
+position = Vector2(0, -95)
 shape = SubResource("RectZoneBoss")
 
 [node name="Frontiere" type="Node2D" parent="ZoneBossCerf" unique_id=2102435091]
@@ -463,13 +466,13 @@ position = Vector2(1450, 610)
 position = Vector2(2650, 610)
 
 [node name="CorridorL1_1" parent="Grotte/Sol" unique_id=204253254 instance=ExtResource("sol")]
-position = Vector2(1899, 445)
+position = Vector2(1901, 470)
 
 [node name="CorridorL1_2" parent="Grotte/Sol" unique_id=204253255 instance=ExtResource("sol")]
-position = Vector2(2098, 445)
+position = Vector2(2100, 470)
 
 [node name="CorridorL1_3" parent="Grotte/Sol" unique_id=204253256 instance=ExtResource("sol")]
-position = Vector2(2298, 445)
+position = Vector2(2300, 470)
 
 [node name="CorridorL1_4" parent="Grotte/Sol" unique_id=204253257 instance=ExtResource("sol")]
 position = Vector2(2497, 445)
