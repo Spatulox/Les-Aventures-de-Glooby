@@ -461,3 +461,33 @@ mais **non instanciée** dans la banquise. Raison géométrique :
 **Question ouverte** : autoriser le déplacement de 2–3 décors de la banquise (ou
 descendre la `CameraZone` pour révéler une cuvette) afin d'y loger une vraie
 pente marchable ?
+
+## Fix — traversée des plateformes en sortie de glissade
+
+**Symptôme** : après un `shift` (glissade), quand le joueur se remet debout il
+traverse les `PlateformeUnidirectionnelle` comme s'il n'avait plus de hitbox.
+
+**Cause** : désalignement vertical des deux formes de collision du joueur dans
+`scenes/entites/player.tscn`.
+
+| Forme | Géométrie | Bas (local) |
+|---|---|---|
+| `CollisionDebout` | Capsule r=11 h=32, `scale=(1.04, 1.4)`, `y=0` | `+22.4` |
+| `CollisionGlisse` | Rect 26×14, `y=9` | `+16.0` |
+
+Pendant la glissade le corps se pose sur le bas de `CollisionGlisse` : son origine
+est donc 6,4 px plus bas qu'en debout. `FinirGlissade()` réactive `CollisionDebout`
+sans recaler la position → la capsule réapparaît **encastrée de 6,4 px** dans le
+sol. Sur le sol plein (layer 1) la dépénétration corrige silencieusement ; sur une
+plateforme `OneWayCollision` un corps déjà à l'intérieur n'est jamais repoussé →
+traversée.
+
+**Correction** : `CollisionGlisse.position` `Vector2(0, 9)` → `Vector2(0, 15.4)`,
+ce qui aligne son bas sur `+22.4`. Aucun changement de code. La forme de glissade
+reste nettement plus basse que la debout (haut `+8.4` vs `-22.4`), donc « passer
+sous un obstacle » est préservé.
+
+**Vérifié** : compilation propre, run headless sans nouvelle erreur (les erreurs
+`MenuPrincipal.ToucheDe` sont préexistantes — API clavier non supportée en
+headless). **Test manuel F5 encore à faire** : glisser sur une plateforme
+traversable et laisser la glissade se terminer dessus.

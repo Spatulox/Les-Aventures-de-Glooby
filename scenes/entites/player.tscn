@@ -28,7 +28,7 @@ scale = Vector2(1.0400001, 1.4000001)
 shape = SubResource("CapsuleShape2D_debout")
 
 [node name="CollisionGlisse" type="CollisionShape2D" parent="." unique_id=1004984052]
-position = Vector2(0, 9)
+position = Vector2(0, 15.4)
 shape = SubResource("RectangleShape2D_glisse")
 disabled = true
 
