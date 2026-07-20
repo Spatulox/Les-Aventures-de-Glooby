@@ -459,6 +459,7 @@ shape = SubResource("RectZoneBoss")
 [node name="Grotte" type="Node2D" parent="." unique_id=960315107]
 
 [node name="Camera" type="Node2D" parent="Grotte" unique_id=1994032986]
+visible = false
 
 [node name="ZoneGrotte" parent="Grotte/Camera" unique_id=1851448665 instance=ExtResource("camzone")]
 position = Vector2(3345.0002, 1029)
@@ -617,9 +618,6 @@ position = Vector2(2500, 805)
 
 [node name="Joueur" parent="." unique_id=1975658094 instance=ExtResource("player")]
 position = Vector2(183.26, 272.805)
-
-[node name="CollisionGlisse" parent="Joueur" index="3" unique_id=1004984052]
-position = Vector2(0, 9)
 
 [node name="Camera2D" parent="Joueur" index="4" unique_id=1011165119]
 limit_right = 1280
