@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" uid="uid://ddnsknw2pcyrc" path="res://scripts/Entities/Pnj/Pingouin.cs" id="1"]
 [ext_resource type="Script" uid="uid://bnskcw6i56nex" path="res://scripts/Core/DeclencheurDialogue.cs" id="3"]
+[ext_resource type="Texture2D" uid="uid://cd5dpi4e8mjxj" path="res://assets/pnj/pingouin/idle/00.png" id="4"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
-radius = 8.0
+radius = 15.0
 height = 32.0
 
 [sub_resource type="RectangleShape2D" id="RectProximite"]
@@ -17,7 +18,11 @@ script = ExtResource("1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=150768102]
 
+[node name="Apercu" type="Sprite2D" parent="." unique_id=550891893]
+texture = ExtResource("4")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1071445481]
+scale = Vector2(1, 1.6400001)
 shape = SubResource("CapsuleShape2D_1")
 
 [node name="DeclencheurDialogue" type="Area2D" parent="." unique_id=974735215]

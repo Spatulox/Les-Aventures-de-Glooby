@@ -1,49 +1,28 @@
 using Godot;
-using System.Collections.Generic;
 
 // Segment de sol de banquise : pièce posable côte à côte pour former un sol
 // continu de n'importe quelle longueur. Les 3 centres partagent les mêmes
 // bords (greffés depuis le segment A, auto-tuilable) donc sont
 // interchangeables ; les embouts portent la cassure de glace et les
-// stalactites décoratives (hors collision). Le sprite est décalé par type
-// pour que la surface de neige soit toujours à y = -50 en local, quelle que
-// soit la hauteur du canevas.
-// Le .tscn embarque le visuel du type par défaut (CentreA) pour que la pièce
-// soit VISIBLE dans l'éditeur ; _Ready le ré-applique ensuite depuis Type.
+// stalactites décoratives (hors collision).
+//
+// Chaque type a sa propre scène (scenes/sol/SolBanquiseXxx.tscn) qui porte son
+// sprite ET sa CollisionShape2D. La scène est la SEULE source de vérité : le
+// script ne réapplique plus rien au runtime, sinon régler la collision dans
+// l'éditeur ne servirait à rien (elle serait écrasée au lancement, et joueur
+// comme PNJ se poseraient à une hauteur qui ne correspond pas au visuel).
+// Surface de marche : y = -29 en local, bas de la collision à y = 62.
 public partial class SolBanquise : StaticBody2D
 {
 	public enum TypeSegment { CentreA, CentreB, CentreC, EmboutGauche, EmboutDroit }
 
-	[Export] public TypeSegment Type = TypeSegment.CentreA;
-
 	// Largeur d'un emplacement dans une ligne (172px natif x2).
 	public const float LargeurSegment = 344f;
 
-	private record Config(string Texture, Vector2 DecalageSprite, Vector2 TailleCollision, Vector2 PositionCollision);
-
-	private static readonly Dictionary<TypeSegment, Config> Configs = new()
-	{
-		[TypeSegment.CentreA] = new("res://assets/sol/sol_centre_a.png", Vector2.Zero, new Vector2(344, 112), new Vector2(0, 6)),
-		[TypeSegment.CentreB] = new("res://assets/sol/sol_centre_b.png", Vector2.Zero, new Vector2(344, 112), new Vector2(0, 6)),
-		[TypeSegment.CentreC] = new("res://assets/sol/sol_centre_c.png", Vector2.Zero, new Vector2(344, 112), new Vector2(0, 6)),
-		[TypeSegment.EmboutGauche] = new("res://assets/sol/sol_embout_gauche.png", new Vector2(0, 40), new Vector2(300, 112), new Vector2(22, 6)),
-		[TypeSegment.EmboutDroit] = new("res://assets/sol/sol_embout_droit.png", new Vector2(0, 40), new Vector2(300, 112), new Vector2(-22, 6)),
-	};
-
 	public override void _Ready()
 	{
+		// Seul réglage encore fait en code : la géométrie vient de la scène.
 		// Layer 1 (terrain, vu par le joueur) + layer sol des PNJ. Voir Constantes.
 		CollisionLayer |= Constantes.LayerSolPnj;
-
-		var config = Configs[Type];
-
-		var sprite = GetNode<Sprite2D>("Sprite2D");
-		sprite.Texture = GD.Load<Texture2D>(config.Texture);
-		sprite.Scale = new Vector2(2, 2);
-		sprite.Position = config.DecalageSprite;
-
-		var collision = GetNode<CollisionShape2D>("CollisionShape2D");
-		collision.Shape = new RectangleShape2D { Size = config.TailleCollision };
-		collision.Position = config.PositionCollision;
 	}
 }

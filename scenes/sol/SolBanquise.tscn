@@ -1,10 +1,10 @@
-[gd_scene format=3 uid="uid://0r4t00pq46h"]
+[gd_scene format=3 uid="uid://c4lfcjnl74oh"]
 
 [ext_resource type="Script" uid="uid://cs6i6hmcy7fdg" path="res://scripts/sol/SolBanquise.cs" id="1"]
 [ext_resource type="Texture2D" uid="uid://csjp177d0hutg" path="res://assets/sol/sol_centre_a.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="RectSolCentre"]
-size = Vector2(344, 112)
+size = Vector2(344, 96)
 
 [node name="SolBanquise" type="StaticBody2D" unique_id=198024636]
 script = ExtResource("1")
@@ -14,5 +14,5 @@ scale = Vector2(2, 2)
 texture = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=42019152]
-position = Vector2(0, 6)
+position = Vector2(0, 14)
 shape = SubResource("RectSolCentre")

@@ -5,7 +5,6 @@
 
 [node name="PenteBanquiseDouceDescendante" type="StaticBody2D"]
 script = ExtResource("1")
-Type = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, 68)
@@ -13,4 +12,4 @@ scale = Vector2(2, 2)
 texture = ExtResource("2")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-172, -50, 172, 86, 172, 198, -172, 62)
+polygon = PackedVector2Array(-172, -29, 172, 107, 172, 198, -172, 62)

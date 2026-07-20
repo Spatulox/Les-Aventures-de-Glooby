@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/props/noel/BancTravail.tscn" id="3_banc"]
 [ext_resource type="PackedScene" path="res://scenes/props/noel/LutinUsine.tscn" id="4_lutin"]
 [ext_resource type="PackedScene" path="res://scenes/props/noel/GuirlandeNoel.tscn" id="5_guirlande"]
-[ext_resource type="PackedScene" path="res://scenes/sol/SolBanquiseCentreA.tscn" id="6_sol"]
+[ext_resource type="PackedScene" path="res://scenes/sol/SolBanquise.tscn" id="6_sol"]
 
 [node name="DemoUsine" type="Node2D"]
 

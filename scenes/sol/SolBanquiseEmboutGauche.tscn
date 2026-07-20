@@ -4,11 +4,10 @@
 [ext_resource type="Texture2D" uid="uid://dbykexflx125p" path="res://assets/sol/sol_embout_gauche.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="Rect"]
-size = Vector2(300, 112)
+size = Vector2(300, 91)
 
 [node name="SolBanquiseEmboutGauche" type="StaticBody2D"]
 script = ExtResource("1")
-Type = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, 40)
@@ -16,5 +15,5 @@ scale = Vector2(2, 2)
 texture = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(22, 6)
+position = Vector2(22, 16.5)
 shape = SubResource("Rect")

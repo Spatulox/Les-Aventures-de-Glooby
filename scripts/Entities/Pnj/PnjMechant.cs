@@ -31,6 +31,7 @@ public abstract partial class PnjMechant : LivingEntity
 	public override void _Ready()
 	{
 		Sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		MasquerApercuEditeur();
 		Pv = PvMax;
 		AddToGroup("pnj");
 		_xDepart = GlobalPosition.X;

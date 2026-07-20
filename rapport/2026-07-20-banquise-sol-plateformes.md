@@ -298,6 +298,32 @@ exactement l'ancienne étendue 2636→6250, plus les 3 corniches à y=293 (surfa
 Reste seul le **Labyrinthe** (21 nœuds) en `PlateformeUnidirectionnelle`, exclu à
 votre demande — et c'est la vraie caverne, donc `SolBanquise` n'y conviendrait pas.
 
+### La scène devient la seule source de vérité, centres unifiés
+
+Symptôme signalé : baisser la hauteur de collision d'un `SolBanquise` dans
+l'éditeur ne changeait pas la hauteur à laquelle joueur et PNJ se posent. Mesuré :
+
+```
+SolBanquiseCentreA.tscn   editeur: 344x83 @ (0,20.5)   runtime: 344x112 @ (0,6)
+```
+
+Les scripts réappliquaient sprite et collision depuis leurs tables `Configs` à
+chaque `_Ready()`. Avec une scène par variante, cette réapplication n'avait plus
+d'utilité — elle ne faisait qu'écraser le réglage éditeur. **Retirée** des trois
+scripts ; il ne reste que la ligne `CollisionLayer` (comportement, pas géométrie).
+Les tables `Configs` mortes ont été supprimées.
+
+Centres unifiés : `SolBanquiseCentreA/B/C` disparaissent au profit d'une seule
+`SolBanquise.tscn`. `SolBanquiseLigne` perd son alternance A/B/C et ses
+dictionnaires, réduit à trois constantes de chemin.
+
+Surface de marche harmonisée sur celle de `SolBanquise.tscn` : **y = −29**
+(collision 91 de haut, bas à 62). Embouts et pentes réalignés dessus, sinon un
+segment non retouché aurait fait une marche avec les autres. Les nœuds de
+`monde.tscn` ont été décalés en compensation pour que la ligne de marche reste
+**exactement** à 300 dans le monde — vérifié : x=700, 1100, 2100, 2300, 2600,
+3000, 4000, 5900 renvoient tous `y=300`.
+
 ### Assets rangés
 
 `assets/decors/sol/` → `assets/sol/` et `assets/decors/banquise/elements/` →
@@ -377,6 +403,15 @@ réimportés sans erreur.
   ```
 
   Entrée, récupération du pouvoir, sortie et retour au mur : la boucle est fermée.
+- **Sol de la « Grotte » après conversion** :
+
+  ```
+  TROUS sol 2636->6250 : aucun
+  corniches x=3500/4550/5600 -> surface 243 (57px au-dessus du sol, saut 73.5)
+  zones camera : ZoneVillage, ZoneBanquise, ZoneBanquise2, ZoneGrotte,
+                 ZoneArenaBoss, ZoneBossCerf
+  traversee : x=2900 -> 6228 (fin du sol 6250), y le plus bas 289 : jamais tombe
+  ```
 - Scripts temporaires supprimés, aucun processus Godot résiduel.
 
 ### Point d'attention sur le village

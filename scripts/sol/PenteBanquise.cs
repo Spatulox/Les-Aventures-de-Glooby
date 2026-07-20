@@ -4,12 +4,13 @@ using System.Collections.Generic;
 // Pente de sol de banquise, raccordable avec les segments SolBanquise :
 // fabriquée par décalage de colonnes du segment A, ses bords gauche/droit
 // sont exactement ceux d'un segment plat, aux extrémités la surface est
-// donc au même niveau qu'un sol plat posé à côté (surface locale à y=-50
-// du côté bas... côté gauche pour les deux sens, le côté droit étant plus
-// haut/bas de DeniveleTotal). La collision est un CollisionPolygon2D dont
+// donc au même niveau qu'un sol plat posé à côté (surface locale à y=-29
+// côté gauche pour les deux sens, le côté droit étant plus haut/bas de
+// DeniveleTotal). La collision est un CollisionPolygon2D dont
 // le dessus suit la diagonale de neige : pas de marches invisibles.
-// Le .tscn embarque le visuel du type par défaut (DouceMontante) pour que la
-// pièce soit VISIBLE dans l'éditeur ; _Ready le ré-applique ensuite depuis Type.
+// Chaque type a sa propre scène, qui porte sprite ET CollisionPolygon2D : elle
+// est la seule source de vérité, le script ne réapplique rien au runtime.
+// Surface de marche : y = -29 à l'entrée (côté gauche), bas du polygone à 62.
 public partial class PenteBanquise : StaticBody2D
 {
 	public enum TypePente { DouceMontante, DouceDescendante, ForteMontante, ForteDescendante }
@@ -36,26 +37,9 @@ public partial class PenteBanquise : StaticBody2D
 
 	public override void _Ready()
 	{
+		// Seul réglage encore fait en code : sprite et polygone viennent de la
+		// scène, qui est la seule source de vérité (voir SolBanquise).
 		// Layer 1 (terrain, vu par le joueur) + layer sol des PNJ. Voir Constantes.
 		CollisionLayer |= Constantes.LayerSolPnj;
-
-		var config = Configs[Type];
-		int d = config.Denivele;
-
-		var sprite = GetNode<Sprite2D>("Sprite2D");
-		sprite.Texture = GD.Load<Texture2D>(config.Texture);
-		sprite.Scale = new Vector2(2, 2);
-		sprite.Position = new Vector2(0, config.Montante ? -d : d);
-
-		// Parallélogramme : dessus en diagonale sur la neige, flancs verticaux.
-		float hautDroit = config.Montante ? -50f - 2 * d : -50f + 2 * d;
-		var polygone = GetNode<CollisionPolygon2D>("CollisionPolygon2D");
-		polygone.Polygon = new[]
-		{
-			new Vector2(-172, -50),
-			new Vector2(172, hautDroit),
-			new Vector2(172, hautDroit + 112),
-			new Vector2(-172, 62),
-		};
 	}
 }

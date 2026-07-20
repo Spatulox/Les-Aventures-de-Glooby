@@ -81,6 +81,7 @@ public partial class Player : LivingEntity
 		FloorSnapLength = 8f;
 
 		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		MasquerApercuEditeur();
 		_colDebout = GetNode<CollisionShape2D>("CollisionDebout");
 		_colGlisse = GetNode<CollisionShape2D>("CollisionGlisse");
 		_colGlisse.Disabled = true;
