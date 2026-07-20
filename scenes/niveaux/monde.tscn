@@ -402,6 +402,12 @@ position = Vector2(5650, 110)
 position = Vector2(2700, 255)
 IdMur = "mur_glace_grotte"
 
+[node name="PanneauGrotte" parent="ZoneBossCerf/Interactifs" unique_id=700000011 instance=ExtResource("panneau")]
+position = Vector2(2196, 267)
+scale = Vector2(0.5, 0.5)
+Texte = "Grotte"
+Lignes = PackedStringArray("Grotte")
+
 [node name="CheckpointGrotte" parent="ZoneBossCerf/Interactifs" unique_id=2019026174 instance=ExtResource("checkpoint")]
 position = Vector2(2860, 296)
 IdCheckpoint = "grotte_entree"
