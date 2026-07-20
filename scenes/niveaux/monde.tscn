@@ -77,6 +77,7 @@ modulate = Color(1, 1, 1, 0)
 [node name="Village" type="Node2D" parent="." unique_id=681150130]
 
 [node name="Camera" type="Node2D" parent="Village" unique_id=578104210]
+visible = false
 
 [node name="ZoneVillage" parent="Village/Camera" unique_id=132868656 instance=ExtResource("camzone")]
 position = Vector2(321, 145.00003)
@@ -175,6 +176,7 @@ scale = Vector2(19.12795, 1.6637502)
 NomRegion = "banquise"
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=2118285159]
+position = Vector2(1, 0)
 
 [node name="RampeOuest" parent="Banquise/Sol" unique_id=967974687 instance=ExtResource("pente_montante")]
 position = Vector2(1418, 329)
@@ -231,7 +233,7 @@ position = Vector2(2150, 252)
 position = Vector2(2620, 268)
 
 [node name="CristalPetit" parent="Banquise/Decor" unique_id=1617416377 instance=ExtResource("cristalp")]
-position = Vector2(2300, 284)
+position = Vector2(2218, 276)
 
 [node name="FleurGivre" parent="Banquise/Decor" unique_id=242948217 instance=ExtResource("fleur")]
 position = Vector2(2450, 284)
@@ -472,7 +474,7 @@ position = Vector2(1901, 470)
 position = Vector2(2100, 470)
 
 [node name="CorridorL1_3" parent="Grotte/Sol" unique_id=204253256 instance=ExtResource("sol")]
-position = Vector2(2300, 470)
+position = Vector2(2311, 446)
 
 [node name="CorridorL1_4" parent="Grotte/Sol" unique_id=204253257 instance=ExtResource("sol")]
 position = Vector2(2497, 445)
