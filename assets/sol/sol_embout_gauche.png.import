@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dstxnw7pn2554"
-path="res://.godot/imported/congere.png-a59e18357cd3abaf571553232ab852c1.ctex"
+uid="uid://dbykexflx125p"
+path="res://.godot/imported/sol_embout_gauche.png-d1643f437eb158f5b9f929937d48261d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/banquise/elements/congere.png"
-dest_files=["res://.godot/imported/congere.png-a59e18357cd3abaf571553232ab852c1.ctex"]
+source_file="res://assets/sol/sol_embout_gauche.png"
+dest_files=["res://.godot/imported/sol_embout_gauche.png-d1643f437eb158f5b9f929937d48261d.ctex"]
 
 [params]
 

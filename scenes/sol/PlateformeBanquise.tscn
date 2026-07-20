@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://clvmhk0rpnxh6"]
+
+[ext_resource type="Script" uid="uid://cloh2njuqy61p" path="res://scripts/sol/PlateformeBanquise.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://ff0jcnunxcvx" path="res://assets/sol/elements/plaque_flottante.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectPlaque"]
+size = Vector2(96, 28)
+
+[node name="PlateformeBanquise" type="StaticBody2D" unique_id=1005351204]
+script = ExtResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=639267988]
+scale = Vector2(2, 2)
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1051987640]
+position = Vector2(0, -4)
+shape = SubResource("RectPlaque")

@@ -100,6 +100,32 @@ dévale en petits sauts (auSol perdu). 8px couvre 45° avec marge. Vérifié
 dans la foulée que le saut fonctionne toujours (le snap de Godot 4
 n'empêche pas de décoller quand la vélocité part vers le haut).
 
+**Correctif 2026-07-20 : cette décision n'avait jamais été appliquée.** Un grep
+sur tout le dépôt ne trouvait aucune occurrence de `FloorSnapLength` — la valeur
+était restée au défaut de 1. Le réglage est désormais réellement posé, dans
+`Player._Ready()`. Note : le problème ne se limite pas au 45°, une pente *douce*
+(21,6°) fait déjà chuter de 1,45px par frame, soit au-delà du snap par défaut.
+
+## CameraZone : hauteur minimale = hauteur du viewport (360)
+
+Les zones caméra faisaient 243-256px de haut pour un viewport de 360. Quand la
+zone est plus courte que l'écran, le clamp de Godot reçoit `min > max`
+(`limite_haut + 180 > limite_bas - 180`) et retourne systématiquement `min` :
+**la caméra se fige verticalement** au lieu de suivre le joueur. Le cadrage
+n'était donc choisi par personne, c'était un effet de bord.
+
+Toutes les zones font maintenant au moins 360 de haut. La banquise passe à 600
+pour que la caméra suive vraiment le joueur et que les 180px d'épaisseur de
+glace soient visibles sous lui (c'est ce qui fait « lire » la banquise). Village,
+grotte et arènes de boss sont calées à exactement 360 en conservant leur bord
+haut : la plage de clamp se réduit à un point unique, donc **leur cadrage reste
+identique à l'ancien**, mais devient légal. Ces lieux ont des sols fins : leur
+faire suivre la caméra révélerait du vide sous le sol.
+
+Effet de bord traité : `SeuilChuteVide = bas + MargeChuteVide`. Descendre le bord
+bas repoussait le seuil de mort, compensé par `MargeChuteVide = 196` sur les
+zones concernées.
+
 ## PNJ pingouin : animer l'objet validé plutôt que recréer un personnage
 
 Le choix d'accessoire s'est fait sur 3 vignettes générées en petits objets

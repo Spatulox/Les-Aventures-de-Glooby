@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dbykexflx125p"
-path="res://.godot/imported/sol_embout_gauche.png-4977e8ebfc71d0814a8ee8f56bd4c970.ctex"
+uid="uid://dstxnw7pn2554"
+path="res://.godot/imported/congere.png-3734a7b751bb49aca577ae2a676ede9b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/sol/sol_embout_gauche.png"
-dest_files=["res://.godot/imported/sol_embout_gauche.png-4977e8ebfc71d0814a8ee8f56bd4c970.ctex"]
+source_file="res://assets/sol/elements/congere.png"
+dest_files=["res://.godot/imported/congere.png-3734a7b751bb49aca577ae2a676ede9b.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ff0jcnunxcvx"
-path="res://.godot/imported/plaque_flottante.png-b4bc0273fcb9e832321154f93f7f2fa7.ctex"
+uid="uid://cpgrt424f3xgj"
+path="res://.godot/imported/bloc_empilable.png-3a510bf6ff098160d901eb10eb1a47d7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/banquise/elements/plaque_flottante.png"
-dest_files=["res://.godot/imported/plaque_flottante.png-b4bc0273fcb9e832321154f93f7f2fa7.ctex"]
+source_file="res://assets/sol/elements/bloc_empilable.png"
+dest_files=["res://.godot/imported/bloc_empilable.png-3a510bf6ff098160d901eb10eb1a47d7.ctex"]
 
 [params]
 

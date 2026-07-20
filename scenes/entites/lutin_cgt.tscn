@@ -16,7 +16,7 @@ size = Vector2(72, 80)
 
 [node name="LutinCgt" type="CharacterBody2D" unique_id=1187403218]
 collision_layer = 4
-collision_mask = 16
+collision_mask = 18
 script = ExtResource("1")
 Lignes = PackedStringArray("On lâche rien. Même pas les jouets.")
 AuPassage = true

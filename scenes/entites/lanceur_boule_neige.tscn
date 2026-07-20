@@ -12,7 +12,7 @@ size = Vector2(24, 24)
 
 [node name="LanceurBouleNeige" type="CharacterBody2D" unique_id=1045879546]
 collision_layer = 4
-collision_mask = 16
+collision_mask = 18
 script = ExtResource("1")
 SceneBouleDeNeige = ExtResource("3")
 

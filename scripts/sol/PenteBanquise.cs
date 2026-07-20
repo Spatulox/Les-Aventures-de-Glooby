@@ -8,6 +8,8 @@ using System.Collections.Generic;
 // du côté bas... côté gauche pour les deux sens, le côté droit étant plus
 // haut/bas de DeniveleTotal). La collision est un CollisionPolygon2D dont
 // le dessus suit la diagonale de neige : pas de marches invisibles.
+// Le .tscn embarque le visuel du type par défaut (DouceMontante) pour que la
+// pièce soit VISIBLE dans l'éditeur ; _Ready le ré-applique ensuite depuis Type.
 public partial class PenteBanquise : StaticBody2D
 {
 	public enum TypePente { DouceMontante, DouceDescendante, ForteMontante, ForteDescendante }
@@ -22,10 +24,10 @@ public partial class PenteBanquise : StaticBody2D
 	// Denivele en pixels natifs (68 -> ~22 deg, 171 -> 45 deg), x2 à l'écran.
 	private static readonly Dictionary<TypePente, Config> Configs = new()
 	{
-		[TypePente.DouceMontante] = new("res://assets/decors/sol/pente_douce_montante.png", 68, true),
-		[TypePente.DouceDescendante] = new("res://assets/decors/sol/pente_douce_descendante.png", 68, false),
-		[TypePente.ForteMontante] = new("res://assets/decors/sol/pente_forte_montante.png", 171, true),
-		[TypePente.ForteDescendante] = new("res://assets/decors/sol/pente_forte_descendante.png", 171, false),
+		[TypePente.DouceMontante] = new("res://assets/sol/pente_douce_montante.png", 68, true),
+		[TypePente.DouceDescendante] = new("res://assets/sol/pente_douce_descendante.png", 68, false),
+		[TypePente.ForteMontante] = new("res://assets/sol/pente_forte_montante.png", 171, true),
+		[TypePente.ForteDescendante] = new("res://assets/sol/pente_forte_descendante.png", 171, false),
 	};
 
 	// Écart de hauteur (en pixels écran) entre les deux extrémités : la pièce
@@ -34,6 +36,9 @@ public partial class PenteBanquise : StaticBody2D
 
 	public override void _Ready()
 	{
+		// Layer 1 (terrain, vu par le joueur) + layer sol des PNJ. Voir Constantes.
+		CollisionLayer |= Constantes.LayerSolPnj;
+
 		var config = Configs[Type];
 		int d = config.Denivele;
 

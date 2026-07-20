@@ -9,6 +9,9 @@ public partial class MurFondable : StaticBody2D
 
 	public override void _Ready()
 	{
+		// Layer 1 (vu par le joueur) + layer sol des PNJ. Voir Constantes.
+		CollisionLayer |= Constantes.LayerSolPnj;
+
 		if (string.IsNullOrEmpty(IdMur))
 			IdMur = GetPath().ToString();
 

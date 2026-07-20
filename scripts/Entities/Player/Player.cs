@@ -73,6 +73,13 @@ public partial class Player : LivingEntity
 	{
 		AddToGroup("joueur");
 
+		// Pentes (PenteBanquise) : le snap par défaut de Godot (1px) ne recolle
+		// pas le joueur au sol en descente. À Speed=220 il avance 3,67px par
+		// frame, soit déjà 1,45px de chute sur une pente douce (21,6°) : sans
+		// marge il dévale en petits sauts et perd EstAuSol. 8px couvre large,
+		// jusqu'aux pentes fortes. Voir DECISIONS.md.
+		FloorSnapLength = 8f;
+
 		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_colDebout = GetNode<CollisionShape2D>("CollisionDebout");
 		_colGlisse = GetNode<CollisionShape2D>("CollisionGlisse");

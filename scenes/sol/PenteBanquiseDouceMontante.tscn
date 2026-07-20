@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/sol/PenteBanquise.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://b3pab1pdmpbp0" path="res://assets/sol/pente_douce_montante.png" id="2"]
+
+[node name="PenteBanquiseDouceMontante" type="StaticBody2D"]
+script = ExtResource("1")
+Type = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -68)
+scale = Vector2(2, 2)
+texture = ExtResource("2")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-172, -50, 172, -186, 172, -74, -172, 62)
