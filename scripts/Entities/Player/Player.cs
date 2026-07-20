@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 // Le héros jouable (LivingEntity) : contrôleur à minuteurs — coyote time + tampon de
 // saut, glissade accélérée (plus vive sur la glace), lancer de boule de neige, courte
-// invincibilité post-coup, rupture de tuile fragile, filet anti-chute relatif à la zone.
+// invincibilité post-coup, rupture de tuile fragile, filet anti-chute relatif à la zone,
+// pentes trop raides non praticables (glissade forcée vers le bas).
 // PV/gravité/friction/saut/dégâts viennent de LivingEntity ; ses PV vivent dans GameState.
 public partial class Player : LivingEntity
 {
@@ -26,6 +27,11 @@ public partial class Player : LivingEntity
 	// Plafond de sécurité : une très longue descente ne doit pas rendre le
 	// contrôle au joueur au bout de plusieurs secondes de glissade subie.
 	[Export] public float DureeElanPenteMax = 0.5f;
+	// Au-delà de cet angle de sol, la pente ne se marche plus : le joueur y bascule
+	// automatiquement en glissade et la dévale (voir GererPenteRaide). Réglé entre
+	// les deux pentes du jeu — PenteBanquiseDouce* ~21,6° (praticable) et
+	// PenteBanquiseForte* ~44,8° (glissade obligatoire).
+	[Export] public float AnglePenteMaxDegres = 35f;
 	// Inclinaison du sprite sur la pente pendant la glissade : vitesse de
 	// rappel (rad/s) vers l'angle du sol, puis vers 0 une fois la glissade finie.
 	[Export] public float VitesseInclinaison = 12f;
@@ -105,6 +111,12 @@ public partial class Player : LivingEntity
 		_colDebout = GetNode<CollisionShape2D>("CollisionDebout");
 		_colGlisse = GetNode<CollisionShape2D>("CollisionGlisse");
 		_colGlisse.Disabled = true;
+		// IMPORTANT : les deux hitboxes doivent être alignées PAR LE BAS (pieds à
+		// y = 22.2 en local) ; la glissade est plus BASSE, pas plus haute sur pieds.
+		// Si le bas de CollisionGlisse remonte, entrer en glissade fait descendre le
+		// corps d'autant pour reposer sur le sol — et au relevé la capsule debout
+		// réapparaît sous la surface. Une PlateformeUnidirectionnelle ne repousse
+		// jamais un corps déjà passé dessous : le joueur la traverse et tombe.
 		_camera = GetNode<Camera2D>("Camera2D");
 
 		ChargerAnimations();
@@ -152,6 +164,7 @@ public partial class Player : LivingEntity
 
 		GererGlaceFragile(auSol, dt);
 		bool vientDeTraverser = GererTraverseePlateforme(auSol, dt);
+		GererPenteRaide(auSol);
 
 		if (_enGlissade)
 		{
@@ -471,6 +484,30 @@ public partial class Player : LivingEntity
 	{
 		var normale = GetFloorNormal();
 		return Mathf.Abs(normale.X) > 0.05f && Mathf.Sign(normale.X) == _directionRegard;
+	}
+
+	// Une pente au-delà d'AnglePenteMaxDegres (les PenteBanquiseForte*, ~45°) ne se
+	// marche pas : ni idle, ni marche, ni course, ni montée. Dès que le joueur y pose
+	// les pieds il bascule en glissade vers le bas — la seule façon de la parcourir.
+	// Le cooldown de glissade est ignoré (sinon on resterait planté sur la pente), et
+	// l'élan de pente (GererElanPente) prolonge la glissade jusqu'en bas puis au-delà.
+	// Les pentes douces (~22°) restent parcourables normalement.
+	private void GererPenteRaide(bool auSol)
+	{
+		if (!auSol || GetFloorAngle() < Mathf.DegToRad(AnglePenteMaxDegres))
+			return;
+
+		// La normale d'une pente penche du côté du bas : son X donne la descente.
+		var descente = (int)Mathf.Sign(GetFloorNormal().X);
+		if (descente == 0)
+			return;
+
+		// Glissade arrivée par le bas : elle ne peut pas remonter la pente, on la
+		// retourne vers la descente au lieu de la laisser grimper sur son élan.
+		_directionRegard = descente;
+
+		if (!_enGlissade)
+			DemarrerGlissade();
 	}
 
 	private void Lancer()
