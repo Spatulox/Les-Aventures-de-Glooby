@@ -40,6 +40,15 @@ public partial class Parametres : Node
 	public Vector2I TailleFenetreCourante => _tailleFenetre;
 	public bool VsyncActif => _vsync;
 
+	// Faux quand le moteur refuse nos ordres de fenêtre — cas de la fenêtre EMBARQUÉE dans
+	// l'éditeur (onglet « Game », Godot 4.4+), où DisplayServer rejette mode, taille et
+	// position (« Embedded window can't be resized. »…). Ce mode n'est pas exposé au script
+	// et se détecte différemment selon l'OS : plutôt que de le deviner, on applique, on
+	// relit, et on retient le refus. L'UI s'en sert pour annoncer un effet différé ; le
+	// choix de l'utilisateur reste mémorisé et sauvegardé, donc appliqué au prochain
+	// lancement non embarqué.
+	public bool FenetrePilotable { get; private set; } = true;
+
 	public float VolumeMasterCourant => _volumeMaster;
 	public float VolumeMusiqueCourant => _volumeMusique;
 	public float VolumeAmbianceCourant => _volumeAmbiance;
@@ -222,10 +231,7 @@ public partial class Parametres : Node
 	{
 		_tailleFenetre = taille;
 		if (_modeAffichage == ModeAffichage.Fenetre)
-		{
-			DisplayServer.WindowSetSize(taille);
-			CentrerFenetre(taille);
-		}
+			AppliquerTailleFenetre();
 		Sauver();
 	}
 
@@ -312,26 +318,61 @@ public partial class Parametres : Node
 		return liste;
 	}
 
-	// Traduit le mode « métier » en DisplayServer.WindowMode. Au retour en fenêtré on
-	// redéfinit taille + position (contourne un bug connu où la fenêtre reste mal placée
-	// après un plein écran).
+	// Pose le mode moteur correspondant, puis vérifie que la fenêtre a obtempéré. Au retour
+	// en fenêtré on redéfinit taille + position (contourne un bug connu où la fenêtre reste
+	// mal placée après un plein écran) — c'est cette étape qui fait office de vérification
+	// dans ce cas, le mode fenêtré étant déjà celui d'une fenêtre embarquée.
 	private void AppliquerMode(ModeAffichage mode)
 	{
-		switch (mode)
-		{
-			case ModeAffichage.Fenetre:
-				DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
-				DisplayServer.WindowSetSize(_tailleFenetre);
-				CentrerFenetre(_tailleFenetre);
-				break;
-			case ModeAffichage.PleinEcran:
-				DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
-				break;
-			case ModeAffichage.PleinEcranFenetre:
-				DisplayServer.WindowSetMode(DisplayServer.WindowMode.Fullscreen);
-				break;
-		}
+		if (!FenetrePilotable)
+			return;
+
+		var attendu = ModeMoteur(mode);
+		DisplayServer.WindowSetMode(attendu);
+
+		if (mode == ModeAffichage.Fenetre)
+			AppliquerTailleFenetre();
+		else
+			VerifierPilotage(EstPleinEcran(DisplayServer.WindowGetMode()));
 	}
+
+	// Applique la taille mémorisée puis recentre. La relecture immédiate sert de test :
+	// une fenêtre embarquée ignore le redimensionnement (après l'avoir loggé) et renvoie
+	// toujours la taille de son conteneur.
+	private void AppliquerTailleFenetre()
+	{
+		if (!FenetrePilotable)
+			return;
+
+		DisplayServer.WindowSetSize(_tailleFenetre);
+		VerifierPilotage(DisplayServer.WindowGetSize() == _tailleFenetre);
+
+		if (FenetrePilotable)
+			CentrerFenetre(_tailleFenetre);
+	}
+
+	// Retient un refus du moteur. Sens unique : l'embarquement ne peut pas être levé en
+	// cours d'exécution, donc on ne repasse jamais à « pilotable ».
+	private void VerifierPilotage(bool applique)
+	{
+		if (!applique)
+			FenetrePilotable = false;
+	}
+
+	// Traduit le mode « métier » en DisplayServer.WindowMode.
+	private static DisplayServer.WindowMode ModeMoteur(ModeAffichage mode) => mode switch
+	{
+		ModeAffichage.PleinEcran => DisplayServer.WindowMode.ExclusiveFullscreen,
+		ModeAffichage.PleinEcranFenetre => DisplayServer.WindowMode.Fullscreen,
+		_ => DisplayServer.WindowMode.Windowed,
+	};
+
+	// Nos deux modes plein écran sont interchangeables pour ce test : selon la plateforme
+	// (Wayland notamment) le moteur retombe de l'exclusif vers le plein écran fenêtré. On
+	// vérifie donc « est-on en plein écran ? » plutôt qu'une égalité stricte, qui
+	// signalerait à tort une fenêtre non pilotable.
+	private static bool EstPleinEcran(DisplayServer.WindowMode mode) =>
+		mode == DisplayServer.WindowMode.Fullscreen || mode == DisplayServer.WindowMode.ExclusiveFullscreen;
 
 	private static void DefinirVsyncMoteur(bool actif) =>
 		DisplayServer.WindowSetVsyncMode(actif ? DisplayServer.VSyncMode.Enabled : DisplayServer.VSyncMode.Disabled);
@@ -340,10 +381,13 @@ public partial class Parametres : Node
 	// part de l'origine de cet écran). On calcule à partir de la taille cible plutôt que
 	// de WindowGetSize(), qui peut être encore périmée juste après un redimensionnement.
 	// Sous Wayland, une application ne peut pas positionner sa propre fenêtre (c'est le
-	// compositeur qui décide) : on n'essaie pas, ça éviterait un appel sans effet.
+	// compositeur qui décide) : on n'essaie pas, ça éviterait un appel sans effet. La
+	// comparaison ignore la casse — le moteur nomme ses pilotes en minuscules (« wayland »)
+	// mais les DisplayServer se présentent capitalisés, et se tromper de casse ici
+	// désarmerait silencieusement le garde.
 	private static void CentrerFenetre(Vector2I tailleFenetre)
 	{
-		if (DisplayServer.GetName() == "Wayland")
+		if (DisplayServer.GetName().ToLowerInvariant() == "wayland")
 			return;
 
 		int ecran = DisplayServer.WindowGetCurrentScreen();

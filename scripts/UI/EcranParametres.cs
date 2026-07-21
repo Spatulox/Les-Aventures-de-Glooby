@@ -36,6 +36,7 @@ public partial class EcranParametres : Control
 	private OptionButton _optionMode;
 	private OptionButton _optionResolution;
 	private CheckButton _checkVsync;
+	private Label _avertissementAffichage;
 	private List<Vector2I> _resolutions = new();
 
 	public bool EnCapture => _capture != null && _capture.EnCours;
@@ -242,7 +243,20 @@ public partial class EcranParametres : Control
 		_checkVsync.Toggled += OnVsyncBascule;
 		colonne.AddChild(LigneReglage("Synchronisation verticale (VSync)", _checkVsync));
 
-		MettreAJourEtatResolution();
+		// Effet différé : quand le moteur refuse de piloter la fenêtre (jeu lancé dans la
+		// fenêtre embarquée de l'éditeur), les réglages sont bien mémorisés et sauvegardés,
+		// simplement pas appliqués tout de suite. On le dit plutôt que de laisser croire à
+		// une panne — les listes restent utilisables.
+		_avertissementAffichage = new Label
+		{
+			Text = "⚠ Sera appliqué au prochain lancement (fenêtre embarquée dans l'éditeur).",
+			AutowrapMode = TextServer.AutowrapMode.WordSmart,
+			Modulate = new Color(1f, 1f, 1f, 0.6f),
+			Visible = false,
+		};
+		colonne.AddChild(_avertissementAffichage);
+
+		MettreAJourEtatAffichage();
 		return marge;
 	}
 
@@ -285,20 +299,28 @@ public partial class EcranParametres : Control
 	private void OnModeChoisi(long index)
 	{
 		Parametres.Instance.DefinirMode((ModeAffichage)_optionMode.GetItemId((int)index));
-		MettreAJourEtatResolution();
+		MettreAJourEtatAffichage();
 	}
 
 	private void OnResolutionChoisie(long index)
 	{
 		if (index >= 0 && index < _resolutions.Count)
 			Parametres.Instance.DefinirResolution(_resolutions[(int)index]);
+		MettreAJourEtatAffichage();
 	}
 
 	private void OnVsyncBascule(bool actif) => Parametres.Instance.DefinirVsync(actif);
 
-	// La résolution ne se règle qu'en mode fenêtré (en plein écran, la taille suit l'écran).
-	private void MettreAJourEtatResolution() =>
-		_optionResolution.Disabled = Parametres.Instance.ModeAffichageCourant != ModeAffichage.Fenetre;
+	// Point unique de synchronisation de la section : la résolution ne se règle qu'en mode
+	// fenêtré (en plein écran, la taille suit l'écran), et l'avertissement d'effet différé
+	// apparaît dès que le moteur a refusé un ordre de fenêtre. Appelé à la construction et
+	// après chaque changement, le refus n'étant constaté qu'à la première tentative.
+	private void MettreAJourEtatAffichage()
+	{
+		var p = Parametres.Instance;
+		_optionResolution.Disabled = p.ModeAffichageCourant != ModeAffichage.Fenetre;
+		_avertissementAffichage.Visible = !p.FenetrePilotable;
+	}
 
 	// Section Audio : un curseur de volume par bus (général, musique, ambiance). Tous les
 	// changements sont immédiats et persistés par Parametres.
