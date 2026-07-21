@@ -32,6 +32,12 @@ public partial class EcranParametres : Control
 	// Sections empilées (une visible à la fois), indexées par titre.
 	private readonly Dictionary<string, Control> _sections = new();
 
+	// Contrôles de la section Affichage.
+	private OptionButton _optionMode;
+	private OptionButton _optionResolution;
+	private CheckButton _checkVsync;
+	private List<Vector2I> _resolutions = new();
+
 	public bool EnCapture => _capture != null && _capture.EnCours;
 
 	public override void _Ready()
@@ -90,8 +96,8 @@ public partial class EcranParametres : Control
 		colonne.AddChild(onglets);
 
 		AjouterOnglet(onglets, "Touches", actif: true);
+		AjouterOnglet(onglets, "Affichage", actif: true);
 		AjouterOnglet(onglets, "Audio", actif: false);
-		AjouterOnglet(onglets, "Affichage", actif: false);
 		AjouterOnglet(onglets, "Accessibilité", actif: false);
 	}
 
@@ -112,8 +118,8 @@ public partial class EcranParametres : Control
 	private void ConstruireSections(Control hote)
 	{
 		_sections["Touches"] = ConstruireSectionTouches();
+		_sections["Affichage"] = ConstruireSectionAffichage();
 		_sections["Audio"] = ConstruireSectionAVenir("Réglages audio à venir.");
-		_sections["Affichage"] = ConstruireSectionAVenir("Réglages d'affichage à venir.");
 		_sections["Accessibilité"] = ConstruireSectionAVenir("Options d'accessibilité à venir.");
 
 		foreach (var section in _sections.Values)
@@ -204,6 +210,95 @@ public partial class EcranParametres : Control
 		bouton.Pressed += () => DemarrerCapture(action, clavier);
 		return bouton;
 	}
+
+	// Section Affichage : mode (fenêtré / plein écran / plein écran fenêtré), résolution
+	// (mode fenêtré uniquement) et VSync. Tous les changements sont immédiats.
+	private Control ConstruireSectionAffichage()
+	{
+		var marge = new MarginContainer();
+		foreach (var cote in new[] { "margin_left", "margin_right", "margin_top" })
+			marge.AddThemeConstantOverride(cote, 8);
+
+		var colonne = new VBoxContainer();
+		colonne.AddThemeConstantOverride("separation", 14);
+		marge.AddChild(colonne);
+
+		var p = Parametres.Instance;
+
+		_optionMode = new OptionButton();
+		_optionMode.AddItem("Fenêtré", (int)ModeAffichage.Fenetre);
+		_optionMode.AddItem("Plein écran", (int)ModeAffichage.PleinEcran);
+		_optionMode.AddItem("Plein écran fenêtré", (int)ModeAffichage.PleinEcranFenetre);
+		_optionMode.Selected = (int)p.ModeAffichageCourant;
+		_optionMode.ItemSelected += OnModeChoisi;
+		colonne.AddChild(LigneReglage("Mode d'affichage", _optionMode));
+
+		_optionResolution = new OptionButton();
+		RemplirResolutions();
+		_optionResolution.ItemSelected += OnResolutionChoisie;
+		colonne.AddChild(LigneReglage("Résolution (fenêtré)", _optionResolution));
+
+		_checkVsync = new CheckButton { ButtonPressed = p.VsyncActif };
+		_checkVsync.Toggled += OnVsyncBascule;
+		colonne.AddChild(LigneReglage("Synchronisation verticale (VSync)", _checkVsync));
+
+		MettreAJourEtatResolution();
+		return marge;
+	}
+
+	// Ligne « libellé … contrôle », alignée comme les lignes de touches.
+	private static HBoxContainer LigneReglage(string libelle, Control controle)
+	{
+		var ligne = new HBoxContainer();
+		ligne.AddThemeConstantOverride("separation", 12);
+
+		var label = new Label
+		{
+			Text = libelle,
+			SizeFlagsHorizontal = SizeFlags.ExpandFill,
+			SizeFlagsVertical = SizeFlags.ShrinkCenter,
+			AutowrapMode = TextServer.AutowrapMode.WordSmart,
+		};
+		ligne.AddChild(label);
+
+		controle.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+		controle.CustomMinimumSize = new Vector2(220, 32);
+		ligne.AddChild(controle);
+		return ligne;
+	}
+
+	// (Re)remplit la liste déroulante des résolutions et sélectionne la taille courante.
+	private void RemplirResolutions()
+	{
+		_optionResolution.Clear();
+		_resolutions = Parametres.Instance.ResolutionsDisponibles();
+		var courante = Parametres.Instance.TailleFenetreCourante;
+		for (int i = 0; i < _resolutions.Count; i++)
+		{
+			var r = _resolutions[i];
+			_optionResolution.AddItem($"{r.X} × {r.Y}", i);
+			if (r == courante)
+				_optionResolution.Selected = i;
+		}
+	}
+
+	private void OnModeChoisi(long index)
+	{
+		Parametres.Instance.DefinirMode((ModeAffichage)_optionMode.GetItemId((int)index));
+		MettreAJourEtatResolution();
+	}
+
+	private void OnResolutionChoisie(long index)
+	{
+		if (index >= 0 && index < _resolutions.Count)
+			Parametres.Instance.DefinirResolution(_resolutions[(int)index]);
+	}
+
+	private void OnVsyncBascule(bool actif) => Parametres.Instance.DefinirVsync(actif);
+
+	// La résolution ne se règle qu'en mode fenêtré (en plein écran, la taille suit l'écran).
+	private void MettreAJourEtatResolution() =>
+		_optionResolution.Disabled = Parametres.Instance.ModeAffichageCourant != ModeAffichage.Fenetre;
 
 	private static Control ConstruireSectionAVenir(string texte)
 	{

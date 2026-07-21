@@ -16,8 +16,15 @@ public class DonneesParametres
 	// action -> événements liés (clavier + manette mélangés, comme dans l'InputMap).
 	public readonly Dictionary<string, Godot.Collections.Array<InputEvent>> Touches = new();
 
+	// Réglages d'affichage (section [affichage]). Défauts = état du projet au lancement
+	// (fenêtré 1280×720, VSync active).
+	public ModeAffichage Mode = ModeAffichage.Fenetre;
+	public Vector2I TailleFenetre = new(1280, 720);
+	public bool Vsync = true;
+
 	private const string SectionMeta = "meta";
 	private const string SectionTouches = "touches";
+	private const string SectionAffichage = "affichage";
 
 	// Écrit toutes les liaisons dans un ConfigFile : une clé par action, valeur =
 	// tableau de descripteurs sérialisables (voir EvenementEntree.Serialiser).
@@ -37,6 +44,11 @@ public class DonneesParametres
 			}
 			cfg.SetValue(SectionTouches, action, tableau);
 		}
+
+		cfg.SetValue(SectionAffichage, "mode", (int)Mode);
+		cfg.SetValue(SectionAffichage, "largeur", TailleFenetre.X);
+		cfg.SetValue(SectionAffichage, "hauteur", TailleFenetre.Y);
+		cfg.SetValue(SectionAffichage, "vsync", Vsync);
 		return cfg;
 	}
 
@@ -50,6 +62,8 @@ public class DonneesParametres
 
 		if (cfg.HasSectionKey(SectionMeta, "version"))
 			donnees.Version = (int)cfg.GetValue(SectionMeta, "version");
+
+		LireAffichage(cfg, donnees);
 
 		if (!cfg.HasSection(SectionTouches))
 			return donnees;
@@ -66,5 +80,25 @@ public class DonneesParametres
 			donnees.Touches[action] = liste;
 		}
 		return donnees;
+	}
+
+	// Lit la section [affichage] si présente ; chaque champ absent garde son défaut
+	// (compat ascendante : un ancien fichier sans cette section reste valide).
+	private static void LireAffichage(ConfigFile cfg, DonneesParametres donnees)
+	{
+		if (!cfg.HasSection(SectionAffichage))
+			return;
+
+		if (cfg.HasSectionKey(SectionAffichage, "mode"))
+			donnees.Mode = (ModeAffichage)(int)cfg.GetValue(SectionAffichage, "mode");
+
+		int largeur = cfg.HasSectionKey(SectionAffichage, "largeur")
+			? (int)cfg.GetValue(SectionAffichage, "largeur") : donnees.TailleFenetre.X;
+		int hauteur = cfg.HasSectionKey(SectionAffichage, "hauteur")
+			? (int)cfg.GetValue(SectionAffichage, "hauteur") : donnees.TailleFenetre.Y;
+		donnees.TailleFenetre = new Vector2I(largeur, hauteur);
+
+		if (cfg.HasSectionKey(SectionAffichage, "vsync"))
+			donnees.Vsync = (bool)cfg.GetValue(SectionAffichage, "vsync");
 	}
 }
