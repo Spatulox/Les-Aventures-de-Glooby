@@ -54,6 +54,12 @@ public partial class GameState : Node
 	// "Continuer" n'est actif que si un fichier de sauvegarde existe sur disque.
 	public bool SauvegardeExiste => Sauvegarde.Existe();
 
+	// Mode debug : partie de test lancée depuis le menu principal, avec tous les
+	// pouvoirs et des coups qui tuent n'importe quel mob d'un seul impact (voir
+	// LivingEntity.TakeDamage). Volontairement hors DonneesSauvegarde : c'est un
+	// état de session, il ne doit pas contaminer un fichier de sauvegarde.
+	public bool ModeDebug { get; private set; }
+
 	// Flags de progression (débloqués une fois pour toute la partie).
 	public bool PouvoirChaleurActif { get => _donnees.PouvoirChaleurActif; private set => _donnees.PouvoirChaleurActif = value; }
 	public bool PouvoirGlaceActif { get => _donnees.PouvoirGlaceActif; private set => _donnees.PouvoirGlaceActif = value; }
@@ -100,6 +106,20 @@ public partial class GameState : Node
 	{
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
 		ManaGlace = ManaGlaceMax;
+		ModeDebug = false;
+	}
+
+	// Nouvelle partie de test : tous les pouvoirs sont acquis d'emblée et les mobs
+	// tombent en un coup, pour atteindre vite n'importe quel point du monde sans
+	// rejouer la progression. Réutilise NouvellePartie plutôt que de dupliquer la
+	// remise à zéro, et passe par les ObtenirPouvoir* pour que le HUD reçoive bien
+	// les signaux de déblocage.
+	public void NouvellePartieDebug()
+	{
+		NouvellePartie();
+		ModeDebug = true;
+		ObtenirPouvoirChaleur();
+		ObtenirPouvoirGlace();
 	}
 
 	public void Degats(int quantite = 1)

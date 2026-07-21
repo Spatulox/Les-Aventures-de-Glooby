@@ -85,6 +85,7 @@ position = Vector2(321, 145.00003)
 scale = Vector2(2.4799972, 1.40625)
 MargeChuteVide = 196.0
 NomRegion = "banquise"
+NomAmbiance = "village"
 
 [node name="Sol" type="Node2D" parent="Village" unique_id=675078096]
 
@@ -359,6 +360,7 @@ position = Vector2(5930, 154)
 scale = Vector2(2.891, 1.40625)
 MargeChuteVide = 196.0
 NomRegion = "boss_cerf"
+NomAmbiance = "boss_cerf"
 
 [node name="Sol" type="Node2D" parent="ZoneBossCerf" unique_id=870484074]
 
@@ -449,6 +451,7 @@ NomBoss = "Boss Cerf (Rodolphe)"
 PositionApparition = Vector2(5900, 280)
 NomRegion = "grotte"
 MargeChuteVide = 196.0
+NomAmbiance = "boss_cerf"
 CheminBarre = NodePath("../BossHudBarre")
 PvBoss = 40
 UneSeuleFois = true

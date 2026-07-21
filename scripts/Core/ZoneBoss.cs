@@ -19,6 +19,12 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	[Export] public string NomRegion = "";
 	[Export] public float MargeChuteVide = 300f;
 
+	// Ambiance sonore de l'arène. À renseigner ici ET sur la CameraZone qui la
+	// recouvre : les deux sont dans le groupe zones_camera, et laquelle s'applique
+	// dépend de l'ordre de parcours - sans quoi la musique de l'arène serait tirée
+	// au hasard entre les deux. Vide = reprendre NomRegion.
+	[Export] public string NomAmbiance = "";
+
 	// Barre de vie à révéler et lier au boss spawné.
 	[Export] public NodePath CheminBarre;
 
@@ -30,7 +36,6 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 
 	protected Boss Boss;
 	protected BossHudBarre Barre;
-	private AudioStreamPlayer _lecteurMusique;
 
 	protected override bool PreparerDeclencheur()
 	{
@@ -45,7 +50,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 
 	// IZoneCamera : verrouille la caméra du joueur sur l'arène (limites = rectangle de
 	// la zone) et affiche le fond de région. Appelé par le Player par sondage.
-	public void Appliquer(Player joueur) => AppliquerCommeSalle(joueur, NomRegion, MargeChuteVide);
+	public void Appliquer(Player joueur) => AppliquerCommeSalle(joueur, NomRegion, NomAmbiance, MargeChuteVide);
 
 	protected override void SurEntreeJoueur(Player joueur)
 	{
@@ -88,13 +93,9 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// (ex. connecter Vaincu à la fin de partie).
 	protected virtual void DemarrerCombat(Player joueur) { }
 
-	private void JouerMusique()
-	{
-		if (Musique == null)
-			return;
-
-		_lecteurMusique = new AudioStreamPlayer { Stream = Musique };
-		AddChild(_lecteurMusique);
-		_lecteurMusique.Play();
-	}
+	// Thème de combat optionnel, en plus de l'ambiance de l'arène. Délégué au
+	// GestionnaireAudio : lui seul tient le fondu et le lecteur unique par canal
+	// (cette méthode empilait auparavant un lecteur par entrée, sans jamais les
+	// libérer).
+	private void JouerMusique() => GestionnaireAudio.Instance?.JouerMusiquePonctuelle(Musique);
 }

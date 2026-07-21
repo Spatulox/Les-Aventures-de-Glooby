@@ -20,6 +20,11 @@ public partial class CameraZone : DeclencheurZone, IZoneCamera
 	// Vide = ne pas toucher au fond. Remplace les anciens RegionTrigger.
 	[Export] public string NomRegion = "";
 
+	// Ambiance sonore de cette salle (ex. "village"). Vide = reprendre NomRegion.
+	// Clé SÉPARÉE du fond : le village et la banquise partagent le décor
+	// "banquise" mais n'ont pas la même musique.
+	[Export] public string NomAmbiance = "";
+
 	// Nature de la salle. Enum (et non booléen) pour pouvoir en ajouter d'autres
 	// - Interieur, Arene... - sans casser les zones déjà posées.
 	public enum TypeZone { Exterieur, Souterrain }
@@ -47,7 +52,7 @@ public partial class CameraZone : DeclencheurZone, IZoneCamera
 	// (Contient + le calcul des bornes sont mutualisés dans DeclencheurZone.)
 	public void Appliquer(Player joueur)
 	{
-		AppliquerCommeSalle(joueur, NomRegion, MargeChuteVide);
+		AppliquerCommeSalle(joueur, NomRegion, NomAmbiance, MargeChuteVide);
 
 		bool blizzard = _meteo.AuChangementDeZone(Type == TypeZone.Souterrain);
 		GestionnaireMeteo.Instance?.AfficherBlizzard(this, blizzard, changementDeZone: true);

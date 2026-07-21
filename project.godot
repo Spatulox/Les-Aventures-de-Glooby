@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameState="*res://scripts/Core/GameState.cs"
 Hud="*res://scenes/ui/hud.tscn"
+GestionnaireAudio="*res://scripts/Core/GestionnaireAudio.cs"
 
 [display]
 

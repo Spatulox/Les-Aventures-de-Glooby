@@ -39,7 +39,9 @@ public partial class BackgroundManager : Node2D
 			tween.TweenProperty(fond, "modulate:a", cible, DureeFondu);
 		}
 
-		// Hook pour la musique d'ambiance par région, à brancher plus tard.
-		// EmitSignal(SignalName.RegionChangee, nom);
+		// Pas de hook musique ici : l'audio n'est PAS calé sur la région (le village
+		// et la banquise partagent ce fond sans partager leur musique), et ce point
+		// est de toute façon derrière l'early-return ci-dessus. Le branchement se
+		// fait dans DeclencheurZone.AppliquerCommeSalle, via CameraZone.NomAmbiance.
 	}
 }

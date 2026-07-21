@@ -56,6 +56,12 @@ public partial class GestionnaireMeteo : CanvasLayer
 		_actif = actif;
 		Effets.Fondu(_blizzard, actif ? 1f : 0f, DureeFondu);
 
+		// Le son bascule ICI, et pas dans GestionnaireAudio : c'est le seul endroit
+		// qui sache que le blizzard VISIBLE change. Les minuteries tournent dans
+		// toutes les salles, donc sans le filtre par salle ci-dessus l'expiration
+		// d'un blizzard à l'autre bout de la carte couperait la musique du joueur.
+		GestionnaireAudio.Instance?.DefinirEtat(actif ? "blizzard" : AmbianceSonore.EtatNormal);
+
 		foreach (var particules in _flocons)
 			particules.Emitting = actif;
 	}
