@@ -4,8 +4,8 @@ using Godot;
 // Demarrer(clavier), elle écoute dans _Input le premier événement du périphérique
 // attendu, le normalise, consomme l'événement et émet Capturee. Échap annule toujours
 // et émet Annulee (Échap n'est donc jamais capturable comme liaison). N'écoute que
-// lorsqu'elle est active, pour ne pas interférer avec le jeu. Le remapping manette
-// (boutons + axes) est branché à l'itération suivante.
+// lorsqu'elle est active, pour ne pas interférer avec le jeu. Gère le clavier (touche)
+// et la manette (bouton, ou axe stick/gâchette au-delà de la zone morte, normalisé ±1).
 public partial class CaptureEntree : Node
 {
 	[Signal]
@@ -70,7 +70,13 @@ public partial class CaptureEntree : Node
 			return null;
 		}
 
-		// Périphérique manette : branché à l'itération 3 (boutons + axes).
+		// Manette : bouton pressé, ou axe (stick/gâchette) franchissant la zone morte.
+		// L'axe est normalisé à ±1 pour que Input.GetAxis fonctionne comme avec les
+		// défauts, et pour une sérialisation stable.
+		if (evenement is InputEventJoypadButton { Pressed: true } bouton)
+			return new InputEventJoypadButton { ButtonIndex = bouton.ButtonIndex };
+		if (evenement is InputEventJoypadMotion motion && Mathf.Abs(motion.AxisValue) >= EvenementEntree.SeuilAxe)
+			return new InputEventJoypadMotion { Axis = motion.Axis, AxisValue = motion.AxisValue >= 0f ? 1 : -1 };
 		return null;
 	}
 }
