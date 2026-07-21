@@ -283,3 +283,78 @@ pour d'éventuelles migrations, comme la sauvegarde de progression.
   patron `ConfigFile` pour clavier + manette.
 - Guide to the Godot game engine — Input (Wikibooks) : rappel `_input` vs
   `_unhandled_input` et capture d'événement.
+
+---
+
+## Partie D — Extension : section Affichage
+
+> Deuxième itération de la même méthodologie : ajouter une **section Affichage**
+> (mode fenêtré / plein écran / plein écran fenêtré, résolution, VSync) qui s'insère
+> dans le système de paramètres déjà écrit, sans architecture parallèle.
+
+### D.1 Points d'insertion dans le code déjà écrit
+
+- **Triptyque** en place : `CatalogueActions` / `DonneesParametres` / `ConfigFichier`
+  + autoload `Parametres`. Fichier `ConfigFile` sectionné `user://parametres.cfg`
+  (`[meta]` version, `[touches]`).
+- **Persistance** : `DonneesParametres.VersConfig()` / `DepuisConfig()` = le
+  (dé)sérialiseur du ConfigFile **entier** ; `ConfigFichier` = l'I/O ;
+  `Parametres` = l'application. → une section Affichage s'ajoute naturellement comme
+  une section `[affichage]` gérée par `DonneesParametres`.
+- ⚠️ **Point d'intégration critique** : `Parametres.Sauver()` (Parametres.cs:62)
+  reconstruit un `DonneesParametres` ne contenant **que** `Touches`, donc réécrit un
+  `.cfg` **sans** `[affichage]` → il **écraserait** les réglages d'affichage à chaque
+  remap. Il faut que `Sauver()` **préserve toutes les sections**. Solution retenue :
+  `DonneesParametres` gagne des champs d'affichage, `Parametres` conserve l'état
+  d'affichage **en mémoire**, et `Sauver()` écrit les deux sections en un bloc.
+- **UI** : `EcranParametres` est déjà **sectionné**. Aujourd'hui
+  `_sections["Affichage"] = ConstruireSectionAVenir(...)` et l'onglet est `Disabled`.
+  → remplacer par `ConstruireSectionAffichage()` et passer l'onglet `actif: true`.
+  Le signal `LiaisonsChangees` est propre aux touches ; l'affichage n'en a pas besoin
+  (les contrôles reflètent directement l'état courant).
+- **Conventions** à reconduire : français, commentaire de classe, `Instance`, UI par
+  code via `MenuFabrique`, tolérance aux clés absentes, `version` du format.
+
+### D.2 Recherche Godot 4 — affichage
+
+- **Modes** (`DisplayServer.WindowSetMode(DisplayServer.WindowMode)`) :
+  - `Windowed` — fenêtre normale.
+  - `Fullscreen` — **plein écran sans bordure** (la fenêtre prend la taille de l'écran,
+    pas de changement de mode vidéo, ami du multi-écran).
+  - `ExclusiveFullscreen` — plein écran exclusif, **Windows uniquement** ; ailleurs
+    (Linux — machine de dev) il **retombe sur `Fullscreen`** (identique).
+  - Mapping FR proposé : **Fenêtré** = `Windowed`, **Plein écran fenêtré** =
+    `Fullscreen` (borderless), **Plein écran** = `ExclusiveFullscreen`.
+  - **Piège connu** (issues godot #70166 / #105747, forum) : repasser
+    plein écran → fenêtré peut laisser une fenêtre mal dimensionnée / hors écran →
+    on **redéfinit toujours la taille + on recentre** au retour en fenêtré.
+- **Résolution / content scale** : le projet est en `stretch/mode="viewport"` +
+  `scale_mode="integer"` (project.godot) : rendu **640×360** mis à l'échelle en **entier**
+  avec letterbox. Conséquence directe : **aucun étirement ni coupure** du gameplay,
+  quels que soient le mode et la taille — c'est **déjà garanti** par le projet. On ne
+  touche donc **pas** au content scale. La « résolution » = **taille de la fenêtre**
+  (utile en mode fenêtré). Choix retenu : proposer les **multiples entiers de 640×360**
+  (1280×720, 1920×1080, 2560×1440, 3840×2160) **filtrés** à ceux qui tiennent dans
+  l'écran courant (`DisplayServer.ScreenGetSize`) → pixels les plus nets, letterbox
+  minimal. Godot 4 **n'énumère plus** les modes vidéo d'un écran (retiré depuis
+  Godot 3) : une liste curatée est la bonne approche pour ce jeu.
+- **VSync** : `DisplayServer.WindowSetVsyncMode(Enabled/Disabled)`, effet immédiat.
+  Pertinent (anti-tearing) et trivial → simple bascule **on/off**.
+- **Application immédiate** : `WindowSetMode` / `WindowSetSize` / `WindowSetVsyncMode`
+  s'appliquent **à chaud** → **aucun redémarrage requis**, rien à marquer « redémarrage ».
+- **Multi-écrans** : minimal — on applique sur l'écran courant
+  (`WindowGetCurrentScreen`) et on recentre ; **pas** de sélecteur d'écran (hors périmètre).
+
+### D.3 Périmètre retenu (strict)
+
+Uniquement : **Mode** (3 choix), **Résolution** (tailles fenêtrées = multiples entiers
+tenant dans l'écran), **VSync** (on/off). Rien d'autre (pas de FPS cap, luminosité,
+qualité de particules, sélecteur d'écran…). Le content scale reste géré par le projet.
+
+### Sources (ajout affichage)
+
+- `DisplayServer` — documentation Godot 4 (docs.godotengine.org, class_displayserver) :
+  `WindowSetMode`, `WindowMode` (Fullscreen borderless vs ExclusiveFullscreen
+  Windows-only), `WindowSetSize`, `ScreenGetSize`, `WindowSetVsyncMode`.
+- Forum Godot + issues #70166 / #105747 : bug de retour plein écran → fenêtré
+  (nécessité de redéfinir taille + position).
