@@ -79,7 +79,8 @@ public partial class GameState : Node
 		Instance = this;
 		Pv = PvMax;
 		ManaGlace = ManaGlaceMax;
-		ConfigurerActionsParDefaut();
+		// La configuration des actions d'entrée (défauts + remapping persistant) est
+		// désormais gérée par l'autoload Parametres (scripts/Core/Parametres.cs).
 	}
 
 	// Régénération du mana de glace : rien pendant DelaiRegenGlace après la
@@ -237,37 +238,4 @@ public partial class GameState : Node
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 	}
 
-	// Enregistre les actions d'entrée (mouvement, saut, glissade) par code,
-	// pour ne pas dépendre d'un mapping figé dans project.godot.
-	private static void ConfigurerActionsParDefaut()
-	{
-		// Déplacement
-		AjouterAction("move_left", Key.Left);
-		AjouterAction("move_right", Key.Right);
-		AjouterAction("jump", Key.Space);
-		AjouterAction("slide", Key.Shift);
-		AjouterAction("bas", Key.Down);
-
-		// Actions
-		AjouterAction("lancer", Key.D);
-		AjouterAction("manger", Key.W);
-		AjouterAction("pouvoir_chaleur", Key.A);
-		AjouterAction("pouvoir_glace", Key.S);
-		
-		// Interactions
-		AjouterAction("action", Key.Enter, Key.Space);
-		AjouterAction("menu", Key.Escape);
-	}
-
-	private static void AjouterAction(string nom, params Key[] touches)
-	{
-		if (InputMap.HasAction(nom))
-			return;
-
-		InputMap.AddAction(nom);
-		foreach (var touche in touches)
-		{
-			InputMap.ActionAddEvent(nom, new InputEventKey { PhysicalKeycode = touche });
-		}
-	}
 }
