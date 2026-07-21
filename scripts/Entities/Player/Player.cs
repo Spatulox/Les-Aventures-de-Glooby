@@ -409,9 +409,11 @@ public partial class Player : LivingEntity
 		Effets.FlashCouleur(_sprite, new Color(0.6f, 1f, 0.6f), 0.08f, 0.25f);
 	}
 
-	// Pouvoir de Chaleur : aura courte portée qui fait fondre les murs de
-	// glace fondable à proximité. Flash orange procédural, pas de nouvel
-	// asset d'effet visuel.
+	// Pouvoir de Chaleur : aura courte portée qui fait fondre les murs de glace
+	// fondable à proximité, ainsi que les entités sensibles au feu (bonhomme de
+	// neige...) — celles-ci passent par Degats.Infliger avec DamageSource.Fire,
+	// qui applique déjà les règles communes (invincibilité, PNJ amicaux).
+	// Flash orange procédural, pas de nouvel asset d'effet visuel.
 	private void UtiliserPouvoirChaleur()
 	{
 		if (GameState.Instance?.PouvoirChaleurActif != true)
@@ -425,13 +427,16 @@ public partial class Player : LivingEntity
 			Transform = new Transform2D(0, GlobalPosition + new Vector2(_directionRegard * 24f, 0)),
 			CollideWithBodies = true,
 			CollideWithAreas = false,
-			CollisionMask = Constantes.LayerTerrain,
+			CollisionMask = Constantes.LayerTerrain | Constantes.LayerPnj,
 		};
 
 		foreach (var resultat in espace.IntersectShape(param))
 		{
-			if (resultat["collider"].As<GodotObject>() is MurFondable mur)
+			var cible = resultat["collider"].As<GodotObject>();
+			if (cible is MurFondable mur)
 				mur.Melt();
+			else if (cible is Node noeud)
+				Degats.Infliger(noeud, DamageSource.Fire);
 		}
 
 		Effets.FlashCouleur(_sprite, new Color(1f, 0.7f, 0.3f), 0.1f, 0.3f);

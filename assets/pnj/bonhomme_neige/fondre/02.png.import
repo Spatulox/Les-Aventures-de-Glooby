@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfaf548w1gihx"
-path="res://.godot/imported/02.png-a759714fe333b13c04f86c5cc33a8ea5.ctex"
+path="res://.godot/imported/02.png-b650cf3c4de7fdf9b38767c4e77aa553.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pnj/bonhomme_neige/mort/02.png"
-dest_files=["res://.godot/imported/02.png-a759714fe333b13c04f86c5cc33a8ea5.ctex"]
+source_file="res://assets/pnj/bonhomme_neige/fondre/02.png"
+dest_files=["res://.godot/imported/02.png-b650cf3c4de7fdf9b38767c4e77aa553.ctex"]
 
 [params]
 
