@@ -2,9 +2,9 @@ using Godot;
 using System.Collections.Generic;
 
 // Écran Paramètres réutilisable, partagé par le menu principal et le menu pause.
-// Construit par code (comme MenuFabrique) et organisé en SECTIONS : seule « Touches »
-// a du contenu pour l'instant, les autres (Audio, Affichage, Accessibilité) sont des
-// emplacements réservés — le menu accueillera ces réglages plus tard sans réécriture.
+// Construit par code (comme MenuFabrique) et organisé en SECTIONS : « Touches »,
+// « Affichage » et « Audio » ont du contenu ; « Accessibilité » reste un emplacement
+// réservé — le menu accueillera ces réglages plus tard sans réécriture.
 //
 // La section Touches liste chaque action (regroupée par catégorie) avec sa liaison
 // clavier et sa liaison manette, chacune remappable : un clic arme la capture (overlay
@@ -97,7 +97,7 @@ public partial class EcranParametres : Control
 
 		AjouterOnglet(onglets, "Touches", actif: true);
 		AjouterOnglet(onglets, "Affichage", actif: true);
-		AjouterOnglet(onglets, "Audio", actif: false);
+		AjouterOnglet(onglets, "Audio", actif: true);
 		AjouterOnglet(onglets, "Accessibilité", actif: false);
 	}
 
@@ -119,7 +119,7 @@ public partial class EcranParametres : Control
 	{
 		_sections["Touches"] = ConstruireSectionTouches();
 		_sections["Affichage"] = ConstruireSectionAffichage();
-		_sections["Audio"] = ConstruireSectionAVenir("Réglages audio à venir.");
+		_sections["Audio"] = ConstruireSectionAudio();
 		_sections["Accessibilité"] = ConstruireSectionAVenir("Options d'accessibilité à venir.");
 
 		foreach (var section in _sections.Values)
@@ -299,6 +299,67 @@ public partial class EcranParametres : Control
 	// La résolution ne se règle qu'en mode fenêtré (en plein écran, la taille suit l'écran).
 	private void MettreAJourEtatResolution() =>
 		_optionResolution.Disabled = Parametres.Instance.ModeAffichageCourant != ModeAffichage.Fenetre;
+
+	// Section Audio : un curseur de volume par bus (général, musique, ambiance). Tous les
+	// changements sont immédiats et persistés par Parametres.
+	private Control ConstruireSectionAudio()
+	{
+		var marge = new MarginContainer();
+		foreach (var cote in new[] { "margin_left", "margin_right", "margin_top" })
+			marge.AddThemeConstantOverride(cote, 8);
+
+		var colonne = new VBoxContainer();
+		colonne.AddThemeConstantOverride("separation", 14);
+		marge.AddChild(colonne);
+
+		colonne.AddChild(LigneVolume("Volume général", Parametres.BusMaster));
+		colonne.AddChild(LigneVolume("Musique", Parametres.BusMusique));
+		colonne.AddChild(LigneVolume("Ambiance", Parametres.BusAmbiance));
+		return marge;
+	}
+
+	// Ligne « libellé … curseur + pourcentage » pour un bus audio. Le curseur et son
+	// pourcentage voyagent ensemble dans une boîte, que LigneReglage traite comme un
+	// contrôle unique (même gabarit que les listes déroulantes de la section Affichage).
+	private static HBoxContainer LigneVolume(string libelle, string bus)
+	{
+		var boite = new HBoxContainer();
+		boite.AddThemeConstantOverride("separation", 8);
+
+		float valeur = Parametres.Instance.VolumeCourant(bus);
+
+		var curseur = new HSlider
+		{
+			MinValue = 0,
+			MaxValue = 1,
+			Step = 0.01,
+			Value = valeur,
+			SizeFlagsHorizontal = SizeFlags.ExpandFill,
+			SizeFlagsVertical = SizeFlags.ShrinkCenter,
+		};
+		boite.AddChild(curseur);
+
+		// Largeur fixe : le pourcentage change de longueur (5 % → 100 %) et ferait
+		// autrement bouger le curseur pendant qu'on le glisse.
+		var pourcentage = new Label
+		{
+			Text = TextePourcentage(valeur),
+			HorizontalAlignment = HorizontalAlignment.Right,
+			SizeFlagsVertical = SizeFlags.ShrinkCenter,
+			CustomMinimumSize = new Vector2(48, 0),
+		};
+		boite.AddChild(pourcentage);
+
+		curseur.ValueChanged += valeurNouvelle =>
+		{
+			Parametres.Instance.DefinirVolume(bus, (float)valeurNouvelle);
+			pourcentage.Text = TextePourcentage((float)valeurNouvelle);
+		};
+
+		return LigneReglage(libelle, boite);
+	}
+
+	private static string TextePourcentage(float valeur) => $"{Mathf.RoundToInt(valeur * 100f)} %";
 
 	private static Control ConstruireSectionAVenir(string texte)
 	{

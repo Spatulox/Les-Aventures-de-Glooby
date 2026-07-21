@@ -2,14 +2,21 @@ using Godot;
 using System.Collections.Generic;
 
 // Autoload (singleton) : gestionnaire des paramètres du jeu — touches (remapping
-// clavier + manette) et affichage (mode fenêtré/plein écran, résolution, VSync). Au
-// démarrage il pose dans l'InputMap les liaisons par défaut du CatalogueActions, puis
-// écrase avec les personnalisations lues dans user://parametres.cfg, et applique
-// l'affichage. Reprend à GameState la responsabilité de configurer les entrées,
-// centralisée ici. Point d'entrée unique des réglages, extensible (audio…).
+// clavier + manette), affichage (mode fenêtré/plein écran, résolution, VSync) et audio
+// (volume des bus Master/Musique/Ambiance). Au démarrage il pose dans l'InputMap les
+// liaisons par défaut du CatalogueActions, puis écrase avec les personnalisations lues
+// dans user://parametres.cfg, et applique l'affichage puis l'audio. Reprend à GameState
+// la responsabilité de configurer les entrées, centralisée ici. Point d'entrée unique
+// des réglages, extensible (accessibilité…).
 public partial class Parametres : Node
 {
 	public static Parametres Instance { get; private set; }
+
+	// Noms des bus audio (default_bus_layout.tres). Centralisés ici pour que l'UI n'ait
+	// pas à répéter les chaînes littérales.
+	public const string BusMaster = "Master";
+	public const string BusMusique = "Musique";
+	public const string BusAmbiance = "Ambiance";
 
 	// Émis quand les liaisons d'une action changent (chaîne vide = tout a changé,
 	// ex. réinitialisation globale) : l'UI s'y abonne pour se resynchroniser.
@@ -23,9 +30,19 @@ public partial class Parametres : Node
 	private Vector2I _tailleFenetre = new(1280, 720);
 	private bool _vsync = true;
 
+	// Volumes audio par bus, en linéaire 0 → 1. Comme l'affichage, la mémoire fait foi :
+	// on les applique à l'AudioServer au démarrage et à chaque modification.
+	private float _volumeMaster = 1f;
+	private float _volumeMusique = 1f;
+	private float _volumeAmbiance = 1f;
+
 	public ModeAffichage ModeAffichageCourant => _modeAffichage;
 	public Vector2I TailleFenetreCourante => _tailleFenetre;
 	public bool VsyncActif => _vsync;
+
+	public float VolumeMasterCourant => _volumeMaster;
+	public float VolumeMusiqueCourant => _volumeMusique;
+	public float VolumeAmbianceCourant => _volumeAmbiance;
 
 	public override void _Ready()
 	{
@@ -33,6 +50,7 @@ public partial class Parametres : Node
 		AppliquerDefautsAuMap();
 		Charger();
 		AppliquerAffichage();
+		AppliquerAudio();
 	}
 
 	// (Ré)installe toutes les actions du catalogue dans l'InputMap avec leurs
@@ -71,12 +89,16 @@ public partial class Parametres : Node
 		_modeAffichage = donnees.Mode;
 		_tailleFenetre = donnees.TailleFenetre;
 		_vsync = donnees.Vsync;
+
+		_volumeMaster = donnees.VolumeMaster;
+		_volumeMusique = donnees.VolumeMusique;
+		_volumeAmbiance = donnees.VolumeAmbiance;
 		return true;
 	}
 
 	// Écrit sur disque TOUTES les sections : instantané de l'InputMap (touches) + état
-	// d'affichage courant. Écrire les deux à chaque fois évite qu'un remap de touche
-	// n'efface la section [affichage] (et inversement).
+	// d'affichage + volumes audio. Tout réécrire à chaque fois évite qu'un remap de touche
+	// n'efface la section [affichage] ou [audio] (et inversement).
 	public void Sauver()
 	{
 		var donnees = new DonneesParametres
@@ -84,6 +106,9 @@ public partial class Parametres : Node
 			Mode = _modeAffichage,
 			TailleFenetre = _tailleFenetre,
 			Vsync = _vsync,
+			VolumeMaster = _volumeMaster,
+			VolumeMusique = _volumeMusique,
+			VolumeAmbiance = _volumeAmbiance,
 		};
 		foreach (var action in CatalogueActions.Toutes)
 			donnees.Touches[action.Nom] = InputMap.ActionGetEvents(action.Nom);
@@ -210,6 +235,57 @@ public partial class Parametres : Node
 		_vsync = actif;
 		DefinirVsyncMoteur(actif);
 		Sauver();
+	}
+
+	// --- Audio ---
+
+	// Applique les trois volumes mémorisés aux bus. Appelé au démarrage.
+	public void AppliquerAudio()
+	{
+		AppliquerVolumeBus(BusMaster, _volumeMaster);
+		AppliquerVolumeBus(BusMusique, _volumeMusique);
+		AppliquerVolumeBus(BusAmbiance, _volumeAmbiance);
+	}
+
+	// Volume courant du bus demandé (1 si le nom est inconnu) : pour initialiser l'UI.
+	public float VolumeCourant(string bus) => bus switch
+	{
+		BusMusique => _volumeMusique,
+		BusAmbiance => _volumeAmbiance,
+		BusMaster => _volumeMaster,
+		_ => 1f,
+	};
+
+	// Change le volume d'un bus (effet immédiat) et persiste. La valeur est bornée à
+	// [0,1] : l'appelant (slider) n'a pas à s'en soucier.
+	public void DefinirVolume(string bus, float valeur)
+	{
+		valeur = Mathf.Clamp(valeur, 0f, 1f);
+		switch (bus)
+		{
+			case BusMaster: _volumeMaster = valeur; break;
+			case BusMusique: _volumeMusique = valeur; break;
+			case BusAmbiance: _volumeAmbiance = valeur; break;
+			default: return;
+		}
+
+		AppliquerVolumeBus(bus, valeur);
+		Sauver();
+	}
+
+	// Pose le volume sur le bus de l'AudioServer. Le volume utilisateur vit sur le BUS,
+	// alors que GestionnaireAudio tweene le volume_db de ses LECTEURS pour ses fondus :
+	// les deux se composent sans se marcher dessus. À 0, LinearToDb vaut -inf : on coupe
+	// explicitement le bus plutôt que de compter sur ce cas limite. Un bus absent
+	// (renommé dans le layout) est ignoré silencieusement plutôt que de planter.
+	private static void AppliquerVolumeBus(string nom, float valeur)
+	{
+		int index = AudioServer.GetBusIndex(nom);
+		if (index < 0)
+			return;
+
+		AudioServer.SetBusVolumeDb(index, Mathf.LinearToDb(valeur));
+		AudioServer.SetBusMute(index, valeur <= 0f);
 	}
 
 	// Résolutions proposées = multiples entiers de la résolution de base du jeu
