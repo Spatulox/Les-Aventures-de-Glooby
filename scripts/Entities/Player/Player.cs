@@ -27,11 +27,14 @@ public partial class Player : LivingEntity
 	// Plafond de sécurité : une très longue descente ne doit pas rendre le
 	// contrôle au joueur au bout de plusieurs secondes de glissade subie.
 	[Export] public float DureeElanPenteMax = 0.5f;
-	// Au-delà de cet angle de sol, la pente ne se marche plus : le joueur y bascule
-	// automatiquement en glissade et la dévale (voir GererPenteRaide). Réglé entre
-	// les deux pentes du jeu — PenteBanquiseDouce* ~21,6° (praticable) et
-	// PenteBanquiseForte* ~44,8° (glissade obligatoire).
+	// Second garde-fou de GererPenteRaide (le déclencheur, lui, est le collider) :
+	// réglé entre les deux pentes du jeu — PenteBanquiseDouce* ~21,6° (praticable)
+	// et PenteBanquiseForte* ~44,8° (glissade obligatoire).
 	[Export] public float AnglePenteMaxDegres = 35f;
+	// Durée pendant laquelle les pieds doivent rester sur une pente forte avant que
+	// la glissade s'enclenche. Un contact de coin (jointure de dalles) ne dure qu'une
+	// frame : ce délai l'élimine sans être perceptible sur une vraie pente.
+	[Export] public float DelaiConfirmationPenteRaide = 0.06f;
 	// Inclinaison du sprite sur la pente pendant la glissade : vitesse de
 	// rappel (rad/s) vers l'angle du sol, puis vers 0 une fois la glissade finie.
 	[Export] public float VitesseInclinaison = 12f;
@@ -83,6 +86,7 @@ public partial class Player : LivingEntity
 	private float _dureeRelever = 0.33f;
 	private float _distancePente;
 	private bool _surPenteDescendante;
+	private float _timerPenteRaide;
 	private bool _enLancer;
 	private bool _enDegats;
 	private int _directionRegard = 1;
@@ -111,6 +115,15 @@ public partial class Player : LivingEntity
 		// marge il dévale en petits sauts et perd EstAuSol. 8px couvre large,
 		// jusqu'aux pentes fortes. Voir DECISIONS.md.
 		FloorSnapLength = 8f;
+
+		// Le sol est un pavage de segments SolBanquise distincts, aux dessus coplanaires
+		// et largement chevauchants. Le bas arrondi de la capsule accroche le COIN
+		// haut-gauche du segment suivant et en reçoit une normale à ~46-56°, classée
+		// « mur » (floor_max_angle = 45°) : avec floor_block_on_wall, move_and_slide
+		// annulait alors tout le déplacement horizontal — le joueur se bloquait net à
+		// chaque jointure. Au sol on préfère glisser le long de ces faux murs ; les vrais
+		// murs (MurGauche, MurSolide) restent infranchissables, ils repoussent toujours.
+		FloorBlockOnWall = false;
 
 		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		MasquerApercuEditeur();
@@ -170,7 +183,7 @@ public partial class Player : LivingEntity
 
 		GererGlaceFragile(auSol, dt);
 		bool vientDeTraverser = GererTraverseePlateforme(auSol, dt);
-		GererPenteRaide(auSol);
+		GererPenteRaide(auSol, dt);
 
 		if (_enGlissade)
 		{
@@ -493,15 +506,29 @@ public partial class Player : LivingEntity
 		return Mathf.Abs(normale.X) > 0.05f && Mathf.Sign(normale.X) == _directionRegard;
 	}
 
-	// Une pente au-delà d'AnglePenteMaxDegres (les PenteBanquiseForte*, ~45°) ne se
-	// marche pas : ni idle, ni marche, ni course, ni montée. Dès que le joueur y pose
-	// les pieds il bascule en glissade vers le bas — la seule façon de la parcourir.
-	// Le cooldown de glissade est ignoré (sinon on resterait planté sur la pente), et
-	// l'élan de pente (GererElanPente) prolonge la glissade jusqu'en bas puis au-delà.
-	// Les pentes douces (~22°) restent parcourables normalement.
-	private void GererPenteRaide(bool auSol)
+	// Une PenteBanquise forte (~45°) ne se marche pas : ni idle, ni marche, ni course,
+	// ni montée. Dès que le joueur y pose les pieds il bascule en glissade vers le bas
+	// — la seule façon de la parcourir. Le cooldown de glissade est ignoré (sinon on
+	// resterait planté sur la pente), et l'élan de pente (GererElanPente) prolonge la
+	// glissade jusqu'en bas puis au-delà. Les pentes douces (~22°) restent praticables.
+	//
+	// Le déclencheur est le COLLIDER sous les pieds, pas l'angle du sol : le
+	// floor_max_angle du joueur vaut 45°, donc toute normale entre AnglePenteMaxDegres
+	// et 45° serait classée « pente raide » — y compris une normale de coin d'une seule
+	// frame produite par une micro-marche à la jointure de deux dalles. Ça déclenchait
+	// des glissades parasites en terrain plat, dans une direction subie par le joueur.
+	// L'angle ne sert plus que de second garde-fou, et la condition doit tenir
+	// DelaiConfirmationPenteRaide pour éliminer les contacts fugaces.
+	private void GererPenteRaide(bool auSol, float dt)
 	{
-		if (!auSol || GetFloorAngle() < Mathf.DegToRad(AnglePenteMaxDegres))
+		if (!auSol || !EstSurPenteForte() || GetFloorAngle() < Mathf.DegToRad(AnglePenteMaxDegres))
+		{
+			_timerPenteRaide = 0f;
+			return;
+		}
+
+		_timerPenteRaide += dt;
+		if (_timerPenteRaide < DelaiConfirmationPenteRaide)
 			return;
 
 		// La normale d'une pente penche du côté du bas : son X donne la descente.
@@ -515,6 +542,26 @@ public partial class Player : LivingEntity
 
 		if (!_enGlissade)
 			DemarrerGlissade();
+	}
+
+	// Rayon court vers le bas, depuis le centre du joueur jusqu'un peu sous ses pieds
+	// (bas des hitboxes à y = 22.2) : seule une vraie PenteBanquise de type Forte* peut
+	// imposer la glissade. Aucun coin de dalle ne peut plus l'armer, quelle que soit la
+	// normale de contact. Un rayon plutôt qu'une requête ponctuelle : le point sous les
+	// pieds tomberait dans le joueur lui-même, pas dans le sol.
+	private bool EstSurPenteForte()
+	{
+		var espace = GetWorld2D().DirectSpaceState;
+		var param = PhysicsRayQueryParameters2D.Create(
+			GlobalPosition,
+			GlobalPosition + new Vector2(0, 30f),
+			Constantes.LayerTerrain);
+		param.Exclude = new Godot.Collections.Array<Rid> { GetRid() };
+
+		var resultat = espace.IntersectRay(param);
+		return resultat.ContainsKey("collider")
+			&& resultat["collider"].As<GodotObject>() is PenteBanquise pente
+			&& pente.EstForte;
 	}
 
 	private void Lancer()
