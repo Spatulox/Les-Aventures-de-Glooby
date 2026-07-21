@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/Entities/Ennemis/BonhommeDeNeige.cs" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/BouleDeNeige.tscn" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectCorps"]
+size = Vector2(38, 58)
+
+[node name="BonhommeDeNeige" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 18
+script = ExtResource("1")
+PvMax = 3
+SceneBoule = ExtResource("2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectCorps")
