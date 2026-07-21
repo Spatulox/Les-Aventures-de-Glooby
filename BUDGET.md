@@ -23,3 +23,6 @@ Solde compte au départ de la mission : 1812 restantes / 2000 (hors plafond miss
 | 16 | (hors jalon, demande directe) | 5 vignettes concept ennemis (ours/ver/morse + bonhomme malicieux/grognon), choix user | 5 | 102 |
 | 17 | (hors jalon, demande directe) | Ours polaire : 6 animations (idle/marche/detection/charge/etourdi/mort) via animate_object — frames déposées dans TES dossiers (code Fonceur non modifié) | ~14 | 116 |
 | 18 | (hors jalon, demande directe) | Bonhomme malicieux : 4 animations (idle/armer/lancer/mort) + fichiers neufs BonhommeDeNeige/BouleDeNeige (impact procédural) | ~13 | 129 |
+| 19 | (hors jalon, demande directe) | Murs de grotte empilables : 5 gén. (3 centres colonnes + couronnement + base) puis 3 centres régénérés « texture pleine » — traités en tuilage vertical, 2 variantes dérivées du meilleur | 8 | 137 |
+| 20 | (hors jalon, demande directe) | Sol de grotte décoré : 3 centres (dessous stalactites/cristaux, densité variable) + 2 fins à falaise cassée — surface alignée, bords greffés | 5 | 142 |
+| 21 | (hors jalon, demande directe) | Obstacles : 2 tas de neige + 2 rochers enneigés (frames de destruction procédurales, 0 gén.) | 4 | 146 |
