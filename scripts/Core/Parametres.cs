@@ -199,7 +199,7 @@ public partial class Parametres : Node
 		if (_modeAffichage == ModeAffichage.Fenetre)
 		{
 			DisplayServer.WindowSetSize(taille);
-			CentrerFenetre();
+			CentrerFenetre(taille);
 		}
 		Sauver();
 	}
@@ -246,7 +246,7 @@ public partial class Parametres : Node
 			case ModeAffichage.Fenetre:
 				DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
 				DisplayServer.WindowSetSize(_tailleFenetre);
-				CentrerFenetre();
+				CentrerFenetre(_tailleFenetre);
 				break;
 			case ModeAffichage.PleinEcran:
 				DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
@@ -260,14 +260,19 @@ public partial class Parametres : Node
 	private static void DefinirVsyncMoteur(bool actif) =>
 		DisplayServer.WindowSetVsyncMode(actif ? DisplayServer.VSyncMode.Enabled : DisplayServer.VSyncMode.Disabled);
 
-	// Recentre la fenêtre sur l'écran courant (multi-écran géré : on part de l'origine
-	// de cet écran).
-	private static void CentrerFenetre()
+	// Recentre la fenêtre de taille donnée sur l'écran courant (multi-écran géré : on
+	// part de l'origine de cet écran). On calcule à partir de la taille cible plutôt que
+	// de WindowGetSize(), qui peut être encore périmée juste après un redimensionnement.
+	// Sous Wayland, une application ne peut pas positionner sa propre fenêtre (c'est le
+	// compositeur qui décide) : on n'essaie pas, ça éviterait un appel sans effet.
+	private static void CentrerFenetre(Vector2I tailleFenetre)
 	{
+		if (DisplayServer.GetName() == "Wayland")
+			return;
+
 		int ecran = DisplayServer.WindowGetCurrentScreen();
 		var origine = DisplayServer.ScreenGetPosition(ecran);
 		var tailleEcran = DisplayServer.ScreenGetSize(ecran);
-		var tailleFenetre = DisplayServer.WindowGetSize();
 		DisplayServer.WindowSetPosition(origine + (tailleEcran - tailleFenetre) / 2);
 	}
 
