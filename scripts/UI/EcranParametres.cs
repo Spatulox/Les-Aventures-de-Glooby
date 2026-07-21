@@ -133,7 +133,12 @@ public partial class EcranParametres : Control
 	// Section Touches : liste défilante des actions regroupées par catégorie.
 	private Control ConstruireSectionTouches()
 	{
-		var defilement = new ScrollContainer();
+		// Défilement vertical seulement : les lignes s'ajustent à la largeur de l'écran
+		// (jamais de scroll horizontal). La liste suit la largeur du conteneur.
+		var defilement = new ScrollContainer
+		{
+			HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled,
+		};
 		var liste = new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
 		liste.AddThemeConstantOverride("separation", 4);
 		defilement.AddChild(liste);
@@ -161,10 +166,15 @@ public partial class EcranParametres : Control
 		var ligne = new HBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
 		ligne.AddThemeConstantOverride("separation", 8);
 
+		// Le libellé prend l'espace restant et se replie sur plusieurs lignes si besoin
+		// (autowrap) au lieu d'imposer sa largeur et de forcer un défilement horizontal.
 		var libelle = new Label
 		{
 			Text = action.Libelle,
 			SizeFlagsHorizontal = SizeFlags.ExpandFill,
+			SizeFlagsVertical = SizeFlags.ShrinkCenter,
+			AutowrapMode = TextServer.AutowrapMode.WordSmart,
+			CustomMinimumSize = new Vector2(0, 32),
 		};
 		ligne.AddChild(libelle);
 
@@ -188,7 +198,8 @@ public partial class EcranParametres : Control
 		var bouton = new Button
 		{
 			Text = TexteLiaison(clavier ? p.LiaisonClavier(action) : p.LiaisonManette(action)),
-			CustomMinimumSize = new Vector2(160, 32),
+			CustomMinimumSize = new Vector2(124, 32),
+			ClipText = true,
 		};
 		bouton.Pressed += () => DemarrerCapture(action, clavier);
 		return bouton;
