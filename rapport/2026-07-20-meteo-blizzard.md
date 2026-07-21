@@ -67,3 +67,45 @@ Pour tester vite, monter `MeteoZone.ChanceBlizzard` à `1f` (et le remettre à
 
 Les textures de flocons sont des **carrés unis placeholder** — à remplacer par de
 vrais flocons pixel-art.
+
+## Suite (2026-07-21) : vrais flocons + suppression de `NeigeQuiTombe`
+
+Le placeholder ci-dessus est levé, et le doublon de système supprimé.
+
+- **Textures remplacées.** Les 3 carrés unis (`flocon_clair/moyen/sombre`, 2 à
+  4 px) laissent place aux flocons procéduraux détaillés récupérés de
+  `NeigeQuiTombe` (symétrie 6 branches), déplacés de `assets/props/flocons/`
+  vers `assets/meteo/` : `flocon_grain` (10 px) au fond, `flocon_simple`
+  (22 px) au milieu, `flocon_ornemente` (30 px) au premier plan — la hiérarchie
+  de profondeur déjà en place est conservée. Les anciens PNG sont supprimés.
+- **Variante tirée au sort par particule.** Une texture par couche rendait le
+  premier plan toujours identique (que des `flocon_ornemente`). Comme un
+  `GPUParticles2D` n'accepte qu'UNE texture, les 3 flocons sont fusionnés dans
+  un atlas `assets/meteo/flocons_atlas.png` (3 cases de 30×30, chaque flocon
+  centré dans sa case pour garder sa taille propre). Les 3 couches partagent un
+  même `CanvasItemMaterial` (`particles_animation`, `h_frames = 3`,
+  `loop = false`) et tirent `anim_offset` entre 0 et 1 : **chaque flocon choisit
+  sa case au hasard** et la garde (`anim_speed` reste à 0). Les 3 couches
+  pointent donc toutes sur le même atlas — elles ne se distinguent plus que par
+  la profondeur (vitesse, gravité, échelle, densité).
+- **Échelles réajustées** dans les 3 `ParticleProcessMaterial`. Les cases de
+  l'atlas font 30 px, donc l'échelle n'exprime plus que la profondeur (avant,
+  elle compensait aussi la taille de chaque texture) : fond `0.28→0.36`,
+  milieu `0.38→0.48`, avant `0.5→0.62`. La taille écran varie en plus selon la
+  case tirée (contenu de 10 à 30 px), ce qui donne une variété naturelle : de
+  ≈ 3 px pour un grain au fond à ≈ 18 px pour un flocon ornementé au premier
+  plan. Rien d'autre n'a bougé (`amount`, `lifetime`, `gravity`, voile).
+- **`NeigeQuiTombe` supprimé** (`scripts/decors/NeigeQuiTombe.cs` + `.uid`,
+  `scenes/effets/NeigeQuiTombe.tscn`, dossier `scenes/effets/` devenu vide) :
+  effet de neige d'ambiance permanent construit en code, **jamais instancié par
+  aucune scène**. Seules ses textures valaient d'être conservées. Il n'y a donc
+  plus qu'un seul système de neige, celui décrit ci-dessus.
+- `GestionnaireMeteo.cs` **n'a pas été modifié** : il découvre ses émetteurs par
+  parcours des enfants de `Blizzard`, le changement de textures lui est
+  transparent — le point de conception noté plus haut a payé.
+- `BUDGET.md` ligne 15 mise à jour (les 3 flocons servent désormais le
+  blizzard). Aucun budget consommé.
+
+Vérification : `grep` sans aucune référence résiduelle, compilation propre,
+`--quit-after 200` sans erreur liée. Reste le test manuel de lisibilité en jeu
+(voir section précédente) — noter que `ChanceBlizzard` vaut aujourd'hui `0.2f`.

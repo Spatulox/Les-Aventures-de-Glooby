@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b82r5tp62p50y"
-path="res://.godot/imported/flocon_sombre.png-61c11ee23b76f75cc16675cea5c147e1.ctex"
+uid="uid://dmvnl8q761pfw"
+path="res://.godot/imported/flocon_grain.png-e21ab33b11dabfc89a993e88899976cf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/meteo/flocon_sombre.png"
-dest_files=["res://.godot/imported/flocon_sombre.png-61c11ee23b76f75cc16675cea5c147e1.ctex"]
+source_file="res://assets/meteo/flocon_grain.png"
+dest_files=["res://.godot/imported/flocon_grain.png-e21ab33b11dabfc89a993e88899976cf.ctex"]
 
 [params]
 

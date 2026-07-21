@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lla3s8mubo0"
-path="res://.godot/imported/flocon_simple.png-eb4408668a82de1250fbefea43f3d1bf.ctex"
+uid="uid://crw64724wux2r"
+path="res://.godot/imported/flocon_ornemente.png-31abeb66d26a861aac6774e4ca897c69.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/props/flocons/flocon_simple.png"
-dest_files=["res://.godot/imported/flocon_simple.png-eb4408668a82de1250fbefea43f3d1bf.ctex"]
+source_file="res://assets/meteo/flocon_ornemente.png"
+dest_files=["res://.godot/imported/flocon_ornemente.png-31abeb66d26a861aac6774e4ca897c69.ctex"]
 
 [params]
 

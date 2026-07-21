@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/SolBanquiseEmboutDroit.tscn" id="20_1vuit"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/BonhommeDeNeige.tscn" id="bonhomme"]
 [ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss_cerf.tscn" id="boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="boss_hud"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
@@ -144,11 +145,13 @@ position = Vector2(1080, 284)
 [node name="FleurGivre" parent="Village/Decor" unique_id=643500453 instance=ExtResource("fleur")]
 position = Vector2(360, 284)
 
-[node name="Pingouin" parent="Village/Decor" unique_id=700000001 instance=ExtResource("pingouin")]
+[node name="Pnj" type="Node2D" parent="Village" unique_id=700000020]
+
+[node name="Pingouin" parent="Village/Pnj" unique_id=700000001 instance=ExtResource("pingouin")]
 position = Vector2(250, 272)
 Lignes = PackedStringArray("Oh ! Salut Glooby !", "J\'adore ton Pantalon !")
 
-[node name="Pingouin2" parent="Village/Decor" unique_id=700000002 instance=ExtResource("pingouin")]
+[node name="Pingouin2" parent="Village/Pnj" unique_id=700000002 instance=ExtResource("pingouin")]
 position = Vector2(721, 272)
 Lignes = PackedStringArray("Huummff")
 
@@ -262,13 +265,6 @@ position = Vector2(3600, 252)
 [node name="Rocher3" parent="Banquise/Decor" unique_id=401579510 instance=ExtResource("rocher")]
 position = Vector2(4900, 252)
 
-[node name="LutinNoel" parent="Banquise/Decor" unique_id=700000003 instance=ExtResource("lutin")]
-position = Vector2(3100, 272)
-Lignes = PackedStringArray("Hihi ! Un lutin du Pere Noel, perdu dans la grotte...", "Le Boss Cerf garde la sortie. Bonne chance, Glooby !")
-
-[node name="LutinNoel2" parent="Banquise/Decor" unique_id=700000004 instance=ExtResource("lutin")]
-position = Vector2(4600, 272)
-
 [node name="ColonneGlace1" parent="Banquise/Decor" unique_id=1778159670 instance=ExtResource("g_colonne")]
 position = Vector2(2950, 254)
 
@@ -343,6 +339,15 @@ position = Vector2(3650, 110)
 
 [node name="Fissure2" parent="Banquise/Decor" unique_id=1939018732 instance=ExtResource("g_fissure")]
 position = Vector2(4850, 110)
+
+[node name="Pnj" type="Node2D" parent="Banquise" unique_id=700000021]
+
+[node name="LutinNoel" parent="Banquise/Pnj" unique_id=700000003 instance=ExtResource("lutin")]
+position = Vector2(3100, 272)
+Lignes = PackedStringArray("Hihi ! Un lutin du Pere Noel, perdu dans la grotte...", "Le Boss Cerf garde la sortie. Bonne chance, Glooby !")
+
+[node name="LutinNoel2" parent="Banquise/Pnj" unique_id=700000004 instance=ExtResource("lutin")]
+position = Vector2(4600, 272)
 
 [node name="Interactifs" type="Node2D" parent="Banquise" unique_id=1713257003]
 
@@ -620,6 +625,11 @@ position = Vector2(2620, 480)
 
 [node name="PouvoirChaleur" parent="Grotte/Interactifs" unique_id=1494707600 instance=ExtResource("pouvoir")]
 position = Vector2(2500, 805)
+
+[node name="Pnj" type="Node2D" parent="Grotte" unique_id=700000022]
+
+[node name="BonhommeDeNeige" parent="Grotte/Pnj" unique_id=700000023 instance=ExtResource("bonhomme")]
+position = Vector2(2350, 795)
 
 [node name="Joueur" parent="." unique_id=1975658094 instance=ExtResource("player")]
 position = Vector2(183.26, 272.805)
