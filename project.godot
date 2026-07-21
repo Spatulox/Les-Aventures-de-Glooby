@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Parametres="*res://scripts/Core/Parametres.cs"
 GameState="*res://scripts/Core/GameState.cs"
 Hud="*res://scenes/ui/hud.tscn"
 
