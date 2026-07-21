@@ -12,6 +12,7 @@ public abstract partial class Boss : LivingEntity
 	public override void _Ready()
 	{
 		Sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		AppliquerCollisionsPnj();
 		MasquerApercuEditeur();
 		Sprite.SpriteFrames = ConstruireAnimations();
 		Pv = PvMax;

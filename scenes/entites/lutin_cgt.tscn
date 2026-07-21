@@ -17,7 +17,7 @@ size = Vector2(72, 80)
 
 [node name="LutinCgt" type="CharacterBody2D" unique_id=1187403218]
 collision_layer = 4
-collision_mask = 18
+collision_mask = 17
 script = ExtResource("1")
 Lignes = PackedStringArray("On lâche rien. Même pas les jouets.")
 AuPassage = true
@@ -39,6 +39,8 @@ vertical_alignment = 1
 autowrap_mode = 2
 
 [node name="DeclencheurDialogue" type="Area2D" parent="." unique_id=1761683833]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue" unique_id=1104909488]

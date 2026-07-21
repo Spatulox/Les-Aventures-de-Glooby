@@ -10,12 +10,31 @@ using Godot;
 //    panneau ne porte que son contenu et délègue toute l'interaction à un
 //    DeclencheurDialogue enfant (bulle au-dessus, défilement des répliques).
 // La variante Droite réutilise le sprite de la flèche gauche en miroir.
+// Le script est [Tool] : changer Type ou Texte dans l'inspecteur applique
+// aussitôt la bonne texture et la bonne étiquette, si bien que monde.tscn
+// montre le panneau tel qu'il sera en jeu (aperçu dans l'éditeur).
+[Tool]
 public partial class PanneauBois : Node2D, Talkative
 {
 	public enum TypePanneau { Poteau, Accroche, FlecheGauche, FlecheDroite }
 
-	[Export] public TypePanneau Type = TypePanneau.Poteau;
-	[Export(PropertyHint.MultilineText)] public string Texte = "";
+	private TypePanneau _type = TypePanneau.Poteau;
+	private string _texte = "";
+
+	[Export]
+	public TypePanneau Type
+	{
+		get => _type;
+		set { _type = value; AppliquerApparence(); }
+	}
+
+	[Export(PropertyHint.MultilineText)]
+	public string Texte
+	{
+		get => _texte;
+		set { _texte = value; AppliquerApparence(); }
+	}
+
 	[Export] public bool AfficherSeulementProche = false;
 
 	// --- Volet « bavard » (Talkative) : répliques affichées dans la bulle externe ---
@@ -56,9 +75,16 @@ public partial class PanneauBois : Node2D, Talkative
 
 	public bool TexteVisible => _etiquette != null && _etiquette.Visible;
 
-	public override void _Ready()
+	// Applique la texture du Type choisi et repositionne l'étiquette sur la zone
+	// d'écriture correspondante. Appelée au _Ready comme à chaque changement
+	// d'export (donc aussi dans l'éditeur, le script étant [Tool]).
+	private void AppliquerApparence()
 	{
-		var config = Configs[Type];
+		// Les setters d'export tournent avant que les enfants existent : on attend.
+		if (!IsNodeReady())
+			return;
+
+		var config = Configs[_type];
 
 		var sprite = GetNode<Sprite2D>("Sprite2D");
 		sprite.Texture = GD.Load<Texture2D>(config.Texture);
@@ -66,9 +92,18 @@ public partial class PanneauBois : Node2D, Talkative
 		sprite.FlipH = config.Miroir;
 
 		_etiquette = GetNode<Label>("Label");
-		_etiquette.Text = Texte;
+		_etiquette.Text = _texte;
 		_etiquette.Position = config.ZoneEcriture;
 		_etiquette.Size = config.TailleZone;
+	}
+
+	public override void _Ready()
+	{
+		AppliquerApparence();
+
+		// L'éditeur n'a pas de joueur : pas de détection de proximité en aperçu.
+		if (Engine.IsEditorHint())
+			return;
 
 		var zone = GetNode<Area2D>("ZoneDetection");
 		if (AfficherSeulementProche)

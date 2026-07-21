@@ -6,24 +6,42 @@ public static class Constantes
 	// Taille d'une tuile en pixels (grille des feuilles PixelLab 32x32).
 	public const int TailleTuile = 32;
 
-	// Layer physique dédié aux plateformes traversables (one-way). Séparé du
-	// layer 1 (terrain/décor normal) pour pouvoir le retirer temporairement
-	// du collision_mask du joueur pendant une traversée, sans toucher au
-	// reste des collisions.
-	public const uint LayerPlateformesTraversables = 1 << 4; // layer 5 dans l'éditeur
+	// Layers physiques : une catégorie par layer, sans recouvrement. C'est ce qui
+	// rend les règles lisibles — auparavant le layer 1 signifiait terrain ET
+	// joueur, ce qui obligeait à redéclarer tout le terrain sur un second layer
+	// pour que les PNJ puissent le masquer sans se cogner au joueur.
+	public const uint LayerTerrain = 1 << 0; // layer 1 dans l'éditeur
+	public const uint LayerJoueur = 1 << 1;  // layer 2
+	public const uint LayerPnj = 1 << 2;     // layer 3
 
-	// Le layer 1 est ambigu : le terrain ET le joueur s'y trouvent (le joueur n'a
-	// pas de collision_layer explicite, donc il hérite du défaut). Un PNJ qui
-	// masquerait le layer 1 pour tenir sur le sol se cognerait donc aussi au
-	// joueur. Ce layer 2 est le sol vu par les PNJ : tout terrain plein s'y
-	// déclare EN PLUS du layer 1, et les PNJ ne masquent que celui-ci.
-	// Conséquence voulue : le joueur (layer 1 seul) leur reste invisible.
-	// Ajouté au layer 1 plutôt que substitué → un terrain qu'on oublierait de
-	// marquer resterait solide pour le joueur (la panne est côté PNJ, pas côté
-	// joueur, ce qui est le sens le moins grave).
-	public const uint LayerSolPnj = 1 << 1; // layer 2 dans l'éditeur
+	// Plateformes traversables (one-way), sur leur propre layer pour pouvoir le
+	// retirer temporairement du masque du joueur pendant une traversée, sans
+	// toucher au reste des collisions.
+	public const uint LayerPlateformesTraversables = 1 << 4; // layer 5
 
-	// Ce qu'un PNJ doit masquer pour marcher : le sol plein + les plateformes
-	// traversables. Volontairement sans le layer 1, pour ne pas heurter le joueur.
-	public const uint MasqueSolPnj = LayerSolPnj | LayerPlateformesTraversables; // 18
+	// Ce que masque un corps qui marche, joueur comme PNJ : le terrain et les
+	// plateformes traversables, rien d'autre. Les layers joueur et PNJ ne sont
+	// masqués par aucun corps, donc aucune collision joueur↔PNJ ni PNJ↔PNJ
+	// n'est possible — l'invariant tient par construction, pas par réglage.
+	public const uint MasqueMarcheur = LayerTerrain | LayerPlateformesTraversables; // 17
+
+	// Ce que masque un projectile : le terrain (pour éclater) plus le joueur et
+	// les PNJ (pour blesser) — la même scène est tirée par le joueur et par les
+	// ennemis, le tireur étant filtré par Projectile.Initialiser.
+	public const uint MasqueProjectile = LayerTerrain | LayerJoueur | LayerPnj; // 7
+
+	// Strates de rendu (z_index), de l'arrière vers l'avant. Les valeurs
+	// négatives décrivent l'existant déjà posé dans les .tscn ; elles sont
+	// listées ici pour qu'on puisse lire l'empilement d'un coup d'œil.
+	public const int ZFond = -100;    // ciels fixes : FondBanquise / FondGrotte / FondBossCerf
+	public const int ZDecor = -1;     // props de décor (Rocher, ColonneGlace, …)
+	public const int ZPlanDeJeu = 0;  // sol, plateformes, PNJ, projectiles
+
+	// Le joueur est volontairement une strate au-dessus du plan de jeu. À z égal,
+	// Godot dessine dans l'ordre de l'arbre : tout ce qui est instancié en cours
+	// de partie (plateformes de glace posées par le pouvoir, futurs spawns)
+	// arrive en fin d'arbre, donc après le joueur, et le recouvrirait.
+	public const int ZJoueur = 1;
+
+	public const int ZDialogue = 100; // bulles de dialogue, au-dessus de tout le reste
 }

@@ -13,7 +13,7 @@ size = Vector2(72, 80)
 
 [node name="LutinNoel" type="CharacterBody2D" unique_id=276249539]
 collision_layer = 4
-collision_mask = 18
+collision_mask = 17
 script = ExtResource("1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1966985840]
@@ -26,6 +26,8 @@ scale = Vector2(1.7999997, 2.6000001)
 shape = SubResource("CapsuleShape2D_1")
 
 [node name="DeclencheurDialogue" type="Area2D" parent="." unique_id=54451740]
+collision_layer = 0
+collision_mask = 2
 script = ExtResource("3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue" unique_id=1672011972]

@@ -38,6 +38,7 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ta
 	public override void _Ready()
 	{
 		Sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		AppliquerCollisionsPnj();
 		MasquerApercuEditeur();
 		Pv = PvMax;
 		AddToGroup("pnj");

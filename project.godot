@@ -17,8 +17,10 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Parametres="*res://scripts/Core/Parametres.cs"
 GameState="*res://scripts/Core/GameState.cs"
 Hud="*res://scenes/ui/hud.tscn"
+GestionnaireAudio="*res://scripts/Core/GestionnaireAudio.cs"
 
 [display]
 
@@ -32,6 +34,13 @@ window/stretch/scale_mode="integer"
 [dotnet]
 
 project/assembly_name="Les Aventures de Glooby"
+
+[layer_names]
+
+2d_physics/layer_1="Terrain"
+2d_physics/layer_2="Joueur"
+2d_physics/layer_3="PNJ"
+2d_physics/layer_5="Plateformes traversables"
 
 [physics]
 

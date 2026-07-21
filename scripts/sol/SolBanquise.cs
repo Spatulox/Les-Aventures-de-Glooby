@@ -11,18 +11,15 @@ using Godot;
 // script ne réapplique plus rien au runtime, sinon régler la collision dans
 // l'éditeur ne servirait à rien (elle serait écrasée au lancement, et joueur
 // comme PNJ se poseraient à une hauteur qui ne correspond pas au visuel).
-// Surface de marche : y = -29 en local, bas de la collision à y = 62.
+// Surface de marche : y = -46 en local — c'est le dessus de neige réellement dessiné
+// dans sol_centre_*.png, la collision est calée dessus. Toutes les
+// pièces de sol (embouts, pentes) doivent partager cette hauteur : un écart, même
+// de quelques pixels, crée une micro-marche à la jointure — donc des normales de
+// coin parasites que le joueur interprète comme une pente (voir Player.GererPenteRaide).
 public partial class SolBanquise : StaticBody2D
 {
 	public enum TypeSegment { CentreA, CentreB, CentreC, EmboutGauche, EmboutDroit }
 
 	// Largeur d'un emplacement dans une ligne (172px natif x2).
 	public const float LargeurSegment = 344f;
-
-	public override void _Ready()
-	{
-		// Seul réglage encore fait en code : la géométrie vient de la scène.
-		// Layer 1 (terrain, vu par le joueur) + layer sol des PNJ. Voir Constantes.
-		CollisionLayer |= Constantes.LayerSolPnj;
-	}
 }

@@ -54,6 +54,12 @@ public partial class GameState : Node
 	// "Continuer" n'est actif que si un fichier de sauvegarde existe sur disque.
 	public bool SauvegardeExiste => Sauvegarde.Existe();
 
+	// Mode debug : partie de test lancée depuis le menu principal, avec tous les
+	// pouvoirs et des coups qui tuent n'importe quel mob d'un seul impact (voir
+	// LivingEntity.TakeDamage). Volontairement hors DonneesSauvegarde : c'est un
+	// état de session, il ne doit pas contaminer un fichier de sauvegarde.
+	public bool ModeDebug { get; private set; }
+
 	// Flags de progression (débloqués une fois pour toute la partie).
 	public bool PouvoirChaleurActif { get => _donnees.PouvoirChaleurActif; private set => _donnees.PouvoirChaleurActif = value; }
 	public bool PouvoirGlaceActif { get => _donnees.PouvoirGlaceActif; private set => _donnees.PouvoirGlaceActif = value; }
@@ -73,7 +79,8 @@ public partial class GameState : Node
 		Instance = this;
 		Pv = PvMax;
 		ManaGlace = ManaGlaceMax;
-		ConfigurerActionsParDefaut();
+		// La configuration des actions d'entrée (défauts + remapping persistant) est
+		// désormais gérée par l'autoload Parametres (scripts/Core/Parametres.cs).
 	}
 
 	// Régénération du mana de glace : rien pendant DelaiRegenGlace après la
@@ -100,6 +107,20 @@ public partial class GameState : Node
 	{
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
 		ManaGlace = ManaGlaceMax;
+		ModeDebug = false;
+	}
+
+	// Nouvelle partie de test : tous les pouvoirs sont acquis d'emblée et les mobs
+	// tombent en un coup, pour atteindre vite n'importe quel point du monde sans
+	// rejouer la progression. Réutilise NouvellePartie plutôt que de dupliquer la
+	// remise à zéro, et passe par les ObtenirPouvoir* pour que le HUD reçoive bien
+	// les signaux de déblocage.
+	public void NouvellePartieDebug()
+	{
+		NouvellePartie();
+		ModeDebug = true;
+		ObtenirPouvoirChaleur();
+		ObtenirPouvoirGlace();
 	}
 
 	public void Degats(int quantite = 1)
@@ -159,8 +180,14 @@ public partial class GameState : Node
 	public bool PeutUtiliserPouvoirGlace(float cout) => PouvoirGlaceActif && ManaGlace >= cout;
 
 	// Consomme du mana (pose d'une plateforme) et relance le délai avant régen.
+	// En mode debug la jauge est infinie : on ne prélève rien, donc elle reste pleine
+	// et PeutUtiliserPouvoirGlace laisse toujours passer. Bloquer ici plutôt que dans
+	// PeutUtiliserPouvoirGlace garde la jauge du HUD cohérente avec ce qu'elle affiche.
 	public void ConsommerManaGlace(float cout)
 	{
+		if (ModeDebug)
+			return;
+
 		ManaGlace = Mathf.Max(0f, ManaGlace - cout);
 		_delaiRegenTimer = DelaiRegenGlace;
 		EmitSignal(SignalName.ManaGlaceChanges, ManaGlace, ManaGlaceMax);
@@ -211,37 +238,4 @@ public partial class GameState : Node
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 	}
 
-	// Enregistre les actions d'entrée (mouvement, saut, glissade) par code,
-	// pour ne pas dépendre d'un mapping figé dans project.godot.
-	private static void ConfigurerActionsParDefaut()
-	{
-		// Déplacement
-		AjouterAction("move_left", Key.Left);
-		AjouterAction("move_right", Key.Right);
-		AjouterAction("jump", Key.Space);
-		AjouterAction("slide", Key.Shift);
-		AjouterAction("bas", Key.Down);
-
-		// Actions
-		AjouterAction("lancer", Key.D);
-		AjouterAction("manger", Key.W);
-		AjouterAction("pouvoir_chaleur", Key.A);
-		AjouterAction("pouvoir_glace", Key.S);
-		
-		// Interactions
-		AjouterAction("action", Key.Enter, Key.Space);
-		AjouterAction("menu", Key.Escape);
-	}
-
-	private static void AjouterAction(string nom, params Key[] touches)
-	{
-		if (InputMap.HasAction(nom))
-			return;
-
-		InputMap.AddAction(nom);
-		foreach (var touche in touches)
-		{
-			InputMap.ActionAddEvent(nom, new InputEventKey { PhysicalKeycode = touche });
-		}
-	}
 }

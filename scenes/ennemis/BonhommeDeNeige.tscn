@@ -8,9 +8,9 @@ size = Vector2(38, 58)
 
 [node name="BonhommeDeNeige" type="CharacterBody2D"]
 collision_layer = 4
-collision_mask = 18
+collision_mask = 17
 script = ExtResource("1")
-PvMax = 3
+PvMax = 1
 SceneBoule = ExtResource("2")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

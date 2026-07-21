@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AmbianceSonore" load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://bvc1x82wporg4" path="res://scripts/Core/AmbianceSonore.cs" id="1_ambiance"]
+[ext_resource type="Script" uid="uid://cxveo4dosu75i" path="res://scripts/Core/VarianteAmbiance.cs" id="2_variante"]
+[ext_resource type="AudioStream" uid="uid://6rce3upeoomw" path="res://assets/audio/musiques/ice_cave_lofi.ogg" id="3_ice_cave"]
+
+[sub_resource type="Resource" id="VarianteNormale"]
+script = ExtResource("2_variante")
+Etat = "normal"
+Musiques = Array[AudioStream]([ExtResource("3_ice_cave")])
+
+[resource]
+script = ExtResource("1_ambiance")
+Nom = "menu"
+Variantes = Array[VarianteAmbiance]([SubResource("VarianteNormale")])

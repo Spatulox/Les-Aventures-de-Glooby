@@ -2,8 +2,9 @@ using Godot;
 
 // Base commune aux projectiles (boule de neige...) : déplacement horizontal à vitesse
 // constante + gravité + durée de vie, dégâts au contact via un DamageSource, puis
-// disparition. Garde une référence à son instanciateur (le LivingEntity qui l'a tiré)
-// pour ne jamais le blesser avec son propre projectile.
+// disparition. Le projectile s'oriente en vol dans le sens de sa vitesse, si bien
+// qu'il pique du nez en retombant. Garde une référence à son instanciateur (le
+// LivingEntity qui l'a tiré) pour ne jamais le blesser avec son propre projectile.
 public abstract partial class Projectile : Area2D
 {
 	[Export] public float Vitesse = 320f;
@@ -28,8 +29,29 @@ public abstract partial class Projectile : Area2D
 		Direction = direction;
 	}
 
+	// Configure un tir en cloche : vecteur vitesse initial complet (composante Y
+	// négative = le projectile monte d'abord avant de retomber, là où la surcharge
+	// ci-dessus part toujours à l'horizontale). À appeler avant l'ajout à l'arbre.
+	public void Initialiser(LivingEntity instanciateur, Vector2 velocite)
+	{
+		_instanciateur = instanciateur;
+		Direction = velocite.X < 0f ? -1 : 1;
+		Vitesse = Mathf.Abs(velocite.X);
+		_vitesseChute = velocite.Y;
+	}
+
+	// Vélocité courante du projectile, pour les sous-classes qui veulent s'orienter
+	// dessus (une boule en cloche qui pointe dans le sens de sa chute).
+	protected Vector2 VelociteCourante => new Vector2(Direction * Vitesse, _vitesseChute);
+
 	public override void _Ready()
 	{
+		// Un projectile ne se déclare sur aucun layer (rien ne doit le heurter) et
+		// masque le terrain (pour éclater) plus le joueur et les PNJ (pour blesser).
+		// Posé en code pour que toute scène de projectile soit correcte d'office.
+		CollisionLayer = 0;
+		CollisionMask = Constantes.MasqueProjectile;
+
 		_tempsRestant = DureeVie;
 		BodyEntered += OnBodyEntered;
 	}
@@ -42,6 +64,9 @@ public abstract partial class Projectile : Area2D
 		var dt = (float)delta;
 		_vitesseChute += Gravite * dt;
 		Position += new Vector2(Direction * Vitesse, _vitesseChute) * dt;
+		// Oriente le projectile dans le sens de son déplacement : il part à plat et
+		// pique progressivement du nez à mesure que la gravité le fait retomber.
+		Rotation = VelociteCourante.Angle();
 
 		_tempsRestant -= dt;
 		if (_tempsRestant <= 0f)

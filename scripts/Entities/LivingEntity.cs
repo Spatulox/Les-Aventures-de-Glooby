@@ -23,6 +23,18 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 	// Impulsion de saut (vers le haut).
 	protected void Sauter(ref Vector2 velocite) => velocite.Y = JumpVelocity;
 
+	// ---- Collisions ----
+	// Applique la convention de collision d'un PNJ : il voit le terrain et les
+	// plateformes traversables, mais ni le joueur ni les autres PNJ (personne ne
+	// masque les layers joueur/PNJ). Posé ici, en code, plutôt que laissé à chaque
+	// scène : un nouveau PNJ est correct même si son .tscn est mal réglé, et
+	// l'invariant « aucune collision entre PNJ » ne peut plus se perdre en route.
+	protected void AppliquerCollisionsPnj()
+	{
+		CollisionLayer = Constantes.LayerPnj;
+		CollisionMask = Constantes.MasqueMarcheur;
+	}
+
 	// ---- Aperçu éditeur ----
 	// Chaque scène d'entité porte un Sprite2D « Apercu » figé sur la 1re frame de son idle,
 	// uniquement pour que l'entité soit visible/positionnable dans l'éditeur Godot. En jeu,
@@ -62,7 +74,12 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 		if (EstVaincu)
 			return;
 
-		int total = Mathf.Max(0, AjusterDegats(source.MontantDegats()));
+		// En mode debug, tout coup porté par le joueur emporte la cible d'un seul impact,
+		// quels que soient ses PV. Le joueur n'est pas concerné : il surcharge TakeDamage
+		// pour router vers GameState, et ne s'inflige de toute façon aucune source « du
+		// joueur ».
+		bool debug = GameState.Instance is { ModeDebug: true } && source.EstDuJoueur();
+		int total = debug ? PvMax : Mathf.Max(0, AjusterDegats(source.MontantDegats()));
 		Pv = Mathf.Max(0, Pv - total);
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 

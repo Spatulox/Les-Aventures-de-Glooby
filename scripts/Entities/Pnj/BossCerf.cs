@@ -236,7 +236,7 @@ public partial class BossCerf : Boss
 
 	private void CreerConeDeGivre()
 	{
-		var zone = new Area2D { CollisionLayer = 0, CollisionMask = 1 };
+		var zone = new Area2D { CollisionLayer = 0, CollisionMask = Constantes.LayerJoueur };
 		var forme = new CollisionShape2D { Shape = new RectangleShape2D { Size = new Vector2(10, 24) } };
 		zone.AddChild(forme);
 		AddChild(zone);

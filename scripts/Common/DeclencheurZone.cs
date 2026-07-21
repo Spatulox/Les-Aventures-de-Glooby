@@ -77,9 +77,10 @@ public partial class DeclencheurZone : Area2D
 	}
 
 	// Applique cette zone comme salle caméra : cale les limites de la Camera2D du
-	// joueur sur le rectangle de la zone et bascule le fond de région. Partagé par
-	// CameraZone (salle normale) et ZoneBoss (arène de boss) - voir IZoneCamera.
-	protected void AppliquerCommeSalle(Player joueur, string nomRegion, float margeChute)
+	// joueur sur le rectangle de la zone, bascule le fond de région et l'ambiance
+	// sonore. Partagé par CameraZone (salle normale) et ZoneBoss (arène de boss) -
+	// voir IZoneCamera. Point de branchement UNIQUE de l'audio par lieu.
+	protected void AppliquerCommeSalle(Player joueur, string nomRegion, string nomAmbiance, float margeChute)
 	{
 		if (!CalculerLimitesDepuisForme(out int g, out int d, out int h, out int b))
 		{
@@ -91,5 +92,13 @@ public partial class DeclencheurZone : Area2D
 
 		if (!string.IsNullOrEmpty(nomRegion))
 			BackgroundManager.Instance?.AfficherRegion(nomRegion);
+
+		// La clé sonore n'est PAS la région visuelle : le village et la banquise
+		// partagent le fond "banquise" mais pas la musique. À défaut de clé propre,
+		// on retombe sur la région - seuls les lieux qui s'en écartent ont besoin
+		// de renseigner NomAmbiance.
+		var ambiance = string.IsNullOrEmpty(nomAmbiance) ? nomRegion : nomAmbiance;
+		if (!string.IsNullOrEmpty(ambiance))
+			GestionnaireAudio.Instance?.JouerAmbiance(ambiance);
 	}
 }

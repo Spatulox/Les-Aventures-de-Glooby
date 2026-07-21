@@ -20,6 +20,23 @@ public partial class CameraZone : DeclencheurZone, IZoneCamera
 	// Vide = ne pas toucher au fond. Remplace les anciens RegionTrigger.
 	[Export] public string NomRegion = "";
 
+	// Ambiance sonore de cette salle (ex. "village"). Vide = reprendre NomRegion.
+	// Clé SÉPARÉE du fond : le village et la banquise partagent le décor
+	// "banquise" mais n'ont pas la même musique.
+	[Export] public string NomAmbiance = "";
+
+	// Nature de la salle. Enum (et non booléen) pour pouvoir en ajouter d'autres
+	// - Interieur, Arene... - sans casser les zones déjà posées.
+	public enum TypeZone { Exterieur, Souterrain }
+
+	// Conditionne la météo : aucun blizzard sous terre. Le défaut Exterieur
+	// évite d'avoir à retoucher les zones existantes.
+	[Export] public TypeZone Type = TypeZone.Exterieur;
+
+	// État météo PROPRE à cette salle : mémorisé ici pour qu'un aller-retour
+	// hors de la zone ne permette ni d'annuler ni de re-tirer le blizzard.
+	private readonly MeteoZone _meteo = new();
+
 	// Détection par sondage (Contient) côté Player : on s'inscrit juste au groupe
 	// et on ne branche PAS BodyEntered (retour false = pas de câblage du signal).
 	protected override bool PreparerDeclencheur()
@@ -28,8 +45,25 @@ public partial class CameraZone : DeclencheurZone, IZoneCamera
 		return false;
 	}
 
-	// IZoneCamera : applique les limites caméra de cette zone au joueur et bascule le
-	// fond de région associé. Appelée par le Player quand il entre dans la zone.
+	// IZoneCamera : applique les limites caméra de cette zone au joueur, bascule le
+	// fond de région associé et la météo. Appelée par le Player UNE SEULE FOIS par
+	// entrée dans la zone (hystérésis de MettreAJourZoneCamera) - c'est donc le
+	// bon endroit pour le tirage au sort du blizzard.
 	// (Contient + le calcul des bornes sont mutualisés dans DeclencheurZone.)
-	public void Appliquer(Player joueur) => AppliquerCommeSalle(joueur, NomRegion, MargeChuteVide);
+	public void Appliquer(Player joueur)
+	{
+		AppliquerCommeSalle(joueur, NomRegion, NomAmbiance, MargeChuteVide);
+
+		bool blizzard = _meteo.AuChangementDeZone(Type == TypeZone.Souterrain);
+		GestionnaireMeteo.Instance?.AfficherBlizzard(this, blizzard, changementDeZone: true);
+	}
+
+	// La minuterie météo tourne dans TOUTES les salles, même celles où le joueur
+	// n'est pas : le monde continue de vivre et un blizzard commencé s'épuise.
+	// Seule la salle courante se voit à l'écran (filtre côté GestionnaireMeteo).
+	public override void _Process(double delta)
+	{
+		if (_meteo.Avancer(delta))
+			GestionnaireMeteo.Instance?.AfficherBlizzard(this, _meteo.BlizzardActif);
+	}
 }
