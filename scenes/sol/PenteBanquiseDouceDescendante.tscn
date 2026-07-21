@@ -1,15 +1,16 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://w5t6yendfo78"]
 
-[ext_resource type="Script" path="res://scripts/sol/PenteBanquise.cs" id="1"]
+[ext_resource type="Script" uid="uid://dhrn5dxpwmdc7" path="res://scripts/sol/PenteBanquise.cs" id="1"]
 [ext_resource type="Texture2D" uid="uid://doespr71oo0p5" path="res://assets/sol/pente_douce_descendante.png" id="2"]
 
-[node name="PenteBanquiseDouceDescendante" type="StaticBody2D"]
+[node name="PenteBanquiseDouceDescendante" type="StaticBody2D" unique_id=570342384]
 script = ExtResource("1")
+Type = 1
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, 68)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1818524650]
+position = Vector2(0, 63)
 scale = Vector2(2, 2)
 texture = ExtResource("2")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-172, -29, 172, 107, 172, 198, -172, 62)
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=267553254]
+polygon = PackedVector2Array(-172, -41, 172, 101, 172, 193, -172, 57)

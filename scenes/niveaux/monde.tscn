@@ -33,9 +33,9 @@
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/mur_fondable.tscn" id="mur_fondable"]
 [ext_resource type="PackedScene" path="res://scenes/plateformes/MurSolide.tscn" id="mur_solide"]
-[ext_resource type="PackedScene" path="res://scenes/props/PanneauBois.tscn" id="panneau"]
-[ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseDouceDescendante.tscn" id="pente_descendante"]
-[ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseDouceMontante.tscn" id="pente_montante"]
+[ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="panneau"]
+[ext_resource type="PackedScene" uid="uid://w5t6yendfo78" path="res://scenes/sol/PenteBanquiseDouceDescendante.tscn" id="pente_descendante"]
+[ext_resource type="PackedScene" uid="uid://b1sqxo0ogwnv" path="res://scenes/sol/PenteBanquiseDouceMontante.tscn" id="pente_montante"]
 [ext_resource type="PackedScene" uid="uid://jj522styq8rs" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/pouvoir_chaleur_pickup.tscn" id="pouvoir"]
@@ -90,8 +90,7 @@ NomAmbiance = "village"
 [node name="Sol" type="Node2D" parent="Village" unique_id=675078096]
 
 [node name="Sol1" parent="Village/Sol" unique_id=891891511 instance=ExtResource("sol_embout_g")]
-position = Vector2(-35, 326)
-scale = Vector2(1, 1.0399988)
+position = Vector2(-35, 329)
 
 [node name="Sol2" parent="Village/Sol" unique_id=1974415156 instance=ExtResource("sol_banquise")]
 position = Vector2(308, 329)
@@ -181,17 +180,16 @@ NomRegion = "banquise"
 position = Vector2(1, 0)
 
 [node name="RampeOuest" parent="Banquise/Sol" unique_id=967974687 instance=ExtResource("pente_montante")]
-position = Vector2(1418, 329)
+position = Vector2(1418, 334)
 
 [node name="RampeEst" parent="Banquise/Sol" unique_id=518875373 instance=ExtResource("pente_descendante")]
-position = Vector2(1762, 193)
+position = Vector2(1762, 198)
 
 [node name="SolBanquiseEmboutDroit" parent="Banquise/Sol" unique_id=1865036209 instance=ExtResource("20_1vuit")]
-position = Vector2(2105, 329)
+position = Vector2(2105, 333)
 
 [node name="SolBanquiseEmboutGauche" parent="Banquise/Sol" unique_id=1758720072 instance=ExtResource("sol_embout_g")]
-position = Vector2(2466, 325)
-scale = Vector2(1, 1.04)
+position = Vector2(2466, 329)
 
 [node name="Sol1" parent="Banquise/Sol" unique_id=662512016 instance=ExtResource("sol_banquise")]
 position = Vector2(2808, 329)
@@ -406,7 +404,7 @@ position = Vector2(2700, 255)
 IdMur = "mur_glace_grotte"
 
 [node name="PanneauGrotte" parent="ZoneBossCerf/Interactifs" unique_id=700000011 instance=ExtResource("panneau")]
-position = Vector2(2196, 267)
+position = Vector2(2128, 261)
 scale = Vector2(0.5, 0.5)
 Texte = "Grotte"
 Lignes = PackedStringArray("Grotte")

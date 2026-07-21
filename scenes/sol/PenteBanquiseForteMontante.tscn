@@ -5,11 +5,12 @@
 
 [node name="PenteBanquiseForteMontante" type="StaticBody2D"]
 script = ExtResource("1")
+Type = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -171)
+position = Vector2(0, -176)
 scale = Vector2(2, 2)
 texture = ExtResource("2")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-172, -29, 172, -371, 172, -280, -172, 62)
+polygon = PackedVector2Array(-172, -34, 172, -376, 172, -285, -172, 57)
