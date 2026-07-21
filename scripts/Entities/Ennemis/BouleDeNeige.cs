@@ -1,33 +1,24 @@
 using Godot;
 
-// Boule de neige lancée par le Bonhomme de neige : projectile Area2D à
-// trajectoire en cloche (vélocité initiale libre + gravité, contrairement au
-// Projectile de base du joueur qui ne fait que retomber). Blesse le joueur au
-// contact puis éclate en un petit éclat de neige (animation « impact ») avant
-// de disparaître. Fichier neuf, indépendant de la boule_de_neige.tscn du joueur.
-public partial class BouleDeNeige : Area2D
+// Boule de neige lancée par le Bonhomme de neige : même Projectile que celui du
+// joueur (dégâts, immunité au tireur, couches de collision, durée de vie), avec
+// deux spécificités — une trajectoire en cloche (via la surcharge Initialiser à
+// vecteur vitesse, la boule monte puis retombe) et un éclat de neige animé à
+// l'impact plutôt qu'une simple disparition. L'orientation en vol vient de
+// Projectile, partagée avec la boule du joueur.
+public partial class BouleDeNeige : Projectile
 {
-	[Export] public float Gravite = 520f;
-	[Export] public float DureeVie = 4f;
-	// Source de dégâts : l'attaque d'un PNJ méchant (1 PV), comme le contact.
-	private const DamageSource Source = DamageSource.ContactMechant;
+	// Blesse le joueur comme le contact d'un méchant (1 PV).
+	protected override DamageSource Source => DamageSource.ContactMechant;
 
-	private Vector2 _velocite;
-	private float _tempsRestant;
-	private bool _eclate;
 	private AnimatedSprite2D _sprite;
-
-	// Configure le tir : vecteur vitesse initial (composante verticale négative
-	// = la boule monte d'abord, d'où la cloche). À appeler avant l'ajout à l'arbre.
-	public void Lancer(Vector2 velocite) => _velocite = velocite;
 
 	public override void _Ready()
 	{
+		base._Ready();   // couches, durée de vie et détection des corps
 		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		_sprite.SpriteFrames = ConstruireAnimations();
-		_tempsRestant = DureeVie;
 		_sprite.Play("vol");
-		BodyEntered += OnBodyEntered;
 	}
 
 	// « vol » = la boule simple (sprite existant) ; « impact » = l'éclat de neige.
@@ -43,40 +34,12 @@ public partial class BouleDeNeige : Area2D
 		return frames;
 	}
 
-	public override void _PhysicsProcess(double delta)
+	// Éclatement : redresse la boule puis joue l'éclat de neige avant de se libérer.
+	protected override void Disparaitre()
 	{
-		if (_eclate)
-			return;
-
-		var dt = (float)delta;
-		_velocite.Y += Gravite * dt;
-		Position += _velocite * dt;
-		// Oriente la boule dans le sens de sa chute (petit plus visuel).
-		Rotation = _velocite.Angle();
-
-		_tempsRestant -= dt;
-		if (_tempsRestant <= 0f)
-			Eclater();
-	}
-
-	private void OnBodyEntered(Node body)
-	{
-		if (body is Player)
-			Degats.Infliger(body, Source);
-		Eclater();
-	}
-
-	// Stoppe la boule et joue l'éclat de neige, puis se libère.
-	private void Eclater()
-	{
-		if (_eclate)
-			return;
-
-		_eclate = true;
-		SetPhysicsProcess(false);
 		Rotation = 0f;
 
-		if (_sprite.SpriteFrames.HasAnimation("impact") && _sprite.SpriteFrames.GetFrameCount("impact") > 0)
+		if (_sprite.SpriteFrames.GetFrameCount("impact") > 0)
 		{
 			_sprite.Play("impact");
 			_sprite.AnimationFinished += QueueFree;
