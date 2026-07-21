@@ -31,4 +31,10 @@ public static class DamageSourceExtensions
 		DamageSource.ContactMechant => 1,
 		_ => 1,
 	};
+
+	// Vrai si la source est une attaque du joueur (par opposition aux pièges et aux
+	// attaques subies). Sert au mode debug, qui ne surpuissance que les coups portés
+	// par le joueur — ceux qu'il encaisse gardent leur montant normal.
+	public static bool EstDuJoueur(this DamageSource source)
+		=> source is DamageSource.Snowball or DamageSource.Fire;
 }

@@ -179,8 +179,14 @@ public partial class GameState : Node
 	public bool PeutUtiliserPouvoirGlace(float cout) => PouvoirGlaceActif && ManaGlace >= cout;
 
 	// Consomme du mana (pose d'une plateforme) et relance le délai avant régen.
+	// En mode debug la jauge est infinie : on ne prélève rien, donc elle reste pleine
+	// et PeutUtiliserPouvoirGlace laisse toujours passer. Bloquer ici plutôt que dans
+	// PeutUtiliserPouvoirGlace garde la jauge du HUD cohérente avec ce qu'elle affiche.
 	public void ConsommerManaGlace(float cout)
 	{
+		if (ModeDebug)
+			return;
+
 		ManaGlace = Mathf.Max(0f, ManaGlace - cout);
 		_delaiRegenTimer = DelaiRegenGlace;
 		EmitSignal(SignalName.ManaGlaceChanges, ManaGlace, ManaGlaceMax);

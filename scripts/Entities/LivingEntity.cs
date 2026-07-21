@@ -74,7 +74,12 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 		if (EstVaincu)
 			return;
 
-		int total = Mathf.Max(0, AjusterDegats(source.MontantDegats()));
+		// En mode debug, tout coup porté par le joueur emporte la cible d'un seul impact,
+		// quels que soient ses PV. Le joueur n'est pas concerné : il surcharge TakeDamage
+		// pour router vers GameState, et ne s'inflige de toute façon aucune source « du
+		// joueur ».
+		bool debug = GameState.Instance is { ModeDebug: true } && source.EstDuJoueur();
+		int total = debug ? PvMax : Mathf.Max(0, AjusterDegats(source.MontantDegats()));
 		Pv = Mathf.Max(0, Pv - total);
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 

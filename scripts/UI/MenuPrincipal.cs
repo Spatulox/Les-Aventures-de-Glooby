@@ -3,8 +3,11 @@ using System.Collections.Generic;
 
 // Menu principal (scène séparée, écran de lancement du jeu) : créer une
 // partie, continuer (grisé tant qu'aucune sauvegarde n'existe), paramètres
-// (rappel des touches) et quitter. Construit son UI via MenuFabrique pour
-// rester cohérent avec le menu pause.
+// (rappel des touches) et quitter. Le layout (titre, colonne de boutons et
+// BoiteMob) est authoré dans menu_principal.tscn et donc éditable à la souris
+// dans l'éditeur ; ce script ne porte que le comportement : branchement des
+// boutons, fond aléatoire, mob décoratif et panneau Paramètres (dont les
+// lignes se déduisent de l'InputMap, donc restent générées via MenuFabrique).
 public partial class MenuPrincipal : Control
 {
 	// Actions du jeu associées à un libellé lisible, pour l'écran Paramètres.
@@ -30,39 +33,50 @@ public partial class MenuPrincipal : Control
 	private const string DossierPnj = "res://assets/pnj";
 	private const string NomAnimationIdle = "idle";
 
-	// Hauteur à l'écran imposée à tous les mobs, quelle que soit la taille de leurs
-	// frames (64 à 96 px) : 96 px * l'échelle 2.5 d'origine, pour que le joueur garde
-	// exactement la taille qu'il avait avant le tirage aléatoire.
-	private const float HauteurMob = 240f;
+	// Ambiance sonore de l'écran-titre. Le menu n'a pas de CameraZone pour la
+	// demander à sa place : il s'adresse directement au gestionnaire, qui est un
+	// autoload et survit donc au changement de scène vers le monde.
+	private const string NomAmbiance = "menu";
 
 	private Control _panneauParametres;
 
+	// Boîte de la scène dans laquelle le mob décoratif est cantonné, et le sprite
+	// qu'on y a monté (null si aucun mob n'était affichable).
+	private Control _boiteMob;
+	private AnimatedSprite2D _mob;
+
 	public override void _Ready()
 	{
-		SetAnchorsPreset(Control.LayoutPreset.FullRect);
+		// Le village partage cette piste : en lançant une partie, la musique
+		// enchaîne sans coupure (le gestionnaire ne relance pas une piste déjà
+		// en cours).
+		GestionnaireAudio.Instance?.JouerAmbiance(NomAmbiance);
 
 		// Le HUD (autoload) ne doit pas s'afficher par-dessus le menu.
 		GetNodeOrNull<Hud>("/root/Hud")?.Masquer();
 
-		// Image de fond aléatoire (rejouée à chaque affichage : la scène du menu
-		// se recharge en y revenant), puis un voile sombre semi-transparent
-		// par-dessus pour garder titre et boutons lisibles.
+		// Image de fond aléatoire, rejouée à chaque affichage (la scène du menu se
+		// recharge en y revenant). Le voile sombre qui la rend lisible et toute la
+		// mise en page viennent, eux, de la scène.
 		AjouterFondAleatoire();
-		MenuFabrique.AjouterFond(this, new Color(0.06f, 0.08f, 0.14f, 0.5f));
 
-		var colonne = MenuFabrique.AjouterColonne(this, "Les Aventures de Glooby");
-		MenuFabrique.AjouterBouton(colonne, "Créer une partie", DemarrerNouvellePartie);
-		MenuFabrique.AjouterBouton(colonne, "Continuer", ContinuerPartie, actif: GameState.Instance.SauvegardeExiste);
-		MenuFabrique.AjouterBouton(colonne, "Paramètres", () => AfficherParametres(true));
-		MenuFabrique.AjouterBouton(colonne, "Quitter", () => GetTree().Quit());
+		GetNode<Button>("Colonne/BoutonNouvelle").Pressed += DemarrerNouvellePartie;
+		GetNode<Button>("Colonne/BoutonDebug").Pressed += DemarrerPartieDebug;
+		GetNode<Button>("Colonne/BoutonParametres").Pressed += () => AfficherParametres(true);
+		GetNode<Button>("Colonne/BoutonQuitter").Pressed += () => GetTree().Quit();
 
-		// La colonne, centrée par défaut, est ramenée vers la gauche pour laisser la
-		// moitié droite de l'écran au mob (on réduit la zone de centrage à la
-		// partie gauche de l'écran, ce qui recentre le menu dedans).
-		if (colonne.GetParent() is Control zoneColonne)
-			zoneColonne.AnchorRight = 0.72f;
+		var boutonContinuer = GetNode<Button>("Colonne/BoutonContinuer");
+		boutonContinuer.Pressed += ContinuerPartie;
+		boutonContinuer.Disabled = !GameState.Instance.SauvegardeExiste;
+
+		_boiteMob = GetNode<Control>("BoiteMob");
+		// La taille d'un Control ancré n'est pas encore définitive dans _Ready : on
+		// recalcule le cadrage du mob à chaque redimensionnement de la boîte (donc
+		// aussi au premier layout et quand la fenêtre change de taille).
+		_boiteMob.Resized += AjusterMob;
 
 		AjouterMobAleatoire();
+		AjusterMob();
 
 		ConstruireParametres();
 	}
@@ -70,7 +84,15 @@ public partial class MenuPrincipal : Control
 	private void DemarrerNouvellePartie()
 	{
 		GameState.Instance.NouvellePartie();
-		GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
+		ChargerMonde();
+	}
+
+	// Partie de test : tous les pouvoirs débloqués et les mobs tués d'un coup, pour
+	// parcourir le monde rapidement sans refaire la progression.
+	private void DemarrerPartieDebug()
+	{
+		GameState.Instance.NouvellePartieDebug();
+		ChargerMonde();
 	}
 
 	private void ContinuerPartie()
@@ -78,14 +100,16 @@ public partial class MenuPrincipal : Control
 		// Restaure la progression sauvegardée avant de charger le monde : le joueur
 		// se replace ensuite à son checkpoint (voir Player._Ready).
 		GameState.Instance.Charger();
-		GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
+		ChargerMonde();
 	}
 
-	// Affiche à droite du menu un mob tiré au hasard (joueur ou PNJ) en animation
-	// « idle », purement décoratif (non contrôlable) : on ne réutilise pas les scènes
-	// d'entités (qui embarquent physique, collisions et scripts de comportement) mais
-	// uniquement leurs frames idle, montées sur un AnimatedSprite2D posé dans la
-	// moitié droite de l'écran. Le tirage est rejoué à chaque affichage du menu.
+	private void ChargerMonde() => GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
+
+	// Affiche dans la BoiteMob de la scène un mob tiré au hasard (joueur ou PNJ) en
+	// animation « idle », purement décoratif (non contrôlable) : on ne réutilise pas les
+	// scènes d'entités (qui embarquent physique, collisions et scripts de comportement)
+	// mais uniquement leurs frames idle, montées sur un AnimatedSprite2D. Le tirage est
+	// rejoué à chaque affichage du menu.
 	private void AjouterMobAleatoire()
 	{
 		var dossier = MobAleatoire();
@@ -96,30 +120,32 @@ public partial class MenuPrincipal : Control
 		if (frames == null)
 			return;
 
-		// Ancré au centre-droit de l'écran : le mob suit ce coin quel que soit
-		// le redimensionnement de la fenêtre. L'AnimatedSprite2D (nœud 2D) est posé
-		// à l'origine de cette ancre, décalé vers la gauche du bord.
-		var ancre = new Control { MouseFilter = Control.MouseFilterEnum.Ignore };
-		ancre.SetAnchorsPreset(Control.LayoutPreset.CenterRight);
-		AddChild(ancre);
-
-		// Les frames ne font pas toutes la même taille (64 à 96 px) : on met chaque mob
-		// à l'échelle pour qu'il occupe la même hauteur à l'écran. Le sprite étant
-		// centré sur sa frame, la position reste au centre de l'ancre : tous les mobs
-		// partagent alors la même ligne de sol, celle du joueur avant ce changement.
-		float echelle = HauteurMob / frames.GetFrameTexture(NomAnimationIdle, 0).GetHeight();
-
 		// Les sprites idle regardent vers la droite : on les retourne pour qu'ils
-		// fassent face au menu, situé à leur gauche.
-		var sprite = new AnimatedSprite2D
-		{
-			SpriteFrames = frames,
-			Position = new Vector2(-160, 0),
-			Scale = new Vector2(echelle, echelle),
-			FlipH = true
-		};
-		ancre.AddChild(sprite);
-		sprite.Play(NomAnimationIdle);
+		// fassent face au menu, situé à leur gauche. Échelle et position sont posées
+		// par AjusterMob, qui a besoin de la taille réelle de la boîte.
+		_mob = new AnimatedSprite2D { SpriteFrames = frames, FlipH = true };
+		_boiteMob.AddChild(_mob);
+		_mob.Play(NomAnimationIdle);
+	}
+
+	// Cadre le mob dans la boîte dessinée dans l'éditeur : c'est la boîte qui commande
+	// sa taille, jamais l'inverse. Les frames ne font pas toutes la même taille (64 à
+	// 96 px) et certaines sont plus larges que hautes (le boss cerf) : on retient
+	// l'échelle uniforme la plus grande qui fasse tenir la frame entière, en largeur
+	// comme en hauteur, ce qui interdit tout débordement sur la colonne de boutons
+	// (clip_contents sur la boîte n'est qu'un filet de sécurité).
+	private void AjusterMob()
+	{
+		if (_mob == null)
+			return;
+
+		var frame = _mob.SpriteFrames.GetFrameTexture(NomAnimationIdle, 0);
+		var boite = _boiteMob.Size;
+		float echelle = Mathf.Min(boite.X / frame.GetWidth(), boite.Y / frame.GetHeight());
+
+		_mob.Scale = new Vector2(echelle, echelle);
+		// Le sprite est centré sur sa frame : le poser au centre de la boîte le centre.
+		_mob.Position = boite / 2f;
 	}
 
 	// Dossier d'un mob tiré au hasard parmi ceux qui ont une animation « idle »
@@ -175,7 +201,9 @@ public partial class MenuPrincipal : Control
 	}
 
 	// Place derrière tout le reste une image de fond tirée au hasard parmi celles
-	// de assets/backgrounds, étirée pour couvrir l'écran sans déformation.
+	// de assets/backgrounds, étirée pour couvrir l'écran sans déformation. Le tirage
+	// étant fait au lancement, ce nœud ne peut pas venir de la scène : il est ajouté
+	// ici puis renvoyé au fond de la pile, sous les nœuds authorés dans le .tscn.
 	private void AjouterFondAleatoire()
 	{
 		var chemin = FondAleatoire();
@@ -191,6 +219,7 @@ public partial class MenuPrincipal : Control
 		};
 		fond.SetAnchorsPreset(Control.LayoutPreset.FullRect);
 		AddChild(fond);
+		MoveChild(fond, 0);
 	}
 
 	// Chemin d'un PNG au hasard dans DossierFonds, ou null si le dossier est vide
