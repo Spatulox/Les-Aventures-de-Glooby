@@ -35,6 +35,18 @@ public partial class Player : LivingEntity
 	// la glissade s'enclenche. Un contact de coin (jointure de dalles) ne dure qu'une
 	// frame : ce délai l'élimine sans être perceptible sur une vraie pente.
 	[Export] public float DelaiConfirmationPenteRaide = 0.06f;
+	// Hauteur maximale d'un ressaut franchi automatiquement (voir GererMarcheAutomatique).
+	// Couvre les micro-marches entre pièces de sol (jointures de dalles, pied de pente,
+	// embouts) sans permettre d'escalader quoi que ce soit de volontairement infranchissable.
+	[Export] public float HauteurMarcheMax = 10f;
+	// Finesse de recherche de la hauteur : on monte du strict nécessaire, pas plus.
+	[Export] public float PasMarche = 1f;
+	// Distance minimale sondée devant le joueur pour détecter un ressaut.
+	[Export] public float DistanceSondeMarche = 4f;
+	// Nombre de frames sans progresser, chemin libre devant, avant de forcer le pas
+	// (déblocage d'une arête). 6 frames = 0,1 s : invisible, mais assez long pour ne
+	// jamais se déclencher sur un arrêt légitime.
+	[Export] public int FramesAvantDeblocage = 6;
 	// Inclinaison du sprite sur la pente pendant la glissade : vitesse de
 	// rappel (rad/s) vers l'angle du sol, puis vers 0 une fois la glissade finie.
 	[Export] public float VitesseInclinaison = 12f;
@@ -86,6 +98,8 @@ public partial class Player : LivingEntity
 	private float _dureeRelever = 0.33f;
 	private float _distancePente;
 	private bool _surPenteDescendante;
+	private float _xAvantMarche;
+	private int _framesSansProgres;
 	private float _timerPenteRaide;
 	private bool _enLancer;
 	private bool _enDegats;
@@ -261,6 +275,8 @@ public partial class Player : LivingEntity
 			_releverTimer -= dt;
 
 		GererInvincibilite(dt);
+
+		GererMarcheAutomatique(velocity, dt);
 
 		Velocity = velocity;
 		MoveAndSlide();
@@ -504,6 +520,82 @@ public partial class Player : LivingEntity
 	{
 		var normale = GetFloorNormal();
 		return Mathf.Abs(normale.X) > 0.05f && Mathf.Sign(normale.X) == _directionRegard;
+	}
+
+	// Franchit tout seul les petits ressauts du sol. Le sol est un pavage de pièces
+	// distinctes (dalles, embouts, pentes) dont les dessus ne tombent pas toujours au
+	// pixel près : il reste des marches de quelques pixels aux jointures. Sans ça, le
+	// bas arrondi de la capsule accroche l'arête et le joueur se bloque net, alors que
+	// rien ne se voit à l'écran.
+	//
+	// Principe : si le déplacement horizontal de la frame est bloqué alors qu'on est au
+	// sol, on cherche la PLUS PETITE élévation qui le libère (par pas de PasMarche) et on
+	// y remonte le corps — la montée est donc proportionnée à la marche réelle. Au-delà
+	// de HauteurMarcheMax c'est un vrai mur : on ne grimpe pas. FloorSnapLength recolle
+	// ensuite le joueur au sol, donc aucun flottement si le ressaut était plus bas.
+	private void GererMarcheAutomatique(Vector2 velocity, float dt)
+	{
+		// Coyote plutôt qu'IsOnFloor strict : en passant le sommet d'une butte le joueur
+		// décolle d'une frame, et c'est précisément là qu'il accrochait l'arête. Un saut
+		// remet le coyote à zéro, donc ça ne permet pas de grimper en l'air.
+		if (!IsOnFloor() && _coyoteTimer <= 0f)
+		{
+			_framesSansProgres = 0;
+			_xAvantMarche = GlobalPosition.X;
+			return;
+		}
+
+		var dx = velocity.X * dt;
+		if (Mathf.Abs(dx) < 0.01f)
+		{
+			_framesSansProgres = 0;
+			_xAvantMarche = GlobalPosition.X;
+			return;
+		}
+
+		// La frame où l'arête bloque, MoveAndSlide met Velocity.X à zéro : la frame
+		// suivante dx ne vaut plus qu'une fraction de pixel et ne toucherait plus
+		// l'obstacle — le joueur resterait collé sans jamais déclencher la marche. On
+		// sonde donc au moins DistanceSondeMarche devant soi.
+		var depart = GlobalTransform;
+		var deplacement = new Vector2(Mathf.Sign(dx) * Mathf.Max(Mathf.Abs(dx), DistanceSondeMarche), 0f);
+
+		if (TestMove(depart, deplacement))
+		{
+			_framesSansProgres = 0;
+			for (var hauteur = PasMarche; hauteur <= HauteurMarcheMax; hauteur += PasMarche)
+			{
+				var montee = new Vector2(0f, -hauteur);
+				// Plafond juste au-dessus : inutile de chercher plus haut.
+				if (TestMove(depart, montee))
+					break;
+				if (TestMove(depart.Translated(montee), deplacement))
+					continue;
+
+				GlobalPosition += montee;
+				break;
+			}
+		}
+		// Chemin libre mais on n'avance pas : le joueur est en équilibre sur une arête
+		// (sommet de butte, où deux pentes se rejoignent en pointe). Chaque frame un
+		// contact rasant y remet la vitesse horizontale à zéro et il oscille sur place.
+		// On applique alors le déplacement — dont TestMove vient de garantir qu'il est
+		// libre, donc sans risque de traverser quoi que ce soit.
+		else if (Mathf.Abs(GlobalPosition.X - _xAvantMarche) < 0.3f)
+		{
+			_framesSansProgres++;
+			if (_framesSansProgres >= FramesAvantDeblocage)
+			{
+				GlobalPosition += deplacement;
+				_framesSansProgres = 0;
+			}
+		}
+		else
+		{
+			_framesSansProgres = 0;
+		}
+
+		_xAvantMarche = GlobalPosition.X;
 	}
 
 	// Une PenteBanquise forte (~45°) ne se marche pas : ni idle, ni marche, ni course,

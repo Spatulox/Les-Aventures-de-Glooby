@@ -29,4 +29,19 @@ public static class Constantes
 	// les PNJ (pour blesser) — la même scène est tirée par le joueur et par les
 	// ennemis, le tireur étant filtré par Projectile.Initialiser.
 	public const uint MasqueProjectile = LayerTerrain | LayerJoueur | LayerPnj; // 7
+
+	// Strates de rendu (z_index), de l'arrière vers l'avant. Les valeurs
+	// négatives décrivent l'existant déjà posé dans les .tscn ; elles sont
+	// listées ici pour qu'on puisse lire l'empilement d'un coup d'œil.
+	public const int ZFond = -100;    // ciels fixes : FondBanquise / FondGrotte / FondBossCerf
+	public const int ZDecor = -1;     // props de décor (Rocher, ColonneGlace, …)
+	public const int ZPlanDeJeu = 0;  // sol, plateformes, PNJ, projectiles
+
+	// Le joueur est volontairement une strate au-dessus du plan de jeu. À z égal,
+	// Godot dessine dans l'ordre de l'arbre : tout ce qui est instancié en cours
+	// de partie (plateformes de glace posées par le pouvoir, futurs spawns)
+	// arrive en fin d'arbre, donc après le joueur, et le recouvrirait.
+	public const int ZJoueur = 1;
+
+	public const int ZDialogue = 100; // bulles de dialogue, au-dessus de tout le reste
 }
