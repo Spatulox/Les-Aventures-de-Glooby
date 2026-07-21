@@ -25,6 +25,10 @@ public partial class BonhommeDeNeige : LivingEntity
 	[Export] public float DureeArmer = 0.5f;
 	// Durée de l'étourdissement infligé par une boule de neige du joueur.
 	[Export] public float DureeEtourdissement = 1.5f;
+	// Durée de l'affaissement final (≈ la durée de l'animation « fondre »).
+	[Export] public float DureeFonte = 0.6f;
+	// Échelle verticale atteinte en fin de fonte (0.12 = écrasé en flaque).
+	[Export] public float EcrasementFonte = 0.12f;
 	// Vitesse horizontale et hauteur d'arc du projectile (trajectoire en cloche).
 	[Export] public float VitesseProjectile = 170f;
 	[Export] public float ArcProjectile = 200f;
@@ -147,8 +151,9 @@ public partial class BonhommeDeNeige : LivingEntity
 			return;
 
 		var boule = SceneBoule.Instantiate<BouleDeNeige>();
-		// Cloche : vitesse horizontale vers le joueur + poussée vers le haut.
-		boule.Lancer(new Vector2(_dirTir * VitesseProjectile, -ArcProjectile));
+		// Cloche : vitesse horizontale vers le joueur + poussée vers le haut. Le
+		// bonhomme s'enregistre comme tireur pour ne pas se blesser lui-même.
+		boule.Initialiser(this, new Vector2(_dirTir * VitesseProjectile, -ArcProjectile));
 		GetParent().AddChild(boule);
 		boule.GlobalPosition = GlobalPosition + new Vector2(_dirTir * 16f, -18f);
 	}
@@ -210,10 +215,17 @@ public partial class BonhommeDeNeige : LivingEntity
 		if (col != null)
 			col.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 
+		// L'affaissement porte le QueueFree : le bonhomme s'écrase vers le sol (sa
+		// base reste posée) en se fondant, pendant que joue l'animation « fondre ».
 		if (JouerSiPresente("fondre"))
-			_sprite.AnimationFinished += QueueFree;
+		{
+			var texture = _sprite.SpriteFrames.GetFrameTexture("fondre", 0);
+			Effets.FondreVersLeBas(_sprite, EcrasementFonte, texture.GetHeight() * 0.5f, DureeFonte, this);
+		}
 		else
+		{
 			QueueFree();
+		}
 	}
 
 	// Joue une animation si elle a au moins une frame ; renvoie vrai si jouée.

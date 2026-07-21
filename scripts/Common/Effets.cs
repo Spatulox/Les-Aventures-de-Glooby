@@ -17,6 +17,26 @@ public static class Effets
 		tween.TweenCallback(Callable.From((aLiberer ?? anime).QueueFree));
 	}
 
+	// Fonte : le nœud s'affaisse verticalement en gardant sa base fixe —
+	// contrairement à Disparaitre, dont la mise à l'échelle part du centre et
+	// décollerait donc l'objet du sol — avec fondu de l'alpha, puis libère le
+	// nœud voulu. Suppose un visuel centré sur son origine.
+	// demiHauteurLocale = distance origine → base du visuel, AVANT mise à l'échelle.
+	public static void FondreVersLeBas(Node2D anime, float facteur, float demiHauteurLocale, float duree, Node aLiberer = null)
+	{
+		float echelleDepart = anime.Scale.Y;
+		float echelleFin = echelleDepart * facteur;
+		// En descendant l'origine d'autant que le visuel perd en demi-hauteur, la
+		// base reste exactement où elle était : l'objet s'écrase au lieu de rétrécir.
+		float compensation = demiHauteurLocale * (echelleDepart - echelleFin);
+
+		var tween = anime.CreateTween();
+		tween.TweenProperty(anime, "scale:y", echelleFin, duree);
+		tween.Parallel().TweenProperty(anime, "position:y", anime.Position.Y + compensation, duree);
+		tween.Parallel().TweenProperty(anime, "modulate:a", 0f, duree);
+		tween.TweenCallback(Callable.From((aLiberer ?? anime).QueueFree));
+	}
+
 	// Flash de couleur bref puis retour au blanc (retour visuel de soin, de
 	// pouvoir, etc.) sans animation dédiée.
 	public static void FlashCouleur(CanvasItem cible, Color couleur, float dureeAllee, float dureeRetour)
