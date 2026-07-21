@@ -7,24 +7,13 @@ using System.Collections.Generic;
 // rester cohérent avec le menu pause.
 public partial class MenuPrincipal : Control
 {
-	// Actions du jeu associées à un libellé lisible, pour l'écran Paramètres.
-	private static readonly (string Action, string Libelle)[] Controles =
-	{
-		("move_left", "Aller à gauche"),
-		("move_right", "Aller à droite"),
-		("jump", "Sauter"),
-		("slide", "Glisser"),
-		("bas", "Descendre / traverser une plateforme"),
-		("lancer", "Lancer une boule de neige"),
-		("manger", "Manger un poisson"),
-		("pouvoir_chaleur", "Pouvoir de chaleur"),
-		("menu", "Menu / Pause"),
-	};
-
 	// Dossier des images de fond piochées au hasard pour l'arrière-plan du menu.
 	private const string DossierFonds = "res://assets/backgrounds";
 
-	private Control _panneauParametres;
+	// Écran Paramètres réutilisable (touches remappables + sections à venir), superposé
+	// et masqué au départ ; instancié depuis scenes/ui/ecran_parametres.tscn. Remplace
+	// l'ancien panneau en lecture seule et son tableau de touches codé en dur.
+	private EcranParametres _ecranParametres;
 
 	public override void _Ready()
 	{
@@ -42,7 +31,7 @@ public partial class MenuPrincipal : Control
 		var colonne = MenuFabrique.AjouterColonne(this, "Les Aventures de Glooby");
 		MenuFabrique.AjouterBouton(colonne, "Créer une partie", DemarrerNouvellePartie);
 		MenuFabrique.AjouterBouton(colonne, "Continuer", ContinuerPartie, actif: GameState.Instance.SauvegardeExiste);
-		MenuFabrique.AjouterBouton(colonne, "Paramètres", () => AfficherParametres(true));
+		MenuFabrique.AjouterBouton(colonne, "Paramètres", () => _ecranParametres.Visible = true);
 		MenuFabrique.AjouterBouton(colonne, "Quitter", () => GetTree().Quit());
 
 		// La colonne, centrée par défaut, est ramenée vers la gauche pour laisser la
@@ -164,46 +153,20 @@ public partial class MenuPrincipal : Control
 		if (!evenement.IsActionPressed("menu"))
 			return;
 
-		if (_panneauParametres.Visible)
+		// Échap ferme l'écran Paramètres ouvert (mais pas pendant une capture de touche :
+		// CaptureEntree y intercepte déjà Échap pour annuler la capture).
+		if (_ecranParametres.Visible && !_ecranParametres.EnCapture)
 		{
-			AfficherParametres(false);
+			_ecranParametres.Visible = false;
 			GetViewport().SetInputAsHandled();
 		}
 	}
 
-	// Écran Paramètres : superposé et masqué au départ, il liste les touches.
+	// Instancie l'écran Paramètres réutilisable et le superpose (masqué au départ).
 	private void ConstruireParametres()
 	{
-		_panneauParametres = new Control { Visible = false };
-		_panneauParametres.SetAnchorsPreset(Control.LayoutPreset.FullRect);
-		AddChild(_panneauParametres);
-
-		MenuFabrique.AjouterFond(_panneauParametres, new Color(0.06f, 0.08f, 0.14f));
-
-		var colonne = MenuFabrique.AjouterColonne(_panneauParametres, "Touches");
-		foreach (var (action, libelle) in Controles)
-			MenuFabrique.AjouterLigne(colonne, $"{libelle} : {ToucheDe(action)}");
-		MenuFabrique.AjouterBouton(colonne, "Retour", () => AfficherParametres(false));
-	}
-
-	private void AfficherParametres(bool visible) => _panneauParametres.Visible = visible;
-
-	// Texte des touches physiques associées à une action (ex. "A / Left").
-	private static string ToucheDe(string action)
-	{
-		var touches = new List<string>();
-		foreach (var evenement in InputMap.ActionGetEvents(action))
-			if (evenement is InputEventKey touche)
-			{
-				// Les actions sont liées en touche physique (position QWERTY) pour rester
-				// stables quel que soit le clavier. Pour l'affichage on traduit cette
-				// position vers l'étiquette réelle du clavier de l'utilisateur
-				// (ex. W physique → « Z » en AZERTY) ; sinon on retombe sur la position brute.
-				var etiquette = DisplayServer.KeyboardGetLabelFromPhysical(touche.PhysicalKeycode);
-				if (etiquette == Key.None)
-					etiquette = touche.PhysicalKeycode;
-				touches.Add(OS.GetKeycodeString(etiquette));
-			}
-		return touches.Count > 0 ? string.Join(" / ", touches) : "-";
+		_ecranParametres = GD.Load<PackedScene>("res://scenes/ui/ecran_parametres.tscn")
+			.Instantiate<EcranParametres>();
+		AddChild(_ecranParametres);
 	}
 }
