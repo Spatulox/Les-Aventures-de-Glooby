@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cmurgrottecol0"]
+
+[ext_resource type="Script" uid="uid://c8ueyxtq5pug5" path="res://scripts/mur/MurGrotteColonne.cs" id="1"]
+
+[node name="MurGrotteColonne" type="Node2D"]
+script = ExtResource("1")

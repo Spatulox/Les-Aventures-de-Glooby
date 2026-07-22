@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://oywi8ac3yrsx"]
+
+[ext_resource type="Script" uid="uid://d1rnh25edlx5x" path="res://scripts/sol/SolGrotte.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://di6qpqnui8apa" path="res://assets/sol/grotte/sol_centre_b.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectSolCentre"]
+size = Vector2(256, 73)
+
+[node name="SolGrotteCentreB" type="StaticBody2D" unique_id=117851906]
+script = ExtResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=44671964]
+scale = Vector2(2, 2)
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2048603556]
+position = Vector2(0, -36.5)
+shape = SubResource("RectSolCentre")

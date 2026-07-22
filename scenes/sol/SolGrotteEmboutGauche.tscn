@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://c0grsolembgau"]
+
+[ext_resource type="Script" uid="uid://d1rnh25edlx5x" path="res://scripts/sol/SolGrotte.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://d1grqxl3waqw0" path="res://assets/sol/grotte/sol_fin_gauche.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="Rect"]
+size = Vector2(182, 72)
+
+[node name="SolGrotteEmboutGauche" type="StaticBody2D" unique_id=877416420]
+script = ExtResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=123765423]
+scale = Vector2(2, 2)
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1732829959]
+position = Vector2(0, -36)
+shape = SubResource("Rect")

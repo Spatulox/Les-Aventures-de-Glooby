@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ihu5i5pbkkn5"
-path="res://.godot/imported/mur_bas.png-350b7c10afb0f050e62b00892681006a.ctex"
+uid="uid://gdpir0pfu258"
+path="res://.godot/imported/mur_centre_c.png-50c0168837f71b02b207616ba0e82a07.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/mur_grotte/mur_bas.png"
-dest_files=["res://.godot/imported/mur_bas.png-350b7c10afb0f050e62b00892681006a.ctex"]
+source_file="res://assets/mur/grotte/mur_centre_c.png"
+dest_files=["res://.godot/imported/mur_centre_c.png-50c0168837f71b02b207616ba0e82a07.ctex"]
 
 [params]
 

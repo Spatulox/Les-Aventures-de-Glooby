@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dicebp6tv7goq"
-path="res://.godot/imported/sol_fin_droite.png-05d0d3e06f1ad66c581b0b362792ef0e.ctex"
+uid="uid://d1grqxl3waqw0"
+path="res://.godot/imported/sol_fin_gauche.png-9fcfb1334ae445b18e0f881700b8bded.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/decors/sol_grotte/sol_fin_droite.png"
-dest_files=["res://.godot/imported/sol_fin_droite.png-05d0d3e06f1ad66c581b0b362792ef0e.ctex"]
+source_file="res://assets/sol/grotte/sol_fin_gauche.png"
+dest_files=["res://.godot/imported/sol_fin_gauche.png-9fcfb1334ae445b18e0f881700b8bded.ctex"]
 
 [params]
 

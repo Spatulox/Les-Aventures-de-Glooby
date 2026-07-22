@@ -445,6 +445,7 @@ position = Vector2(6170, 75)
 [node name="BossHudBarre" parent="ZoneBossCerf/Interactifs" unique_id=976306309 instance=ExtResource("boss_hud")]
 
 [node name="ZoneBossCerf" type="Area2D" parent="ZoneBossCerf/Interactifs" unique_id=1743602004]
+visible = false
 position = Vector2(5900, 252)
 collision_layer = 0
 collision_mask = 2
@@ -468,7 +469,6 @@ shape = SubResource("RectZoneBoss")
 [node name="Grotte" type="Node2D" parent="." unique_id=960315107]
 
 [node name="Camera" type="Node2D" parent="Grotte" unique_id=1994032986]
-visible = false
 
 [node name="ZoneGrotte" parent="Grotte/Camera" unique_id=1851448665 instance=ExtResource("camzone")]
 position = Vector2(3345.0002, 1029)
@@ -624,7 +624,7 @@ position = Vector2(2620, 480)
 [node name="Interactifs" type="Node2D" parent="Grotte" unique_id=425688669]
 
 [node name="PouvoirChaleur" parent="Grotte/Interactifs" unique_id=1494707600 instance=ExtResource("pouvoir")]
-position = Vector2(2500, 805)
+position = Vector2(4926, 1462)
 
 [node name="Pnj" type="Node2D" parent="Grotte" unique_id=700000022]
 
