@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Texture2D" uid="uid://v6x285vnd7bf" path="res://assets/props/stalactite.png" id="1"]
-
-[node name="StalactiteDecor" type="Sprite2D"]
-z_index = -1
-texture = ExtResource("1")

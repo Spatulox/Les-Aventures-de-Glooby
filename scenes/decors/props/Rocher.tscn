@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://du38rqxpol3j8"]
-
-[ext_resource type="Texture2D" uid="uid://bruo6y23arcsm" path="res://assets/props/rocher_glace.png" id="1"]
-
-[node name="Rocher" type="Sprite2D" unique_id=2090157966]
-z_index = -1
-texture = ExtResource("1")
-offset = Vector2(0, 16.375)

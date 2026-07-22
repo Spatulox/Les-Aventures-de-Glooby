@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Texture2D" uid="uid://chsru3aestwy" path="res://assets/props/grotte/fleur_givre.png" id="1"]
-
-[node name="FleurGivre" type="Sprite2D"]
-z_index = -1
-texture = ExtResource("1")
-offset = Vector2(0, 4)

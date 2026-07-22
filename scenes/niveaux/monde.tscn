@@ -11,27 +11,27 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="boss_hud"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="checkpoint"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/CristalGros.tscn" id="cristalg"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/CristalPetit.tscn" id="cristalp"]
+[ext_resource type="Texture2D" uid="uid://b873grf55e3xa" path="res://assets/props/cristal_gros.png" id="cristalg"]
+[ext_resource type="Texture2D" uid="uid://cc6yrec3tv63a" path="res://assets/props/cristal_petit.png" id="cristalp"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorGrotte.tscn" id="decor_grotte"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/FleurGivre.tscn" id="fleur"]
+[ext_resource type="Texture2D" uid="uid://chsru3aestwy" path="res://assets/props/grotte/fleur_givre.png" id="fleur"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
 [ext_resource type="PackedScene" path="res://scenes/boss/FondBossCerf.tscn" id="fond_boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondGrotte.tscn" id="fond_grotte"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/ChampignonLumineux.tscn" id="g_champi"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/ChampignonGeant.tscn" id="g_champi_geant"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/ColonneGlace.tscn" id="g_colonne"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/ColonneBrisee.tscn" id="g_colonne_brisee"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/Congere.tscn" id="g_congere"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/FissureLumineuse.tscn" id="g_fissure"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/FlaqueGelee.tscn" id="g_flaque"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/Geode.tscn" id="g_geode"]
+[ext_resource type="Texture2D" uid="uid://c2smw15se8pxl" path="res://assets/props/grotte/champignon_lumineux.png" id="g_champi"]
+[ext_resource type="Texture2D" uid="uid://bfrhgyx6lctpg" path="res://assets/props/grotte/champignon_geant.png" id="g_champi_geant"]
+[ext_resource type="Texture2D" uid="uid://bhhuniybvlpn" path="res://assets/props/grotte/colonne_glace.png" id="g_colonne"]
+[ext_resource type="Texture2D" uid="uid://b7vb1rx12kudf" path="res://assets/props/grotte/colonne_brisee.png" id="g_colonne_brisee"]
+[ext_resource type="Texture2D" uid="uid://ch2iky3wg6byj" path="res://assets/props/grotte/congere.png" id="g_congere"]
+[ext_resource type="Texture2D" uid="uid://cnhu7yvjv5amv" path="res://assets/props/grotte/fissure_lumineuse.png" id="g_fissure"]
+[ext_resource type="Texture2D" uid="uid://gmg54v3b243c" path="res://assets/props/grotte/flaque_gelee.png" id="g_flaque"]
+[ext_resource type="Texture2D" uid="uid://th06bv70gtl6" path="res://assets/props/grotte/geode.png" id="g_geode"]
 [ext_resource type="PackedScene" uid="uid://dkexqekqeptd4" path="res://scenes/decors/props/grotte/GlaceEmpilee.tscn" id="g_glace"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/GrappeCristaux.tscn" id="g_grappe"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/MiniLacGele.tscn" id="g_lac"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/TasPierres.tscn" id="g_pierres"]
-[ext_resource type="PackedScene" path="res://scenes/decors/props/grotte/VeineCristalMur.tscn" id="g_veine"]
+[ext_resource type="Texture2D" uid="uid://bip7n6bihgrg5" path="res://assets/props/grotte/grappe_cristaux.png" id="g_grappe"]
+[ext_resource type="Texture2D" uid="uid://derxsdufogc1l" path="res://assets/props/grotte/mini_lac_gele.png" id="g_lac"]
+[ext_resource type="Texture2D" uid="uid://cclkoou2acrp5" path="res://assets/props/grotte/tas_pierres.png" id="g_pierres"]
+[ext_resource type="Texture2D" uid="uid://drbwhq3gakl50" path="res://assets/props/grotte/veine_cristal_mur.png" id="g_veine"]
 [ext_resource type="PackedScene" path="res://scenes/decors/igloo.tscn" id="igloo"]
 [ext_resource type="PackedScene" uid="uid://cfuc5gb01g7jn" path="res://scenes/entites/lutin_noel.tscn" id="lutin"]
 [ext_resource type="PackedScene" path="res://scenes/meteo/blizzard.tscn" id="meteo"]
@@ -46,7 +46,7 @@
 [ext_resource type="PackedScene" uid="uid://jj522styq8rs" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/pouvoir_chaleur_pickup.tscn" id="pouvoir"]
-[ext_resource type="PackedScene" uid="uid://du38rqxpol3j8" path="res://scenes/decors/props/Rocher.tscn" id="rocher"]
+[ext_resource type="Texture2D" uid="uid://bruo6y23arcsm" path="res://assets/props/rocher_glace.png" id="rocher"]
 [ext_resource type="PackedScene" uid="uid://c0hqmgvti2q03" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="sol"]
 [ext_resource type="PackedScene" uid="uid://oywi8ac3yrsw" path="res://scenes/sol/SolGrotte.tscn" id="solg_c"]
 [ext_resource type="PackedScene" uid="uid://oywi8ac3yrsx" path="res://scenes/sol/SolGrotteCentreB.tscn" id="solg_cb"]
@@ -139,20 +139,33 @@ flip_h = true
 [node name="Igloo5" parent="Village/Decor" unique_id=514023599 instance=ExtResource("igloo")]
 position = Vector2(415, 269)
 
-[node name="Rocher" parent="Village/Decor" unique_id=1012349065 instance=ExtResource("rocher")]
+[node name="Rocher" type="Sprite2D" parent="Village/Decor"]
 position = Vector2(502, 271)
+texture = ExtResource("rocher")
+z_index = -1
+offset = Vector2(0, 16.375)
 
-[node name="CristalGros" parent="Village/Decor" unique_id=832460837 instance=ExtResource("cristalg")]
+[node name="CristalGros" type="Sprite2D" parent="Village/Decor"]
 position = Vector2(980, 268)
+texture = ExtResource("cristalg")
+z_index = -1
+offset = Vector2(0, 9)
 
-[node name="CristalPetit" parent="Village/Decor" unique_id=1387160016 instance=ExtResource("cristalp")]
+[node name="CristalPetit" type="Sprite2D" parent="Village/Decor"]
 position = Vector2(620, 284)
+texture = ExtResource("cristalp")
+z_index = -1
 
-[node name="CristalPetit2" parent="Village/Decor" unique_id=1591060625 instance=ExtResource("cristalp")]
+[node name="CristalPetit2" type="Sprite2D" parent="Village/Decor"]
 position = Vector2(1080, 284)
+texture = ExtResource("cristalp")
+z_index = -1
 
-[node name="FleurGivre" parent="Village/Decor" unique_id=643500453 instance=ExtResource("fleur")]
+[node name="FleurGivre" type="Sprite2D" parent="Village/Decor"]
 position = Vector2(360, 284)
+texture = ExtResource("fleur")
+z_index = -1
+offset = Vector2(0, 4)
 
 [node name="Pnj" type="Node2D" parent="Village" unique_id=700000020]
 
@@ -241,101 +254,173 @@ position = Vector2(4550, 272)
 
 [node name="Decor" type="Node2D" parent="Banquise" unique_id=819138525]
 
-[node name="Rocher" parent="Banquise/Decor" unique_id=2016734448 instance=ExtResource("rocher")]
+[node name="Rocher" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2150, 252)
+texture = ExtResource("rocher")
+z_index = -1
+offset = Vector2(0, 16.375)
 
-[node name="CristalGros" parent="Banquise/Decor" unique_id=1195526778 instance=ExtResource("cristalg")]
+[node name="CristalGros" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2620, 268)
+texture = ExtResource("cristalg")
+z_index = -1
+offset = Vector2(0, 9)
 
-[node name="CristalPetit" parent="Banquise/Decor" unique_id=1617416377 instance=ExtResource("cristalp")]
+[node name="CristalPetit" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2218, 276)
+texture = ExtResource("cristalp")
+z_index = -1
 
-[node name="FleurGivre" parent="Banquise/Decor" unique_id=242948217 instance=ExtResource("fleur")]
+[node name="FleurGivre" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2450, 284)
+texture = ExtResource("fleur")
+z_index = -1
+offset = Vector2(0, 4)
 
-[node name="FleurGivre2" parent="Banquise/Decor" unique_id=85913560 instance=ExtResource("fleur")]
+[node name="FleurGivre2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2700, 284)
+texture = ExtResource("fleur")
+z_index = -1
+offset = Vector2(0, 4)
 
-[node name="CristalGros2" parent="Banquise/Decor" unique_id=1937939991 instance=ExtResource("cristalg")]
+[node name="CristalGros2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3100, 268)
+texture = ExtResource("cristalg")
+z_index = -1
+offset = Vector2(0, 9)
 
-[node name="CristalGros3" parent="Banquise/Decor" unique_id=1796972081 instance=ExtResource("cristalg")]
+[node name="CristalGros3" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4300, 268)
+texture = ExtResource("cristalg")
+z_index = -1
+offset = Vector2(0, 9)
 
-[node name="CristalPetit2" parent="Banquise/Decor" unique_id=5326416 instance=ExtResource("cristalp")]
+[node name="CristalPetit2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3300, 284)
+texture = ExtResource("cristalp")
+z_index = -1
 
-[node name="CristalPetit3" parent="Banquise/Decor" unique_id=1595708465 instance=ExtResource("cristalp")]
+[node name="CristalPetit3" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3800, 284)
+texture = ExtResource("cristalp")
+z_index = -1
 
-[node name="CristalPetit4" parent="Banquise/Decor" unique_id=1148796574 instance=ExtResource("cristalp")]
+[node name="CristalPetit4" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4500, 284)
+texture = ExtResource("cristalp")
+z_index = -1
 
-[node name="Rocher2" parent="Banquise/Decor" unique_id=1606535264 instance=ExtResource("rocher")]
+[node name="Rocher2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3600, 252)
+texture = ExtResource("rocher")
+z_index = -1
+offset = Vector2(0, 16.375)
 
-[node name="Rocher3" parent="Banquise/Decor" unique_id=401579510 instance=ExtResource("rocher")]
+[node name="Rocher3" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4900, 252)
+texture = ExtResource("rocher")
+z_index = -1
+offset = Vector2(0, 16.375)
 
-[node name="ColonneGlace1" parent="Banquise/Decor" unique_id=1778159670 instance=ExtResource("g_colonne")]
+[node name="ColonneGlace1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2950, 254)
+texture = ExtResource("g_colonne")
+z_index = -1
 
-[node name="ColonneGlace2" parent="Banquise/Decor" unique_id=1845187423 instance=ExtResource("g_colonne")]
+[node name="ColonneGlace2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3720, 254)
+texture = ExtResource("g_colonne")
+z_index = -1
 
-[node name="ColonneGlace3" parent="Banquise/Decor" unique_id=1573782724 instance=ExtResource("g_colonne")]
+[node name="ColonneGlace3" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(5380, 254)
+texture = ExtResource("g_colonne")
+z_index = -1
 
-[node name="ChampiGeant1" parent="Banquise/Decor" unique_id=1152396756 instance=ExtResource("g_champi_geant")]
+[node name="ChampiGeant1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3250, 268)
+texture = ExtResource("g_champi_geant")
+z_index = -1
 
-[node name="ChampiGeant2" parent="Banquise/Decor" unique_id=2130756598 instance=ExtResource("g_champi_geant")]
+[node name="ChampiGeant2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(5100, 268)
+texture = ExtResource("g_champi_geant")
+z_index = -1
 
-[node name="Champi1" parent="Banquise/Decor" unique_id=1910463905 instance=ExtResource("g_champi")]
+[node name="Champi1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2900, 282)
+texture = ExtResource("g_champi")
+z_index = -1
 
-[node name="Champi2" parent="Banquise/Decor" unique_id=1142381795 instance=ExtResource("g_champi")]
+[node name="Champi2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4200, 282)
+texture = ExtResource("g_champi")
+z_index = -1
 
-[node name="Champi4" parent="Banquise/Decor" unique_id=1559196436 instance=ExtResource("g_champi")]
+[node name="Champi4" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4950, 282)
+texture = ExtResource("g_champi")
+z_index = -1
 
-[node name="Grappe1" parent="Banquise/Decor" unique_id=377977314 instance=ExtResource("g_grappe")]
+[node name="Grappe1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3560, 278)
+texture = ExtResource("g_grappe")
+z_index = -1
 
-[node name="Grappe2" parent="Banquise/Decor" unique_id=1610122729 instance=ExtResource("g_grappe")]
+[node name="Grappe2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4880, 278)
+texture = ExtResource("g_grappe")
+z_index = -1
 
-[node name="Geode1" parent="Banquise/Decor" unique_id=2087572625 instance=ExtResource("g_geode")]
+[node name="Geode1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4120, 278)
+texture = ExtResource("g_geode")
+z_index = -1
 
-[node name="Geode2" parent="Banquise/Decor" unique_id=1181957771 instance=ExtResource("g_geode")]
+[node name="Geode2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(5300, 278)
+texture = ExtResource("g_geode")
+z_index = -1
 
-[node name="Lac1" parent="Banquise/Decor" unique_id=1392608718 instance=ExtResource("g_lac")]
+[node name="Lac1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3820, 286)
+texture = ExtResource("g_lac")
+z_index = -1
 
-[node name="Lac2" parent="Banquise/Decor" unique_id=682630809 instance=ExtResource("g_lac")]
+[node name="Lac2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4680, 286)
+texture = ExtResource("g_lac")
+z_index = -1
 
-[node name="Congere1" parent="Banquise/Decor" unique_id=309431022 instance=ExtResource("g_congere")]
+[node name="Congere1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3140, 286)
+texture = ExtResource("g_congere")
+z_index = -1
 
-[node name="Congere2" parent="Banquise/Decor" unique_id=464561138 instance=ExtResource("g_congere")]
+[node name="Congere2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(5020, 286)
+texture = ExtResource("g_congere")
+z_index = -1
 
-[node name="Flaque1" parent="Banquise/Decor" unique_id=2069144568 instance=ExtResource("g_flaque")]
+[node name="Flaque1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4420, 286)
+texture = ExtResource("g_flaque")
+z_index = -1
 
-[node name="ColonneBrisee1" parent="Banquise/Decor" unique_id=1918144948 instance=ExtResource("g_colonne_brisee")]
+[node name="ColonneBrisee1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4760, 286)
+texture = ExtResource("g_colonne_brisee")
+z_index = -1
 
-[node name="Pierres1" parent="Banquise/Decor" unique_id=1514931407 instance=ExtResource("g_pierres")]
+[node name="Pierres1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3920, 286)
+texture = ExtResource("g_pierres")
+z_index = -1
 
-[node name="Pierres2" parent="Banquise/Decor" unique_id=579425358 instance=ExtResource("g_pierres")]
+[node name="Pierres2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(5220, 286)
+texture = ExtResource("g_pierres")
+z_index = -1
 
 [node name="Glace1" parent="Banquise/Decor" unique_id=1402786529 instance=ExtResource("g_glace")]
 z_index = -1
@@ -345,14 +430,20 @@ position = Vector2(3360, 284)
 z_index = -1
 position = Vector2(5460, 284)
 
-[node name="VeineMur1" parent="Banquise/Decor" unique_id=746917375 instance=ExtResource("g_veine")]
+[node name="VeineMur1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(2830, 130)
+texture = ExtResource("g_veine")
+z_index = -1
 
-[node name="Fissure1" parent="Banquise/Decor" unique_id=1781981918 instance=ExtResource("g_fissure")]
+[node name="Fissure1" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(3650, 110)
+texture = ExtResource("g_fissure")
+z_index = -1
 
-[node name="Fissure2" parent="Banquise/Decor" unique_id=1939018732 instance=ExtResource("g_fissure")]
+[node name="Fissure2" type="Sprite2D" parent="Banquise/Decor"]
 position = Vector2(4850, 110)
+texture = ExtResource("g_fissure")
+z_index = -1
 
 [node name="Pnj" type="Node2D" parent="Banquise" unique_id=700000021]
 
@@ -392,29 +483,45 @@ position = Vector2(5600, 272)
 
 [node name="Decor" type="Node2D" parent="ZoneBossCerf" unique_id=669849264]
 
-[node name="ColonneGlace4" parent="ZoneBossCerf/Decor" unique_id=533667475 instance=ExtResource("g_colonne")]
+[node name="ColonneGlace4" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(5950, 254)
+texture = ExtResource("g_colonne")
+z_index = -1
 
-[node name="Champi3" parent="ZoneBossCerf/Decor" unique_id=1674662838 instance=ExtResource("g_champi")]
+[node name="Champi3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(5620, 282)
+texture = ExtResource("g_champi")
+z_index = -1
 
-[node name="Grappe3" parent="ZoneBossCerf/Decor" unique_id=300413515 instance=ExtResource("g_grappe")]
+[node name="Grappe3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(6020, 278)
+texture = ExtResource("g_grappe")
+z_index = -1
 
-[node name="Lac3" parent="ZoneBossCerf/Decor" unique_id=1594723993 instance=ExtResource("g_lac")]
+[node name="Lac3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(5720, 286)
+texture = ExtResource("g_lac")
+z_index = -1
 
-[node name="Flaque2" parent="ZoneBossCerf/Decor" unique_id=2135867173 instance=ExtResource("g_flaque")]
+[node name="Flaque2" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(5880, 286)
+texture = ExtResource("g_flaque")
+z_index = -1
 
-[node name="VeineMur2" parent="ZoneBossCerf/Decor" unique_id=9569320 instance=ExtResource("g_veine")]
+[node name="VeineMur2" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(6180, 140)
+texture = ExtResource("g_veine")
+z_index = -1
 
-[node name="ColonneBrisee2" parent="ZoneBossCerf/Decor" unique_id=357808324 instance=ExtResource("g_colonne_brisee")]
+[node name="ColonneBrisee2" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(5980, 286)
+texture = ExtResource("g_colonne_brisee")
+z_index = -1
 
-[node name="Fissure3" parent="ZoneBossCerf/Decor" unique_id=294092093 instance=ExtResource("g_fissure")]
+[node name="Fissure3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
 position = Vector2(5650, 110)
+texture = ExtResource("g_fissure")
+z_index = -1
 
 [node name="Interactifs" type="Node2D" parent="ZoneBossCerf" unique_id=1375720744]
 

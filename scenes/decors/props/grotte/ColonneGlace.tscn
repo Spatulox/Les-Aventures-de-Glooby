@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3]
-
-[ext_resource type="Texture2D" uid="uid://bhhuniybvlpn" path="res://assets/props/grotte/colonne_glace.png" id="1"]
-
-[node name="ColonneGlace" type="Sprite2D"]
-z_index = -1
-texture = ExtResource("1")
