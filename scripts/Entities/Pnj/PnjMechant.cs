@@ -1,6 +1,6 @@
 using Godot;
 
-// Base commune à tous les PNJ hostiles (lanceur de boules de neige, fonceur...).
+// Base commune à tous les PNJ hostiles (lanceur de boules de neige, ours de neige...).
 // Pendant amical de PnjAmical : une LivingEntity qui déambule en va-et-vient sur le sol,
 // mais qui, elle, blesse le joueur au contact via une Area2D « ZoneContact » posée en
 // enfant dans sa scène. Le pipeline d'animation est actif (comme le Player et les Boss) :
