@@ -47,6 +47,61 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 			apercu.Visible = false;
 	}
 
+	// ---- Détection du joueur (portée) ----
+	// Joueur actuellement présent dans la ZoneDetection (Area2D enfant facultative), ou null.
+	private Player _joueurDansZone;
+
+	// Vrai si la scène porte une Area2D « ZoneDetection » câblée : la portée est alors pilotée
+	// par la taille de sa CollisionShape2D (réglable par instance) et non par une distance codée.
+	protected bool ZoneDetectionPresente { get; private set; }
+
+	// Câble la zone de détection facultative « ZoneDetection » : au chevauchement du joueur, il
+	// devient la cible « à portée » ; à sa sortie, la portée redevient vide. Sans nœud
+	// « ZoneDetection », ne fait rien : la sous-classe retombe sur la distance flottante (repli).
+	protected void CablerZoneDetection(string nom = "ZoneDetection")
+	{
+		var zone = GetNodeOrNull<Area2D>(nom);
+		if (zone == null)
+			return;
+
+		ZoneDetectionPresente = true;
+		zone.BodyEntered += corps => { if (corps is Player j) _joueurDansZone = j; };
+		zone.BodyExited += corps => { if (corps == _joueurDansZone) _joueurDansZone = null; };
+	}
+
+	// Joueur « à portée » : si la scène fournit une ZoneDetection, c'est le joueur présent dans la
+	// zone (distance 0) ou null (distance MaxValue) ; sinon, le joueur le plus proche à sa distance
+	// réelle. Contrat : distance == 0 signifie « dans la zone », MaxValue « hors de portée » — les
+	// IA gardent ainsi leur test « joueur == null || distance > Portee » sans le moindre changement.
+	protected Player JoueurAPortee(out float distance)
+	{
+		if (ZoneDetectionPresente)
+		{
+			distance = _joueurDansZone != null ? 0f : float.MaxValue;
+			return _joueurDansZone;
+		}
+		return JoueurLePlusProche(out distance);
+	}
+
+	// Renvoie le joueur le plus proche (groupe « joueur ») et sa distance, ou null s'il n'y en a pas.
+	protected Player JoueurLePlusProche(out float distance)
+	{
+		distance = float.MaxValue;
+		Player plusProche = null;
+		foreach (var noeud in GetTree().GetNodesInGroup("joueur"))
+		{
+			if (noeud is not Player joueur)
+				continue;
+			float d = GlobalPosition.DistanceTo(joueur.GlobalPosition);
+			if (d < distance)
+			{
+				distance = d;
+				plusProche = joueur;
+			}
+		}
+		return plusProche;
+	}
+
 	// ---- PV & dégâts (Damageable) ----
 	[Signal] public delegate void PvChangesEventHandler(int pv, int pvMax);
 	[Signal] public delegate void VaincuEventHandler();

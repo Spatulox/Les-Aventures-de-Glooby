@@ -43,6 +43,10 @@ public abstract partial class PnjMechant : LivingEntity
 		if (zoneContact != null)
 			zoneContact.BodyEntered += SurContact;
 
+		// Câble la zone de détection (facultative) : si la scène porte une Area2D « ZoneDetection »,
+		// c'est sa taille (réglable par instance) qui définit la portée, à la place de PorteeDetection.
+		CablerZoneDetection();
+
 		Initialiser();
 
 		// Charge les animations dans l'AnimatedSprite2D de la scène puis lance l'idle
@@ -74,8 +78,9 @@ public abstract partial class PnjMechant : LivingEntity
 
 		AppliquerGravite(ref velocite, dt);
 
-		// Le joueur le plus proche sert de cible aux comportements d'attaque des sous-classes.
-		var joueur = JoueurLePlusProche(out float distance);
+		// Le joueur à portée sert de cible aux comportements d'attaque des sous-classes (piloté par
+		// la ZoneDetection si la scène en fournit une, sinon par la distance à PorteeDetection).
+		var joueur = JoueurAPortee(out float distance);
 		DeciderMouvement(dt, ref velocite, joueur, distance);
 
 		Velocity = velocite;
@@ -126,25 +131,6 @@ public abstract partial class PnjMechant : LivingEntity
 	protected void DefinirOrientation(bool versLaGauche)
 	{
 		Sprite.FlipH = versLaGauche;
-	}
-
-	// Renvoie le joueur le plus proche (groupe "joueur") et sa distance, ou null s'il n'y en a pas.
-	protected Player JoueurLePlusProche(out float distance)
-	{
-		distance = float.MaxValue;
-		Player plusProche = null;
-		foreach (var noeud in GetTree().GetNodesInGroup("joueur"))
-		{
-			if (noeud is not Player joueur)
-				continue;
-			float d = GlobalPosition.DistanceTo(joueur.GlobalPosition);
-			if (d < distance)
-			{
-				distance = d;
-				plusProche = joueur;
-			}
-		}
-		return plusProche;
 	}
 
 	// Contact de la zone hostile avec le joueur : lui inflige des dégâts avec recul,

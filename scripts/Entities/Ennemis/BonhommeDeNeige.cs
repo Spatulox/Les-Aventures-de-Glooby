@@ -48,6 +48,9 @@ public partial class BonhommeDeNeige : LivingEntity, Etourdissable
 		_sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		AppliquerCollisionsPnj();
 		MasquerApercuEditeur();
+		// Zone de détection facultative : si la scène porte une Area2D « ZoneDetection », sa taille
+		// (réglable par instance) définit la portée à la place de Portee.
+		CablerZoneDetection();
 		_sprite.SpriteFrames = ConstruireAnimations();
 		Pv = PvMax;   // décoratif : les PV ne sont jamais consommés (voir TakeDamage)
 		AddToGroup("pnj");
@@ -66,7 +69,9 @@ public partial class BonhommeDeNeige : LivingEntity, Etourdissable
 		if (_rechargeMinuteur > 0f)
 			_rechargeMinuteur -= dt;
 
-		var joueur = JoueurLePlusProche(out float distance);
+		// Joueur à portée : piloté par la ZoneDetection si la scène en fournit une (distance 0 dans
+		// la zone), sinon par la distance à Portee (repli).
+		var joueur = JoueurAPortee(out float distance);
 
 		switch (_etat)
 		{
@@ -237,21 +242,6 @@ public partial class BonhommeDeNeige : LivingEntity, Etourdissable
 			return true;
 		}
 		return false;
-	}
-
-	// Joueur le plus proche (groupe "joueur") et sa distance.
-	private Player JoueurLePlusProche(out float distance)
-	{
-		distance = float.MaxValue;
-		Player proche = null;
-		foreach (var n in GetTree().GetNodesInGroup("joueur"))
-		{
-			if (n is not Player j)
-				continue;
-			float d = GlobalPosition.DistanceTo(j.GlobalPosition);
-			if (d < distance) { distance = d; proche = j; }
-		}
-		return proche;
 	}
 
 	private SpriteFrames ConstruireAnimations()
