@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/UI/Hud.cs" id="1"]
 [ext_resource type="Texture2D" path="res://assets/props/poisson.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/hud/barre_mana_fond.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/ui/hud/barre_mana_remplissage.png" id="4"]
 
 [node name="Hud" type="CanvasLayer"]
 script = ExtResource("1")
@@ -15,9 +17,9 @@ theme_override_constants/separation = 4
 
 [node name="Poissons" type="HBoxContainer" parent="."]
 offset_left = 12.0
-offset_top = 34.0
+offset_top = 40.0
 offset_right = 120.0
-offset_bottom = 58.0
+offset_bottom = 64.0
 theme_override_constants/separation = 6
 
 [node name="IconePoisson" type="TextureRect" parent="Poissons"]
@@ -28,18 +30,19 @@ expand_mode = 1
 [node name="LabelPoissons" type="Label" parent="Poissons"]
 text = "x 0"
 
-[node name="ManaGlace" type="Control" parent="."]
+[node name="ManaGlace" type="TextureProgressBar" parent="."]
 offset_left = 12.0
-offset_top = 62.0
-offset_right = 132.0
+offset_top = 66.0
+offset_right = 124.0
 offset_bottom = 74.0
-
-[node name="Fond" type="ColorRect" parent="ManaGlace"]
-offset_right = 120.0
-offset_bottom = 12.0
-color = Color(0.1, 0.13, 0.2, 0.7)
-
-[node name="Remplissage" type="ColorRect" parent="ManaGlace"]
-offset_right = 120.0
-offset_bottom = 12.0
-color = Color(0.55, 0.82, 1, 1)
+min_value = 0.0
+max_value = 100.0
+value = 100.0
+nine_patch_stretch = true
+stretch_margin_left = 16
+stretch_margin_top = 4
+stretch_margin_right = 16
+stretch_margin_bottom = 4
+texture_under = ExtResource("3")
+texture_progress = ExtResource("4")
+fill_mode = 0
