@@ -209,11 +209,23 @@ public partial class GameState : Node
 
 	public void MarquerBossVaincu(string id) => _donnees.BossVaincus.Add(id);
 
-	// Écrit toute la progression courante sur disque (emplacement unique).
-	public void Sauvegarder() => Sauvegarde.Ecrire(_donnees.VersDictionnaire());
+	// Écrit toute la progression courante sur disque (emplacement unique). En mode
+	// debug on n'écrit jamais : une partie de test ne doit pas contaminer le fichier
+	// de sauvegarde (voir ModeDebug), sinon Continuer reprendrait un demi-état debug
+	// (pouvoirs débloqués mais ni mana infini ni oneshot). Continuer reprend donc
+	// toujours une vraie partie.
+	public void Sauvegarder()
+	{
+		if (ModeDebug)
+			return;
+
+		Sauvegarde.Ecrire(_donnees.VersDictionnaire());
+	}
 
 	// Recharge la progression depuis le disque : remplace l'instance de données
-	// puis ré-émet les signaux pour resynchroniser HUD et sprites de checkpoint.
+	// puis ré-émet les signaux pour resynchroniser HUD et sprites de checkpoint
+	// (dont les pouvoirs débloqués : le HUD, autoload, a lu son état une seule fois
+	// au boot et doit être renotifié pour ré-afficher la jauge de mana).
 	// Retourne false si aucune sauvegarde n'existe.
 	public bool Charger()
 	{
@@ -227,6 +239,17 @@ public partial class GameState : Node
 		EmitSignal(SignalName.PvChanges, Pv, PvMax);
 		EmitSignal(SignalName.PoissonsChanges, Poissons);
 		EmitSignal(SignalName.CheckpointActif, CheckpointIdActif);
+
+		// Resynchronise les pouvoirs déjà débloqués dans la sauvegarde : sans ça la
+		// jauge de mana (masquée au boot) ne réapparaîtrait jamais après Continuer.
+		if (PouvoirChaleurActif)
+			EmitSignal(SignalName.PouvoirChaleurObtenu);
+		if (PouvoirGlaceActif)
+		{
+			EmitSignal(SignalName.PouvoirGlaceObtenu);
+			EmitSignal(SignalName.ManaGlaceChanges, ManaGlace, ManaGlaceMax);
+		}
+
 		return true;
 	}
 
