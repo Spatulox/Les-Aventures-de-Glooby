@@ -11,7 +11,7 @@ using Godot;
 //     DureeEtourdissement (il cesse de viser et de tirer) ;
 //   - le pouvoir de chaleur (DamageSource.Fire) le fait FONDRE définitivement.
 // Toute autre source de dégâts le laisse indifférent.
-public partial class BonhommeDeNeige : LivingEntity
+public partial class BonhommeDeNeige : LivingEntity, Etourdissable
 {
 	private enum Etat { Idle, Armer, Lancer, Etourdi, Fonte }
 
@@ -171,7 +171,7 @@ public partial class BonhommeDeNeige : LivingEntity
 				break;
 
 			case DamageSource.Snowball:
-				EntrerEtourdi();
+				Etourdir(DureeEtourdissement);
 				break;
 		}
 	}
@@ -188,14 +188,14 @@ public partial class BonhommeDeNeige : LivingEntity
 		return source is not (DamageSource.Fire or DamageSource.Snowball);
 	}
 
-	// Étourdi par une boule de neige : le tir en cours est annulé et le bonhomme se
-	// fige (idle en pause) le temps du décompte. Pas d'animation dédiée — l'idle figé
-	// suffit et évite de générer un jeu de frames supplémentaire.
-	private void EntrerEtourdi()
+	// Étourdi par une boule de neige (Etourdissable) : le tir en cours est annulé et le
+	// bonhomme se fige (idle en pause) le temps du décompte. Pas d'animation dédiée — l'idle
+	// figé suffit et évite de générer un jeu de frames supplémentaire.
+	public void Etourdir(float duree)
 	{
 		OublierFinLancer();
 		_etat = Etat.Etourdi;
-		_minuteur = DureeEtourdissement;
+		_minuteur = duree;
 		_rechargeMinuteur = CadenceTir;   // il ne repart pas en tir dès le réveil
 		Effets.FlashCouleur(_sprite, new Color(0.6f, 0.85f, 1f), 0.1f, 0.3f);
 		JouerSiPresente("idle");

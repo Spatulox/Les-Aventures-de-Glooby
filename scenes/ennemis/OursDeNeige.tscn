@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bj4l8jmcag3ln"]
 
-[ext_resource type="Script" uid="uid://cxds8uw1rgenf" path="res://scripts/Entities/Pnj/OursDeNeige.cs" id="1"]
+[ext_resource type="Script" uid="uid://cxds8uw1rgenf" path="res://scripts/Entities/Ennemis/OursDeNeige.cs" id="1"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
 radius = 6.0

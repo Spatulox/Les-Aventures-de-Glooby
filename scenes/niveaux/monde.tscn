@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://21qfi1kw4uu" path="res://scenes/ennemis/BonhommeDeNeige.tscn" id="49_nhnan"]
 [ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseForteDescendante.tscn" id="52_kxqbj"]
 [ext_resource type="Texture2D" uid="uid://s1ycefd1kkcg" path="res://assets/props/grotte/brasero_eteint.png" id="53_a0dla"]
-[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/entites/ours_de_neige.tscn" id="55_dejuv"]
+[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="55_dejuv"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss_cerf.tscn" id="boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="boss_hud"]
