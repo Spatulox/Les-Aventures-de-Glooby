@@ -1,0 +1,309 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/fond.png" id="t1"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/back_wall.png" id="t2"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/ceiling.png" id="t3"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/mur_side.png" id="t4"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/sol.png" id="t5"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/plat.png" id="t6"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/plat_petite.png" id="t7"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/champ.png" id="t8"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/massif.png" id="t9"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/tulipe.png" id="t10"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/liane.png" id="t11"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/pointes.png" id="t12"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/focal_glow.png" id="t13"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/focal.png" id="t14"]
+[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/salle/vignette.png" id="t15"]
+
+[sub_resource type="RectangleShape2D" id="s1"]
+size = Vector2(1160, 34)
+[sub_resource type="RectangleShape2D" id="s2"]
+size = Vector2(87, 32)
+[sub_resource type="RectangleShape2D" id="s3"]
+size = Vector2(87, 32)
+[sub_resource type="RectangleShape2D" id="s4"]
+size = Vector2(55, 27)
+
+[node name="SalleFlorale" type="Node2D"]
+
+[node name="Grade" type="CanvasModulate" parent="."]
+color = Color(0.9, 0.96, 1.08, 1)
+
+[node name="Fond" type="Node2D" parent="."]
+
+[node name="Decor" type="Node2D" parent="."]
+
+[node name="Sol" type="StaticBody2D" parent="."]
+collision_layer = 1
+
+[node name="Plateformes" type="Node2D" parent="."]
+
+[node name="Hazard" type="Node2D" parent="."]
+
+[node name="Focal" type="Node2D" parent="."]
+
+[node name="Avant" type="Node2D" parent="."]
+
+[node name="Overlay" type="CanvasLayer" parent="."]
+
+[node name="Dec1" type="Sprite2D" parent="Decor"]
+position = Vector2(640, 360)
+scale = Vector2(4.0, 4.0)
+z_index = -100
+texture = ExtResource("t1")
+
+[node name="Dec2" type="Sprite2D" parent="Decor"]
+position = Vector2(640, 340)
+z_index = -60
+texture = ExtResource("t2")
+
+[node name="Ava1" type="Sprite2D" parent="Avant"]
+position = Vector2(640, 35)
+z_index = 6
+texture = ExtResource("t3")
+
+[node name="Dec3" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 72)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec4" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 136)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec5" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 200)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec6" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 264)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec7" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 328)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec8" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 392)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec9" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 456)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec10" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 520)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec11" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 584)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec12" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 648)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec13" type="Sprite2D" parent="Decor"]
+position = Vector2(44, 712)
+z_index = -50
+texture = ExtResource("t4")
+
+[node name="Dec14" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 72)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec15" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 136)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec16" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 200)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec17" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 264)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec18" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 328)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec19" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 392)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec20" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 456)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec21" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 520)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec22" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 584)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec23" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 648)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Dec24" type="Sprite2D" parent="Decor"]
+position = Vector2(1236, 712)
+z_index = -50
+flip_h = true
+texture = ExtResource("t4")
+
+[node name="Sol1" type="Sprite2D" parent="Sol"]
+position = Vector2(140, 665)
+texture = ExtResource("t5")
+
+[node name="Sol2" type="Sprite2D" parent="Sol"]
+position = Vector2(256, 665)
+texture = ExtResource("t5")
+
+[node name="Sol3" type="Sprite2D" parent="Sol"]
+position = Vector2(372, 665)
+texture = ExtResource("t5")
+
+[node name="Sol4" type="Sprite2D" parent="Sol"]
+position = Vector2(488, 665)
+texture = ExtResource("t5")
+
+[node name="Sol5" type="Sprite2D" parent="Sol"]
+position = Vector2(604, 665)
+texture = ExtResource("t5")
+
+[node name="Sol6" type="Sprite2D" parent="Sol"]
+position = Vector2(720, 665)
+texture = ExtResource("t5")
+
+[node name="Sol7" type="Sprite2D" parent="Sol"]
+position = Vector2(836, 665)
+texture = ExtResource("t5")
+
+[node name="Sol8" type="Sprite2D" parent="Sol"]
+position = Vector2(952, 665)
+texture = ExtResource("t5")
+
+[node name="Sol9" type="Sprite2D" parent="Sol"]
+position = Vector2(1068, 665)
+texture = ExtResource("t5")
+
+[node name="Sol10" type="Sprite2D" parent="Sol"]
+position = Vector2(1184, 665)
+texture = ExtResource("t5")
+
+[node name="Plat1" type="StaticBody2D" parent="Plateformes"]
+collision_layer = 1
+[node name="Spr" type="Sprite2D" parent="Plateformes/Plat1"]
+position = Vector2(360, 470)
+texture = ExtResource("t6")
+[node name="Col" type="CollisionShape2D" parent="Plateformes/Plat1"]
+position = Vector2(360, 470)
+shape = SubResource("s2")
+
+[node name="Plat2" type="StaticBody2D" parent="Plateformes"]
+collision_layer = 1
+[node name="Spr" type="Sprite2D" parent="Plateformes/Plat2"]
+position = Vector2(900, 395)
+texture = ExtResource("t6")
+[node name="Col" type="CollisionShape2D" parent="Plateformes/Plat2"]
+position = Vector2(900, 395)
+shape = SubResource("s3")
+
+[node name="Plat3" type="StaticBody2D" parent="Plateformes"]
+collision_layer = 1
+[node name="Spr" type="Sprite2D" parent="Plateformes/Plat3"]
+position = Vector2(650, 300)
+texture = ExtResource("t7")
+[node name="Col" type="CollisionShape2D" parent="Plateformes/Plat3"]
+position = Vector2(650, 300)
+shape = SubResource("s4")
+
+[node name="Dec25" type="Sprite2D" parent="Decor"]
+position = Vector2(1060, 615)
+z_index = 1
+texture = ExtResource("t8")
+
+[node name="Dec26" type="Sprite2D" parent="Decor"]
+position = Vector2(200, 618)
+z_index = 1
+texture = ExtResource("t9")
+
+[node name="Dec27" type="Sprite2D" parent="Decor"]
+position = Vector2(760, 598)
+z_index = 1
+texture = ExtResource("t10")
+
+[node name="Dec28" type="Sprite2D" parent="Decor"]
+position = Vector2(300, 120)
+z_index = 1
+texture = ExtResource("t11")
+
+[node name="Dec29" type="Sprite2D" parent="Decor"]
+position = Vector2(1000, 120)
+z_index = 1
+flip_h = true
+texture = ExtResource("t11")
+
+[node name="Haz1" type="Sprite2D" parent="Hazard"]
+position = Vector2(520, 619)
+z_index = 1
+texture = ExtResource("t12")
+
+[node name="Dec30" type="Sprite2D" parent="Decor"]
+position = Vector2(650, 570)
+z_index = 1
+texture = ExtResource("t13")
+
+[node name="Foc1" type="Sprite2D" parent="Focal"]
+position = Vector2(650, 570)
+z_index = 2
+texture = ExtResource("t14")
+
+[node name="Ove1" type="Sprite2D" parent="Overlay"]
+position = Vector2(640, 360)
+z_index = 100
+texture = ExtResource("t15")
+
+[node name="CollSol" type="CollisionShape2D" parent="Sol"]
+position = Vector2(662, 648)
+shape = SubResource("s1")
+
+[node name="DepartJoueur" type="Marker2D" parent="."]
+position = Vector2(360, 610)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+zoom = Vector2(0.5, 0.5)
