@@ -2,6 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/SolBanquiseEmboutDroit.tscn" id="20_1vuit"]
 [ext_resource type="PackedScene" uid="uid://b230aybnrmrin" path="res://scenes/plateformes/PlateformeMobile.tscn" id="46_a0dla"]
+[ext_resource type="PackedScene" uid="uid://21qfi1kw4uu" path="res://scenes/ennemis/BonhommeDeNeige.tscn" id="49_nhnan"]
+[ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseForteDescendante.tscn" id="52_kxqbj"]
+[ext_resource type="Texture2D" uid="uid://s1ycefd1kkcg" path="res://assets/props/grotte/brasero_eteint.png" id="53_a0dla"]
+[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/entites/ours_de_neige.tscn" id="55_dejuv"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss_cerf.tscn" id="boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="boss_hud"]
@@ -47,7 +51,6 @@
 [ext_resource type="PackedScene" uid="uid://oywi8ac3yrsw" path="res://scenes/sol/SolGrotte.tscn" id="solg_c"]
 [ext_resource type="PackedScene" uid="uid://oywi8ac3yrsx" path="res://scenes/sol/SolGrotteCentreB.tscn" id="solg_cb"]
 [ext_resource type="PackedScene" uid="uid://oywi8ac3yrsy" path="res://scenes/sol/SolGrotteCentreC.tscn" id="solg_cc"]
-[ext_resource type="PackedScene" uid="uid://c0grsolembdro" path="res://scenes/sol/SolGrotteEmboutDroit.tscn" id="solg_ed"]
 [ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/SolBanquise.tscn" id="sol_banquise"]
 [ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="stalactite_piege"]
@@ -554,6 +557,9 @@ position = Vector2(5170, 1323)
 [node name="MurDroitBas" parent="Grotte/Sol/MurDroit" unique_id=1964539903 instance=ExtResource("murg_b")]
 position = Vector2(5170, 1521)
 
+[node name="MurGrotteCentre" parent="Grotte/Sol/MurDroit" unique_id=878983757 instance=ExtResource("murg_c")]
+position = Vector2(5169, 1447)
+
 [node name="Entry" type="Node2D" parent="Grotte/Sol" unique_id=526187400]
 
 [node name="HautG1" parent="Grotte/Sol/Entry" unique_id=1795744274 instance=ExtResource("solg_c")]
@@ -592,7 +598,7 @@ position = Vector2(2030, 1140)
 [node name="MurGrotteCentre9" parent="Grotte/Sol/Entry" unique_id=981097590 instance=ExtResource("murg_c")]
 position = Vector2(2030, 1262)
 
-[node name="PlateformeMobile" parent="Grotte/Sol/Entry" unique_id=514327090 instance=ExtResource("46_a0dla")]
+[node name="PlateformeMobile" parent="Grotte/Sol/Entry" unique_id=316284977 instance=ExtResource("46_a0dla")]
 position = Vector2(1638.9999, 932)
 scale = Vector2(0.645, 0.645)
 collision_layer = 1
@@ -656,7 +662,7 @@ position = Vector2(2514, 766)
 position = Vector2(3324, 941)
 
 [node name="SolGrotte4" parent="Grotte/Sol/FireChamber" unique_id=244460411 instance=ExtResource("solg_c")]
-position = Vector2(3285, 697)
+position = Vector2(3284, 697)
 
 [node name="SolGrotte5" parent="Grotte/Sol/FireChamber" unique_id=525381109 instance=ExtResource("solg_c")]
 position = Vector2(3043, 568)
@@ -674,18 +680,11 @@ position = Vector2(3453, 805)
 position = Vector2(2871, 462)
 
 [node name="PenteBanquiseDouceMontante" parent="Grotte/Sol/FireChamber" unique_id=767501165 instance=ExtResource("pente_montante")]
-position = Vector2(3027, 750)
+position = Vector2(3027, 756)
 scale = Vector2(0.75, 0.75)
 
 [node name="MurGrotteCentre4" parent="Grotte/Sol/FireChamber" unique_id=354864700 instance=ExtResource("murg_c")]
-position = Vector2(3453, 682)
-
-[node name="PanneauBois" parent="Grotte/Sol/FireChamber" unique_id=197425152 instance=ExtResource("panneau")]
-z_index = 1
-position = Vector2(2228, 697.99994)
-scale = Vector2(0.61, 0.61)
-Type = 2
-Lignes = PackedStringArray("Raccourci")
+position = Vector2(3453, 683)
 
 [node name="SolGrotte3" parent="Grotte/Sol/FireChamber" unique_id=323072278 instance=ExtResource("solg_c")]
 position = Vector2(2270, 765.00006)
@@ -735,38 +734,202 @@ position = Vector2(4760, 1561)
 [node name="BasG13" parent="Grotte/Sol/SolBas" unique_id=18829583 instance=ExtResource("solg_cb")]
 position = Vector2(5016, 1561)
 
-[node name="BasGEd" parent="Grotte/Sol/SolBas" unique_id=120810823 instance=ExtResource("solg_ed")]
-position = Vector2(5030, 1561)
+[node name="UnderFireChamber" type="Node2D" parent="Grotte/Sol" unique_id=1204690604]
 
-[node name="Laby" type="Node2D" parent="Grotte/Sol" unique_id=1204690604]
-
-[node name="MurGrotteCentre2" parent="Grotte/Sol/Laby" unique_id=1827692370 instance=ExtResource("murg_c")]
+[node name="MurGrotteCentre2" parent="Grotte/Sol/UnderFireChamber" unique_id=1827692370 instance=ExtResource("murg_c")]
 position = Vector2(2270, 847)
 
-[node name="MurGrotteCentre3" parent="Grotte/Sol/Laby" unique_id=846665207 instance=ExtResource("murg_c")]
+[node name="MurGrotteCentre3" parent="Grotte/Sol/UnderFireChamber" unique_id=846665207 instance=ExtResource("murg_c")]
 position = Vector2(2270, 970)
 
-[node name="MurGrotteCentre4" parent="Grotte/Sol/Laby" unique_id=119749121 instance=ExtResource("murg_c")]
+[node name="MurGrotteCentre4" parent="Grotte/Sol/UnderFireChamber" unique_id=119749121 instance=ExtResource("murg_c")]
 position = Vector2(2270, 1092)
 
-[node name="PlateformeMobile" parent="Grotte/Sol/Laby" unique_id=1026860084 instance=ExtResource("46_a0dla")]
+[node name="PlateformeMobile" parent="Grotte/Sol/UnderFireChamber" unique_id=1026860084 instance=ExtResource("46_a0dla")]
 z_index = -1
 position = Vector2(2713, 1508.0001)
 scale = Vector2(0.49, 0.49)
 AngleDegres = 270.0
+Distance = 250.0
+
+[node name="PlateformeUnidirectionnelle" parent="Grotte/Sol/UnderFireChamber" unique_id=1642649202 instance=ExtResource("sol")]
+position = Vector2(2716, 1267.9999)
+scale = Vector2(0.61, 0.61)
+
+[node name="SolGrotte" parent="Grotte/Sol/UnderFireChamber" unique_id=2035897502 instance=ExtResource("solg_c")]
+position = Vector2(2474.9998, 969)
+rotation = 2.5202553
+scale = Vector2(1.6873983, 1.6109122)
+skew = -0.055727124
+
+[node name="MurGrotteCentre" parent="Grotte/Sol/UnderFireChamber" unique_id=656094032 instance=ExtResource("murg_c")]
+position = Vector2(3480, 1464)
+
+[node name="MurGrotteCentre5" parent="Grotte/Sol/UnderFireChamber" unique_id=1051808917 instance=ExtResource("murg_c")]
+position = Vector2(3480, 1342)
+
+[node name="MurGrotteCentre6" parent="Grotte/Sol/UnderFireChamber" unique_id=972037012 instance=ExtResource("murg_c")]
+position = Vector2(3480, 1222)
+
+[node name="MurGrotteCentre7" parent="Grotte/Sol/UnderFireChamber" unique_id=1738812946 instance=ExtResource("murg_c")]
+position = Vector2(3480, 1052)
+scale = Vector2(0.74, 1)
+
+[node name="PenteBanquiseDouceMontante" parent="Grotte/Sol/UnderFireChamber" unique_id=1900245965 instance=ExtResource("pente_montante")]
+z_index = -1
+position = Vector2(3276.0002, 1223)
+scale = Vector2(0.775, 0.35)
+
+[node name="PenteBanquiseDouceMontante2" parent="Grotte/Sol/UnderFireChamber" unique_id=385545152 instance=ExtResource("pente_montante")]
+position = Vector2(2975.0002, 1270)
+scale = Vector2(1.03, 0.35)
+
+[node name="MurGrotteCentre8" parent="Grotte/Sol/UnderFireChamber" unique_id=1285481686 instance=ExtResource("murg_c")]
+position = Vector2(3480, 951)
+
+[node name="MurGrotteCentre9" parent="Grotte/Sol/UnderFireChamber" unique_id=1105558904 instance=ExtResource("murg_c")]
+position = Vector2(3453, 926)
+
+[node name="Plateformer" type="Node2D" parent="Grotte/Sol" unique_id=1455188983]
+
+[node name="PlateformeMobile" parent="Grotte/Sol/Plateformer" unique_id=514327090 instance=ExtResource("46_a0dla")]
+position = Vector2(3736, 1499)
+scale = Vector2(0.675, 0.675)
+AngleDegres = 270.0
+Distance = 400.0
+
+[node name="PlateformeUnidirectionnelle" parent="Grotte/Sol/Plateformer" unique_id=900840215 instance=ExtResource("sol")]
+z_index = -2
+position = Vector2(3557, 1178)
+
+[node name="PlateformeMobile2" parent="Grotte/Sol/Plateformer" unique_id=754088549 instance=ExtResource("46_a0dla")]
+position = Vector2(3826, 1176)
+scale = Vector2(0.505, 0.505)
+Distance = 500.0
+
+[node name="PenteBanquiseForteDescendante" parent="Grotte/Sol/Plateformer" unique_id=886173035 instance=ExtResource("52_kxqbj")]
+position = Vector2(3698, 670)
+
+[node name="PenteBanquiseForteDescendante2" parent="Grotte/Sol/Plateformer" unique_id=191430629 instance=ExtResource("52_kxqbj")]
+position = Vector2(3797, 909)
+rotation = 3.1415925
+
+[node name="SolBanquiseEmboutGauche" parent="Grotte/Sol/Plateformer" unique_id=1889024334 instance=ExtResource("sol_embout_g")]
+position = Vector2(3700, 544)
+
+[node name="SolGrotte" parent="Grotte/Sol/Plateformer" unique_id=1433587338 instance=ExtResource("solg_c")]
+position = Vector2(4685, 848)
+
+[node name="SolGrotte2" parent="Grotte/Sol/Plateformer" unique_id=1790588780 instance=ExtResource("solg_c")]
+z_index = -1
+position = Vector2(5078, 848)
+
+[node name="SolGrotte3" parent="Grotte/Sol/Plateformer" unique_id=1780864354 instance=ExtResource("solg_c")]
+position = Vector2(4469, 1253)
+
+[node name="SolGrotte4" parent="Grotte/Sol/Plateformer" unique_id=1886188316 instance=ExtResource("solg_c")]
+position = Vector2(4473, 1031)
+
+[node name="SolGrotte5" parent="Grotte/Sol/Plateformer" unique_id=97007550 instance=ExtResource("solg_c")]
+z_index = -1
+position = Vector2(5054, 1135)
+
+[node name="LutinNoel" parent="Grotte/Sol/Plateformer" unique_id=276249539 instance=ExtResource("lutin")]
+position = Vector2(4117, 922)
+Lignes = PackedStringArray("J\'ai trop peur pour sauter... Pourtant c\'est le seul moyen T_T")
+
+[node name="SolGrotte" parent="Grotte/Sol" unique_id=42132410 instance=ExtResource("solg_c")]
+z_index = -1
+position = Vector2(4533.0005, 919)
+rotation = -0.83950335
 
 [node name="Decor" type="Node2D" parent="Grotte" unique_id=1829211204]
+
+[node name="BraseroEteintEntry" type="Sprite2D" parent="Grotte/Decor" unique_id=2023413939]
+z_index = 1
+position = Vector2(1670, 1469)
+texture = ExtResource("53_a0dla")
+
+[node name="IglooEntry" parent="Grotte/Decor" unique_id=953018349 instance=ExtResource("igloo")]
+z_index = 1
+position = Vector2(1608, 1463)
 
 [node name="Interactifs" type="Node2D" parent="Grotte" unique_id=925847537]
 
 [node name="PouvoirChaleur" parent="Grotte/Interactifs" unique_id=345962472 instance=ExtResource("pouvoir")]
-position = Vector2(2544, 640)
+position = Vector2(2523, 712)
 
-[node name="CheckpointFond" parent="Grotte/Interactifs" unique_id=1616650343 instance=ExtResource("checkpoint")]
-position = Vector2(2351, 1472)
+[node name="CheckpointEntry" parent="Grotte/Interactifs" unique_id=1616650343 instance=ExtResource("checkpoint")]
+position = Vector2(1755, 559)
 IdCheckpoint = "grotte_fond"
 
+[node name="PanneauBoisEntry" parent="Grotte/Interactifs" unique_id=26847602 instance=ExtResource("panneau")]
+position = Vector2(1953.9999, 1444)
+scale = Vector2(0.565, 0.565)
+Lignes = PackedStringArray("Ascenseur")
+
+[node name="PanneauBoisFireChamber" parent="Grotte/Interactifs" unique_id=1556259477 instance=ExtResource("panneau")]
+z_index = 1
+position = Vector2(2228, 697.99994)
+scale = Vector2(0.61, 0.61)
+Type = 2
+Lignes = PackedStringArray("Raccourci")
+
+[node name="CheckpointDown1" parent="Grotte/Interactifs" unique_id=343988124 instance=ExtResource("checkpoint")]
+position = Vector2(1769, 1472)
+
+[node name="CheckpointLabyStart" parent="Grotte/Interactifs" unique_id=1551883748 instance=ExtResource("checkpoint")]
+position = Vector2(3593, 1145)
+
+[node name="CheckpointLabyEnd" parent="Grotte/Interactifs" unique_id=1618785671 instance=ExtResource("checkpoint")]
+position = Vector2(5005, 756)
+
+[node name="PanneauBoisLabyUp" parent="Grotte/Interactifs" unique_id=197425152 instance=ExtResource("panneau")]
+position = Vector2(3861, 1448.0001)
+scale = Vector2(0.66, 0.66)
+Lignes = PackedStringArray("Attendez là...")
+
+[node name="PanneauBoisLabyUTurn" parent="Grotte/Interactifs" unique_id=1689352533 instance=ExtResource("panneau")]
+position = Vector2(4936, 1457)
+scale = Vector2(0.66, 0.66)
+Type = 2
+Lignes = PackedStringArray("Par là !")
+
+[node name="PlateformeUnidirectionnelle" parent="Grotte/Interactifs" unique_id=1292683072 instance=ExtResource("sol")]
+z_index = -1
+position = Vector2(4220, 973)
+
+[node name="PlateformeUnidirectionnelle2" parent="Grotte/Interactifs" unique_id=722760462 instance=ExtResource("sol")]
+z_index = -2
+position = Vector2(4374, 731.00006)
+rotation = 0.37350047
+scale = Vector2(1.52, 1.235)
+
 [node name="Pnj" type="Node2D" parent="Grotte" unique_id=390658495]
+
+[node name="BonhommeDeNeigeUnderFireChamber" parent="Grotte/Pnj" unique_id=153493064 instance=ExtResource("49_nhnan")]
+position = Vector2(2490, 1451)
+
+[node name="BonhommeDeNeigeLabyMoving" parent="Grotte/Pnj" unique_id=1405198096 instance=ExtResource("49_nhnan")]
+position = Vector2(3827, 1128)
+
+[node name="BonhommeDeNeigeLaby2" parent="Grotte/Pnj" unique_id=1566449808 instance=ExtResource("49_nhnan")]
+position = Vector2(4969, 1023)
+
+[node name="BonhommeDeNeigeLaby3" parent="Grotte/Pnj" unique_id=1769396740 instance=ExtResource("49_nhnan")]
+position = Vector2(4567, 917)
+
+[node name="OursDeNeigeLaby" parent="Grotte/Pnj" unique_id=22413935 instance=ExtResource("55_dejuv")]
+position = Vector2(4763, 1460)
+
+[node name="OursDeNeigeLaby2" parent="Grotte/Pnj" unique_id=446657237 instance=ExtResource("55_dejuv")]
+position = Vector2(3985, 1470)
+
+[node name="PlateformeMobile" parent="Grotte/Pnj" unique_id=1540417215 instance=ExtResource("46_a0dla")]
+position = Vector2(4667, 1182)
+scale = Vector2(0.55, 0.55)
+AngleDegres = 299.0
+Distance = 500.0
 
 [node name="Joueur" parent="." unique_id=1975658094 instance=ExtResource("player")]
 position = Vector2(183.26, 272.805)
@@ -780,18 +943,11 @@ limit_bottom = 400
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
 
-[node name="CheckpointPeche" parent="." unique_id=1320792551 instance=ExtResource("checkpoint")]
-position = Vector2(1621, 621)
-
-[node name="Igloo" parent="." unique_id=953018349 instance=ExtResource("igloo")]
-position = Vector2(1618, 1465)
-
 [node name="Pingouin" parent="." unique_id=1788672048 instance=ExtResource("pingouin")]
 position = Vector2(1702, 1455)
 Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
 
-[node name="PlateformeUnidirectionnelle" parent="." unique_id=1642649202 instance=ExtResource("sol")]
-position = Vector2(2716, 1274)
-scale = Vector2(0.61, 0.61)
+[node name="PenteBanquiseDouceDescendante" parent="." unique_id=2044054575 instance=ExtResource("pente_descendante")]
+position = Vector2(4043, 546)
 
 [editable path="Joueur"]
