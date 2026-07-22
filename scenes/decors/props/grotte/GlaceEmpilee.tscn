@@ -1,7 +1,15 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://dkexqekqeptd4"]
 
 [ext_resource type="Texture2D" uid="uid://cfafajwqshgwh" path="res://assets/props/grotte/glace_empilee.png" id="1"]
 
-[node name="GlaceEmpilee" type="Sprite2D"]
-z_index = -1
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_glace"]
+size = Vector2(34, 35)
+
+[node name="GlaceEmpilee" type="StaticBody2D" unique_id=555439208]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 2
 texture = ExtResource("1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_glace")

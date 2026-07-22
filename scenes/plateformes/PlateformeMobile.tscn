@@ -6,14 +6,12 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_top"]
 size = Vector2(176, 59)
 
-[sub_resource type="Curve2D" id="Curve2D_defaut"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 260, 0)
-}
-point_count = 2
-
 [node name="PlateformeMobile" type="AnimatableBody2D" unique_id=514327090]
+collision_layer = 16
+collision_mask = 0
 script = ExtResource("1")
+AngleDegres = 0.0
+Distance = 260.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1905243285]
 scale = Vector2(2, 2)
@@ -22,6 +20,3 @@ texture = ExtResource("2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1550358577]
 position = Vector2(-2, -1.5)
 shape = SubResource("RectangleShape2D_top")
-
-[node name="Path2D" type="Path2D" parent="." unique_id=919820440]
-curve = SubResource("Curve2D_defaut")

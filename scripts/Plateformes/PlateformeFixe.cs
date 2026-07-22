@@ -5,11 +5,22 @@ using System.Collections.Generic;
 // porte la collision, les stalactites en dessous sont purement décoratives.
 // 3 tailles disponibles, chacune avec sa propre silhouette générée (pas un
 // étirement de la même image).
+//
+// Script [Tool] : sprite + collision sont (re)construits depuis Configs[Taille]
+// À LA FOIS dans l'éditeur et en jeu. Changer « Taille » dans l'inspecteur met à
+// jour la texture ET la hitbox en direct dans Godot — l'éditeur montre donc
+// exactement ce qu'on aura en jeu (fini le décalage éditeur ≠ runtime).
+[Tool]
 public partial class PlateformeFixe : StaticBody2D
 {
 	public enum TaillePlateforme { Petite, Moyenne, Grande }
 
-	[Export] public TaillePlateforme Taille = TaillePlateforme.Petite;
+	private TaillePlateforme _taille = TaillePlateforme.Petite;
+	[Export] public TaillePlateforme Taille
+	{
+		get => _taille;
+		set { _taille = value; Appliquer(); }
+	}
 
 	private record Config(string Texture, Vector2 TailleCollision, Vector2 PositionCollision);
 
@@ -24,15 +35,22 @@ public partial class PlateformeFixe : StaticBody2D
 		[TaillePlateforme.Grande] = new("res://assets/plateformes/fixe_grande.png", new Vector2(652, 38), new Vector2(-2, -45)),
 	};
 
-	public override void _Ready()
-	{
-		var config = Configs[Taille];
+	public override void _Ready() => Appliquer();
 
-		var sprite = GetNode<Sprite2D>("Sprite2D");
+	// Applique la texture + la collision de la taille courante. Réutilisée par le
+	// setter (édition live dans l'éditeur) et par _Ready (chargement en jeu comme
+	// en éditeur). Les enfants peuvent ne pas encore exister quand le setter tombe
+	// pendant le chargement de la scène : dans ce cas on ne fait rien, _Ready rejouera.
+	private void Appliquer()
+	{
+		var sprite = GetNodeOrNull<Sprite2D>("Sprite2D");
+		var collision = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+		if (sprite == null || collision == null)
+			return;
+
+		var config = Configs[_taille];
 		sprite.Texture = GD.Load<Texture2D>(config.Texture);
 		sprite.Scale = new Vector2(2, 2);
-
-		var collision = GetNode<CollisionShape2D>("CollisionShape2D");
 		collision.Shape = new RectangleShape2D { Size = config.TailleCollision };
 		collision.Position = config.PositionCollision;
 	}

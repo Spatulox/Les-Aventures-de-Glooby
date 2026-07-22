@@ -1,59 +1,88 @@
 using Godot;
 
-// Bloc de glace flottant qui suit un Path2D interne (courbe éditable dans
-// l'éditeur). AnimatableBody2D + sync_to_physics : le joueur est correctement
-// entraîné par le mouvement (CharacterBody2D hérite la vitesse de la
-// plateforme porteuse tant que sync_to_physics est actif).
+// Bloc de glace flottant qui va-et-vient en LIGNE DROITE, direction réglée
+// directement dans l'inspecteur : un angle en degrés + une distance en pixels.
+// AnimatableBody2D + sync_to_physics : le joueur est correctement entraîné par
+// le mouvement (CharacterBody2D hérite la vitesse de la plateforme porteuse).
+//
+// Convention d'angle (repère Godot, Y vers le bas) : 0° = droite, 90° = bas,
+// 180° = gauche, 270° = haut. Pas besoin de deviner : le script est [Tool] et
+// dessine la trajectoire (ligne + point d'arrivée) EN DIRECT dans l'éditeur.
+[Tool]
 public partial class PlateformeMobile : AnimatableBody2D
 {
+	private float _angleDegres = 0f;
+	// Direction du mouvement, en degrés (voir convention ci-dessus).
+	// PropertyHint.Range -> slider 0..360 dans l'inspecteur (pas de 1°).
+	[Export(PropertyHint.Range, "0,360,1,suffix:°")] public float AngleDegres
+	{
+		get => _angleDegres;
+		set { _angleDegres = value; QueueRedraw(); }
+	}
+
+	private float _distance = 260f;
+	// Amplitude du va-et-vient, en pixels globaux.
+	[Export] public float Distance
+	{
+		get => _distance;
+		set { _distance = Mathf.Max(0f, value); QueueRedraw(); }
+	}
+
 	[Export] public float Vitesse = 60f;
 	[Export] public bool AllerRetour = true;
 
-	private Curve2D _courbe;
-	// Position de départ figée une fois pour toutes : le Path2D est un enfant
-	// de ce corps qui se déplace, donc échantillonner sa position globale en
-	// direct créerait une boucle de rétroaction (la cible s'éloigne à chaque
-	// fois que le corps bouge). On échantillonne la courbe dans son espace
-	// local et on ajoute cette origine fixe à la place.
+	// Origine figée au lancement : on part de la position posée et on oscille sur
+	// UN côté (origine -> origine + direction*Distance -> retour).
 	private Vector2 _origine;
 	private float _progression;
 	private int _sens = 1;
 
+	private Vector2 Direction => Vector2.Right.Rotated(Mathf.DegToRad(_angleDegres));
+
 	public override void _Ready()
 	{
-		SyncToPhysics = true;
+		if (Engine.IsEditorHint())
+		{
+			QueueRedraw();   // pas de simulation en éditeur, juste le gizmo
+			return;
+		}
 
-		_courbe = GetNode<Path2D>("Path2D").Curve;
+		SyncToPhysics = true;
 		_origine = GlobalPosition;
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		var dt = (float)delta;
-		var longueur = _courbe.GetBakedLength();
-		if (longueur <= 0f)
+		if (Engine.IsEditorHint() || _distance <= 0f)
 			return;
 
+		var dt = (float)delta;
 		_progression += Vitesse * dt * _sens;
 
 		if (AllerRetour)
 		{
-			if (_progression >= longueur)
-			{
-				_progression = longueur;
-				_sens = -1;
-			}
-			else if (_progression <= 0f)
-			{
-				_progression = 0f;
-				_sens = 1;
-			}
+			if (_progression >= _distance) { _progression = _distance; _sens = -1; }
+			else if (_progression <= 0f) { _progression = 0f; _sens = 1; }
 		}
 		else
 		{
-			_progression = Mathf.PosMod(_progression, longueur);
+			_progression = Mathf.PosMod(_progression, _distance);
 		}
 
-		GlobalPosition = _origine + _courbe.SampleBaked(_progression);
+		GlobalPosition = _origine + Direction * _progression;
+	}
+
+	// Gizmo éditeur : trajectoire de la plateforme (compensée de l'échelle du
+	// nœud pour rester juste même si l'instance est mise à l'échelle).
+	public override void _Draw()
+	{
+		if (!Engine.IsEditorHint())
+			return;
+
+		float echelle = Mathf.Abs(GlobalScale.X) < 0.001f ? 1f : GlobalScale.X;
+		Vector2 fin = Direction * (_distance / echelle);
+		var couleur = new Color(0.4f, 0.9f, 1f);
+		DrawLine(Vector2.Zero, fin, couleur, 2f);
+		DrawCircle(fin, 6f, couleur);
 	}
 }
