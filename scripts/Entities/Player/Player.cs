@@ -223,7 +223,11 @@ public partial class Player : LivingEntity
 				// La glissade se termine uniquement à l'épuisement du minuteur : une
 				// glissade lancée au sol se poursuit en l'air (ex. tremplin/rebord)
 				// au lieu d'être coupée dès qu'on quitte le sol.
-				if (_slideTimer <= 0f)
+				// Un plafond bas (tunnel, corniche) empêche le relevé : tant que la
+				// capsule debout ne rentre pas, on prolonge la glissade à l'infini —
+				// le joueur continue de « slider » jusqu'à retrouver la place de se
+				// redresser (sinon il apparaîtrait à moitié dans le plafond).
+				if (_slideTimer <= 0f && PeutSeRelever())
 					FinirGlissade(true);
 			}
 		}
@@ -751,6 +755,27 @@ public partial class Player : LivingEntity
 		}
 
 		return 1f;
+	}
+
+	// Y a-t-il la place de repasser sur la hitbox debout ? On teste la capsule
+	// CollisionDebout à la position courante (elle monte plus haut que la hitbox
+	// de glissade) : si elle chevauche du terrain (plafond bas), le relevé est
+	// interdit et la glissade se prolonge. Requête de forme directe plutôt qu'un
+	// TestMove pour interroger la capsule debout alors qu'elle est désactivée.
+	private bool PeutSeRelever()
+	{
+		var espace = GetWorld2D().DirectSpaceState;
+		var param = new PhysicsShapeQueryParameters2D
+		{
+			Shape = _colDebout.Shape,
+			Transform = _colDebout.GlobalTransform,
+			CollideWithBodies = true,
+			CollideWithAreas = false,
+			CollisionMask = Constantes.LayerTerrain,
+			Exclude = new Godot.Collections.Array<Rid> { GetRid() },
+		};
+
+		return espace.IntersectShape(param, 1).Count == 0;
 	}
 
 	private bool ObtenirDonneesSol(out bool estGlace, out bool estFragile, out Vector2I coordsCellule)

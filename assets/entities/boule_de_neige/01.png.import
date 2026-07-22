@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bhm5hpavvtsce"
-path="res://.godot/imported/02.png-0588345afbed936702ad452f63f04a52.ctex"
+uid="uid://bc7hxtrokpj24"
+path="res://.godot/imported/01.png-463dbe97ad3075d00f3aa4f6fda34d31.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/props/boule_neige_impact/02.png"
-dest_files=["res://.godot/imported/02.png-0588345afbed936702ad452f63f04a52.ctex"]
+source_file="res://assets/entities/boule_de_neige/01.png"
+dest_files=["res://.godot/imported/01.png-463dbe97ad3075d00f3aa4f6fda34d31.ctex"]
 
 [params]
 

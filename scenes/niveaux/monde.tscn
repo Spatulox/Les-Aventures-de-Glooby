@@ -680,7 +680,7 @@ position = Vector2(3453, 805)
 position = Vector2(2871, 462)
 
 [node name="PenteBanquiseDouceMontante" parent="Grotte/Sol/FireChamber" unique_id=767501165 instance=ExtResource("pente_montante")]
-position = Vector2(3027, 756)
+position = Vector2(3033, 756)
 scale = Vector2(0.75, 0.75)
 
 [node name="MurGrotteCentre4" parent="Grotte/Sol/FireChamber" unique_id=354864700 instance=ExtResource("murg_c")]
