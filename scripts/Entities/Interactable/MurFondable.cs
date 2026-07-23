@@ -3,7 +3,9 @@ using Godot;
 // Mur de glace fondable : bloc solide tant que le pouvoir de chaleur n'a pas
 // été utilisé dessus. Melt() le fait fondre définitivement (état persistant
 // dans GameState, pour rester fondu si le joueur revient sur cet écran).
-public partial class MurFondable : StaticBody2D
+// MurNonAgrippable : glace lisse et vouée à fondre, on ne peut ni s'y agripper
+// ni y wall-jumper.
+public partial class MurFondable : StaticBody2D, MurNonAgrippable
 {
 	[Export] public string IdMur = "";
 

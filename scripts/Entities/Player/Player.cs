@@ -52,6 +52,14 @@ public partial class Player : LivingEntity
 	[Export] public float VitesseInclinaison = 12f;
 	// Garde-fou visuel : au-delà, le pingouin part trop à plat sur les pentes fortes.
 	[Export] public float InclinaisonMaxDegres = 50f;
+	// Wall jump : impulsion horizontale (loin du mur) et verticale d'un saut mural.
+	[Export] public float WallJumpVitesseX = 260f;
+	[Export] public float WallJumpVitesseY = -400f;   // ~ JumpVelocity, réglable à part
+	// Contrôle horizontal bridé juste après un wall jump : sans ça, tenir la direction
+	// du mur annulerait aussitôt la poussée (l'accélération MoveToward la mangerait).
+	[Export] public float WallJumpDureeControleBloque = 0.14f;
+	// Glisse murale : plafond de la vitesse de chute tant qu'on est agrippé au mur.
+	[Export] public float VitesseGlisseMur = 90f;
 	[Export] public float LancerCooldown = 0.5f;
 	[Export] public float LancerDuree = 0.35f;
 	[Export] public float DegatsDuree = 0.4f;
@@ -87,6 +95,7 @@ public partial class Player : LivingEntity
 	private float _bufferSautTimer;
 	private float _slideTimer;
 	private float _slideCooldownTimer;
+	private float _wallJumpLockTimer;   // > 0 : poussée du wall jump en cours, input X bridé
 	private float _slideVitesseActuelle;
 	private float _lancerTimer;
 	private float _lancerCooldownTimer;
@@ -181,6 +190,8 @@ public partial class Player : LivingEntity
 
 		if (_slideCooldownTimer > 0f)
 			_slideCooldownTimer -= dt;
+		if (_wallJumpLockTimer > 0f)
+			_wallJumpLockTimer -= dt;
 		if (_lancerCooldownTimer > 0f)
 			_lancerCooldownTimer -= dt;
 		if (_glaceSpawnTimer > 0f)
@@ -233,12 +244,36 @@ public partial class Player : LivingEntity
 		}
 		else
 		{
-			if (Mathf.Abs(direction) > 0.01f)
+			// Glisse murale : agrippé à un vrai mur vertical en l'air et en train de
+			// descendre, la chute est plafonnée — ça laisse le temps de wall-jumper et
+			// rend l'accroche lisible. Le simple contact suffit (pas besoin de pousser
+			// vers le mur).
+			if (velocity.Y > 0f && EstContreMur(out _))
+				velocity.Y = Mathf.Min(velocity.Y, VitesseGlisseMur);
+
+			// Pendant la poussée d'un wall jump, on ne touche pas à velocity.X : tenir
+			// la direction du mur l'annulerait sinon aussitôt (cf. verrou de glissade).
+			if (_wallJumpLockTimer > 0f)
+			{
+				// poussée du wall jump en cours : contrôle horizontal bridé.
+			}
+			else if (Mathf.Abs(direction) > 0.01f)
 				velocity.X = Mathf.MoveToward(velocity.X, direction * Speed, Acceleration * dt);
 			else
 				AppliquerFriction(ref velocity, dt, ObtenirFrictionSol(auSol));
 
-			if (_bufferSautTimer > 0f && _coyoteTimer > 0f && !vientDeTraverser)
+			// Wall jump prioritaire sur le saut sol : contre un mur en l'air, le saut
+			// bufferisé propulse À L'OPPOSÉ du mur + vers le haut. Placé avant le saut
+			// coyote pour qu'un coyote résiduel ne le court-circuite pas.
+			if (_bufferSautTimer > 0f && !auSol && EstContreMur(out var normaleMur))
+			{
+				velocity = new Vector2(normaleMur * WallJumpVitesseX, WallJumpVitesseY);
+				_directionRegard = normaleMur;   // le pingouin regarde là où il part
+				_wallJumpLockTimer = WallJumpDureeControleBloque;
+				_coyoteTimer = 0f;
+				_bufferSautTimer = 0f;
+			}
+			else if (_bufferSautTimer > 0f && _coyoteTimer > 0f && !vientDeTraverser)
 			{
 				Sauter(ref velocity);
 				_coyoteTimer = 0f;
@@ -520,6 +555,43 @@ public partial class Player : LivingEntity
 		}
 
 		_surPenteDescendante = surPente;
+	}
+
+	// Contre un vrai mur vertical, en l'air. On exige !IsOnFloor() (les normales de
+	// « faux mur » ~46-56° des jointures de dalles de SolBanquise n'existent qu'au sol)
+	// et une normale quasi horizontale : seule une paroi verticale (MurSolide/MurGrotte)
+	// passe. normaleX pointe À L'OPPOSÉ du mur — c'est déjà le sens de la poussée.
+	private bool EstContreMur(out int normaleX)
+	{
+		normaleX = 0;
+		if (IsOnFloor() || !IsOnWall())
+			return false;
+
+		var n = GetWallNormal();
+		if (Mathf.Abs(n.X) < 0.9f)
+			return false;
+
+		// Certains murs n'offrent aucune prise (mur fondable, glace lisse...) : s'ils
+		// portent MurNonAgrippable, ni wall jump ni glisse murale.
+		if (MurTouche() is MurNonAgrippable)
+			return false;
+
+		normaleX = (int)Mathf.Sign(n.X);
+		return true;
+	}
+
+	// Le collider du mur en contact, parmi les collisions de la dernière MoveAndSlide :
+	// la première dont la normale est quasi horizontale. null si aucune. Sert à
+	// interroger le type du mur (MurNonAgrippable) sans requête physique supplémentaire.
+	private GodotObject MurTouche()
+	{
+		for (int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			var col = GetSlideCollision(i);
+			if (Mathf.Abs(col.GetNormal().X) > 0.9f)
+				return col.GetCollider();
+		}
+		return null;
 	}
 
 	// Pente descendante dans le sens du déplacement : la normale du sol penche du
