@@ -14,6 +14,10 @@ public partial class EcranChargementOllama : CanvasLayer
 	private ProgressBar _barre;
 	private bool _fige; // vrai dès qu'une erreur est affichée : plus de mise à jour de progression
 
+	// Vrai quand le bandeau affiche une erreur terminale : OllamaService s'en sert pour
+	// décider s'il peut le retirer (retour au menu) sans couper un téléchargement en cours.
+	public bool EstEnErreur => _fige;
+
 	public override void _Ready()
 	{
 		Layer = 100; // au-dessus du menu/HUD, mais on n'intercepte pas les clics
@@ -97,7 +101,20 @@ public partial class EcranChargementOllama : CanvasLayer
 		_barre.Visible = false;
 		_phase.Text = $"⚠ Dialogues IA indisponibles — {message}";
 		_phase.AddThemeColorOverride("font_color", new Color(1f, 0.55f, 0.45f));
-		GetTree().CreateTimer(DureeAvantRetraitErreur).Timeout += QueueFree;
+		// Retrait différé, mais désamorcé si le bandeau a été réinitialisé entre-temps
+		// (nouveau provisionnement) : on ne libère que si l'erreur est toujours affichée.
+		GetTree().CreateTimer(DureeAvantRetraitErreur).Timeout += () => { if (_fige) QueueFree(); };
+	}
+
+	// Remet le bandeau en état « progression » pour un nouveau provisionnement : désamorce le
+	// retrait d'erreur en attente (via _fige) et restaure le libellé, la couleur et la barre.
+	public void Reinitialiser()
+	{
+		_fige = false;
+		_phase.Text = "Préparation des dialogues IA…";
+		_phase.RemoveThemeColorOverride("font_color");
+		_barre.Visible = true;
+		_barre.Value = 0;
 	}
 
 	// Provisionnement fini : succès ⇒ la barre disparaît aussitôt ; échec sans message précis

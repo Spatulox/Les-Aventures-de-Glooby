@@ -88,14 +88,43 @@ public partial class OllamaService : Node
 	private readonly HttpClient _http = new() { Timeout = Timeout.InfiniteTimeSpan };
 	private System.Diagnostics.Process _serveur;
 	private CancellationTokenSource _ctsGeneration;
-	private bool _ecranDemande; // l'écran de chargement n'est instancié qu'une fois, au 1er téléchargement
+
+	// Bandeau de chargement/erreur, instancié une seule fois puis réutilisé (il peut s'auto-
+	// libérer : toujours le tester via GodotObject.IsInstanceValid avant de le toucher).
+	private EcranChargementOllama _bandeau;
+
+	// Sérialisation du provisionnement : un seul tourne à la fois. Toute relance annule le
+	// précédent (_ctsProvision) et s'enchaîne derrière lui (_tacheProvision) — voir
+	// RelancerProvisionnement. Évite les serveurs/pull en double lors d'un changement de modèle.
+	private CancellationTokenSource _ctsProvision;
+	private Task _tacheProvision = Task.CompletedTask;
 
 	public override void _Ready()
 	{
 		Instance = this;
 		ChargerConfig();
 		if (Actif)
-			_ = Task.Run(DemarrerAsync);
+			RelancerProvisionnement();
+	}
+
+	// (Re)lance le provisionnement en supersédant celui en cours : annule le précédent, remet
+	// le bandeau en état « progression » s'il affichait une erreur, puis chaîne la nouvelle
+	// tâche DERRIÈRE l'ancienne pour garantir qu'un seul provisionnement s'exécute à la fois
+	// (pas de double « ollama serve » ni de double pull). Appelé sur le thread principal.
+	private void RelancerProvisionnement()
+	{
+		_ctsProvision?.Cancel();
+		if (GodotObject.IsInstanceValid(_bandeau))
+			_bandeau.Reinitialiser();
+
+		var precedente = _tacheProvision;
+		var cts = new CancellationTokenSource();
+		_ctsProvision = cts;
+		_tacheProvision = Task.Run(async () =>
+		{
+			try { await precedente; } catch { /* laisser l'ancienne tâche se dénouer */ }
+			await DemarrerAsync(cts.Token);
+		});
 	}
 
 	private void ChargerConfig()
@@ -128,9 +157,12 @@ public partial class OllamaService : Node
 
 		if (Actif)
 		{
+			// Coupe le dialogue LLM en cours (il visait l'ancien modèle) puis relance un
+			// provisionnement propre : RelancerProvisionnement annule celui d'avant et évite
+			// tout serveur/pull en double.
+			AnnulerGeneration();
 			Disponible = false;
-			_ecranDemande = false;
-			_ = Task.Run(DemarrerAsync);
+			RelancerProvisionnement();
 		}
 	}
 
@@ -146,8 +178,7 @@ public partial class OllamaService : Node
 
 		if (actif)
 		{
-			_ecranDemande = false;
-			_ = Task.Run(DemarrerAsync);
+			RelancerProvisionnement();
 		}
 		else
 		{
@@ -158,13 +189,20 @@ public partial class OllamaService : Node
 
 	// Provisionnement en tâche de fond : garantit un Ollama utilisable puis bascule
 	// Disponible. Toute exception est absorbée (repli statique), jamais remontée au jeu.
-	private async Task DemarrerAsync()
+	// Le jeton permet à une relance (changement de modèle…) d'annuler ce provisionnement.
+	private async Task DemarrerAsync(CancellationToken jeton)
 	{
 		try
 		{
 			var provisionneur = new ProvisionneurOllama(this, _http);
-			bool ok = await provisionneur.Garantir(SignalerProgres);
-			_serveur = provisionneur.ProcessusLance;
+			bool ok = await provisionneur.Garantir(SignalerProgres, jeton);
+
+			// Ne remplacer le handle du serveur que si CE provisionnement a démarré le nôtre :
+			// une relance qui réutilise le serveur déjà lancé laisse ProcessusLance null, et
+			// l'écraser ferait perdre le handle (serveur non tué à la fermeture).
+			if (provisionneur.ProcessusLance != null)
+				_serveur = provisionneur.ProcessusLance;
+
 			if (!ok && !string.IsNullOrEmpty(provisionneur.DerniereErreur))
 				SignalerErreur(provisionneur.DerniereErreur);
 			Terminer(ok);
@@ -172,8 +210,12 @@ public partial class OllamaService : Node
 			// Préchauffage : charge le modèle en mémoire pendant que le joueur est encore au
 			// menu, pour que le PREMIER dialogue ne paie pas le coût de chargement (le « … »
 			// qui traîne). Best-effort, en fond ; ne change pas Disponible.
-			if (ok)
+			if (ok && !jeton.IsCancellationRequested)
 				await PrechaufferAsync();
+		}
+		catch (OperationCanceledException)
+		{
+			// Provisionnement supersédé (relance/changement de modèle) : rien à signaler.
 		}
 		catch (Exception e)
 		{
@@ -282,8 +324,7 @@ public partial class OllamaService : Node
 	public void Reprovisionner()
 	{
 		SupprimerOllama();
-		_ecranDemande = false; // la barre pourra réapparaître au prochain téléchargement
-		_ = Task.Run(DemarrerAsync);
+		RelancerProvisionnement();
 	}
 
 	// Liste les modèles Ollama réellement présents sur le disque (GET /api/tags). Le résultat
@@ -421,11 +462,7 @@ public partial class OllamaService : Node
 	{
 		Callable.From(() =>
 		{
-			if (!_ecranDemande)
-			{
-				_ecranDemande = true;
-				AfficherEcranChargement();
-			}
+			AfficherEcranChargement();
 			EmitSignal(SignalName.ProvisionnementProgresse, phase, ratio);
 		}).CallDeferred();
 	}
@@ -436,21 +473,34 @@ public partial class OllamaService : Node
 	{
 		Callable.From(() =>
 		{
-			if (!_ecranDemande)
-			{
-				_ecranDemande = true;
-				AfficherEcranChargement();
-			}
+			AfficherEcranChargement();
 			EmitSignal(SignalName.ProvisionnementErreur, message);
 		}).CallDeferred();
 	}
 
+	// Garantit un unique bandeau vivant : n'en instancie un que s'il n'y en a pas déjà (il peut
+	// s'être auto-libéré). L'instance est mémorisée pour être réinitialisée/retirée ensuite.
 	private void AfficherEcranChargement()
 	{
+		if (GodotObject.IsInstanceValid(_bandeau))
+			return;
 		var scene = GD.Load<PackedScene>("res://scenes/ui/ecran_chargement_ollama.tscn");
 		if (scene == null)
 			return;
-		GetTree().Root.AddChild(scene.Instantiate());
+		_bandeau = scene.Instantiate<EcranChargementOllama>();
+		GetTree().Root.AddChild(_bandeau);
+	}
+
+	// Retire le bandeau s'il affiche une erreur terminale (repli statique déjà acté). Appelé au
+	// retour au menu / au lancement d'une partie pour effacer l'erreur. Un téléchargement encore
+	// en cours n'est PAS coupé : le bandeau doit survivre menu→monde (cf. son commentaire de classe).
+	public void MasquerBandeau()
+	{
+		if (GodotObject.IsInstanceValid(_bandeau) && _bandeau.EstEnErreur)
+		{
+			_bandeau.QueueFree();
+			_bandeau = null;
+		}
 	}
 
 	private void Terminer(bool succes)
@@ -472,9 +522,11 @@ public partial class OllamaService : Node
 		_serveur = null;
 	}
 
-	// Arrêt propre : tuer le serveur qu'on a lancé, libérer HttpClient.
+	// Arrêt propre : annuler le provisionnement en cours, tuer le serveur qu'on a lancé,
+	// libérer HttpClient (l'annulation évite qu'une tâche de fond touche un _http disposé).
 	public override void _ExitTree()
 	{
+		_ctsProvision?.Cancel();
 		ArreterServeur();
 		_http.Dispose();
 	}

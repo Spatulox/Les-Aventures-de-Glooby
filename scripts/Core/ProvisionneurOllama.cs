@@ -61,18 +61,22 @@ public class ProvisionneurOllama
 	private bool EstMacos => OS.GetName() == "macOS";
 	private string NomBinaire => EstWindows ? "ollama.exe" : "ollama";
 
-	// Garantit un Ollama prêt à générer. Retourne false (repli statique) au moindre échec.
-	public async Task<bool> Garantir(Action<string, float> progres)
+	// Garantit un Ollama prêt à générer. Retourne false (repli statique) au moindre échec. Le
+	// jeton permet à une relance (changement de modèle) d'annuler un provisionnement en cours :
+	// l'annulation remonte en OperationCanceledException jusqu'à OllamaService.DemarrerAsync.
+	public async Task<bool> Garantir(Action<string, float> progres, CancellationToken jeton)
 	{
 		_cheminBinaire = TrouverBinaire();
 
 		// 1. Serveur déjà en écoute (lancé à la main/par l'installeur, ou run précédent vivant) ?
-		if (!await ServeurRepond())
+		if (!await ServeurRepond(jeton))
 		{
+			jeton.ThrowIfCancellationRequested();
+
 			// Pas de binaire installé : lancer la procédure d'installation de l'OS.
 			if (_cheminBinaire == null)
 			{
-				if (!await Installer(progres))
+				if (!await Installer(progres, jeton))
 					return false; // DerniereErreur déjà renseignée par Installer
 				_cheminBinaire = TrouverBinaire();
 				if (_cheminBinaire == null)
@@ -80,12 +84,14 @@ public class ProvisionneurOllama
 			}
 
 			// L'installeur Windows/macOS a pu démarrer le serveur lui-même : sinon on le lance.
-			if (!await ServeurRepond() && !await LancerServeur())
+			if (!await ServeurRepond(jeton) && !await LancerServeur(jeton))
 				return Echec("Le serveur Ollama n'a pas pu démarrer.");
 		}
 
+		jeton.ThrowIfCancellationRequested();
+
 		// 2. Modèle présent ? sinon on le télécharge via /api/pull (le serveur gère le store).
-		return await GarantirModele(progres);
+		return await GarantirModele(progres, jeton);
 	}
 
 	// Localise le binaire ollama : emplacements d'installation standard de l'OS d'abord,
@@ -125,12 +131,15 @@ public class ProvisionneurOllama
 		}
 	}
 
-	// Le serveur local répond-il ? (test court, sans exception remontée.)
-	private async Task<bool> ServeurRepond()
+	// Le serveur local répond-il ? (test court, sans exception remontée.) Le timeout de 2 s est
+	// lié au jeton de provisionnement : une annulation coupe l'attente (le retour false laisse
+	// alors Garantir constater l'annulation via ThrowIfCancellationRequested).
+	private async Task<bool> ServeurRepond(CancellationToken jeton)
 	{
 		try
 		{
-			using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+			using var cts = CancellationTokenSource.CreateLinkedTokenSource(jeton);
+			cts.CancelAfter(TimeSpan.FromSeconds(2));
 			using var reponse = await _http.GetAsync($"{_service.UrlBase}/api/tags", cts.Token);
 			return reponse.IsSuccessStatusCode;
 		}
@@ -141,7 +150,7 @@ public class ProvisionneurOllama
 	}
 
 	// Lance la procédure d'installation officielle de l'OS courant. Retourne false sur échec.
-	private async Task<bool> Installer(Action<string, float> progres)
+	private async Task<bool> Installer(Action<string, float> progres, CancellationToken jeton)
 	{
 		try
 		{
@@ -150,10 +159,14 @@ public class ProvisionneurOllama
 
 			return OS.GetName() switch
 			{
-				"Windows" => await InstallerWindows(progres),
-				"macOS" => await InstallerMacos(progres),
-				_ => await InstallerLinux(progres),
+				"Windows" => await InstallerWindows(progres, jeton),
+				"macOS" => await InstallerMacos(progres, jeton),
+				_ => await InstallerLinux(progres, jeton),
 			};
+		}
+		catch (OperationCanceledException)
+		{
+			throw; // provisionnement supersédé : remonter l'annulation, pas d'erreur affichée
 		}
 		catch (Exception e)
 		{
@@ -164,10 +177,10 @@ public class ProvisionneurOllama
 
 	// Windows : télécharge OllamaSetup.exe et l'exécute en silencieux (installeur Inno Setup,
 	// installation par-utilisateur sans droits admin). TrouverBinaire localisera ensuite l'exe.
-	private async Task<bool> InstallerWindows(Action<string, float> progres)
+	private async Task<bool> InstallerWindows(Action<string, float> progres, CancellationToken jeton)
 	{
 		string installeur = Path.Combine(RacineCache, "OllamaSetup.exe");
-		await TelechargerFichier(_service.UrlBinaireWindows, installeur, "Téléchargement d'Ollama", progres);
+		await TelechargerFichier(_service.UrlBinaireWindows, installeur, "Téléchargement d'Ollama", progres, jeton);
 
 		progres?.Invoke("Installation d'Ollama", 1f);
 		int code = await ExecuterProcessus(installeur, "/VERYSILENT", "/NORESTART");
@@ -182,10 +195,10 @@ public class ProvisionneurOllama
 
 	// macOS : télécharge Ollama.dmg, le monte (hdiutil), copie Ollama.app dans le cache puis
 	// démonte. Le binaire CLI vit dans Contents/Resources/ollama de l'app copiée.
-	private async Task<bool> InstallerMacos(Action<string, float> progres)
+	private async Task<bool> InstallerMacos(Action<string, float> progres, CancellationToken jeton)
 	{
 		string dmg = Path.Combine(RacineCache, "Ollama.dmg");
-		await TelechargerFichier(_service.UrlBinaireMacos, dmg, "Téléchargement d'Ollama", progres);
+		await TelechargerFichier(_service.UrlBinaireMacos, dmg, "Téléchargement d'Ollama", progres, jeton);
 
 		progres?.Invoke("Installation d'Ollama", 1f);
 		string montage = Path.Combine(RacineCache, "montage");
@@ -216,11 +229,11 @@ public class ProvisionneurOllama
 	// compression est choisi d'après l'extension de l'URL (zstd pour .tar.zst — format officiel
 	// actuel —, gzip pour .tgz/.tar.gz, sinon autodétection). Pas de sudo ni d'écriture dans
 	// /usr : on garde tout dans le cache du jeu.
-	private async Task<bool> InstallerLinux(Action<string, float> progres)
+	private async Task<bool> InstallerLinux(Action<string, float> progres, CancellationToken jeton)
 	{
 		string url = _service.UrlBinaireLinux;
 		string archive = Path.Combine(RacineCache, "ollama-linux.tar");
-		await TelechargerFichier(url, archive, "Téléchargement d'Ollama", progres);
+		await TelechargerFichier(url, archive, "Téléchargement d'Ollama", progres, jeton);
 
 		progres?.Invoke("Installation d'Ollama", 1f);
 
@@ -246,7 +259,7 @@ public class ProvisionneurOllama
 
 	// Pose l'environnement (hôte + dossier des modèles) puis lance « ollama serve » et attend
 	// qu'il réponde (jusqu'à ~30 s). L'enfant hérite de l'environnement du process.
-	private async Task<bool> LancerServeur()
+	private async Task<bool> LancerServeur(CancellationToken jeton)
 	{
 		OS.SetEnvironment("OLLAMA_HOST", "127.0.0.1:11434");
 		OS.SetEnvironment("OLLAMA_MODELS", DossierModeles);
@@ -266,27 +279,27 @@ public class ProvisionneurOllama
 
 		for (int i = 0; i < 60; i++)
 		{
-			if (await ServeurRepond())
+			if (await ServeurRepond(jeton))
 				return true;
-			await Task.Delay(500);
+			await Task.Delay(500, jeton);
 		}
 		return false;
 	}
 
 	// Garantit le modèle demandé : présent ⇒ rien à faire, absent ⇒ /api/pull streamé.
-	private async Task<bool> GarantirModele(Action<string, float> progres)
+	private async Task<bool> GarantirModele(Action<string, float> progres, CancellationToken jeton)
 	{
-		if (await ModelePresent())
+		if (await ModelePresent(jeton))
 			return true;
-		return await TelechargerModele(progres);
+		return await TelechargerModele(progres, jeton);
 	}
 
 	// Le modèle configuré figure-t-il dans /api/tags ?
-	private async Task<bool> ModelePresent()
+	private async Task<bool> ModelePresent(CancellationToken jeton)
 	{
 		try
 		{
-			using var reponse = await _http.GetAsync($"{_service.UrlBase}/api/tags");
+			using var reponse = await _http.GetAsync($"{_service.UrlBase}/api/tags", jeton);
 			if (!reponse.IsSuccessStatusCode)
 				return false;
 
@@ -313,7 +326,7 @@ public class ProvisionneurOllama
 	}
 
 	// Télécharge le modèle via /api/pull (NDJSON : total/completed par couche → ratio).
-	private async Task<bool> TelechargerModele(Action<string, float> progres)
+	private async Task<bool> TelechargerModele(Action<string, float> progres, CancellationToken jeton)
 	{
 		try
 		{
@@ -322,16 +335,17 @@ public class ProvisionneurOllama
 			{
 				Content = new StringContent(corps, Encoding.UTF8, "application/json"),
 			};
-			using var reponse = await _http.SendAsync(requete, HttpCompletionOption.ResponseHeadersRead);
+			using var reponse = await _http.SendAsync(requete, HttpCompletionOption.ResponseHeadersRead, jeton);
 			reponse.EnsureSuccessStatusCode();
 
-			using var flux = await reponse.Content.ReadAsStreamAsync();
+			using var flux = await reponse.Content.ReadAsStreamAsync(jeton);
 			using var lecteur = new StreamReader(flux);
 
 			float dernierRatio = -1f;
 			string ligne;
 			while ((ligne = await lecteur.ReadLineAsync()) != null)
 			{
+				jeton.ThrowIfCancellationRequested();
 				if (string.IsNullOrWhiteSpace(ligne))
 					continue;
 
@@ -356,7 +370,11 @@ public class ProvisionneurOllama
 			}
 
 			progres?.Invoke("Téléchargement du modèle", 1f);
-			return await ModelePresent();
+			return await ModelePresent(jeton);
+		}
+		catch (OperationCanceledException)
+		{
+			throw; // provisionnement supersédé : remonter l'annulation, pas d'erreur affichée
 		}
 		catch (Exception e)
 		{
@@ -367,20 +385,20 @@ public class ProvisionneurOllama
 
 	// Télécharge une URL vers un fichier en rapportant la progression (débit borné par la
 	// taille annoncée ; barre laissée à 0 si le serveur ne renvoie pas Content-Length).
-	private async Task TelechargerFichier(string url, string destination, string phase, Action<string, float> progres)
+	private async Task TelechargerFichier(string url, string destination, string phase, Action<string, float> progres, CancellationToken jeton)
 	{
-		using var reponse = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+		using var reponse = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, jeton);
 		reponse.EnsureSuccessStatusCode();
 
 		long? total = reponse.Content.Headers.ContentLength;
-		using var source = await reponse.Content.ReadAsStreamAsync();
+		using var source = await reponse.Content.ReadAsStreamAsync(jeton);
 		using var fichier = new FileStream(destination, FileMode.Create, FileAccess.Write, FileShare.None);
 
 		var tampon = new byte[81920];
 		long recu = 0;
 		float dernierRatio = -1f;
 		int lus;
-		while ((lus = await source.ReadAsync(tampon)) > 0)
+		while ((lus = await source.ReadAsync(tampon, jeton)) > 0)
 		{
 			await fichier.WriteAsync(tampon.AsMemory(0, lus));
 			recu += lus;
