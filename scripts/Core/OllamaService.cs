@@ -27,6 +27,11 @@ public partial class OllamaService : Node
 	[Export] public string UrlBase = "http://127.0.0.1:11434";
 	[Export] public int MaxTokens = 80; // borne la longueur de réponse (options.num_predict)
 
+	// Durée pendant laquelle Ollama garde le modèle EN MÉMOIRE après une requête (défaut Ollama :
+	// 5 min). On l'allonge pour éviter que le modèle ne se décharge entre deux PNJ : sinon le
+	// dialogue suivant repaie le coût de chargement (le fameux « … » interminable). "-1" = jamais.
+	[Export] public string KeepAlive = "30m";
+
 	// Sources d'installation officielles par OS (ProvisionneurOllama lance la bonne procédure) :
 	// Linux = archive extraite par tar (amd64) ; Windows = installeur silencieux OllamaSetup.exe ;
 	// macOS = image disque Ollama.dmg. Adapter au besoin depuis ollama.com/download.
@@ -124,6 +129,12 @@ public partial class OllamaService : Node
 			if (!ok && !string.IsNullOrEmpty(provisionneur.DerniereErreur))
 				SignalerErreur(provisionneur.DerniereErreur);
 			Terminer(ok);
+
+			// Préchauffage : charge le modèle en mémoire pendant que le joueur est encore au
+			// menu, pour que le PREMIER dialogue ne paie pas le coût de chargement (le « … »
+			// qui traîne). Best-effort, en fond ; ne change pas Disponible.
+			if (ok)
+				await PrechaufferAsync();
 		}
 		catch (Exception e)
 		{
@@ -165,6 +176,28 @@ public partial class OllamaService : Node
 		_ctsGeneration = new CancellationTokenSource();
 		var jeton = _ctsGeneration.Token;
 		_ = Task.Run(() => FluxAsync(contexte, invite, surChunk, surFin, surErreur, jeton));
+	}
+
+	// Charge le modèle en mémoire sans rien générer (prompt vide) et fixe keep_alive : le
+	// premier vrai dialogue démarre alors instantanément. Best-effort — un échec est ignoré.
+	private async Task PrechaufferAsync()
+	{
+		try
+		{
+			var corps = JsonSerializer.Serialize(new
+			{
+				model = Modele,
+				prompt = "",
+				stream = false,
+				keep_alive = KeepAlive,
+			});
+			using var requete = new HttpRequestMessage(HttpMethod.Post, $"{UrlBase}/api/generate")
+			{
+				Content = new StringContent(corps, Encoding.UTF8, "application/json"),
+			};
+			using var reponse = await _http.SendAsync(requete);
+		}
+		catch { /* préchauffage best-effort : sans effet sur la disponibilité */ }
 	}
 
 	// Annule la génération en cours (fin de conversation / sortie de zone).
@@ -211,6 +244,7 @@ public partial class OllamaService : Node
 				system = contexte,
 				prompt = invite,
 				stream = true,
+				keep_alive = KeepAlive, // garde le modèle chaud pour le PNJ suivant
 				options = new { num_predict = MaxTokens },
 			});
 

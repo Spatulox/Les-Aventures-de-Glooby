@@ -42,6 +42,12 @@ sur les `Lignes` statiques si indisponible.
   `DefinirActif(bool)` (démarre/arrête le serveur + persiste), `SupprimerOllama()` (arrête le
   serveur + efface `user://ollama/`), `Reprovisionner()` (supprime puis réinstalle). Au boot,
   le provisionnement ne démarre que si `Actif`.
+- **`OllamaService.cs`** (vitesse) — le long « … » avant la 1re réplique = **chargement à froid
+  du modèle**. Correctifs : **préchauffage** (`PrechaufferAsync`, prompt vide) juste après le
+  provisionnement, pendant que le joueur est au menu, pour que le 1er dialogue ne paie pas le
+  chargement ; et `keep_alive` (`[Export]`, défaut `"30m"`) sur chaque requête pour garder le
+  modèle en mémoire entre PNJ. Mesuré à chaud : ~0,33 s jusqu'au 1er token, ~1 s au total
+  (llama3.2:3b, 27 tok/s).
 - **`PnjAmical.cs`** — implémente `OllamaTalkative` ; exports `DialogueDynamique`, `Contexte`,
   `Invite` ; `DialogueDynamiqueActif => DialogueDynamique && OllamaService prêt`.
 - **`DeclencheurDialogue.cs`** — branche flux LLM prioritaire (`DemarrerFlux`), rendu
