@@ -58,6 +58,12 @@ public partial class BulleDialogue : Node2D
 	public void AfficherDialogue(string texte)
 		=> Composer(texte, FondBulle, ContourBulle, TexteBulle, avecQueue: true);
 
+	// Mise à jour incrémentale pendant un flux LLM (streaming) : même rendu qu'AfficherDialogue,
+	// appelée à chaque token cumulé — la bulle grandit à mesure que le texte arrive. Nommée à
+	// part pour clarifier l'intention côté DeclencheurDialogue (flux vs réplique figée).
+	public void MettreAJourFlux(string texte)
+		=> Composer(texte, FondBulle, ContourBulle, TexteBulle, avecQueue: true);
+
 	// Affiche le rappel de touche : petite étiquette foncée, sans queue.
 	public void AfficherRappel(string texte)
 		=> Composer(texte, FondRappel, ContourBulle, TexteRappel, avecQueue: false);

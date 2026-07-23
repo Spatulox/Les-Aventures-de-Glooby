@@ -172,16 +172,21 @@ offset = Vector2(0, 4)
 [node name="Pingouin" parent="Village/Pnj" unique_id=700000001 instance=ExtResource("pingouin")]
 position = Vector2(250, 272)
 Lignes = PackedStringArray("Oh ! Salut Glooby !", "J\'adore ton Pantalon !")
+DialogueDynamique = true
+Contexte = "Tu es un pinguoin nommé Pipo qui n'est jamais sorti de son village, et tu croise Glooby, l'enfant de ton voisin, avec son pantalon trop grand, qui se balade dans le village a coté chez lui"
+Invite = "Salue Glooby en une courte réplique, en restant dans ton caractère."
+MotMoyenParReponse = 5
 
 [node name="Pingouin2" parent="Village/Pnj" unique_id=700000002 instance=ExtResource("pingouin")]
 position = Vector2(721, 272)
 Lignes = PackedStringArray("Huummff")
+Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère."
 
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
-[node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1926955540 instance=ExtResource("checkpoint")]
-position = Vector2(327, 293)
-IdCheckpoint = "village_depart"
+[node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1428675968 instance=ExtResource("checkpoint")]
+position = Vector2(327, 288)
+IdCheckpoint = "start_village"
 
 [node name="panneau_poteau" parent="Village/Interactifs" unique_id=700000010 instance=ExtResource("panneau")]
 position = Vector2(612, 268)
@@ -452,7 +457,7 @@ position = Vector2(3100, 272)
 Lignes = PackedStringArray("Hihi ! Un lutin du Pere Noel, perdu dans la grotte...", "Le Boss Cerf garde la sortie. Bonne chance, Glooby !")
 
 [node name="LutinNoel2" parent="Banquise/Pnj" unique_id=700000004 instance=ExtResource("lutin")]
-position = Vector2(4600, 272)
+position = Vector2(4597, 202)
 
 [node name="Interactifs" type="Node2D" parent="Banquise" unique_id=1713257003]
 
@@ -537,7 +542,7 @@ Lignes = PackedStringArray("Grotte")
 
 [node name="CheckpointGrotte" parent="ZoneBossCerf/Interactifs" unique_id=2019026174 instance=ExtResource("checkpoint")]
 position = Vector2(2860, 296)
-IdCheckpoint = "grotte_entree"
+IdCheckpoint = "banquise_after_grotte"
 
 [node name="StalactitePiege1" parent="ZoneBossCerf/Interactifs" unique_id=1800415455 groups=["stalactites_boss"] instance=ExtResource("stalactite_piege")]
 position = Vector2(5610, 75)
@@ -968,7 +973,7 @@ position = Vector2(2523, 712)
 
 [node name="CheckpointEntry" parent="Grotte/Interactifs" unique_id=1616650343 instance=ExtResource("checkpoint")]
 position = Vector2(1755, 559)
-IdCheckpoint = "grotte_fond"
+IdCheckpoint = "grotte_start"
 
 [node name="PanneauBoisEntry" parent="Grotte/Interactifs" unique_id=26847602 instance=ExtResource("panneau")]
 position = Vector2(1953.9999, 1444)
@@ -984,6 +989,7 @@ Lignes = PackedStringArray("Raccourci")
 
 [node name="CheckpointDown1" parent="Grotte/Interactifs" unique_id=343988124 instance=ExtResource("checkpoint")]
 position = Vector2(1769, 1472)
+IdCheckpoint = "grotte_fond"
 
 [node name="CheckpointLabyStart" parent="Grotte/Interactifs" unique_id=1551883748 instance=ExtResource("checkpoint")]
 position = Vector2(3593, 1145)
@@ -1013,6 +1019,13 @@ rotation = 0.37350047
 scale = Vector2(1.52, 1.235)
 
 [node name="Pnj" type="Node2D" parent="Grotte" unique_id=390658495]
+
+[node name="Pingouin" parent="Grotte/Pnj" unique_id=1788672048 instance=ExtResource("pingouin")]
+position = Vector2(1702, 1455)
+Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
+DialogueDynamique = true
+Contexte = "Tu es un pingouin râleur sans nom qui déteste le blizzard et la banquise. Tu habite désormais une grotte pour avoir chaud et tu ne veux pas en sortir."
+Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère."
 
 [node name="BonhommeDeNeigeUnderFireChamber" parent="Grotte/Pnj" unique_id=153493064 instance=ExtResource("49_nhnan")]
 position = Vector2(2490, 1451)
@@ -1049,10 +1062,6 @@ limit_bottom = 400
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
-
-[node name="Pingouin" parent="." unique_id=1788672048 instance=ExtResource("pingouin")]
-position = Vector2(1702, 1455)
-Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
 
 [node name="PenteBanquiseDouceDescendante" parent="." unique_id=2044054575 instance=ExtResource("pente_descendante")]
 position = Vector2(4043, 546)

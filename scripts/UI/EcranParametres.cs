@@ -23,6 +23,15 @@ public partial class EcranParametres : Control
 	private CaptureEntree _capture;
 	private ConfirmationDialog _dialogueConflit;
 	private ConfirmationDialog _dialogueReset;
+	private ConfirmationDialog _dialogueSupprOllama;
+	private ConfirmationDialog _dialogueReDlOllama;
+
+	// Contrôles de la section Avancé (gestion d'Ollama).
+	private CheckButton _checkOllama;
+	private OptionButton _optionModele;
+	private Label _statutOllama;
+	private Button _boutonReDlOllama;
+	private Button _boutonSupprOllama;
 
 	// Contexte de la capture / résolution de conflit en cours.
 	private string _actionEnCapture;
@@ -77,6 +86,10 @@ public partial class EcranParametres : Control
 		// Resynchronisation quand une liaison change (remap, reset).
 		Parametres.Instance.LiaisonsChangees += OnLiaisonsChangees;
 
+		// Rafraîchit l'état Ollama de la section Avancé à la fin d'un (re)provisionnement.
+		if (OllamaService.Instance != null)
+			OllamaService.Instance.ProvisionnementTermine += OnProvisionnementTermine;
+
 		Visible = false;
 	}
 
@@ -86,6 +99,8 @@ public partial class EcranParametres : Control
 		// une instance libérée (menu principal rechargé, retour au jeu…).
 		if (Parametres.Instance != null)
 			Parametres.Instance.LiaisonsChangees -= OnLiaisonsChangees;
+		if (OllamaService.Instance != null)
+			OllamaService.Instance.ProvisionnementTermine -= OnProvisionnementTermine;
 	}
 
 	// Barre d'onglets de sections. Seule « Touches » est active ; les autres sont
@@ -99,7 +114,7 @@ public partial class EcranParametres : Control
 		AjouterOnglet(onglets, "Touches", actif: true);
 		AjouterOnglet(onglets, "Affichage", actif: true);
 		AjouterOnglet(onglets, "Audio", actif: true);
-		AjouterOnglet(onglets, "Accessibilité", actif: false);
+		AjouterOnglet(onglets, "Avancé", actif: true);
 	}
 
 	private void AjouterOnglet(HBoxContainer onglets, string titre, bool actif)
@@ -121,7 +136,7 @@ public partial class EcranParametres : Control
 		_sections["Touches"] = ConstruireSectionTouches();
 		_sections["Affichage"] = ConstruireSectionAffichage();
 		_sections["Audio"] = ConstruireSectionAudio();
-		_sections["Accessibilité"] = ConstruireSectionAVenir("Options d'accessibilité à venir.");
+		_sections["Avancé"] = ConstruireSectionAvance();
 
 		foreach (var section in _sections.Values)
 		{
@@ -383,12 +398,126 @@ public partial class EcranParametres : Control
 
 	private static string TextePourcentage(float valeur) => $"{Mathf.RoundToInt(valeur * 100f)} %";
 
-	private static Control ConstruireSectionAVenir(string texte)
+	// Section Avancé : gestion d'Ollama (moteur des dialogues IA locaux). Une case pour
+	// activer/désactiver l'usage d'Ollama (démarrage du serveur + appels), puis deux actions —
+	// retélécharger (supprime puis réinstalle, barre de progression en bas) et supprimer
+	// (efface binaire + modèle du dossier du jeu). Chaque action passe par une confirmation.
+	private Control ConstruireSectionAvance()
 	{
-		var centre = new CenterContainer();
-		centre.AddChild(new Label { Text = texte, Modulate = new Color(1f, 1f, 1f, 0.6f) });
-		return centre;
+		var marge = new MarginContainer();
+		foreach (var cote in new[] { "margin_left", "margin_right", "margin_top" })
+			marge.AddThemeConstantOverride(cote, 8);
+
+		var colonne = new VBoxContainer();
+		colonne.AddThemeConstantOverride("separation", 12);
+		marge.AddChild(colonne);
+
+		AjouterEntete(colonne, "Dialogues IA (Ollama)");
+
+		var info = new Label
+		{
+			Text = "Ollama génère les dialogues des PNJ par IA. Il est téléchargé au premier "
+				+ "lancement dans le dossier du jeu, puis réutilisé hors ligne.",
+			AutowrapMode = TextServer.AutowrapMode.WordSmart,
+			Modulate = new Color(1f, 1f, 1f, 0.7f),
+		};
+		colonne.AddChild(info);
+
+		_checkOllama = new CheckButton { ButtonPressed = OllamaService.Instance is { Actif: true } };
+		_checkOllama.Toggled += OnOllamaActifBascule;
+		colonne.AddChild(LigneReglage("Activer les dialogues IA (Ollama)", _checkOllama));
+
+		// Sélecteur de taille de modèle : plus gros = meilleures répliques mais plus lourd à
+		// télécharger. Rempli depuis le catalogue unique OllamaService.Modeles.
+		_optionModele = new OptionButton();
+		string modeleCourant = OllamaService.Instance?.Modele;
+		for (int i = 0; i < OllamaService.Modeles.Length; i++)
+		{
+			_optionModele.AddItem(OllamaService.Modeles[i].Libelle, i);
+			if (OllamaService.Modeles[i].Tag == modeleCourant)
+				_optionModele.Selected = i;
+		}
+		_optionModele.ItemSelected += OnModeleChoisi;
+		colonne.AddChild(LigneReglage("Modèle", _optionModele));
+
+		_statutOllama = new Label();
+		colonne.AddChild(_statutOllama);
+
+		var boutons = new HBoxContainer();
+		boutons.AddThemeConstantOverride("separation", 12);
+		colonne.AddChild(boutons);
+
+		_boutonReDlOllama = new Button { Text = "Retélécharger Ollama", CustomMinimumSize = new Vector2(220, 36) };
+		_boutonReDlOllama.Pressed += () => _dialogueReDlOllama.PopupCentered();
+		boutons.AddChild(_boutonReDlOllama);
+
+		_boutonSupprOllama = new Button { Text = "Supprimer Ollama", CustomMinimumSize = new Vector2(220, 36) };
+		_boutonSupprOllama.Pressed += () => _dialogueSupprOllama.PopupCentered();
+		boutons.AddChild(_boutonSupprOllama);
+
+		MettreAJourStatutOllama();
+		return marge;
 	}
+
+	// Reflète l'état courant d'Ollama : désactivé (grisé), disponible (vert) ou indisponible
+	// (orange). Les boutons retélécharger/supprimer n'ont de sens que si l'usage est activé.
+	private void MettreAJourStatutOllama()
+	{
+		if (_statutOllama == null)
+			return;
+
+		var svc = OllamaService.Instance;
+		bool actif = svc is { Actif: true };
+		bool dispo = svc is { Disponible: true };
+
+		if (!actif)
+		{
+			_statutOllama.Text = "État : désactivé.";
+			_statutOllama.Modulate = new Color(1f, 1f, 1f, 0.6f);
+		}
+		else
+		{
+			_statutOllama.Text = dispo
+				? "État : disponible ✓"
+				: "État : indisponible (téléchargement/serveur en cours, ou échec).";
+			_statutOllama.Modulate = dispo ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.5f);
+		}
+
+		if (_optionModele != null)
+			_optionModele.Disabled = !actif;
+		if (_boutonReDlOllama != null)
+			_boutonReDlOllama.Disabled = !actif;
+		if (_boutonSupprOllama != null)
+			_boutonSupprOllama.Disabled = !actif;
+	}
+
+	private void OnOllamaActifBascule(bool actif)
+	{
+		OllamaService.Instance?.DefinirActif(actif);
+		MettreAJourStatutOllama();
+	}
+
+	private void OnModeleChoisi(long index)
+	{
+		if (index >= 0 && index < OllamaService.Modeles.Length)
+			OllamaService.Instance?.DefinirModele(OllamaService.Modeles[(int)index].Tag);
+		MettreAJourStatutOllama();
+	}
+
+	private void OnSupprimerOllama()
+	{
+		OllamaService.Instance?.SupprimerOllama();
+		MettreAJourStatutOllama();
+	}
+
+	private void OnRetelechargerOllama()
+	{
+		OllamaService.Instance?.Reprovisionner();
+		MettreAJourStatutOllama();
+	}
+
+	// Rafraîchit l'état à la fin d'un (re)provisionnement lancé depuis cette section.
+	private void OnProvisionnementTermine(bool succes) => MettreAJourStatutOllama();
 
 	private void ConstruireBasDePage(VBoxContainer colonne)
 	{
@@ -436,6 +565,24 @@ public partial class EcranParametres : Control
 		_dialogueReset.CancelButtonText = "Annuler";
 		_dialogueReset.Confirmed += () => Parametres.Instance.ReinitialiserTout();
 		AddChild(_dialogueReset);
+
+		_dialogueSupprOllama = new ConfirmationDialog { Title = "Supprimer Ollama" };
+		_dialogueSupprOllama.DialogText =
+			"Supprimer Ollama et le modèle téléchargés ? Les dialogues IA seront désactivés "
+			+ "jusqu'au prochain téléchargement.";
+		_dialogueSupprOllama.GetOkButton().Text = "Supprimer";
+		_dialogueSupprOllama.CancelButtonText = "Annuler";
+		_dialogueSupprOllama.Confirmed += OnSupprimerOllama;
+		AddChild(_dialogueSupprOllama);
+
+		_dialogueReDlOllama = new ConfirmationDialog { Title = "Retélécharger Ollama" };
+		_dialogueReDlOllama.DialogText =
+			"Supprimer puis retélécharger Ollama et le modèle ? Une barre de progression "
+			+ "apparaîtra en bas de l'écran.";
+		_dialogueReDlOllama.GetOkButton().Text = "Retélécharger";
+		_dialogueReDlOllama.CancelButtonText = "Annuler";
+		_dialogueReDlOllama.Confirmed += OnRetelechargerOllama;
+		AddChild(_dialogueReDlOllama);
 	}
 
 	private void DemarrerCapture(string action, bool clavier)
