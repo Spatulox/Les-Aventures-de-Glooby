@@ -172,6 +172,10 @@ offset = Vector2(0, 4)
 [node name="Pingouin" parent="Village/Pnj" unique_id=700000001 instance=ExtResource("pingouin")]
 position = Vector2(250, 272)
 Lignes = PackedStringArray("Oh ! Salut Glooby !", "J\'adore ton Pantalon !")
+AuPassage = true
+DialogueDynamique = true
+Contexte = "Tu es un pinguoin qui n'est jamais sorti de son village, et tu croise Glooby (le joueur)"
+Invite = "Dis une phrase courte et amicale qui salue Glooby. (5 mots maximum)"
 
 [node name="Pingouin2" parent="Village/Pnj" unique_id=700000002 instance=ExtResource("pingouin")]
 position = Vector2(721, 272)
@@ -1014,6 +1018,10 @@ scale = Vector2(1.52, 1.235)
 
 [node name="Pnj" type="Node2D" parent="Grotte" unique_id=390658495]
 
+[node name="Pingouin" parent="Grotte/Pnj" unique_id=1788672048 instance=ExtResource("pingouin")]
+position = Vector2(1702, 1455)
+Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
+
 [node name="BonhommeDeNeigeUnderFireChamber" parent="Grotte/Pnj" unique_id=153493064 instance=ExtResource("49_nhnan")]
 position = Vector2(2490, 1451)
 
@@ -1049,10 +1057,6 @@ limit_bottom = 400
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
-
-[node name="Pingouin" parent="." unique_id=1788672048 instance=ExtResource("pingouin")]
-position = Vector2(1702, 1455)
-Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
 
 [node name="PenteBanquiseDouceDescendante" parent="." unique_id=2044054575 instance=ExtResource("pente_descendante")]
 position = Vector2(4043, 546)

@@ -17,9 +17,14 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	private Talkative _parlant;
 	// Non nul si la cible défile toute seule (bavardage d'ambiance) : voir TalkativeAutomatique.
 	private TalkativeAutomatique _auto;
+	// Non nul si la cible génère sa réplique via le LLM local : voir OllamaTalkative.
+	private OllamaTalkative _dyn;
 	private BulleDialogue _bulle;
 	private bool _joueurProche;
 	private bool _enDialogue;
+	// Génération LLM en cours (streaming) ; _fluxPret = génération terminée (l'action ferme alors).
+	private bool _enFlux;
+	private bool _fluxPret;
 	private int _ligne;
 	private float _minuteurAuto;
 	private readonly RandomNumberGenerator _rng = new();
@@ -37,6 +42,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		}
 
 		_auto = _parlant as TalkativeAutomatique;   // défilement automatique si la cible l'implémente
+		_dyn = _parlant as OllamaTalkative;         // génération LLM si la cible l'implémente
 		_rng.Randomize();
 
 		_bulle = new BulleDialogue();
@@ -60,7 +66,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	{
 		_joueurProche = true;
 
-		if (!_parlant.PeutParler() || _parlant.Dialogue.Count == 0)
+		if (!PeutDialoguer())
 			return;
 
 		// Un bavard automatique démarre toujours au passage (son défilement ne dépend
@@ -84,6 +90,15 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		if (!_joueurProche || _parlant == null)
 			return;
 
+		// Flux LLM : on attend la fin de génération (l'action ne fait rien pendant le
+		// streaming), puis un appui « action » ferme la bulle.
+		if (_enFlux)
+		{
+			if (_fluxPret && Input.IsActionJustPressed("action"))
+				TerminerDialogue(sortie: false);
+			return;
+		}
+
 		// Défilement automatique : la bulle avance sur minuteur, sans appui de touche.
 		if (_enDialogue && _auto != null)
 		{
@@ -101,8 +116,17 @@ public partial class DeclencheurDialogue : DeclencheurZone
 
 		if (_enDialogue)
 			LigneSuivante();
-		else if (!_parlant.DeclencheAuPassage && _parlant.PeutParler() && _parlant.Dialogue.Count > 0)
+		else if (!_parlant.DeclencheAuPassage && PeutDialoguer())
 			DemarrerDialogue();
+	}
+
+	// Le PNJ a-t-il quelque chose à dire ? Une réplique statique (Lignes) OU un dialogue
+	// dynamique actif (le LLM fournira le texte). Un PNJ IA sans Lignes reste donc parlant.
+	private bool PeutDialoguer()
+	{
+		if (!_parlant.PeutParler())
+			return false;
+		return _parlant.Dialogue.Count > 0 || (_dyn?.DialogueDynamiqueActif ?? false);
 	}
 
 	private void AfficherRappel()
@@ -114,6 +138,55 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	}
 
 	private void DemarrerDialogue()
+	{
+		// Branche LLM prioritaire : réplique générée en streaming (court-circuite le mode
+		// auto et le défilement statique). Si le dynamique n'est pas actif, chemin statique.
+		if (_dyn != null && _dyn.DialogueDynamiqueActif)
+		{
+			DemarrerFlux();
+			return;
+		}
+
+		DemarrerDialogueStatique();
+	}
+
+	// Lance la génération LLM : bulle « … » immédiate, puis rendu incrémental token par
+	// token. Traité comme un dialogue manuel (la touche de saut parle, pas de minuteur auto).
+	private void DemarrerFlux()
+	{
+		_enDialogue = true;
+		_enFlux = true;
+		_fluxPret = false;
+		_parlant.SurDebutDialogue();
+		_bulle.Position = ToLocal(_parlant.PointBulle);
+		GameState.Instance.DialogueDisponible = true;
+
+		_bulle.AfficherDialogue("…"); // retour visuel avant le 1er token
+
+		var svc = OllamaService.Instance;
+		svc.GenererFlux(
+			svc.ConstruireContexte(_dyn.Contexte),
+			_dyn.Invite,
+			surChunk: texte => { if (_enFlux) _bulle.MettreAJourFlux(texte); },
+			surFin: () => _fluxPret = true,
+			surErreur: ReplierSurStatique);
+	}
+
+	// Échec de génération : bascule sur le chemin statique (Lignes) sans repasser par la
+	// branche dynamique (qui relancerait un flux). Si le PNJ n'a aucune Ligne, on ferme.
+	private void ReplierSurStatique()
+	{
+		_enFlux = false;
+		_fluxPret = false;
+		if (_parlant.Dialogue.Count == 0)
+		{
+			TerminerDialogue(sortie: false);
+			return;
+		}
+		DemarrerDialogueStatique();
+	}
+
+	private void DemarrerDialogueStatique()
 	{
 		_enDialogue = true;
 		_ligne = _parlant.Aleatoire ? _rng.RandiRange(0, _parlant.Dialogue.Count - 1) : 0;
@@ -168,6 +241,14 @@ public partial class DeclencheurDialogue : DeclencheurZone
 
 	private void TerminerDialogue(bool sortie)
 	{
+		// Flux LLM : couper la génération en cours avant de fermer.
+		if (_enFlux)
+		{
+			OllamaService.Instance?.AnnulerGeneration();
+			_enFlux = false;
+			_fluxPret = false;
+		}
+
 		bool etaitEnDialogue = _enDialogue;
 		_enDialogue = false;
 
@@ -176,8 +257,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 
 		// Fin « normale » avec le joueur encore proche (mode touche) et dialogue encore
 		// autorisé : on revient au rappel de touche pour pouvoir reparler.
-		if (!sortie && _joueurProche && !_parlant.DeclencheAuPassage
-			&& _parlant.PeutParler() && _parlant.Dialogue.Count > 0)
+		if (!sortie && _joueurProche && !_parlant.DeclencheAuPassage && PeutDialoguer())
 		{
 			AfficherRappel();
 			return;
