@@ -163,7 +163,13 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 	[Export(PropertyHint.MultilineText)] public string Contexte { get; set; } = "";
 
 	// Amorce fixe envoyée au modèle (le joueur ne saisit rien : l'invite lance la génération).
-	[Export(PropertyHint.MultilineText)] public string Invite { get; set; } = "Dis une phrase courte et amicale à Glooby.";
+	// Volontairement NEUTRE sur le ton ET sans salutation imposée : c'est le Contexte (rôle) du
+	// PNJ qui décide s'il est aimable, ronchon, timide… et s'il salue ou entre dans le vif.
+	[Export(PropertyHint.MultilineText)] public string Invite { get; set; } = "Dis une courte réplique dans ton caractère ; saluer Glooby n'est pas obligatoire.";
+
+	// Longueur cible de la réplique générée (nombre de mots moyen). Petit = PNJ laconique,
+	// grand = PNJ bavard. Borne aussi la longueur côté modèle (voir OllamaService.GenererFlux).
+	[Export] public int MotMoyenParReponse { get; set; } = 10;
 
 	// Dynamique réellement actif seulement si l'opt-in est coché ET qu'Ollama est prêt.
 	public bool DialogueDynamiqueActif => DialogueDynamique && OllamaService.Instance is { Disponible: true };

@@ -46,9 +46,10 @@ public partial class OllamaService : Node
 
 	[Export(PropertyHint.MultilineText)]
 	public string ContexteGlobal =
-		"Univers : un jeu de plateforme 2D enfantin et bon enfant sur la banquise. " +
-		"Le héros est un petit pingouin nommé Glooby. Réponds TOUJOURS en français, " +
-		"en une seule phrase courte, et gentille. Voiçi ton rôle  :";
+		"Univers : un jeu de plateforme 2D goofy et bon enfant sur la banquise. " +
+		"Le héros est un petit pingouin nommé Glooby. Réponds TOUJOURS en français en tutoyant, " +
+		"en une seule phrase courte et adaptée aux enfants, en gardant le ton de ton " +
+		"personnage (il peut être ronchon, timide, farceur…).";
 
 	// Faits ajoutables PAR CODE au fil de la partie (progression, pouvoir obtenu…), sans
 	// toucher aux exports. Composés dans le prompt système par ConstruireContexte.
@@ -182,18 +183,31 @@ public partial class OllamaService : Node
 		}
 	}
 
-	// Assemble le prompt système : contexte global + nom du joueur + faits courants + le
-	// contexte propre au PNJ. Point UNIQUE de composition (réutilisé par tous les PNJ IA).
+	// Assemble le prompt système. Ordre IMPORTANT : contexte global, puis le rôle du PNJ
+	// SANS l'interrompre, puis les faits, et ENFIN le cadre d'énonciation (à qui il parle).
+	// On ne glisse plus « le héros s'appelle X » au milieu du rôle : le petit modèle attachait
+	// le backstory du PNJ au nom le plus proche (le joueur). La consigne finale lève la
+	// confusion des identités (le PNJ n'est pas le joueur ; il parle à la 1re personne).
 	public string ConstruireContexte(string contextePnj)
 	{
 		var sb = new StringBuilder();
+		
+		sb.AppendLine($"Cadre : Tu discutes avec {NomJoueur}, le héros du jeu. {NomJoueur} n'est PAS toi. "
+		              + $"Parle uniquement de toi, à la première personne (je/moi) ; n'attribue jamais ton histoire à {NomJoueur}. "
+		              + $"Si tu n'a pas de nom, ne mentionne jamais ton nom, ni comment tu t'appelle"
+		              + $"Fait toujours une seule phrase simple et courte. Jamais plusieurs phrases"
+		              + $"Ne parle jamais du fait que tu es un PNJ dans un jeu."
+		              + $"Tu n'es pas obligé de saluer le jouer : tu peux entrer directement dans le vif du sujet."
+		              + $"Ne mentionne JAMAIS quel type de PNJ tu es (pingouin, lutin, père noel, etc...)"
+		              + $"[TRES IMPORTANT] Fini toujours ta phrase par un point."
+		);
+		
 		if (!string.IsNullOrWhiteSpace(ContexteGlobal))
 			sb.AppendLine(ContexteGlobal.Trim());
-		sb.AppendLine($"Le héros à qui tu parles s'appelle {NomJoueur}.");
-		foreach (var (cle, valeur) in FaitsGlobaux)
-			sb.AppendLine($"{cle} : {valeur}");
 		if (!string.IsNullOrWhiteSpace(contextePnj))
 			sb.AppendLine(contextePnj.Trim());
+		foreach (var (cle, valeur) in FaitsGlobaux)
+			sb.AppendLine($"{cle} : {valeur}");
 		return sb.ToString().Trim();
 	}
 
@@ -202,7 +216,7 @@ public partial class OllamaService : Node
 	//   surChunk : texte CUMULÉ reçu jusqu'ici (rendu incrémental de la bulle).
 	//   surFin   : génération terminée proprement.
 	//   surErreur: échec (réseau, modèle…) ⇒ l'appelant retombe sur les Lignes statiques.
-	public void GenererFlux(string contexte, string invite, Action<string> surChunk, Action surFin, Action surErreur)
+	public void GenererFlux(string contexte, string invite, int motMoyenParReponse, Action<string> surChunk, Action surFin, Action surErreur)
 	{
 		if (!Disponible)
 		{
@@ -213,7 +227,7 @@ public partial class OllamaService : Node
 		_ctsGeneration?.Cancel();
 		_ctsGeneration = new CancellationTokenSource();
 		var jeton = _ctsGeneration.Token;
-		_ = Task.Run(() => FluxAsync(contexte, invite, surChunk, surFin, surErreur, jeton));
+		_ = Task.Run(() => FluxAsync(contexte, invite, motMoyenParReponse, surChunk, surFin, surErreur, jeton));
 	}
 
 	// Charge le modèle en mémoire sans rien générer (prompt vide) et fixe keep_alive : le
@@ -272,18 +286,25 @@ public partial class OllamaService : Node
 		_ = Task.Run(DemarrerAsync);
 	}
 
-	private async Task FluxAsync(string contexte, string invite, Action<string> surChunk, Action surFin, Action surErreur, CancellationToken jeton)
+	private async Task FluxAsync(string contexte, string invite, int motMoyenParReponse, Action<string> surChunk, Action surFin, Action surErreur, CancellationToken jeton)
 	{
 		try
 		{
+			// Longueur : on STEER en douceur via une consigne « en ~N mots » (plus fiable que
+			// couper net), et on borne quand même num_predict comme filet de sécurité (marge de
+			// ~2.5 tokens/mot pour ne pas tronquer la phrase cible). MaxTokens reste le plafond dur.
+			int mots = Mathf.Max(1, motMoyenParReponse);
+			int budgetTokens = Mathf.Clamp(Mathf.RoundToInt(mots * 2.5f), 12, MaxTokens);
+			string inviteAvecLongueur = $"{invite}\nLa réponse courte doit avoir environ {mots} mots. Fini ta phrase et ne coupe pas ta réponse. Ne coupe jamais un mot. Ne commence JAMAIS de nouvelle phrase, la réponse doit avoir seulement une phrase";
+
 			var corps = JsonSerializer.Serialize(new
 			{
 				model = Modele,
 				system = contexte,
-				prompt = invite,
+				prompt = inviteAvecLongueur,
 				stream = true,
 				keep_alive = KeepAlive, // garde le modèle chaud pour le PNJ suivant
-				options = new { num_predict = MaxTokens },
+				options = new { num_predict = budgetTokens },
 			});
 
 			using var requete = new HttpRequestMessage(HttpMethod.Post, $"{UrlBase}/api/generate")

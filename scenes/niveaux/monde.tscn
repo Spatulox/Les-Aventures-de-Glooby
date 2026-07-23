@@ -172,14 +172,15 @@ offset = Vector2(0, 4)
 [node name="Pingouin" parent="Village/Pnj" unique_id=700000001 instance=ExtResource("pingouin")]
 position = Vector2(250, 272)
 Lignes = PackedStringArray("Oh ! Salut Glooby !", "J\'adore ton Pantalon !")
-AuPassage = true
 DialogueDynamique = true
 Contexte = "Tu es un pinguoin (Pipo) qui n'est jamais sorti de son village, et tu croise Glooby (le joueur)"
-Invite = "Dis une phrase courte et amicale qui salue Glooby."
+Invite = "Salue Glooby en une courte réplique, en restant dans ton caractère."
+MotMoyenParReponse = 5
 
 [node name="Pingouin2" parent="Village/Pnj" unique_id=700000002 instance=ExtResource("pingouin")]
 position = Vector2(721, 272)
 Lignes = PackedStringArray("Huummff")
+Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère."
 
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
@@ -1022,7 +1023,8 @@ scale = Vector2(1.52, 1.235)
 position = Vector2(1702, 1455)
 Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
 DialogueDynamique = true
-Contexte = "Tu es un pingouin râleur sans nom qui déteste le blizzard et la banquise, donc tu t'es réfugié dans la grotte pour avoir + chaud et tu ne veux pas en sortir"
+Contexte = "Tu es un pingouin râleur sans nom qui déteste le blizzard et la banquise. Tu habite désormais une grotte pour avoir chaud et tu ne veux pas en sortir."
+Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère."
 
 [node name="BonhommeDeNeigeUnderFireChamber" parent="Grotte/Pnj" unique_id=153493064 instance=ExtResource("49_nhnan")]
 position = Vector2(2490, 1451)

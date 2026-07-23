@@ -48,6 +48,20 @@ sur les `Lignes` statiques si indisponible.
   `DefinirActif(bool)` (démarre/arrête le serveur + persiste), `SupprimerOllama()` (arrête le
   serveur + efface `user://ollama/`), `Reprovisionner()` (supprime puis réinstalle). Au boot,
   le provisionnement ne démarre que si `Actif`.
+- **Longueur & salutations** — `OllamaTalkative` gagne un champ **`MotMoyenParReponse`**
+  (`[Export]` dans `PnjAmical`, défaut **10**) : longueur cible de la réplique par PNJ. Passé à
+  `GenererFlux` → consigne « en ~N mots » + `num_predict` borné (~2.5 tok/mot, plafonné par
+  `MaxTokens`). Et pour éviter le « Bonjour Glooby » systématique : invite par défaut sans
+  salutation imposée + ligne de cadre « tu n'es pas obligé de le saluer ». Vérifié (llama3.2:3b,
+  pingouin grotte) : réponses 9–11 mots, en caractère, sans salutation réflexe.
+- **`OllamaService.cs`** (`ConstruireContexte`) — **confusion d'identité** corrigée : le PNJ
+  attribuait son histoire au joueur (« c'est Glooby qui s'est réfugié »). Cause : la ligne
+  « le héros s'appelle Glooby » était insérée AU MILIEU du rôle du PNJ (juste après « Voici ton
+  rôle : »), donc le petit modèle collait le backstory au nom le plus proche. Correctif : rôle
+  du PNJ **non interrompu**, puis cadre d'énonciation **à la fin** (« tu parles à Glooby, ce
+  n'est pas toi ; parle à la 1re personne »). Vérifié A/B (llama3.2:3b) : avant = répliques qui
+  s'adressent à Glooby en lui prêtant l'histoire ; après = « Je préfère rester dans ma grotte
+  chaude… », 3/3 corrects.
 - **`OllamaService.cs`** (vitesse) — le long « … » avant la 1re réplique = **chargement à froid
   du modèle**. Correctifs : **préchauffage** (`PrechaufferAsync`, prompt vide) juste après le
   provisionnement, pendant que le joueur est au menu, pour que le 1er dialogue ne paie pas le

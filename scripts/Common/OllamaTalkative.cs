@@ -15,4 +15,8 @@ public interface OllamaTalkative : Talkative
 	// Amorce fixe donnée au modèle (ex. « Salue Glooby en une phrase. ») : le joueur ne
 	// saisit pas de texte, l'invite lance simplement la génération.
 	string Invite { get; }
+
+	// Longueur cible de la réplique, en nombre de mots moyen (borne aussi num_predict côté
+	// modèle). Permet des PNJ plus ou moins bavards. Défaut conseillé : 10.
+	int MotMoyenParReponse { get; }
 }

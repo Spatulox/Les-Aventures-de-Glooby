@@ -167,6 +167,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		svc.GenererFlux(
 			svc.ConstruireContexte(_dyn.Contexte),
 			_dyn.Invite,
+			_dyn.MotMoyenParReponse,
 			surChunk: texte => { if (_enFlux) _bulle.MettreAJourFlux(texte); },
 			surFin: () => _fluxPret = true,
 			surErreur: ReplierSurStatique);
