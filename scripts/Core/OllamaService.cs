@@ -25,7 +25,7 @@ public partial class OllamaService : Node
 	// ---- Réglages ----
 	// Modèle courant (tag Ollama). La valeur d'export sert de défaut (palier « Petit ») ; elle
 	// est écrasée au boot par le choix persistant (voir ChargerConfig / DefinirModele).
-	[Export] public string Modele = "llama3.2:3b";
+	[Export] public string Modele = "mistral-small3.2:24b";//mistral:7b
 	[Export] public string UrlBase = "http://127.0.0.1:11434";
 	[Export] public int MaxTokens = 80; // borne la longueur de réponse (options.num_predict)
 
@@ -72,10 +72,10 @@ public partial class OllamaService : Node
 	// téléchargement. Les tags doivent exister sur ollama.com (pull automatique au choix).
 	public static readonly PaletteModele[] Modeles =
 	{
-		new("Minuscule (1.3 Go)", "llama3.2:1b"), // ~1.3 Go
-		new("Petit (2.0 Go)", "llama3.2:3b"),     // ~2.0 Go (défaut)
-		new("Moyen (4.1 Go)", "mistral:7b"),      // ~4.1 Go, français natif
-		new("Lourd (9.0 Go)", "qwen2.5:14b"),     // ~9 Go
+		new("Minuscule (2.0 Go)", "llama3.2:3b"),
+		new("Petit (4.1 Go)", "mistral:7b"),
+		new("Moyen (7.0 Go)", "mistral-nemo:12b"),
+		new("Lourd (15 Go)", "mistral-small3.2:24b")
 	};
 
 	// Progression du provisionnement (pour l'écran de chargement) : phase lisible + ratio 0→1.

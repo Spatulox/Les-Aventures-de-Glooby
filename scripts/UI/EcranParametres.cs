@@ -114,7 +114,7 @@ public partial class EcranParametres : Control
 		AjouterOnglet(onglets, "Touches", actif: true);
 		AjouterOnglet(onglets, "Affichage", actif: true);
 		AjouterOnglet(onglets, "Audio", actif: true);
-		AjouterOnglet(onglets, "Avancé", actif: true);
+		AjouterOnglet(onglets, "Dialogue IA", actif: true);
 	}
 
 	private void AjouterOnglet(HBoxContainer onglets, string titre, bool actif)
@@ -136,7 +136,7 @@ public partial class EcranParametres : Control
 		_sections["Touches"] = ConstruireSectionTouches();
 		_sections["Affichage"] = ConstruireSectionAffichage();
 		_sections["Audio"] = ConstruireSectionAudio();
-		_sections["Avancé"] = ConstruireSectionAvance();
+		_sections["Dialogue IA"] = ConstruireSectionAvance();
 
 		foreach (var section in _sections.Values)
 		{
