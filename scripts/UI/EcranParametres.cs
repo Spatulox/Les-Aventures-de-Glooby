@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 // Écran Paramètres réutilisable, partagé par le menu principal et le menu pause.
 // Construit par code (comme MenuFabrique) et organisé en SECTIONS : « Touches »,
-// « Affichage » et « Audio » ont du contenu ; « Accessibilité » reste un emplacement
-// réservé — le menu accueillera ces réglages plus tard sans réécriture.
+// « Affichage », « Audio » et « Dialogue IA » (gestion d'Ollama : activation, choix du
+// modèle, (re)téléchargement, et liste des modèles installés supprimables un par un).
 //
 // La section Touches liste chaque action (regroupée par catégorie) avec sa liaison
 // clavier et sa liaison manette, chacune remappable : un clic arme la capture (overlay
@@ -25,13 +25,18 @@ public partial class EcranParametres : Control
 	private ConfirmationDialog _dialogueReset;
 	private ConfirmationDialog _dialogueSupprOllama;
 	private ConfirmationDialog _dialogueReDlOllama;
+	private ConfirmationDialog _dialogueSupprModele;
 
-	// Contrôles de la section Avancé (gestion d'Ollama).
+	// Contrôles de la section Dialogue IA (gestion d'Ollama).
 	private CheckButton _checkOllama;
 	private OptionButton _optionModele;
 	private Label _statutOllama;
 	private Button _boutonReDlOllama;
 	private Button _boutonSupprOllama;
+	// Liste dynamique des modèles installés sur le disque (une ligne + bouton Supprimer chacun).
+	private VBoxContainer _listeModeles;
+	// Tag du modèle en attente de confirmation de suppression (dialogue partagé).
+	private string _tagModeleASupprimer;
 
 	// Contexte de la capture / résolution de conflit en cours.
 	private string _actionEnCapture;
@@ -48,7 +53,87 @@ public partial class EcranParametres : Control
 	private Label _avertissementAffichage;
 	private List<Vector2I> _resolutions = new();
 
+	// Éléments dont la dimension/police/marge suit la taille de la fenêtre. On mémorise la
+	// valeur de base de chacun et on la réapplique × facteur à chaque redimensionnement (voir
+	// AppliquerEchelle) : aucune dimension en dur n'est dispersée dans le code de construction.
+	private readonly List<(Control Ctrl, Vector2 Base)> _taillesMin = new();
+	private readonly List<(Label Lbl, int Base)> _polices = new();
+	private readonly List<(Control Noeud, string[] Cotes, int Base)> _marges = new();
+	private readonly List<(BoxContainer Boite, int Base)> _separations = new();
+
 	public bool EnCapture => _capture != null && _capture.EnCours;
+
+	// --- Helpers d'enregistrement pour le redimensionnement proportionnel ---
+	// Chacun pose la valeur de base et l'inscrit au registre correspondant, puis renvoie le
+	// contrôle pour un usage fluide (var b = Min(new Button(), 120, 32)).
+
+	private T Min<T>(T controle, float x, float y) where T : Control
+	{
+		controle.CustomMinimumSize = new Vector2(x, y) * FacteurEchelle();
+		_taillesMin.Add((controle, new Vector2(x, y)));
+		return controle;
+	}
+
+	private Label Police(Label label, int px)
+	{
+		label.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(px * FacteurEchelle()));
+		_polices.Add((label, px));
+		return label;
+	}
+
+	private void Marge(Control noeud, int px, params string[] cotes)
+	{
+		int valeur = Mathf.RoundToInt(px * FacteurEchelle());
+		foreach (var cote in cotes)
+			noeud.AddThemeConstantOverride(cote, valeur);
+		_marges.Add((noeud, cotes, px));
+	}
+
+	private T Sep<T>(T boite, int px) where T : BoxContainer
+	{
+		boite.AddThemeConstantOverride("separation", Mathf.RoundToInt(px * FacteurEchelle()));
+		_separations.Add((boite, px));
+		return boite;
+	}
+
+	// Facteur d'échelle courant, dérivé de la taille RÉELLE de la fenêtre (pas du canvas 640×360
+	// figé). Réf. = fenêtre par défaut (720 p) → 1.0. Borné : le canvas restant fixe, au-delà de
+	// ~1.5 les colonnes déborderaient malgré l'autowrap des libellés ; en dessous de 0.75 le
+	// texte deviendrait illisible.
+	private static float FacteurEchelle() =>
+		Mathf.Clamp(DisplayServer.WindowGetSize().Y / 720f, 0.75f, 1.5f);
+
+	// Réapplique la taille de base × facteur à tous les éléments enregistrés. Appelée après la
+	// construction (différée) et à chaque changement de taille de la fenêtre. On purge d'abord les
+	// entrées libérées : la liste des modèles installés recrée ses lignes à chaque rafraîchissement.
+	private void AppliquerEchelle()
+	{
+		float k = FacteurEchelle();
+		_taillesMin.RemoveAll(e => !IsInstanceValid(e.Ctrl));
+		foreach (var (ctrl, b) in _taillesMin)
+			ctrl.CustomMinimumSize = b * k;
+		_polices.RemoveAll(e => !IsInstanceValid(e.Lbl));
+		foreach (var (lbl, px) in _polices)
+			lbl.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(px * k));
+		_marges.RemoveAll(e => !IsInstanceValid(e.Noeud));
+		foreach (var (noeud, cotes, b) in _marges)
+			foreach (var cote in cotes)
+				noeud.AddThemeConstantOverride(cote, Mathf.RoundToInt(b * k));
+		_separations.RemoveAll(e => !IsInstanceValid(e.Boite));
+		foreach (var (boite, b) in _separations)
+			boite.AddThemeConstantOverride("separation", Mathf.RoundToInt(b * k));
+	}
+
+	// Enveloppe le contenu d'une section dans un défilement vertical (jamais horizontal) : si la
+	// section dépasse la hauteur disponible (grande police, longue liste de modèles/touches), on la
+	// fait défiler au lieu de couper le texte. Le contenu suit la largeur du conteneur.
+	private static ScrollContainer EnvelopperDefilement(Control contenu)
+	{
+		var defilement = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
+		contenu.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+		defilement.AddChild(contenu);
+		return defilement;
+	}
 
 	public override void _Ready()
 	{
@@ -60,16 +145,13 @@ public partial class EcranParametres : Control
 
 		var marge = new MarginContainer();
 		marge.SetAnchorsPreset(LayoutPreset.FullRect);
-		foreach (var cote in new[] { "margin_left", "margin_right", "margin_top", "margin_bottom" })
-			marge.AddThemeConstantOverride(cote, 28);
+		Marge(marge, 28, "margin_left", "margin_right", "margin_top", "margin_bottom");
 		AddChild(marge);
 
-		var colonne = new VBoxContainer();
-		colonne.AddThemeConstantOverride("separation", 10);
+		var colonne = Sep(new VBoxContainer(), 10);
 		marge.AddChild(colonne);
 
-		var titre = new Label { Text = "Paramètres", HorizontalAlignment = HorizontalAlignment.Center };
-		titre.AddThemeFontSizeOverride("font_size", 28);
+		var titre = Police(new Label { Text = "Paramètres", HorizontalAlignment = HorizontalAlignment.Center }, 28);
 		colonne.AddChild(titre);
 
 		ConstruireOnglets(colonne);
@@ -90,6 +172,12 @@ public partial class EcranParametres : Control
 		if (OllamaService.Instance != null)
 			OllamaService.Instance.ProvisionnementTermine += OnProvisionnementTermine;
 
+		// Redimensionnement dynamique : l'écran suit la taille réelle de la fenêtre. La taille
+		// n'étant pas garantie finale en _Ready, on applique une première fois en différé, puis à
+		// chaque changement de taille de la fenêtre (même motif que MenuPrincipal sur Resized).
+		GetTree().Root.SizeChanged += AppliquerEchelle;
+		Callable.From(AppliquerEchelle).CallDeferred();
+
 		Visible = false;
 	}
 
@@ -101,14 +189,15 @@ public partial class EcranParametres : Control
 			Parametres.Instance.LiaisonsChangees -= OnLiaisonsChangees;
 		if (OllamaService.Instance != null)
 			OllamaService.Instance.ProvisionnementTermine -= OnProvisionnementTermine;
+		if (IsInstanceValid(GetTree()?.Root))
+			GetTree().Root.SizeChanged -= AppliquerEchelle;
 	}
 
 	// Barre d'onglets de sections. Seule « Touches » est active ; les autres sont
 	// visibles mais désactivées pour annoncer l'extensibilité à venir.
 	private void ConstruireOnglets(VBoxContainer colonne)
 	{
-		var onglets = new HBoxContainer { Alignment = BoxContainer.AlignmentMode.Center };
-		onglets.AddThemeConstantOverride("separation", 8);
+		var onglets = Sep(new HBoxContainer { Alignment = BoxContainer.AlignmentMode.Center }, 8);
 		colonne.AddChild(onglets);
 
 		AjouterOnglet(onglets, "Touches", actif: true);
@@ -119,24 +208,21 @@ public partial class EcranParametres : Control
 
 	private void AjouterOnglet(HBoxContainer onglets, string titre, bool actif)
 	{
-		var bouton = new Button
-		{
-			Text = titre,
-			Disabled = !actif,
-			CustomMinimumSize = new Vector2(120, 32),
-		};
+		var bouton = Min(new Button { Text = titre, Disabled = !actif }, 120, 32);
 		if (actif)
 			bouton.Pressed += () => AfficherSection(titre);
 		onglets.AddChild(bouton);
 	}
 
-	// Construit toutes les sections (empilées, full rect) puis les cache.
+	// Construit toutes les sections (empilées, full rect) puis les cache. Chaque contenu est
+	// enveloppé dans un défilement vertical : quand une section dépasse la hauteur disponible
+	// (grande police à haute résolution, longue liste), elle défile au lieu de couper le texte.
 	private void ConstruireSections(Control hote)
 	{
-		_sections["Touches"] = ConstruireSectionTouches();
-		_sections["Affichage"] = ConstruireSectionAffichage();
-		_sections["Audio"] = ConstruireSectionAudio();
-		_sections["Dialogue IA"] = ConstruireSectionAvance();
+		_sections["Touches"] = EnvelopperDefilement(ConstruireSectionTouches());
+		_sections["Affichage"] = EnvelopperDefilement(ConstruireSectionAffichage());
+		_sections["Audio"] = EnvelopperDefilement(ConstruireSectionAudio());
+		_sections["Dialogue IA"] = EnvelopperDefilement(ConstruireSectionAvance());
 
 		foreach (var section in _sections.Values)
 		{
@@ -150,20 +236,18 @@ public partial class EcranParametres : Control
 	{
 		foreach (var (nom, section) in _sections)
 			section.Visible = nom == titre;
+
+		// La liste des modèles peut avoir changé (pull, suppression) depuis la dernière visite :
+		// on la rafraîchit à chaque ouverture de la section Dialogue IA.
+		if (titre == "Dialogue IA")
+			RafraichirListeModeles();
 	}
 
-	// Section Touches : liste défilante des actions regroupées par catégorie.
+	// Section Touches : liste des actions regroupées par catégorie. Le défilement vertical est
+	// ajouté par l'enveloppe commune (EnvelopperDefilement) ; la liste suit la largeur du conteneur.
 	private Control ConstruireSectionTouches()
 	{
-		// Défilement vertical seulement : les lignes s'ajustent à la largeur de l'écran
-		// (jamais de scroll horizontal). La liste suit la largeur du conteneur.
-		var defilement = new ScrollContainer
-		{
-			HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled,
-		};
-		var liste = new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
-		liste.AddThemeConstantOverride("separation", 4);
-		defilement.AddChild(liste);
+		var liste = Sep(new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill }, 4);
 
 		foreach (var categorie in new[] { CategorieAction.Deplacement, CategorieAction.Actions, CategorieAction.Systeme })
 		{
@@ -172,32 +256,28 @@ public partial class EcranParametres : Control
 				if (action.Categorie == categorie)
 					AjouterLigneAction(liste, action);
 		}
-		return defilement;
+		return liste;
 	}
 
-	private static void AjouterEntete(VBoxContainer liste, string texte)
+	private void AjouterEntete(VBoxContainer liste, string texte)
 	{
-		var entete = new Label { Text = texte };
-		entete.AddThemeFontSizeOverride("font_size", 18);
-		liste.AddChild(entete);
+		liste.AddChild(Police(new Label { Text = texte }, 18));
 	}
 
 	// Une ligne : libellé + bouton clavier + bouton manette + réinitialisation.
 	private void AjouterLigneAction(VBoxContainer liste, ActionJeu action)
 	{
-		var ligne = new HBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
-		ligne.AddThemeConstantOverride("separation", 8);
+		var ligne = Sep(new HBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill }, 8);
 
 		// Le libellé prend l'espace restant et se replie sur plusieurs lignes si besoin
 		// (autowrap) au lieu d'imposer sa largeur et de forcer un défilement horizontal.
-		var libelle = new Label
+		var libelle = Min(Police(new Label
 		{
 			Text = action.Libelle,
 			SizeFlagsHorizontal = SizeFlags.ExpandFill,
 			SizeFlagsVertical = SizeFlags.ShrinkCenter,
 			AutowrapMode = TextServer.AutowrapMode.WordSmart,
-			CustomMinimumSize = new Vector2(0, 32),
-		};
+		}, 16), 0, 32);
 		ligne.AddChild(libelle);
 
 		var boutonClavier = BoutonLiaison(action.Nom, clavier: true);
@@ -205,7 +285,7 @@ public partial class EcranParametres : Control
 		ligne.AddChild(boutonClavier);
 		ligne.AddChild(boutonManette);
 
-		var reset = new Button { Text = "↺", CustomMinimumSize = new Vector2(36, 32) };
+		var reset = Min(new Button { Text = "↺" }, 36, 32);
 		reset.TooltipText = "Réinitialiser cette action";
 		reset.Pressed += () => Parametres.Instance.ReinitialiserAction(action.Nom);
 		ligne.AddChild(reset);
@@ -217,12 +297,11 @@ public partial class EcranParametres : Control
 	private Button BoutonLiaison(string action, bool clavier)
 	{
 		var p = Parametres.Instance;
-		var bouton = new Button
+		var bouton = Min(new Button
 		{
 			Text = TexteLiaison(clavier ? p.LiaisonClavier(action) : p.LiaisonManette(action)),
-			CustomMinimumSize = new Vector2(124, 32),
 			ClipText = true,
-		};
+		}, 124, 32);
 		bouton.Pressed += () => DemarrerCapture(action, clavier);
 		return bouton;
 	}
@@ -232,11 +311,9 @@ public partial class EcranParametres : Control
 	private Control ConstruireSectionAffichage()
 	{
 		var marge = new MarginContainer();
-		foreach (var cote in new[] { "margin_left", "margin_right", "margin_top" })
-			marge.AddThemeConstantOverride(cote, 8);
+		Marge(marge, 8, "margin_left", "margin_right", "margin_top");
 
-		var colonne = new VBoxContainer();
-		colonne.AddThemeConstantOverride("separation", 14);
+		var colonne = Sep(new VBoxContainer(), 14);
 		marge.AddChild(colonne);
 
 		var p = Parametres.Instance;
@@ -262,13 +339,13 @@ public partial class EcranParametres : Control
 		// fenêtre embarquée de l'éditeur), les réglages sont bien mémorisés et sauvegardés,
 		// simplement pas appliqués tout de suite. On le dit plutôt que de laisser croire à
 		// une panne — les listes restent utilisables.
-		_avertissementAffichage = new Label
+		_avertissementAffichage = Police(new Label
 		{
 			Text = "⚠ Sera appliqué au prochain lancement (fenêtre embarquée dans l'éditeur).",
 			AutowrapMode = TextServer.AutowrapMode.WordSmart,
 			Modulate = new Color(1f, 1f, 1f, 0.6f),
 			Visible = false,
-		};
+		}, 16);
 		colonne.AddChild(_avertissementAffichage);
 
 		MettreAJourEtatAffichage();
@@ -276,22 +353,21 @@ public partial class EcranParametres : Control
 	}
 
 	// Ligne « libellé … contrôle », alignée comme les lignes de touches.
-	private static HBoxContainer LigneReglage(string libelle, Control controle)
+	private HBoxContainer LigneReglage(string libelle, Control controle)
 	{
-		var ligne = new HBoxContainer();
-		ligne.AddThemeConstantOverride("separation", 12);
+		var ligne = Sep(new HBoxContainer(), 12);
 
-		var label = new Label
+		var label = Police(new Label
 		{
 			Text = libelle,
 			SizeFlagsHorizontal = SizeFlags.ExpandFill,
 			SizeFlagsVertical = SizeFlags.ShrinkCenter,
 			AutowrapMode = TextServer.AutowrapMode.WordSmart,
-		};
+		}, 16);
 		ligne.AddChild(label);
 
 		controle.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-		controle.CustomMinimumSize = new Vector2(220, 32);
+		Min(controle, 220, 32);
 		ligne.AddChild(controle);
 		return ligne;
 	}
@@ -342,11 +418,9 @@ public partial class EcranParametres : Control
 	private Control ConstruireSectionAudio()
 	{
 		var marge = new MarginContainer();
-		foreach (var cote in new[] { "margin_left", "margin_right", "margin_top" })
-			marge.AddThemeConstantOverride(cote, 8);
+		Marge(marge, 8, "margin_left", "margin_right", "margin_top");
 
-		var colonne = new VBoxContainer();
-		colonne.AddThemeConstantOverride("separation", 14);
+		var colonne = Sep(new VBoxContainer(), 14);
 		marge.AddChild(colonne);
 
 		colonne.AddChild(LigneVolume("Volume général", Parametres.BusMaster));
@@ -358,10 +432,9 @@ public partial class EcranParametres : Control
 	// Ligne « libellé … curseur + pourcentage » pour un bus audio. Le curseur et son
 	// pourcentage voyagent ensemble dans une boîte, que LigneReglage traite comme un
 	// contrôle unique (même gabarit que les listes déroulantes de la section Affichage).
-	private static HBoxContainer LigneVolume(string libelle, string bus)
+	private HBoxContainer LigneVolume(string libelle, string bus)
 	{
-		var boite = new HBoxContainer();
-		boite.AddThemeConstantOverride("separation", 8);
+		var boite = Sep(new HBoxContainer(), 8);
 
 		float valeur = Parametres.Instance.VolumeCourant(bus);
 
@@ -378,13 +451,12 @@ public partial class EcranParametres : Control
 
 		// Largeur fixe : le pourcentage change de longueur (5 % → 100 %) et ferait
 		// autrement bouger le curseur pendant qu'on le glisse.
-		var pourcentage = new Label
+		var pourcentage = Min(Police(new Label
 		{
 			Text = TextePourcentage(valeur),
 			HorizontalAlignment = HorizontalAlignment.Right,
 			SizeFlagsVertical = SizeFlags.ShrinkCenter,
-			CustomMinimumSize = new Vector2(48, 0),
-		};
+		}, 16), 48, 0);
 		boite.AddChild(pourcentage);
 
 		curseur.ValueChanged += valeurNouvelle =>
@@ -405,22 +477,20 @@ public partial class EcranParametres : Control
 	private Control ConstruireSectionAvance()
 	{
 		var marge = new MarginContainer();
-		foreach (var cote in new[] { "margin_left", "margin_right", "margin_top" })
-			marge.AddThemeConstantOverride(cote, 8);
+		Marge(marge, 8, "margin_left", "margin_right", "margin_top");
 
-		var colonne = new VBoxContainer();
-		colonne.AddThemeConstantOverride("separation", 12);
+		var colonne = Sep(new VBoxContainer(), 12);
 		marge.AddChild(colonne);
 
 		AjouterEntete(colonne, "Dialogues IA (Ollama)");
 
-		var info = new Label
+		var info = Police(new Label
 		{
 			Text = "Ollama génère les dialogues des PNJ par IA. Il est téléchargé au premier "
 				+ "lancement dans le dossier du jeu, puis réutilisé hors ligne.",
 			AutowrapMode = TextServer.AutowrapMode.WordSmart,
 			Modulate = new Color(1f, 1f, 1f, 0.7f),
-		};
+		}, 16);
 		colonne.AddChild(info);
 
 		_checkOllama = new CheckButton { ButtonPressed = OllamaService.Instance is { Actif: true } };
@@ -440,23 +510,125 @@ public partial class EcranParametres : Control
 		_optionModele.ItemSelected += OnModeleChoisi;
 		colonne.AddChild(LigneReglage("Modèle", _optionModele));
 
-		_statutOllama = new Label();
+		_statutOllama = Police(new Label(), 16);
 		colonne.AddChild(_statutOllama);
 
-		var boutons = new HBoxContainer();
-		boutons.AddThemeConstantOverride("separation", 12);
+		var boutons = Sep(new HBoxContainer(), 12);
 		colonne.AddChild(boutons);
 
-		_boutonReDlOllama = new Button { Text = "Retélécharger Ollama", CustomMinimumSize = new Vector2(220, 36) };
+		_boutonReDlOllama = Min(new Button { Text = "Retélécharger Ollama" }, 220, 36);
 		_boutonReDlOllama.Pressed += () => _dialogueReDlOllama.PopupCentered();
 		boutons.AddChild(_boutonReDlOllama);
 
-		_boutonSupprOllama = new Button { Text = "Supprimer Ollama", CustomMinimumSize = new Vector2(220, 36) };
+		_boutonSupprOllama = Min(new Button { Text = "Supprimer Ollama" }, 220, 36);
 		_boutonSupprOllama.Pressed += () => _dialogueSupprOllama.PopupCentered();
 		boutons.AddChild(_boutonSupprOllama);
 
+		// Modèles réellement téléchargés sur le disque : une ligne par modèle avec son propre
+		// bouton Supprimer (libère l'espace disque sans toucher au binaire Ollama). Rempli à la
+		// volée par RafraichirListeModeles (interrogation du serveur), rafraîchi à l'affichage
+		// de la section et après un (re)provisionnement.
+		AjouterEntete(colonne, "Modèles installés");
+		_listeModeles = Sep(new VBoxContainer(), 4);
+		colonne.AddChild(_listeModeles);
+
 		MettreAJourStatutOllama();
+		RafraichirListeModeles();
 		return marge;
+	}
+
+	// Interroge Ollama pour la liste des modèles présents sur le disque et reconstruit l'affichage
+	// (une ligne « nom … Supprimer » par modèle). Serveur éteint/indisponible ⇒ message d'attente.
+	private void RafraichirListeModeles()
+	{
+		if (_listeModeles == null)
+			return;
+
+		foreach (var enfant in _listeModeles.GetChildren())
+			enfant.QueueFree();
+
+		var svc = OllamaService.Instance;
+		if (svc is not { Actif: true, Disponible: true })
+		{
+			_listeModeles.AddChild(Police(new Label
+			{
+				Text = "Modèles indisponibles (Ollama désactivé ou pas encore prêt).",
+				Modulate = new Color(1f, 1f, 1f, 0.6f),
+				AutowrapMode = TextServer.AutowrapMode.WordSmart,
+			}, 16));
+			return;
+		}
+
+		var attente = Police(new Label { Text = "Chargement de la liste…", Modulate = new Color(1f, 1f, 1f, 0.6f) }, 16);
+		_listeModeles.AddChild(attente);
+
+		svc.ListerModelesInstalles(tags =>
+		{
+			// La section a pu être libérée entre-temps (écran fermé/rechargé).
+			if (_listeModeles == null || !IsInstanceValid(_listeModeles))
+				return;
+			foreach (var enfant in _listeModeles.GetChildren())
+				enfant.QueueFree();
+
+			if (tags.Length == 0)
+			{
+				_listeModeles.AddChild(Police(new Label
+				{
+					Text = "Aucun modèle installé.",
+					Modulate = new Color(1f, 1f, 1f, 0.6f),
+				}, 16));
+				return;
+			}
+
+			foreach (var tag in tags)
+				_listeModeles.AddChild(LigneModele(tag));
+		});
+	}
+
+	// Une ligne de la liste des modèles installés : le tag du modèle + un bouton Supprimer qui
+	// ouvre la confirmation partagée (_dialogueSupprModele) en mémorisant le tag ciblé.
+	private HBoxContainer LigneModele(string tag)
+	{
+		var ligne = Sep(new HBoxContainer(), 12);
+
+		ligne.AddChild(Police(new Label
+		{
+			Text = tag,
+			SizeFlagsHorizontal = SizeFlags.ExpandFill,
+			SizeFlagsVertical = SizeFlags.ShrinkCenter,
+			AutowrapMode = TextServer.AutowrapMode.WordSmart,
+		}, 16));
+
+		// Palier de taille (Minuscule / Petit / Moyen / Lourd) déduit du catalogue, en repère discret.
+		var palier = PalierModele(tag);
+		if (palier != null)
+			ligne.AddChild(Police(new Label
+			{
+				Text = palier,
+				SizeFlagsVertical = SizeFlags.ShrinkCenter,
+				Modulate = new Color(1f, 1f, 1f, 0.6f),
+			}, 16));
+
+		var suppr = Min(new Button { Text = "Supprimer" }, 120, 32);
+		suppr.Pressed += () =>
+		{
+			_tagModeleASupprimer = tag;
+			_dialogueSupprModele.DialogText = $"Supprimer le modèle « {tag} » du disque ?";
+			_dialogueSupprModele.PopupCentered();
+		};
+		ligne.AddChild(suppr);
+		return ligne;
+	}
+
+	// Palier de taille lisible d'un modèle installé (« Minuscule », « Petit », « Moyen »,
+	// « Lourd »), déduit du catalogue unique OllamaService.Modeles via son tag — le premier mot du
+	// libellé (« Minuscule (2.0 Go) » → « Minuscule »). Null si le tag n'est pas au catalogue.
+	private static string PalierModele(string tag)
+	{
+		foreach (var modele in OllamaService.Modeles)
+			if (modele.Tag == tag)
+				return modele.Libelle.Split(' ')[0];
+		return null;
 	}
 
 	// Reflète l'état courant d'Ollama : désactivé (grisé), disponible (vert) ou indisponible
@@ -516,20 +688,24 @@ public partial class EcranParametres : Control
 		MettreAJourStatutOllama();
 	}
 
-	// Rafraîchit l'état à la fin d'un (re)provisionnement lancé depuis cette section.
-	private void OnProvisionnementTermine(bool succes) => MettreAJourStatutOllama();
+	// Rafraîchit l'état ET la liste des modèles à la fin d'un (re)provisionnement (un modèle a pu
+	// être téléchargé, l'installation nettoyée…), qu'il soit lancé d'ici ou au démarrage du jeu.
+	private void OnProvisionnementTermine(bool succes)
+	{
+		MettreAJourStatutOllama();
+		RafraichirListeModeles();
+	}
 
 	private void ConstruireBasDePage(VBoxContainer colonne)
 	{
-		var bas = new HBoxContainer { Alignment = BoxContainer.AlignmentMode.Center };
-		bas.AddThemeConstantOverride("separation", 16);
+		var bas = Sep(new HBoxContainer { Alignment = BoxContainer.AlignmentMode.Center }, 16);
 		colonne.AddChild(bas);
 
-		var toutReset = new Button { Text = "Tout réinitialiser", CustomMinimumSize = new Vector2(200, 36) };
+		var toutReset = Min(new Button { Text = "Tout réinitialiser" }, 200, 36);
 		toutReset.Pressed += () => _dialogueReset.PopupCentered();
 		bas.AddChild(toutReset);
 
-		var retour = new Button { Text = "Retour", CustomMinimumSize = new Vector2(200, 36) };
+		var retour = Min(new Button { Text = "Retour" }, 200, 36);
 		retour.Pressed += () => Visible = false;
 		bas.AddChild(retour);
 	}
@@ -543,8 +719,7 @@ public partial class EcranParametres : Control
 		var centre = new CenterContainer();
 		centre.SetAnchorsPreset(LayoutPreset.FullRect);
 		_overlayCapture.AddChild(centre);
-		_labelCapture = new Label { HorizontalAlignment = HorizontalAlignment.Center };
-		_labelCapture.AddThemeFontSizeOverride("font_size", 22);
+		_labelCapture = Police(new Label { HorizontalAlignment = HorizontalAlignment.Center }, 22);
 		centre.AddChild(_labelCapture);
 		AddChild(_overlayCapture);
 
@@ -583,6 +758,25 @@ public partial class EcranParametres : Control
 		_dialogueReDlOllama.CancelButtonText = "Annuler";
 		_dialogueReDlOllama.Confirmed += OnRetelechargerOllama;
 		AddChild(_dialogueReDlOllama);
+
+		_dialogueSupprModele = new ConfirmationDialog { Title = "Supprimer un modèle" };
+		_dialogueSupprModele.GetOkButton().Text = "Supprimer";
+		_dialogueSupprModele.CancelButtonText = "Annuler";
+		_dialogueSupprModele.Confirmed += OnSupprimerModele;
+		AddChild(_dialogueSupprModele);
+	}
+
+	// Suppression confirmée d'un modèle précis : on l'efface via Ollama puis on rafraîchit la liste
+	// (et le statut, car supprimer le modèle courant rend Ollama indisponible tant qu'aucun n'est prêt).
+	private void OnSupprimerModele()
+	{
+		if (string.IsNullOrEmpty(_tagModeleASupprimer))
+			return;
+		OllamaService.Instance?.SupprimerModele(_tagModeleASupprimer, _ =>
+		{
+			RafraichirListeModeles();
+			MettreAJourStatutOllama();
+		});
 	}
 
 	private void DemarrerCapture(string action, bool clavier)

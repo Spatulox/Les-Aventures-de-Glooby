@@ -44,6 +44,10 @@ public partial class MenuPrincipal : Control
 		// Le HUD (autoload) ne doit pas s'afficher par-dessus le menu.
 		GetNodeOrNull<Hud>("/root/Hud")?.Masquer();
 
+		// Efface un éventuel bandeau d'erreur IA resté affiché : au retour au menu et avant
+		// tout lancement de partie, l'erreur de téléchargement ne doit plus persister.
+		OllamaService.Instance?.MasquerBandeau();
+
 		// Image de fond aléatoire, rejouée à chaque affichage (la scène du menu se
 		// recharge en y revenant). Le voile sombre qui la rend lisible et toute la
 		// mise en page viennent, eux, de la scène.
