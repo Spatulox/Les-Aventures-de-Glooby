@@ -72,10 +72,10 @@ public partial class OllamaService : Node
 	// téléchargement. Les tags doivent exister sur ollama.com (pull automatique au choix).
 	public static readonly PaletteModele[] Modeles =
 	{
-		new("Minuscule", "llama3.2:1b"), // ~1.3 Go
-		new("Petit", "llama3.2:3b"),     // ~2.0 Go (défaut)
-		new("Moyen", "mistral:7b"),      // ~4.1 Go, français natif
-		new("Lourd", "qwen2.5:14b"),     // ~9 Go
+		new("Minuscule (1.3 Go)", "llama3.2:1b"), // ~1.3 Go
+		new("Petit (2.0 Go)", "llama3.2:3b"),     // ~2.0 Go (défaut)
+		new("Moyen (4.1 Go)", "mistral:7b"),      // ~4.1 Go, français natif
+		new("Lourd (9.0 Go)", "qwen2.5:14b"),     // ~9 Go
 	};
 
 	// Progression du provisionnement (pour l'écran de chargement) : phase lisible + ratio 0→1.
@@ -295,7 +295,7 @@ public partial class OllamaService : Node
 			// ~2.5 tokens/mot pour ne pas tronquer la phrase cible). MaxTokens reste le plafond dur.
 			int mots = Mathf.Max(1, motMoyenParReponse);
 			//int budgetTokens = Mathf.Clamp(Mathf.RoundToInt(mots * 2.5f), 12, MaxTokens);
-			string inviteAvecLongueur = $"{invite}\nLa réponse courte doit avoir environ {mots} mots. Fini ta phrase et ne coupe pas ta réponse. Ne coupe jamais un mot. Ne commence JAMAIS de nouvelle phrase, la réponse doit avoir seulement une phrase";
+			string inviteAvecLongueur = $"{invite}\nLa réponse courte doit avoir environ {mots} mots.";//" Fini ta phrase et ne coupe pas ta réponse. Ne coupe jamais un mot. Ne commence JAMAIS de nouvelle phrase, la réponse doit avoir seulement une phrase";
 
 			var corps = JsonSerializer.Serialize(new
 			{

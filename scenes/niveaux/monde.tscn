@@ -173,7 +173,7 @@ offset = Vector2(0, 4)
 position = Vector2(250, 272)
 Lignes = PackedStringArray("Oh ! Salut Glooby !", "J\'adore ton Pantalon !")
 DialogueDynamique = true
-Contexte = "Tu es un pinguoin (Pipo) qui n'est jamais sorti de son village, et tu croise Glooby (le joueur)"
+Contexte = "Tu es un pinguoin nommé Pipo qui n'est jamais sorti de son village, et tu croise Glooby, l'enfant de ton voisin, avec son pantalon trop grand, qui se balade dans le village a coté chez lui"
 Invite = "Salue Glooby en une courte réplique, en restant dans ton caractère."
 MotMoyenParReponse = 5
 
@@ -184,9 +184,8 @@ Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère
 
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
-[node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1926955540 instance=ExtResource("checkpoint")]
-position = Vector2(327, 293)
-IdCheckpoint = "village_depart"
+[node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1428675968 instance=ExtResource("checkpoint")]
+position = Vector2(327, 288)
 
 [node name="panneau_poteau" parent="Village/Interactifs" unique_id=700000010 instance=ExtResource("panneau")]
 position = Vector2(612, 268)
