@@ -8,6 +8,11 @@ using Godot;
 // Convention d'angle (repère Godot, Y vers le bas) : 0° = droite, 90° = bas,
 // 180° = gauche, 270° = haut. Pas besoin de deviner : le script est [Tool] et
 // dessine la trajectoire (ligne + point d'arrivée) EN DIRECT dans l'éditeur.
+//
+// Traversable comme PlateformeUnidirectionnelle : la .tscn place la collision sur
+// le layer traversable (Constantes.LayerPlateformesTraversables = 16, masque 0) et
+// coche one_way_collision sur la CollisionShape2D → on peut sauter DEDANS par en
+// dessous et atterrir dessus, et redescendre en bas+saut (Player.GererTraverseePlateforme).
 [Tool]
 public partial class PlateformeMobile : AnimatableBody2D
 {
