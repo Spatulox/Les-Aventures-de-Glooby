@@ -23,6 +23,8 @@ public partial class OllamaService : Node
 	public static OllamaService Instance { get; private set; }
 
 	// ---- Réglages ----
+	// Modèle courant (tag Ollama). La valeur d'export sert de défaut (palier « Petit ») ; elle
+	// est écrasée au boot par le choix persistant (voir ChargerConfig / DefinirModele).
 	[Export] public string Modele = "llama3.2:3b";
 	[Export] public string UrlBase = "http://127.0.0.1:11434";
 	[Export] public int MaxTokens = 80; // borne la longueur de réponse (options.num_predict)
@@ -46,7 +48,7 @@ public partial class OllamaService : Node
 	public string ContexteGlobal =
 		"Univers : un jeu de plateforme 2D enfantin et bon enfant sur la banquise. " +
 		"Le héros est un petit pingouin nommé Glooby. Réponds TOUJOURS en français, " +
-		"en une seule phrase courte, gentille et adaptée aux enfants. Reste dans ton rôle.";
+		"en une seule phrase courte, et gentille. Voiçi ton rôle  :";
 
 	// Faits ajoutables PAR CODE au fil de la partie (progression, pouvoir obtenu…), sans
 	// toucher aux exports. Composés dans le prompt système par ConstruireContexte.
@@ -60,6 +62,20 @@ public partial class OllamaService : Node
 	// dans Paramètres > Avancé.
 	public bool Actif { get; private set; } = true;
 	private const string CheminConfig = "user://ollama.cfg";
+
+	// Palier de modèle proposé au joueur : un libellé lisible et le tag Ollama correspondant.
+	public readonly record struct PaletteModele(string Libelle, string Tag);
+
+	// Catalogue des tailles sélectionnables (Paramètres > Avancé). Source UNIQUE, réutilisée
+	// par l'UI : plus le modèle est gros, meilleures sont les répliques mais plus lourd est le
+	// téléchargement. Les tags doivent exister sur ollama.com (pull automatique au choix).
+	public static readonly PaletteModele[] Modeles =
+	{
+		new("Minuscule", "llama3.2:1b"), // ~1.3 Go
+		new("Petit", "llama3.2:3b"),     // ~2.0 Go (défaut)
+		new("Moyen", "mistral:7b"),      // ~4.1 Go, français natif
+		new("Lourd", "qwen2.5:14b"),     // ~9 Go
+	};
 
 	// Progression du provisionnement (pour l'écran de chargement) : phase lisible + ratio 0→1.
 	[Signal] public delegate void ProvisionnementProgresseEventHandler(string phase, float ratio);
@@ -84,15 +100,37 @@ public partial class OllamaService : Node
 	private void ChargerConfig()
 	{
 		var cfg = new ConfigFile();
-		if (cfg.Load(CheminConfig) == Error.Ok)
-			Actif = cfg.GetValue("ollama", "actif", true).AsBool();
+		if (cfg.Load(CheminConfig) != Error.Ok)
+			return;
+		Actif = cfg.GetValue("ollama", "actif", true).AsBool();
+		Modele = cfg.GetValue("ollama", "modele", Modele).AsString();
 	}
 
 	private void SauverConfig()
 	{
 		var cfg = new ConfigFile();
 		cfg.SetValue("ollama", "actif", Actif);
+		cfg.SetValue("ollama", "modele", Modele);
 		cfg.Save(CheminConfig);
+	}
+
+	// Change le modèle (tag Ollama) et persiste le choix. Si Ollama est actif : relance le
+	// provisionnement, qui réutilise le serveur déjà lancé, télécharge le nouveau modèle s'il
+	// est absent (barre de progression) puis le préchauffe. Inactif : on persiste seulement,
+	// le choix s'appliquera à la prochaine activation. Un tag déjà courant ne fait rien.
+	public void DefinirModele(string tag)
+	{
+		if (string.IsNullOrEmpty(tag) || tag == Modele)
+			return;
+		Modele = tag;
+		SauverConfig();
+
+		if (Actif)
+		{
+			Disponible = false;
+			_ecranDemande = false;
+			_ = Task.Run(DemarrerAsync);
+		}
 	}
 
 	// Active/désactive l'usage d'Ollama et persiste le choix. À l'activation : (re)démarre le

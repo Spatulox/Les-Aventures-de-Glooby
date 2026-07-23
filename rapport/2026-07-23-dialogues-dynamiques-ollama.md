@@ -35,9 +35,15 @@ sur les `Lignes` statiques si indisponible.
 ### Fichiers modifiés
 - **`EcranParametres.cs`** — nouvel onglet **« Avancé »** (gestion d'Ollama) : case
   **Activer/désactiver** les dialogues IA (persistée ; contrôle le démarrage du serveur ET les
-  appels), étiquette d'état (désactivé / disponible / indisponible), boutons **« Retélécharger
-  Ollama »** et **« Supprimer Ollama »** (chacun avec confirmation ; grisés si désactivé).
+  appels), **sélecteur de taille de modèle** (Minuscule / Petit / Moyen / Lourd), étiquette
+  d'état (désactivé / disponible / indisponible), boutons **« Retélécharger Ollama »** et
+  **« Supprimer Ollama »** (chacun avec confirmation ; sélecteur + boutons grisés si désactivé).
   L'onglet **« Accessibilité »** (vide) a été **supprimé**.
+- **`OllamaService.cs`** (modèles) — catalogue statique `Modeles[]` (`PaletteModele` = libellé +
+  tag) : Minuscule `llama3.2:1b` / Petit `llama3.2:3b` / Moyen `mistral:7b` / Lourd
+  `qwen2.5:14b`. Choix **persisté** (clé `modele` dans `user://ollama.cfg`), `DefinirModele(tag)`
+  relance le provisionnement (pull du nouveau modèle si absent, barre de progression, puis
+  préchauffage). Les modèles déjà téléchargés restent en cache (bascule instantanée au retour).
 - **`OllamaService.cs`** (compléments) — flag `Actif` persistant (`user://ollama.cfg`),
   `DefinirActif(bool)` (démarre/arrête le serveur + persiste), `SupprimerOllama()` (arrête le
   serveur + efface `user://ollama/`), `Reprovisionner()` (supprime puis réinstalle). Au boot,

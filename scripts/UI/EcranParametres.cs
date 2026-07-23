@@ -28,6 +28,7 @@ public partial class EcranParametres : Control
 
 	// Contrôles de la section Avancé (gestion d'Ollama).
 	private CheckButton _checkOllama;
+	private OptionButton _optionModele;
 	private Label _statutOllama;
 	private Button _boutonReDlOllama;
 	private Button _boutonSupprOllama;
@@ -426,6 +427,19 @@ public partial class EcranParametres : Control
 		_checkOllama.Toggled += OnOllamaActifBascule;
 		colonne.AddChild(LigneReglage("Activer les dialogues IA (Ollama)", _checkOllama));
 
+		// Sélecteur de taille de modèle : plus gros = meilleures répliques mais plus lourd à
+		// télécharger. Rempli depuis le catalogue unique OllamaService.Modeles.
+		_optionModele = new OptionButton();
+		string modeleCourant = OllamaService.Instance?.Modele;
+		for (int i = 0; i < OllamaService.Modeles.Length; i++)
+		{
+			_optionModele.AddItem(OllamaService.Modeles[i].Libelle, i);
+			if (OllamaService.Modeles[i].Tag == modeleCourant)
+				_optionModele.Selected = i;
+		}
+		_optionModele.ItemSelected += OnModeleChoisi;
+		colonne.AddChild(LigneReglage("Modèle", _optionModele));
+
 		_statutOllama = new Label();
 		colonne.AddChild(_statutOllama);
 
@@ -469,6 +483,8 @@ public partial class EcranParametres : Control
 			_statutOllama.Modulate = dispo ? new Color(0.6f, 1f, 0.6f) : new Color(1f, 0.8f, 0.5f);
 		}
 
+		if (_optionModele != null)
+			_optionModele.Disabled = !actif;
 		if (_boutonReDlOllama != null)
 			_boutonReDlOllama.Disabled = !actif;
 		if (_boutonSupprOllama != null)
@@ -478,6 +494,13 @@ public partial class EcranParametres : Control
 	private void OnOllamaActifBascule(bool actif)
 	{
 		OllamaService.Instance?.DefinirActif(actif);
+		MettreAJourStatutOllama();
+	}
+
+	private void OnModeleChoisi(long index)
+	{
+		if (index >= 0 && index < OllamaService.Modeles.Length)
+			OllamaService.Instance?.DefinirModele(OllamaService.Modeles[(int)index].Tag);
 		MettreAJourStatutOllama();
 	}
 
