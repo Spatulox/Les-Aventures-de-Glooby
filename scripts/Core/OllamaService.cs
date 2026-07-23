@@ -294,7 +294,7 @@ public partial class OllamaService : Node
 			// couper net), et on borne quand même num_predict comme filet de sécurité (marge de
 			// ~2.5 tokens/mot pour ne pas tronquer la phrase cible). MaxTokens reste le plafond dur.
 			int mots = Mathf.Max(1, motMoyenParReponse);
-			int budgetTokens = Mathf.Clamp(Mathf.RoundToInt(mots * 2.5f), 12, MaxTokens);
+			//int budgetTokens = Mathf.Clamp(Mathf.RoundToInt(mots * 2.5f), 12, MaxTokens);
 			string inviteAvecLongueur = $"{invite}\nLa réponse courte doit avoir environ {mots} mots. Fini ta phrase et ne coupe pas ta réponse. Ne coupe jamais un mot. Ne commence JAMAIS de nouvelle phrase, la réponse doit avoir seulement une phrase";
 
 			var corps = JsonSerializer.Serialize(new
@@ -304,7 +304,7 @@ public partial class OllamaService : Node
 				prompt = inviteAvecLongueur,
 				stream = true,
 				keep_alive = KeepAlive, // garde le modèle chaud pour le PNJ suivant
-				options = new { num_predict = budgetTokens },
+				//options = new { num_predict = budgetTokens },
 			});
 
 			using var requete = new HttpRequestMessage(HttpMethod.Post, $"{UrlBase}/api/generate")
