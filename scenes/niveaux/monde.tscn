@@ -139,32 +139,32 @@ flip_h = true
 [node name="Igloo5" parent="Village/Decor" unique_id=514023599 instance=ExtResource("igloo")]
 position = Vector2(415, 269)
 
-[node name="Rocher" type="Sprite2D" parent="Village/Decor"]
+[node name="Rocher" type="Sprite2D" parent="Village/Decor" unique_id=645059120]
+z_index = -1
 position = Vector2(502, 271)
 texture = ExtResource("rocher")
-z_index = -1
 offset = Vector2(0, 16.375)
 
-[node name="CristalGros" type="Sprite2D" parent="Village/Decor"]
+[node name="CristalGros" type="Sprite2D" parent="Village/Decor" unique_id=1357060682]
+z_index = -1
 position = Vector2(980, 268)
 texture = ExtResource("cristalg")
-z_index = -1
 offset = Vector2(0, 9)
 
-[node name="CristalPetit" type="Sprite2D" parent="Village/Decor"]
+[node name="CristalPetit" type="Sprite2D" parent="Village/Decor" unique_id=2046531005]
+z_index = -1
 position = Vector2(620, 284)
 texture = ExtResource("cristalp")
-z_index = -1
 
-[node name="CristalPetit2" type="Sprite2D" parent="Village/Decor"]
+[node name="CristalPetit2" type="Sprite2D" parent="Village/Decor" unique_id=1259092472]
+z_index = -1
 position = Vector2(1080, 284)
 texture = ExtResource("cristalp")
-z_index = -1
 
-[node name="FleurGivre" type="Sprite2D" parent="Village/Decor"]
+[node name="FleurGivre" type="Sprite2D" parent="Village/Decor" unique_id=2063221923]
+z_index = -1
 position = Vector2(360, 284)
 texture = ExtResource("fleur")
-z_index = -1
 offset = Vector2(0, 4)
 
 [node name="Pnj" type="Node2D" parent="Village" unique_id=700000020]
@@ -254,173 +254,173 @@ position = Vector2(4550, 272)
 
 [node name="Decor" type="Node2D" parent="Banquise" unique_id=819138525]
 
-[node name="Rocher" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Rocher" type="Sprite2D" parent="Banquise/Decor" unique_id=1760349192]
+z_index = -1
 position = Vector2(2150, 252)
 texture = ExtResource("rocher")
-z_index = -1
 offset = Vector2(0, 16.375)
 
-[node name="CristalGros" type="Sprite2D" parent="Banquise/Decor"]
+[node name="CristalGros" type="Sprite2D" parent="Banquise/Decor" unique_id=1447659709]
+z_index = -1
 position = Vector2(2620, 268)
 texture = ExtResource("cristalg")
-z_index = -1
 offset = Vector2(0, 9)
 
-[node name="CristalPetit" type="Sprite2D" parent="Banquise/Decor"]
+[node name="CristalPetit" type="Sprite2D" parent="Banquise/Decor" unique_id=1648561555]
+z_index = -1
 position = Vector2(2218, 276)
 texture = ExtResource("cristalp")
-z_index = -1
 
-[node name="FleurGivre" type="Sprite2D" parent="Banquise/Decor"]
+[node name="FleurGivre" type="Sprite2D" parent="Banquise/Decor" unique_id=1762319294]
+z_index = -1
 position = Vector2(2450, 284)
 texture = ExtResource("fleur")
-z_index = -1
 offset = Vector2(0, 4)
 
-[node name="FleurGivre2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="FleurGivre2" type="Sprite2D" parent="Banquise/Decor" unique_id=724489020]
+z_index = -1
 position = Vector2(2700, 284)
 texture = ExtResource("fleur")
-z_index = -1
 offset = Vector2(0, 4)
 
-[node name="CristalGros2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="CristalGros2" type="Sprite2D" parent="Banquise/Decor" unique_id=1956667044]
+z_index = -1
 position = Vector2(3100, 268)
 texture = ExtResource("cristalg")
-z_index = -1
 offset = Vector2(0, 9)
 
-[node name="CristalGros3" type="Sprite2D" parent="Banquise/Decor"]
+[node name="CristalGros3" type="Sprite2D" parent="Banquise/Decor" unique_id=1119722492]
+z_index = -1
 position = Vector2(4300, 268)
 texture = ExtResource("cristalg")
-z_index = -1
 offset = Vector2(0, 9)
 
-[node name="CristalPetit2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="CristalPetit2" type="Sprite2D" parent="Banquise/Decor" unique_id=847841486]
+z_index = -1
 position = Vector2(3300, 284)
 texture = ExtResource("cristalp")
-z_index = -1
 
-[node name="CristalPetit3" type="Sprite2D" parent="Banquise/Decor"]
+[node name="CristalPetit3" type="Sprite2D" parent="Banquise/Decor" unique_id=133779983]
+z_index = -1
 position = Vector2(3800, 284)
 texture = ExtResource("cristalp")
-z_index = -1
 
-[node name="CristalPetit4" type="Sprite2D" parent="Banquise/Decor"]
+[node name="CristalPetit4" type="Sprite2D" parent="Banquise/Decor" unique_id=532295327]
+z_index = -1
 position = Vector2(4500, 284)
 texture = ExtResource("cristalp")
-z_index = -1
 
-[node name="Rocher2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Rocher2" type="Sprite2D" parent="Banquise/Decor" unique_id=716471640]
+z_index = -1
 position = Vector2(3600, 252)
 texture = ExtResource("rocher")
-z_index = -1
 offset = Vector2(0, 16.375)
 
-[node name="Rocher3" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Rocher3" type="Sprite2D" parent="Banquise/Decor" unique_id=165018281]
+z_index = -1
 position = Vector2(4900, 252)
 texture = ExtResource("rocher")
-z_index = -1
 offset = Vector2(0, 16.375)
 
-[node name="ColonneGlace1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="ColonneGlace1" type="Sprite2D" parent="Banquise/Decor" unique_id=2003431191]
+z_index = -1
 position = Vector2(2950, 254)
 texture = ExtResource("g_colonne")
-z_index = -1
 
-[node name="ColonneGlace2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="ColonneGlace2" type="Sprite2D" parent="Banquise/Decor" unique_id=1359128615]
+z_index = -1
 position = Vector2(3720, 254)
 texture = ExtResource("g_colonne")
-z_index = -1
 
-[node name="ColonneGlace3" type="Sprite2D" parent="Banquise/Decor"]
+[node name="ColonneGlace3" type="Sprite2D" parent="Banquise/Decor" unique_id=2019476565]
+z_index = -1
 position = Vector2(5380, 254)
 texture = ExtResource("g_colonne")
-z_index = -1
 
-[node name="ChampiGeant1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="ChampiGeant1" type="Sprite2D" parent="Banquise/Decor" unique_id=1075288879]
+z_index = -1
 position = Vector2(3250, 268)
 texture = ExtResource("g_champi_geant")
-z_index = -1
 
-[node name="ChampiGeant2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="ChampiGeant2" type="Sprite2D" parent="Banquise/Decor" unique_id=138529946]
+z_index = -1
 position = Vector2(5100, 268)
 texture = ExtResource("g_champi_geant")
-z_index = -1
 
-[node name="Champi1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Champi1" type="Sprite2D" parent="Banquise/Decor" unique_id=1875664519]
+z_index = -1
 position = Vector2(2900, 282)
 texture = ExtResource("g_champi")
-z_index = -1
 
-[node name="Champi2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Champi2" type="Sprite2D" parent="Banquise/Decor" unique_id=922906917]
+z_index = -1
 position = Vector2(4200, 282)
 texture = ExtResource("g_champi")
-z_index = -1
 
-[node name="Champi4" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Champi4" type="Sprite2D" parent="Banquise/Decor" unique_id=1845844093]
+z_index = -1
 position = Vector2(4950, 282)
 texture = ExtResource("g_champi")
-z_index = -1
 
-[node name="Grappe1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Grappe1" type="Sprite2D" parent="Banquise/Decor" unique_id=931937026]
+z_index = -1
 position = Vector2(3560, 278)
 texture = ExtResource("g_grappe")
-z_index = -1
 
-[node name="Grappe2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Grappe2" type="Sprite2D" parent="Banquise/Decor" unique_id=880176000]
+z_index = -1
 position = Vector2(4880, 278)
 texture = ExtResource("g_grappe")
-z_index = -1
 
-[node name="Geode1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Geode1" type="Sprite2D" parent="Banquise/Decor" unique_id=1208101845]
+z_index = -1
 position = Vector2(4120, 278)
 texture = ExtResource("g_geode")
-z_index = -1
 
-[node name="Geode2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Geode2" type="Sprite2D" parent="Banquise/Decor" unique_id=1455324851]
+z_index = -1
 position = Vector2(5300, 278)
 texture = ExtResource("g_geode")
-z_index = -1
 
-[node name="Lac1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Lac1" type="Sprite2D" parent="Banquise/Decor" unique_id=753948596]
+z_index = -1
 position = Vector2(3820, 286)
 texture = ExtResource("g_lac")
-z_index = -1
 
-[node name="Lac2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Lac2" type="Sprite2D" parent="Banquise/Decor" unique_id=641362618]
+z_index = -1
 position = Vector2(4680, 286)
 texture = ExtResource("g_lac")
-z_index = -1
 
-[node name="Congere1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Congere1" type="Sprite2D" parent="Banquise/Decor" unique_id=1709423317]
+z_index = -1
 position = Vector2(3140, 286)
 texture = ExtResource("g_congere")
-z_index = -1
 
-[node name="Congere2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Congere2" type="Sprite2D" parent="Banquise/Decor" unique_id=79912702]
+z_index = -1
 position = Vector2(5020, 286)
 texture = ExtResource("g_congere")
-z_index = -1
 
-[node name="Flaque1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Flaque1" type="Sprite2D" parent="Banquise/Decor" unique_id=1690515644]
+z_index = -1
 position = Vector2(4420, 286)
 texture = ExtResource("g_flaque")
-z_index = -1
 
-[node name="ColonneBrisee1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="ColonneBrisee1" type="Sprite2D" parent="Banquise/Decor" unique_id=390169002]
+z_index = -1
 position = Vector2(4760, 286)
 texture = ExtResource("g_colonne_brisee")
-z_index = -1
 
-[node name="Pierres1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Pierres1" type="Sprite2D" parent="Banquise/Decor" unique_id=1046748671]
+z_index = -1
 position = Vector2(3920, 286)
 texture = ExtResource("g_pierres")
-z_index = -1
 
-[node name="Pierres2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Pierres2" type="Sprite2D" parent="Banquise/Decor" unique_id=1041848515]
+z_index = -1
 position = Vector2(5220, 286)
 texture = ExtResource("g_pierres")
-z_index = -1
 
 [node name="Glace1" parent="Banquise/Decor" unique_id=1402786529 instance=ExtResource("g_glace")]
 z_index = -1
@@ -430,20 +430,20 @@ position = Vector2(3360, 284)
 z_index = -1
 position = Vector2(5460, 284)
 
-[node name="VeineMur1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="VeineMur1" type="Sprite2D" parent="Banquise/Decor" unique_id=1886073243]
+z_index = -1
 position = Vector2(2830, 130)
 texture = ExtResource("g_veine")
-z_index = -1
 
-[node name="Fissure1" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Fissure1" type="Sprite2D" parent="Banquise/Decor" unique_id=2129863673]
+z_index = -1
 position = Vector2(3650, 110)
 texture = ExtResource("g_fissure")
-z_index = -1
 
-[node name="Fissure2" type="Sprite2D" parent="Banquise/Decor"]
+[node name="Fissure2" type="Sprite2D" parent="Banquise/Decor" unique_id=1348911705]
+z_index = -1
 position = Vector2(4850, 110)
 texture = ExtResource("g_fissure")
-z_index = -1
 
 [node name="Pnj" type="Node2D" parent="Banquise" unique_id=700000021]
 
@@ -483,45 +483,45 @@ position = Vector2(5600, 272)
 
 [node name="Decor" type="Node2D" parent="ZoneBossCerf" unique_id=669849264]
 
-[node name="ColonneGlace4" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="ColonneGlace4" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=1306516105]
+z_index = -1
 position = Vector2(5950, 254)
 texture = ExtResource("g_colonne")
-z_index = -1
 
-[node name="Champi3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="Champi3" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=956397311]
+z_index = -1
 position = Vector2(5620, 282)
 texture = ExtResource("g_champi")
-z_index = -1
 
-[node name="Grappe3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="Grappe3" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=1342186467]
+z_index = -1
 position = Vector2(6020, 278)
 texture = ExtResource("g_grappe")
-z_index = -1
 
-[node name="Lac3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="Lac3" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=813158398]
+z_index = -1
 position = Vector2(5720, 286)
 texture = ExtResource("g_lac")
-z_index = -1
 
-[node name="Flaque2" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="Flaque2" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=1067583845]
+z_index = -1
 position = Vector2(5880, 286)
 texture = ExtResource("g_flaque")
-z_index = -1
 
-[node name="VeineMur2" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="VeineMur2" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=914837457]
+z_index = -1
 position = Vector2(6180, 140)
 texture = ExtResource("g_veine")
-z_index = -1
 
-[node name="ColonneBrisee2" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="ColonneBrisee2" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=2016457986]
+z_index = -1
 position = Vector2(5980, 286)
 texture = ExtResource("g_colonne_brisee")
-z_index = -1
 
-[node name="Fissure3" type="Sprite2D" parent="ZoneBossCerf/Decor"]
+[node name="Fissure3" type="Sprite2D" parent="ZoneBossCerf/Decor" unique_id=1634684638]
+z_index = -1
 position = Vector2(5650, 110)
 texture = ExtResource("g_fissure")
-z_index = -1
 
 [node name="Interactifs" type="Node2D" parent="ZoneBossCerf" unique_id=1375720744]
 
