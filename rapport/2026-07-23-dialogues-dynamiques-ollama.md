@@ -33,11 +33,17 @@ sur les `Lignes` statiques si indisponible.
   puis se retire seul après quelques secondes. Signal dédié `ProvisionnementErreur(message)`.
 
 ### Fichiers modifiés
-- **`EcranParametres.cs`** — nouvel onglet **« Avancé »** (gestion d'Ollama) : case
-  **Activer/désactiver** les dialogues IA (persistée ; contrôle le démarrage du serveur ET les
-  appels), **sélecteur de taille de modèle** (Minuscule / Petit / Moyen / Lourd), étiquette
-  d'état (désactivé / disponible / indisponible), boutons **« Retélécharger Ollama »** et
-  **« Supprimer Ollama »** (chacun avec confirmation ; sélecteur + boutons grisés si désactivé).
+- **`EcranParametres.cs`** — onglet **« Dialogue IA »** (renommé depuis « Avancé »/« Accessibilité »,
+  gestion d'Ollama) : case **Activer/désactiver** les dialogues IA (persistée ; contrôle le
+  démarrage du serveur ET les appels), **sélecteur de taille de modèle** (Minuscule / Petit /
+  Moyen / Lourd), étiquette d'état (désactivé / disponible / indisponible), boutons
+  **« Retélécharger Ollama »** et **« Supprimer Ollama »** (chacun avec confirmation ; sélecteur +
+  boutons grisés si désactivé). Ajout d'une **liste des modèles installés** (interrogés via
+  `/api/tags`), chaque ligne avec son **bouton « Supprimer »** (confirmation partagée) ; la liste
+  se rafraîchit à l'ouverture de l'onglet, après une suppression et après un (re)provisionnement.
+- **`OllamaService.cs`** — ajout de `ListerModelesInstalles()` (GET `/api/tags` → tags renvoyés
+  sur le thread Godot) et `SupprimerModele(tag)` (DELETE `/api/delete`), pour alimenter la liste
+  ci-dessus.
   L'onglet **« Accessibilité »** (vide) a été **supprimé**.
 - **`OllamaService.cs`** (modèles) — catalogue statique `Modeles[]` (`PaletteModele` = libellé +
   tag) : Minuscule `llama3.2:1b` / Petit `llama3.2:3b` / Moyen `mistral:7b` / Lourd

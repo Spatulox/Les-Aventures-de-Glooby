@@ -286,6 +286,71 @@ public partial class OllamaService : Node
 		_ = Task.Run(DemarrerAsync);
 	}
 
+	// Liste les modèles Ollama réellement présents sur le disque (GET /api/tags). Le résultat
+	// (tableau de tags, ex. « llama3.2:3b ») est renvoyé sur le thread Godot via CallDeferred,
+	// pour que Paramètres > Dialogue puisse l'afficher. Serveur absent/échec ⇒ tableau vide.
+	public void ListerModelesInstalles(Action<string[]> surResultat)
+	{
+		_ = Task.Run(async () =>
+		{
+			string[] tags = await ListerModelesAsync();
+			Callable.From(() => surResultat?.Invoke(tags)).CallDeferred();
+		});
+	}
+
+	private async Task<string[]> ListerModelesAsync()
+	{
+		try
+		{
+			using var reponse = await _http.GetAsync($"{UrlBase}/api/tags");
+			reponse.EnsureSuccessStatusCode();
+			string json = await reponse.Content.ReadAsStringAsync();
+			using var doc = JsonDocument.Parse(json);
+			var liste = new List<string>();
+			if (doc.RootElement.TryGetProperty("models", out var modeles))
+				foreach (var m in modeles.EnumerateArray())
+					if (m.TryGetProperty("name", out var nom))
+						liste.Add(nom.GetString());
+			return liste.ToArray();
+		}
+		catch (Exception e)
+		{
+			GD.PushWarning($"OllamaService : liste des modèles impossible ({e.Message}).");
+			return Array.Empty<string>();
+		}
+	}
+
+	// Supprime UN modèle précis du disque (DELETE /api/delete {name}). Sert la liste « modèles
+	// installés » de Paramètres > Dialogue (un bouton Supprimer par modèle). Le résultat (réussi ?)
+	// est renvoyé sur le thread Godot pour rafraîchir la liste. Ne touche ni au binaire ni à la config.
+	public void SupprimerModele(string tag, Action<bool> surResultat)
+	{
+		_ = Task.Run(async () =>
+		{
+			bool ok = await SupprimerModeleAsync(tag);
+			Callable.From(() => surResultat?.Invoke(ok)).CallDeferred();
+		});
+	}
+
+	private async Task<bool> SupprimerModeleAsync(string tag)
+	{
+		try
+		{
+			var corps = JsonSerializer.Serialize(new { name = tag });
+			using var requete = new HttpRequestMessage(HttpMethod.Delete, $"{UrlBase}/api/delete")
+			{
+				Content = new StringContent(corps, Encoding.UTF8, "application/json"),
+			};
+			using var reponse = await _http.SendAsync(requete);
+			return reponse.IsSuccessStatusCode;
+		}
+		catch (Exception e)
+		{
+			GD.PushWarning($"OllamaService : suppression du modèle {tag} impossible ({e.Message}).");
+			return false;
+		}
+	}
+
 	private async Task FluxAsync(string contexte, string invite, int motMoyenParReponse, Action<string> surChunk, Action surFin, Action surErreur, CancellationToken jeton)
 	{
 		try

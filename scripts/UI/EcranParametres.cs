@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 // Écran Paramètres réutilisable, partagé par le menu principal et le menu pause.
 // Construit par code (comme MenuFabrique) et organisé en SECTIONS : « Touches »,
-// « Affichage » et « Audio » ont du contenu ; « Accessibilité » reste un emplacement
-// réservé — le menu accueillera ces réglages plus tard sans réécriture.
+// « Affichage », « Audio » et « Dialogue IA » (gestion d'Ollama : activation, choix du
+// modèle, (re)téléchargement, et liste des modèles installés supprimables un par un).
 //
 // La section Touches liste chaque action (regroupée par catégorie) avec sa liaison
 // clavier et sa liaison manette, chacune remappable : un clic arme la capture (overlay
@@ -25,13 +25,18 @@ public partial class EcranParametres : Control
 	private ConfirmationDialog _dialogueReset;
 	private ConfirmationDialog _dialogueSupprOllama;
 	private ConfirmationDialog _dialogueReDlOllama;
+	private ConfirmationDialog _dialogueSupprModele;
 
-	// Contrôles de la section Avancé (gestion d'Ollama).
+	// Contrôles de la section Dialogue IA (gestion d'Ollama).
 	private CheckButton _checkOllama;
 	private OptionButton _optionModele;
 	private Label _statutOllama;
 	private Button _boutonReDlOllama;
 	private Button _boutonSupprOllama;
+	// Liste dynamique des modèles installés sur le disque (une ligne + bouton Supprimer chacun).
+	private VBoxContainer _listeModeles;
+	// Tag du modèle en attente de confirmation de suppression (dialogue partagé).
+	private string _tagModeleASupprimer;
 
 	// Contexte de la capture / résolution de conflit en cours.
 	private string _actionEnCapture;
@@ -150,6 +155,11 @@ public partial class EcranParametres : Control
 	{
 		foreach (var (nom, section) in _sections)
 			section.Visible = nom == titre;
+
+		// La liste des modèles peut avoir changé (pull, suppression) depuis la dernière visite :
+		// on la rafraîchit à chaque ouverture de la section Dialogue IA.
+		if (titre == "Dialogue IA")
+			RafraichirListeModeles();
 	}
 
 	// Section Touches : liste défilante des actions regroupées par catégorie.
@@ -455,8 +465,92 @@ public partial class EcranParametres : Control
 		_boutonSupprOllama.Pressed += () => _dialogueSupprOllama.PopupCentered();
 		boutons.AddChild(_boutonSupprOllama);
 
+		// Modèles réellement téléchargés sur le disque : une ligne par modèle avec son propre
+		// bouton Supprimer (libère l'espace disque sans toucher au binaire Ollama). Rempli à la
+		// volée par RafraichirListeModeles (interrogation du serveur), rafraîchi à l'affichage
+		// de la section et après un (re)provisionnement.
+		AjouterEntete(colonne, "Modèles installés");
+		_listeModeles = new VBoxContainer();
+		_listeModeles.AddThemeConstantOverride("separation", 4);
+		colonne.AddChild(_listeModeles);
+
 		MettreAJourStatutOllama();
+		RafraichirListeModeles();
 		return marge;
+	}
+
+	// Interroge Ollama pour la liste des modèles présents sur le disque et reconstruit l'affichage
+	// (une ligne « nom … Supprimer » par modèle). Serveur éteint/indisponible ⇒ message d'attente.
+	private void RafraichirListeModeles()
+	{
+		if (_listeModeles == null)
+			return;
+
+		foreach (var enfant in _listeModeles.GetChildren())
+			enfant.QueueFree();
+
+		var svc = OllamaService.Instance;
+		if (svc is not { Actif: true, Disponible: true })
+		{
+			_listeModeles.AddChild(new Label
+			{
+				Text = "Modèles indisponibles (Ollama désactivé ou pas encore prêt).",
+				Modulate = new Color(1f, 1f, 1f, 0.6f),
+				AutowrapMode = TextServer.AutowrapMode.WordSmart,
+			});
+			return;
+		}
+
+		var attente = new Label { Text = "Chargement de la liste…", Modulate = new Color(1f, 1f, 1f, 0.6f) };
+		_listeModeles.AddChild(attente);
+
+		svc.ListerModelesInstalles(tags =>
+		{
+			// La section a pu être libérée entre-temps (écran fermé/rechargé).
+			if (_listeModeles == null || !IsInstanceValid(_listeModeles))
+				return;
+			foreach (var enfant in _listeModeles.GetChildren())
+				enfant.QueueFree();
+
+			if (tags.Length == 0)
+			{
+				_listeModeles.AddChild(new Label
+				{
+					Text = "Aucun modèle installé.",
+					Modulate = new Color(1f, 1f, 1f, 0.6f),
+				});
+				return;
+			}
+
+			foreach (var tag in tags)
+				_listeModeles.AddChild(LigneModele(tag));
+		});
+	}
+
+	// Une ligne de la liste des modèles installés : le tag du modèle + un bouton Supprimer qui
+	// ouvre la confirmation partagée (_dialogueSupprModele) en mémorisant le tag ciblé.
+	private HBoxContainer LigneModele(string tag)
+	{
+		var ligne = new HBoxContainer();
+		ligne.AddThemeConstantOverride("separation", 12);
+
+		ligne.AddChild(new Label
+		{
+			Text = tag,
+			SizeFlagsHorizontal = SizeFlags.ExpandFill,
+			SizeFlagsVertical = SizeFlags.ShrinkCenter,
+			AutowrapMode = TextServer.AutowrapMode.WordSmart,
+		});
+
+		var suppr = new Button { Text = "Supprimer", CustomMinimumSize = new Vector2(120, 32) };
+		suppr.Pressed += () =>
+		{
+			_tagModeleASupprimer = tag;
+			_dialogueSupprModele.DialogText = $"Supprimer le modèle « {tag} » du disque ?";
+			_dialogueSupprModele.PopupCentered();
+		};
+		ligne.AddChild(suppr);
+		return ligne;
 	}
 
 	// Reflète l'état courant d'Ollama : désactivé (grisé), disponible (vert) ou indisponible
@@ -516,8 +610,13 @@ public partial class EcranParametres : Control
 		MettreAJourStatutOllama();
 	}
 
-	// Rafraîchit l'état à la fin d'un (re)provisionnement lancé depuis cette section.
-	private void OnProvisionnementTermine(bool succes) => MettreAJourStatutOllama();
+	// Rafraîchit l'état ET la liste des modèles à la fin d'un (re)provisionnement (un modèle a pu
+	// être téléchargé, l'installation nettoyée…), qu'il soit lancé d'ici ou au démarrage du jeu.
+	private void OnProvisionnementTermine(bool succes)
+	{
+		MettreAJourStatutOllama();
+		RafraichirListeModeles();
+	}
 
 	private void ConstruireBasDePage(VBoxContainer colonne)
 	{
@@ -583,6 +682,25 @@ public partial class EcranParametres : Control
 		_dialogueReDlOllama.CancelButtonText = "Annuler";
 		_dialogueReDlOllama.Confirmed += OnRetelechargerOllama;
 		AddChild(_dialogueReDlOllama);
+
+		_dialogueSupprModele = new ConfirmationDialog { Title = "Supprimer un modèle" };
+		_dialogueSupprModele.GetOkButton().Text = "Supprimer";
+		_dialogueSupprModele.CancelButtonText = "Annuler";
+		_dialogueSupprModele.Confirmed += OnSupprimerModele;
+		AddChild(_dialogueSupprModele);
+	}
+
+	// Suppression confirmée d'un modèle précis : on l'efface via Ollama puis on rafraîchit la liste
+	// (et le statut, car supprimer le modèle courant rend Ollama indisponible tant qu'aucun n'est prêt).
+	private void OnSupprimerModele()
+	{
+		if (string.IsNullOrEmpty(_tagModeleASupprimer))
+			return;
+		OllamaService.Instance?.SupprimerModele(_tagModeleASupprimer, _ =>
+		{
+			RafraichirListeModeles();
+			MettreAJourStatutOllama();
+		});
 	}
 
 	private void DemarrerCapture(string action, bool clavier)
