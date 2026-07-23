@@ -9,44 +9,44 @@
 
 [node name="TresLointain" type="Parallax2D" parent="."]
 z_index = -12
-scroll_scale = Vector2(0.05, 0.02)
-repeat_size = Vector2(720, 0)
+scroll_scale = Vector2(0.05, 0.005)
+repeat_size = Vector2(900, 0)
 repeat_times = 20
 
 [node name="Sprite2D" type="Sprite2D" parent="TresLointain"]
 position = Vector2(0, 180)
-scale = Vector2(2, 2)
+scale = Vector2(2.5, 2.5)
 texture = ExtResource("1_tl")
 
 [node name="Lointain" type="Parallax2D" parent="."]
 z_index = -9
-scroll_scale = Vector2(0.15, 0.06)
-repeat_size = Vector2(720, 0)
+scroll_scale = Vector2(0.15, 0.008)
+repeat_size = Vector2(900, 0)
 repeat_times = 20
 
 [node name="Sprite2D" type="Sprite2D" parent="Lointain"]
 position = Vector2(0, 180)
-scale = Vector2(2, 2)
+scale = Vector2(2.5, 2.5)
 texture = ExtResource("2_l")
 
 [node name="Intermediaire" type="Parallax2D" parent="."]
 z_index = -6
-scroll_scale = Vector2(0.4, 0.12)
-repeat_size = Vector2(720, 0)
+scroll_scale = Vector2(0.4, 0.012)
+repeat_size = Vector2(900, 0)
 repeat_times = 20
 
 [node name="Sprite2D" type="Sprite2D" parent="Intermediaire"]
 position = Vector2(0, 180)
-scale = Vector2(2, 2)
+scale = Vector2(2.5, 2.5)
 texture = ExtResource("3_i")
 
 [node name="Proche" type="Parallax2D" parent="."]
 z_index = -3
-scroll_scale = Vector2(0.75, 0.2)
-repeat_size = Vector2(720, 0)
+scroll_scale = Vector2(0.75, 0.015)
+repeat_size = Vector2(900, 0)
 repeat_times = 20
 
 [node name="Sprite2D" type="Sprite2D" parent="Proche"]
 position = Vector2(0, 180)
-scale = Vector2(2, 2)
+scale = Vector2(2.5, 2.5)
 texture = ExtResource("4_p")
