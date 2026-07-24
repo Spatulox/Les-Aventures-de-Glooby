@@ -10,7 +10,7 @@ using System.Collections.Generic;
 // depuis le dossier de la pose choisie (invisible si ce dossier est vide).
 //
 // Le script est [Tool] (comme PanneauBois) : changer Pose dans l'inspecteur réapplique aussitôt
-// la 1re frame de la pose sur le Sprite2D « Apercu », si bien que monde.tscn montre le lutin dans
+// la 1re frame de la pose sur le Sprite2D « Apercu », si bien que monde1.tscn montre le lutin dans
 // la pose telle qu'elle sera en jeu (l'aperçu éditeur n'est plus figé sur une seule pose).
 [Tool]
 public partial class LutinCgt : PnjAmical

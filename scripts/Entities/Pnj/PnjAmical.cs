@@ -69,6 +69,12 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 
 	public override void _PhysicsProcess(double delta)
 	{
+		// Les sous-classes [Tool] (ex. LutinCgt, pour l'aperçu de pose) font tourner
+		// cette boucle DANS l'éditeur, où _Ready n'a pas initialisé Sprite : on ne
+		// simule ni IA ni physique en édition (sinon NullReferenceException sur Sprite).
+		if (Engine.IsEditorHint())
+			return;
+
 		float dt = (float)delta;
 		var velocite = Velocity;
 
@@ -135,7 +141,7 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 	}
 
 	// ---- Dialogue (Talkative) ----
-	// Répliques du PNJ (vide = muet). Renseignées au cas par cas dans monde.tscn : c'est
+	// Répliques du PNJ (vide = muet). Renseignées au cas par cas dans monde1.tscn : c'est
 	// ce qui distingue un PNJ bavard d'un PNJ muet, tous deux de la même classe.
 	[Export] public string[] Lignes { get; set; } = Array.Empty<string>();
 
