@@ -306,6 +306,17 @@ position = Vector2(4085, 323.99994)
 rotation = -0.07504916
 scale = Vector2(1.5599804, 0.99999994)
 
+[node name="PlateformeMobile" parent="Banquise/Sol" unique_id=1012318334 instance=ExtResource("46_a0dla")]
+position = Vector2(4374, 307)
+scale = Vector2(0.555, 0.555)
+Distance = 200.0
+
+[node name="PlateformeMobile2" parent="Banquise/Sol" unique_id=1649795489 instance=ExtResource("46_a0dla")]
+position = Vector2(4864, 307)
+scale = Vector2(0.555, 0.555)
+AngleDegres = 180.0
+Distance = 200.0
+
 [node name="Decor" type="Node2D" parent="Banquise" unique_id=819138525]
 
 [node name="Rocher" type="Sprite2D" parent="Banquise/Decor" unique_id=1760349192]
@@ -1128,7 +1139,7 @@ scale = Vector2(2.71875, 3.65625)
 texture = ExtResource("g_champi")
 
 [node name="FleurGivre" type="Sprite2D" parent="Grotte/Decor" unique_id=36703762]
-z_index = 1
+z_index = 3
 position = Vector2(2923, 1462.0001)
 scale = Vector2(2.6874983, 2.65625)
 texture = ExtResource("fleur")
@@ -1317,16 +1328,5 @@ limit_bottom = 400
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
-
-[node name="PlateformeMobile" parent="." unique_id=1012318334 instance=ExtResource("46_a0dla")]
-position = Vector2(4375, 307)
-scale = Vector2(0.555, 0.555)
-Distance = 200.0
-
-[node name="PlateformeMobile2" parent="." unique_id=1649795489 instance=ExtResource("46_a0dla")]
-position = Vector2(4865, 307)
-scale = Vector2(0.555, 0.555)
-AngleDegres = 180.0
-Distance = 200.0
 
 [editable path="Joueur"]

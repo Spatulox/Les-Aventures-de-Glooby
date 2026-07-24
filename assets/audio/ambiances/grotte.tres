@@ -1,7 +1,21 @@
-[gd_resource type="Resource" script_class="AmbianceSonore" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="AmbianceSonore" load_steps=7 format=3]
 
 [ext_resource type="Script" uid="uid://bvc1x82wporg4" path="res://scripts/Core/AmbianceSonore.cs" id="1_ambiance"]
+[ext_resource type="Script" uid="uid://cxveo4dosu75i" path="res://scripts/Core/VarianteAmbiance.cs" id="2_variante"]
+[ext_resource type="Script" uid="uid://catvxyahhpuka" path="res://scripts/Core/PisteMusicale.cs" id="3_piste"]
+[ext_resource type="AudioStream" uid="uid://bfiigt5dfwyb8" path="res://assets/audio/musiques/Echoes in the Deep.mp3" id="4_echoes"]
+
+[sub_resource type="Resource" id="PisteEchoes"]
+script = ExtResource("3_piste")
+Musique = ExtResource("4_echoes")
+Probabilite = 100.0
+
+[sub_resource type="Resource" id="VarianteNormale"]
+script = ExtResource("2_variante")
+Etat = "normal"
+Musiques = Array[PisteMusicale]([SubResource("PisteEchoes")])
 
 [resource]
 script = ExtResource("1_ambiance")
 Nom = "grotte"
+Variantes = Array[VarianteAmbiance]([SubResource("VarianteNormale")])
