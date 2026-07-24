@@ -408,6 +408,11 @@ public partial class Player : LivingEntity
 	// Les PV du joueur vivent dans GameState (persistants, HUD, respawn).
 	public void Blesser(int direction, DamageSource source)
 	{
+		// En mode debug (partie de test), le joueur est invulnérable : aucun coup
+		// subi ne retire de PV ni n'applique de recul, quelle qu'en soit la source.
+		if (GameState.Instance is { ModeDebug: true })
+			return;
+
 		if (EstInvincible)
 			return;
 

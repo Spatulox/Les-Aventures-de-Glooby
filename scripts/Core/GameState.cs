@@ -69,6 +69,10 @@ public partial class GameState : Node
 	public Vector2 CheckpointPosition { get => _donnees.CheckpointPosition; private set => _donnees.CheckpointPosition = value; }
 	public string CheckpointIdActif { get => _donnees.CheckpointIdActif; private set => _donnees.CheckpointIdActif = value; }
 
+	// Scène de niveau où la partie a été sauvegardée : lue par « Continuer » du menu
+	// pour rouvrir le bon monde (le monde est découpé en plusieurs .tscn).
+	public string CheminScene { get => _donnees.CheminScene; private set => _donnees.CheminScene = value; }
+
 	// Vrai quand le joueur est à portée d'un élément parlant (Talkative) : la touche
 	// de saut, partagée avec l'action "action", est alors captée par le dialogue et
 	// ne fait pas sauter le joueur (voir Player._PhysicsProcess et DeclencheurDialogue).
@@ -102,7 +106,7 @@ public partial class GameState : Node
 	}
 
 	// Réinitialise toute la progression pour une nouvelle partie. Le monde ne
-	// se recharge pas seul : à appeler avant de charger scenes/monde.tscn.
+	// se recharge pas seul : à appeler avant de charger scenes/monde1.tscn.
 	public void NouvellePartie()
 	{
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
@@ -218,6 +222,13 @@ public partial class GameState : Node
 	{
 		if (ModeDebug)
 			return;
+
+		// Mémorise la scène active au moment de sauvegarder (checkpoint, boss vaincu) :
+		// c'est elle que « Continuer » rouvrira. La position du checkpoint étant un
+		// point de cette scène, les deux restent cohérents.
+		var scene = GetTree()?.CurrentScene?.SceneFilePath;
+		if (!string.IsNullOrEmpty(scene))
+			CheminScene = scene;
 
 		Sauvegarde.Ecrire(_donnees.VersDictionnaire());
 	}

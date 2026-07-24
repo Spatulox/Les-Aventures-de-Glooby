@@ -1,3 +1,62 @@
 [gd_scene format=3 uid="uid://qopyq3e1vk2k"]
 
+[ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
+[ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
+[ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
+[ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
+[ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
+
 [node name="Monde2" type="Node2D" unique_id=1283461592]
+
+[node name="Fonds" type="Node2D" parent="." unique_id=2117771081]
+script = ExtResource("bgmgr")
+
+[node name="banquise" type="Node2D" parent="Fonds" unique_id=743872087]
+
+[node name="FondBanquise" parent="Fonds/banquise" unique_id=1859756973 instance=ExtResource("fond_banquise")]
+
+[node name="DecorBanquise" parent="Fonds/banquise" unique_id=1091815678 instance=ExtResource("decor_banquise")]
+
+[node name="usine" type="Node2D" parent="Fonds" unique_id=1204741556]
+modulate = Color(1, 1, 1, 0)
+
+[node name="FondUsine" parent="Fonds/usine" unique_id=1206893322 instance=ExtResource("fond_usine")]
+
+[node name="Banquise" type="Node2D" parent="." unique_id=1468028291]
+
+[node name="Camera" type="Node2D" parent="Banquise" unique_id=1362802562]
+
+[node name="ZoneBanquise" parent="Banquise/Camera" unique_id=414830882 instance=ExtResource("camzone")]
+position = Vector2(840, 112)
+scale = Vector2(6.5625, 1.6637502)
+NomRegion = "banquise"
+
+[node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
+
+[node name="Decor" type="Node2D" parent="Banquise" unique_id=1314169779]
+
+[node name="Pnj" type="Node2D" parent="Banquise" unique_id=1652138612]
+
+[node name="Interactifs" type="Node2D" parent="Banquise" unique_id=1918185879]
+
+[node name="Frontiere" type="Node2D" parent="Banquise" unique_id=425975697]
+
+[node name="UsinePereNoel" type="Node2D" parent="." unique_id=902516751]
+
+[node name="Camera" type="Node2D" parent="UsinePereNoel" unique_id=1063593249]
+
+[node name="ZoneUsine" parent="UsinePereNoel/Camera" unique_id=21096232 instance=ExtResource("camzone")]
+position = Vector2(3240, 112)
+scale = Vector2(12.1875, 1.6637502)
+NomRegion = "usine"
+Type = 1
+
+[node name="Sol" type="Node2D" parent="UsinePereNoel" unique_id=1010531163]
+
+[node name="Decor" type="Node2D" parent="UsinePereNoel" unique_id=1280656102]
+
+[node name="Pnj" type="Node2D" parent="UsinePereNoel" unique_id=2000834972]
+
+[node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
+
+[node name="Frontiere" type="Node2D" parent="UsinePereNoel" unique_id=82496359]
