@@ -80,6 +80,25 @@ Two autoloads (`project.godot [autoload]`):
 
 Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a member named `Foo`, which **collides with a property named `Foo`** — a bug hit before (see `RAPPORT.md` Jalon B). Name properties and signals distinctly.
 
+### Audio — musique & ambiance par zone
+
+Le son est piloté par l'autoload **`GestionnaireAudio`** (`scripts/Core/GestionnaireAudio.cs`, `GestionnaireAudio.Instance`), qui **survit aux changements de scène** (menu → monde → écran de fin) et joue sur deux bus (`Musique`, `Ambiance`, définis dans `default_bus_layout.tres`). Comme `BackgroundManager`/`GestionnaireMeteo`, **il ne décide rien** : les zones lui demandent une ambiance par son nom, la météo lui annonce l'état courant.
+
+**Point crucial : les musiques ne sont PAS dans les nœuds de la scène.** Un nœud `CameraZone` de `monde1.tscn` ne porte qu'une **clé texte** (`NomAmbiance`, ex. `"village"`) ; les pistes elles-mêmes vivent dans des **ressources `.tres`** de `assets/audio/ambiances/` (une par lieu). Pour changer ce qui joue, on édite le `.tres` (dock FileSystem), pas la scène.
+
+Chaîne de résolution :
+- **`AmbianceSonore`** (`.tres`, `[GlobalClass]`) = le son d'un lieu : un `Nom` (la clé, ex. `"village"`) + une liste de `Variantes` par état météo. `GestionnaireAudio` **découvre tous les `.tres` du dossier au boot** et les indexe par `Nom` — déposer un nouveau `.tres` suffit à enregistrer un lieu (aucun code à toucher).
+- **`VarianteAmbiance`** (sous-ressource) = le son d'un lieu **dans un état** (`Etat` = `"normal"` ou `"blizzard"`, repli sur `"normal"`). Deux canaux : `Musiques` (playlist musicale) et `Ambiances` (lit de fond bouclé, vent/gouttes) + leurs volumes.
+- **`PisteMusicale`** (sous-ressource) = **une musique + sa `Probabilite`** (slider 0-100). C'est l'unité pondérée de `Musiques`. Dans l'inspecteur : `Variantes → [i] → Musiques → [j] → Probabilite`.
+
+Sélection & enchaînement : une piste est tirée **au sort pondéré** (normalisé sur la somme réelle des probas ; `PushWarning` si ≠ 100), en évitant la répétition immédiate ; les morceaux **s'enchaînent en fondu** (`DureeFondu`, 1.5s) et la piste suivante démarre en fin de morceau — d'où l'**import des musiques en `loop = false`** (un flux bouclé n'émettrait jamais `Finished` et resterait bloqué).
+
+Câblage des zones : `DeclencheurZone.AppliquerCommeSalle` (appelé par `CameraZone.Appliquer`) fait `GestionnaireAudio.JouerAmbiance(NomAmbiance ?? NomRegion)`. **`NomAmbiance` découple la musique du décor** : il n'est à renseigner que quand la musique diffère du fond visuel — c'est le cas du **village** (`NomRegion = "banquise"` pour partager le décor, mais `NomAmbiance = "village"` pour sa propre musique) ; les zones où musique = région le laissent vide (repli sur `NomRegion`).
+
+Blizzard : `GestionnaireMeteo` appelle `GestionnaireAudio.DefinirEtat("blizzard" | "normal")`. Si la variante blizzard a **ses propres `Musiques`**, la musique normale est **mise en pause** (position conservée, `_musiqueSuspendue`) le temps du blizzard puis **reprend là où elle en était** ; si la variante blizzard ne renseigne **que** `Ambiances`, la musique normale continue et seul le lit de fond change.
+
+Musique de boss : soit l'export `ZoneBoss.Musique` (un `AudioStream` unique, via `JouerMusiquePonctuelle`), soit — pour un tirage pondéré de plusieurs thèmes — une ambiance dédiée (`boss_cerf.tres`) pointée par `NomAmbiance` sur la zone d'arène.
+
 ### LivingEntity, Player & Boss
 
 **`LivingEntity.cs`** (`scripts/Entities/`, abstract `CharacterBody2D`, implements `Damageable`) — the shared base for everything that "lives": both `Player` and `Boss` (and any future PNJ) extend it. It owns `PvMax`/`Pv`/`EstVaincu`, the `PvChanges`/`Vaincu` signals, `DefinirPvMax`, the single damage entry `TakeDamage(DamageSource)` (with `AjusterDegats`/`ApresDegats`/`Mourir` virtual hooks), and reusable movement helpers `AppliquerGravite`/`AppliquerFriction`/`Sauter` (tunables `Gravity`/`MaxFallSpeed`/`Friction`/`JumpVelocity`). The generic `Mourir()` marks the entity beaten, zeroes velocity and emits `Vaincu`. It also carries two reusable authoring conventions:
@@ -111,7 +130,7 @@ Note on Godot C# signals: a `[Signal] delegate FooEventHandler` generates a memb
 
 `scripts/` is organized by role — put new C# in the matching folder (namespaces are not used; classes are global, so a file's folder is purely for humans):
 - **`Common/`** — shared, reusable helpers with no gameplay identity of their own: `Constantes` (`TailleTuile`), `Effets` (`Disparaitre`, `FlashCouleur`, `Flottaison`), `DeclencheurZone`, the `DamageSource` enum (+ `MontantDegats` per source), the `Damageable` interface (`TakeDamage`/`IsInvincibleToDamage`) with its `Degats.Infliger(cible, source)` helper (single entry point that applies damage while respecting immunity), and the `FriendlyLivingEntity` marker interface (entities that implement it never take any damage, whatever the source).
-- **`Core/`** — global systems & scene-driven zones: `GameState`, `BackgroundManager`, `CameraZone` (its `NomRegion` drives the background region — the old `RegionTrigger` was removed), `ZoneBoss` + `ZoneBossCerf`.
+- **`Core/`** — global systems & scene-driven zones: `GameState`, `BackgroundManager`, `CameraZone` (its `NomRegion` drives the background region — the old `RegionTrigger` was removed), `ZoneBoss` + `ZoneBossCerf`, the weather system (`GestionnaireMeteo` + `MeteoZone`), and the audio system (`GestionnaireAudio` autoload + the data resources `AmbianceSonore` / `VarianteAmbiance` / `PisteMusicale`, whose `.tres` live in `assets/audio/ambiances/`).
 - **`Entities/`** — in-world actors and interactables. The shared base `LivingEntity` lives at the folder root; the rest is split by role into subfolders: `Pnj/` (the `Boss` base + `BossCerf`), `Player/` (`Player`), `Damage/` (damage-dealing entities: the `Projectile` base + `Snowball`), `Interactable/` (`MurFondable`, `StalactitePiege`, the `PouvoirChaleurPickup` ramassable), and `Misc/` (`Checkpoint`, the `ElementRamassable` base). `Boss` and `Player` both extend `LivingEntity` (which implements `Damageable`).
 - **`Plateformes/`** — platform behaviours: `PlateformeFixe`, `PlateformeMobile`, `PlateformeGlissante`, `PlateformeFragile`, `PlateformeUnidirectionnelle`.
 - **`sol/`** — solid ground behaviours (mirrors `scenes/sol/`): `SolBanquise`, `PenteBanquise`, `PlateformeBanquise`. They configure texture + collision at runtime from a `Type` export and never touch `CollisionLayer` (layer 1 = non-traversable).
