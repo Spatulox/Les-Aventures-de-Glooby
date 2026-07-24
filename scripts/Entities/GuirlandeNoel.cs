@@ -1,7 +1,7 @@
 using Godot;
 
-// Guirlande de Noël raccordable (même logique que SolBanquiseLigne, en pur
-// décor) : embout gauche + N segments auto-tuilables + embout droit,
+// Guirlande de Noël raccordable, en pur décor : embout gauche + N segments
+// auto-tuilables + embout droit,
 // instanciés en _Ready. Deux variantes de couleurs de boules (rouge/or et
 // bleu/or, la bleue est une recoloration procédurale de la rouge).
 public partial class GuirlandeNoel : Node2D

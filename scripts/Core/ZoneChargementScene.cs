@@ -2,16 +2,28 @@ using Godot;
 
 // Zone de transition entre deux scènes de niveau. Quand le joueur entre dans
 // l'Area2D (typiquement placée à la sortie d'un lieu, ex. la fin de la banquise),
-// elle remplace complètement la scène courante par SceneSuivante
-// (GetTree().ChangeSceneToPacked) — contrairement à ZoneBoss qui, lui, instancie
+// elle remplace complètement la scène courante par la scène cible
+// (GetTree().ChangeSceneToFile) — contrairement à ZoneBoss qui, lui, instancie
 // son contenu DANS le monde. Le changement est optionnellement précédé d'un fondu
-// au noir (DureeFondu). SceneSuivante est laissée vide par défaut : on l'assigne
-// par instance dans la scène (le « xxx.tscn » à charger).
+// au noir (DureeFondu).
+//
+// La cible est référencée par CHEMIN (string), pas par un PackedScene embarqué : deux
+// niveaux qui se renvoient l'un vers l'autre (monde1 <-> monde2) créeraient sinon une
+// dépendance circulaire de ressources. Godot n'arrive pas à charger un .tscn qui
+// s'embarque lui-même en boucle (« Parse Error: Busy ») : la seconde référence tombe à
+// null, et la zone de retour restait donc inerte. Un chemin, chargé à la volée, n'a pas
+// ce cycle. À assigner par instance dans l'éditeur.
 public partial class ZoneChargementScene : DeclencheurZone
 {
-	// Scène à charger à l'entrée du joueur (vide = zone inerte, avertissement).
-	// À assigner par instance dans l'éditeur.
-	[Export] public PackedScene SceneSuivante;
+	// Chemin de la scène à charger à l'entrée du joueur (vide = zone inerte,
+	// avertissement). Ex. "res://scenes/niveaux/monde1.tscn".
+	[Export(PropertyHint.File, "*.tscn")] public string CheminSceneSuivante = "";
+
+	// Id du PointEntree où faire apparaître le joueur dans la scène cible (ex.
+	// "depuis_usine" pour revenir côté est de monde1). Vide = position authorée du
+	// nœud Joueur de la scène cible (comportement d'origine). Doit correspondre à
+	// l'Id d'un PointEntree présent dans la scène cible.
+	[Export] public string PointEntreeCible = "";
 
 	// Durée du fondu au noir avant le changement (0 = bascule immédiate, sans voile).
 	[Export] public float DureeFondu = 0.5f;
@@ -26,9 +38,9 @@ public partial class ZoneChargementScene : DeclencheurZone
 
 	protected override void SurEntreeJoueur(Player joueur)
 	{
-		if (SceneSuivante == null)
+		if (string.IsNullOrEmpty(CheminSceneSuivante))
 		{
-			GD.PushWarning($"ZoneChargementScene '{Name}' : SceneSuivante non assignée, transition ignorée.");
+			GD.PushWarning($"ZoneChargementScene '{Name}' : CheminSceneSuivante non assigné, transition ignorée.");
 			return;
 		}
 
@@ -41,8 +53,13 @@ public partial class ZoneChargementScene : DeclencheurZone
 		FondreAuNoirPuisCharger();
 	}
 
-	// Voile noir plein écran (CanvasLayer au-dessus du jeu) dont l'alpha monte de 0
-	// à 1, puis bascule vers SceneSuivante une fois le fondu terminé.
+	// Voile noir plein écran (CanvasLayer au-dessus du jeu) : fondu d'entrée (alpha
+	// 0→1), bascule vers la scène cible, puis fondu de sortie (1→0) et nettoyage.
+	// Le voile est rattaché à Root (il survit au ChangeSceneToFile, qui ne libère
+	// que la scène courante) ET le tween est créé SUR le voile, pas sur cette zone :
+	// il continue donc de tourner après que l'ancienne scène (dont ce nœud) est
+	// libérée. Sans le fondu de sortie + QueueFree, le voile resterait opaque au-dessus
+	// de la nouvelle scène — c'était la cause de l'écran noir persistant.
 	private void FondreAuNoirPuisCharger()
 	{
 		var couche = new CanvasLayer { Layer = 128 };
@@ -59,12 +76,21 @@ public partial class ZoneChargementScene : DeclencheurZone
 		var tween = voile.CreateTween();
 		tween.TweenProperty(voile, "modulate:a", 1f, DureeFondu);
 		tween.TweenCallback(Callable.From(ChangerScene));
+		// Laisse la nouvelle scène s'instancier/s'afficher avant de révéler.
+		tween.TweenInterval(0.1);
+		tween.TweenProperty(voile, "modulate:a", 0f, DureeFondu);
+		tween.TweenCallback(Callable.From(couche.QueueFree));
 	}
 
 	// Bascule effective vers la scène suivante (différée pour rester hors du
-	// traitement de signal/physique en cours).
+	// traitement de signal/physique en cours). On mémorise d'abord la porte visée :
+	// GameState survit au ChangeSceneToFile, Player._Ready la consommera pour
+	// choisir son PointEntree de spawn.
 	private void ChangerScene()
 	{
-		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToPacked, SceneSuivante);
+		if (GameState.Instance != null)
+			GameState.Instance.PointEntreeDemande = PointEntreeCible;
+
+		GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, CheminSceneSuivante);
 	}
 }

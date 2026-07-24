@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cu7xp7h2m0d30"
+path="res://.godot/imported/Frostborn Charge.mp3-9fa325889ca0a3cb3794717bf987e3d3.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/musiques/Frostborn Charge.mp3"
+dest_files=["res://.godot/imported/Frostborn Charge.mp3-9fa325889ca0a3cb3794717bf987e3d3.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

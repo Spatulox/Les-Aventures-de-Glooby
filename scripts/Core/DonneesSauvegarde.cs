@@ -20,6 +20,12 @@ public class DonneesSauvegarde
 	public string CheckpointIdActif = "";
 	public Vector2 CheckpointPosition = Vector2.Zero;
 
+	// Scène de niveau où la partie a été sauvegardée : le monde est désormais
+	// découpé en plusieurs .tscn reliés par ZoneChargementScene, donc « Continuer »
+	// doit rouvrir CELLE-CI (et non plus monde1.tscn en dur). La position du
+	// checkpoint est un point dans cette scène : les deux vont de pair.
+	public string CheminScene = "res://scenes/niveaux/monde1.tscn";
+
 	// Identifiants uniques des éléments persistants consommés (murs fondus,
 	// dialogues uniques) et des boss vaincus.
 	public readonly HashSet<string> ElementsConsommes = new();
@@ -37,6 +43,7 @@ public class DonneesSauvegarde
 			["pouvoirChaleur"] = PouvoirChaleurActif,
 			["pouvoirGlace"] = PouvoirGlaceActif,
 			["checkpointId"] = CheckpointIdActif,
+			["cheminScene"] = CheminScene,
 			["posX"] = CheckpointPosition.X,
 			["posY"] = CheckpointPosition.Y,
 			["elementsConsommes"] = VersArray(ElementsConsommes),
@@ -58,6 +65,7 @@ public class DonneesSauvegarde
 		if (d.TryGetValue("pouvoirChaleur", out var pouvoir)) donnees.PouvoirChaleurActif = (bool)pouvoir;
 		if (d.TryGetValue("pouvoirGlace", out var pouvoirGlace)) donnees.PouvoirGlaceActif = (bool)pouvoirGlace;
 		if (d.TryGetValue("checkpointId", out var id)) donnees.CheckpointIdActif = (string)id;
+		if (d.TryGetValue("cheminScene", out var chemin)) donnees.CheminScene = (string)chemin;
 
 		float x = d.TryGetValue("posX", out var px) ? (float)px : 0f;
 		float y = d.TryGetValue("posY", out var py) ? (float)py : 0f;
