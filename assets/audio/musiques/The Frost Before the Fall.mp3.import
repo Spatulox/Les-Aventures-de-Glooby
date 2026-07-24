@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cyvwsd0v883m0"
+path="res://.godot/imported/The Frost Before the Fall.mp3-b59693634e94462d26924b9d60d6ab70.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/musiques/The Frost Before the Fall.mp3"
+dest_files=["res://.godot/imported/The Frost Before the Fall.mp3-b59693634e94462d26924b9d60d6ab70.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
