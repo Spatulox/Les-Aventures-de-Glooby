@@ -63,6 +63,7 @@
 [ext_resource type="PackedScene" uid="uid://oywi8ac3yrsy" path="res://scenes/sol/SolGrotteCentreC.tscn" id="solg_cc"]
 [ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/SolBanquise.tscn" id="sol_banquise"]
 [ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
+[ext_resource type="PackedScene" uid="uid://kjhdxmbys0gl" path="res://scenes/core/zone_chargement_scene.tscn" id="zone_chargement"]
 
 [sub_resource type="RectangleShape2D" id="RectMurGauche"]
 size = Vector2(32, 600)
@@ -495,6 +496,10 @@ IdCheckpoint = "banquise_after_grotte"
 [node name="MurGlace" parent="Banquise/Interactifs" unique_id=70044992 instance=ExtResource("mur_fondable")]
 position = Vector2(2700, 255)
 IdMur = "mur_glace_grotte"
+
+[node name="ZoneChargementSuivante" parent="Banquise/Interactifs" unique_id=819921959 instance=ExtResource("zone_chargement")]
+position = Vector2(5150, 180)
+scale = Vector2(1, 1.5)
 
 [node name="Frontiere" type="Node2D" parent="Banquise" unique_id=482695684]
 
@@ -1298,7 +1303,7 @@ AngleDegres = 299.0
 Distance = 500.0
 
 [node name="LostLutinCgt" parent="Grotte/Pnj" unique_id=1187403218 instance=ExtResource("59_0ihna")]
-position = Vector2(3322, 828)
+position = Vector2(3322, 839.7083)
 Pose = 0
 Slogan = ""
 DialogueDynamique = true
