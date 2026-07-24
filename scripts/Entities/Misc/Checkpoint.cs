@@ -52,7 +52,7 @@ public partial class Checkpoint : DeclencheurZone
 	// fondus, pouvoir, position).
 	private void DeclencherSauvegarde()
 	{
-		if (GameState.Instance.CheckpointIdActif != IdCheckpoint)
+		if (GameState.Instance.CheckpointIdActif != IdCheckpoint && !GameState.Instance.ModeDebug)
 			GameState.Instance.ActiverCheckpoint(IdCheckpoint, GlobalPosition + new Vector2(-20, 0));
 
 		GameState.Instance.Sauvegarder();
