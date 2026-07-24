@@ -133,9 +133,9 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 	private string ChoisirAnimation(Vector2 velocite)
 	{
 		var frames = Sprite.SpriteFrames;
-		if (_enConversation && frames.GetFrameCount("parler") > 0)
+		if (_enConversation && frames.HasAnimation("parler") && frames.GetFrameCount("parler") > 0)
 			return "parler";
-		if (Mathf.Abs(velocite.X) > 1f && frames.GetFrameCount("marche") > 0)
+		if (Mathf.Abs(velocite.X) > 1f && frames.HasAnimation("marche") && frames.GetFrameCount("marche") > 0)
 			return "marche";
 		return "idle";
 	}
