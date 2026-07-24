@@ -165,7 +165,7 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 	// Amorce fixe envoyée au modèle (le joueur ne saisit rien : l'invite lance la génération).
 	// Volontairement NEUTRE sur le ton ET sans salutation imposée : c'est le Contexte (rôle) du
 	// PNJ qui décide s'il est aimable, ronchon, timide… et s'il salue ou entre dans le vif.
-	[Export(PropertyHint.MultilineText)] public string Invite { get; set; } = "Dis une courte réplique dans ton caractère ; saluer Glooby n'est pas obligatoire.";
+	[Export(PropertyHint.MultilineText)] public string Invite { get; set; } = "Dis une courte réplique dans ton caractère.";
 
 	// Longueur cible de la réplique générée (nombre de mots moyen). Petit = PNJ laconique,
 	// grand = PNJ bavard. Borne aussi la longueur côté modèle (voir OllamaService.GenererFlux).

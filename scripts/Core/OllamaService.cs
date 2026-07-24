@@ -46,7 +46,7 @@ public partial class OllamaService : Node
 
 	[Export(PropertyHint.MultilineText)]
 	public string ContexteGlobal =
-		"Univers : un jeu de plateforme 2D goofy et bon enfant sur la banquise. " +
+		"Univers : un jeu de plateforme 2D goofy et bon enfant sur la banquise au matin de Noël. " +
 		"Le héros est un petit pingouin nommé Glooby. Réponds TOUJOURS en français en tutoyant, " +
 		"en une seule phrase courte et adaptée aux enfants, en gardant le ton de ton " +
 		"personnage (il peut être ronchon, timide, farceur…).";
@@ -240,8 +240,9 @@ public partial class OllamaService : Node
 		              + $"Fait toujours une seule phrase simple et courte. Jamais plusieurs phrases"
 		              + $"Ne parle jamais du fait que tu es un PNJ dans un jeu."
 		              + $"Tu n'es pas obligé de saluer le jouer : tu peux entrer directement dans le vif du sujet."
-		              + $"Ne mentionne JAMAIS quel type de PNJ tu es (pingouin, lutin, père noel, etc...)"
+		              + $"Ne mentionne JAMAIS quel type de PNJ tu es (pingouin, lutin, père noel, etc...)."
 		              + $"[TRES IMPORTANT] Fini toujours ta phrase par un point."
+		              + $"[TRES IMPORTANT] C'est le matin de Noel."
 		);
 		
 		if (!string.IsNullOrWhiteSpace(ContexteGlobal))

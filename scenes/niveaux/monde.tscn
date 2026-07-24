@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseForteDescendante.tscn" id="52_kxqbj"]
 [ext_resource type="Texture2D" uid="uid://s1ycefd1kkcg" path="res://assets/props/grotte/brasero_eteint.png" id="53_a0dla"]
 [ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="55_dejuv"]
+[ext_resource type="PackedScene" uid="uid://civtsuvy2xvd8" path="res://scenes/entites/lutin_cgt.tscn" id="59_0ihna"]
 [ext_resource type="Texture2D" uid="uid://d1x48h11kcry7" path="res://assets/props/tas_neige/tas_neige_b.png" id="62_v2sbg"]
 [ext_resource type="Texture2D" uid="uid://cnar0j6pp2oii" path="res://assets/props/poisson.png" id="63_v2sbg"]
 [ext_resource type="Texture2D" uid="uid://c5d5j6vgunm1q" path="res://assets/props/grotte/toile_givre.png" id="64_kqdy7"]
@@ -196,7 +197,7 @@ Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
 [node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1428675968 instance=ExtResource("checkpoint")]
-position = Vector2(327, 297)
+position = Vector2(327, 279)
 IdCheckpoint = "start_village"
 
 [node name="panneau_poteau" parent="Village/Interactifs" unique_id=700000010 instance=ExtResource("panneau")]
@@ -1201,7 +1202,7 @@ Lignes = PackedStringArray("J\'ai trop peur pour sauter... Pourtant c\'est le se
 position = Vector2(1702, 1455)
 Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
 DialogueDynamique = true
-Contexte = "Tu es un pingouin râleur sans nom qui déteste le blizzard et la banquise. Tu habite désormais une grotte pour avoir chaud et tu ne veux pas en sortir."
+Contexte = "Tu es un pingouin râleur sans nom qui déteste le blizzard et la banquise. Tu habite désormais une grotte pour avoir chaud et tu ne veux pas en sortir. Il n'est pas au courant que c'est Noël"
 Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère."
 
 [node name="BonhommeDeNeigeUnderFireChamber" parent="Grotte/Pnj" unique_id=153493064 instance=ExtResource("49_nhnan")]
@@ -1227,6 +1228,20 @@ position = Vector2(4667, 1182)
 scale = Vector2(0.55, 0.55)
 AngleDegres = 299.0
 Distance = 500.0
+
+[node name="Pingouin" parent="Grotte/Pnj" unique_id=977666246 instance=ExtResource("pingouin")]
+position = Vector2(468, 269)
+Lignes = PackedStringArray("J\'adore Noël !", "Je suis triste, il n\'y a pas de guirlande au village cette année :/")
+DialogueDynamique = true
+Contexte = "Il adore Noël, et plus particulièrement les guirlandes rouge (mais y'en a pas donc il est triste)"
+Invite = "Dis une courte réplique dans ton caractère ."
+
+[node name="LutinCgt" parent="Grotte/Pnj" unique_id=1187403218 instance=ExtResource("59_0ihna")]
+position = Vector2(3322, 828)
+Pose = 0
+Slogan = ""
+DialogueDynamique = true
+Contexte = "Il a perdu son chemin après avoir livré les cadeaux et il ne sais pas comment rentrer chez lui, dans la fabrique du père noel..."
 
 [node name="Joueur" parent="." unique_id=1975658094 instance=ExtResource("player")]
 position = Vector2(183.26, 272.805)
@@ -1419,7 +1434,7 @@ texture = ExtResource("g_congere")
 
 [node name="FissureLumineuse" type="Sprite2D" parent="." unique_id=2124993980]
 z_index = -3
-position = Vector2(4771, 585.99994)
+position = Vector2(4645.0005, 626.99994)
 scale = Vector2(6.875, 8.9375)
 texture = ExtResource("g_fissure")
 
