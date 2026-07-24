@@ -73,6 +73,13 @@ public partial class GameState : Node
 	// pour rouvrir le bon monde (le monde est découpé en plusieurs .tscn).
 	public string CheminScene { get => _donnees.CheminScene; private set => _donnees.CheminScene = value; }
 
+	// Porte par laquelle le joueur arrive dans la PROCHAINE scène : posée par la
+	// ZoneChargementScene juste avant la bascule, consommée par Player._Ready qui
+	// spawn sur le PointEntree d'Id correspondant. État de session (non sauvegardé) :
+	// c'est le trajet en cours, pas de la progression. Vide = spawn à la position
+	// authorée du nœud Joueur (comportement d'origine, ex. tout premier lancement).
+	public string PointEntreeDemande { get; set; } = "";
+
 	// Vrai quand le joueur est à portée d'un élément parlant (Talkative) : la touche
 	// de saut, partagée avec l'action "action", est alors captée par le dialogue et
 	// ne fait pas sauter le joueur (voir Player._PhysicsProcess et DeclencheurDialogue).
@@ -149,6 +156,19 @@ public partial class GameState : Node
 		CheckpointPosition = position;
 		Soigner(PvMax);
 		EmitSignal(SignalName.CheckpointActif, idCheckpoint);
+	}
+
+	// Point d'apparition d'un niveau atteint par TRANSITION (ZoneChargementScene), et non
+	// par « Continuer » : le checkpoint gardé en mémoire appartient au niveau précédent
+	// (GameState est un autoload persistant) et n'a aucun sens dans le nouveau niveau. On
+	// fixe donc l'entrée authorée du niveau comme point de respawn, SANS soigner (les PV
+	// traversent la transition) ni écrire sur disque (une transition n'est pas une
+	// sauvegarde). Le premier vrai campement du niveau écrasera ce point.
+	public void DefinirPointEntree(string chemin, Vector2 position)
+	{
+		CheckpointIdActif = "entree";
+		CheckpointPosition = position;
+		CheminScene = chemin;
 	}
 
 	public bool ManagerPoisson()

@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://b4x2egko1wruq" path="res://assets/props/grotte/racine_arbre_gele.png" id="19_uoa0f"]
 [ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/SolBanquiseEmboutDroit.tscn" id="20_1vuit"]
 [ext_resource type="Texture2D" uid="uid://cb3eaprih8p0d" path="res://assets/props/grotte/racine_gelee.png" id="20_hau0f"]
-[ext_resource type="PackedScene" uid="uid://qopyq3e1vk2k" path="res://scenes/niveaux/monde2.tscn" id="34_a2jxy"]
+[ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="35_vq52v"]
 [ext_resource type="Texture2D" uid="uid://b3m24dymk35gl" path="res://assets/props/tas_neige/tas_neige_a.png" id="36_gw68a"]
 [ext_resource type="PackedScene" uid="uid://b230aybnrmrin" path="res://scenes/plateformes/PlateformeMobile.tscn" id="46_a0dla"]
 [ext_resource type="PackedScene" uid="uid://21qfi1kw4uu" path="res://scenes/ennemis/BonhommeDeNeige.tscn" id="49_nhnan"]
@@ -491,7 +491,11 @@ IdMur = "mur_glace_grotte"
 [node name="ZoneChargementSuivante" parent="Banquise/Interactifs" unique_id=819921959 instance=ExtResource("zone_chargement")]
 position = Vector2(5150, 180)
 scale = Vector2(1, 1.5)
-SceneSuivante = ExtResource("34_a2jxy")
+CheminSceneSuivante = "res://scenes/niveaux/monde2.tscn"
+
+[node name="PointEntree" parent="Banquise/Interactifs" unique_id=824782474 instance=ExtResource("35_vq52v")]
+position = Vector2(5066, 266)
+Id = "monde1End"
 
 [node name="Frontiere" type="Node2D" parent="Banquise" unique_id=482695684]
 

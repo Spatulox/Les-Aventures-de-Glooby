@@ -1,10 +1,17 @@
 [gd_scene format=3 uid="uid://qopyq3e1vk2k"]
 
+[ext_resource type="PackedScene" uid="uid://kjhdxmbys0gl" path="res://scenes/core/zone_chargement_scene.tscn" id="4_544ey"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
+[ext_resource type="PackedScene" path="res://scenes/meteo/blizzard.tscn" id="meteo"]
+[ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
+[ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/SolBanquise.tscn" id="sol_banquise"]
+[ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/SolBanquiseEmboutDroit.tscn" id="sol_embout_d"]
+[ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
 
 [node name="Monde2" type="Node2D" unique_id=1283461592]
 
@@ -17,6 +24,12 @@ script = ExtResource("bgmgr")
 
 [node name="DecorBanquise" parent="Fonds/banquise" unique_id=1091815678 instance=ExtResource("decor_banquise")]
 
+[node name="ZoneChargementScene" parent="Fonds/banquise" unique_id=1796732815 instance=ExtResource("4_544ey")]
+z_index = 1
+position = Vector2(4.415, 120)
+CheminSceneSuivante = "res://scenes/niveaux/monde1.tscn"
+PointEntreeCible = "monde1End"
+
 [node name="usine" type="Node2D" parent="Fonds" unique_id=1204741556]
 modulate = Color(1, 1, 1, 0)
 
@@ -27,11 +40,26 @@ modulate = Color(1, 1, 1, 0)
 [node name="Camera" type="Node2D" parent="Banquise" unique_id=1362802562]
 
 [node name="ZoneBanquise" parent="Banquise/Camera" unique_id=414830882 instance=ExtResource("camzone")]
-position = Vector2(840, 112)
+position = Vector2(838.00006, 112.00001)
 scale = Vector2(6.5625, 1.6637502)
 NomRegion = "banquise"
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
+
+[node name="SolEmboutGauche" parent="Banquise/Sol" unique_id=693222020 instance=ExtResource("sol_embout_g")]
+position = Vector2(71, 285)
+
+[node name="Sol1" parent="Banquise/Sol" unique_id=1445872360 instance=ExtResource("sol_banquise")]
+position = Vector2(415, 280)
+
+[node name="Sol2" parent="Banquise/Sol" unique_id=1569394532 instance=ExtResource("sol_banquise")]
+position = Vector2(759, 280)
+
+[node name="Sol3" parent="Banquise/Sol" unique_id=685372366 instance=ExtResource("sol_banquise")]
+position = Vector2(1103, 280)
+
+[node name="SolEmboutDroit" parent="Banquise/Sol" unique_id=800722113 instance=ExtResource("sol_embout_d")]
+position = Vector2(1447, 280)
 
 [node name="Decor" type="Node2D" parent="Banquise" unique_id=1314169779]
 
@@ -60,3 +88,11 @@ Type = 1
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
 [node name="Frontiere" type="Node2D" parent="UsinePereNoel" unique_id=82496359]
+
+[node name="Joueur" parent="." unique_id=1975658095 instance=ExtResource("player")]
+position = Vector2(87, 209)
+
+[node name="Meteo" parent="." unique_id=2107469773 instance=ExtResource("meteo")]
+
+[node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784830]
+script = ExtResource("mpause")

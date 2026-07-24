@@ -167,10 +167,40 @@ public partial class Player : LivingEntity
 
 		JouerApparition();
 
-		// Partie chargée depuis le menu (le monde ne se recharge pas) : replace le
-		// joueur à son checkpoint. Nouvelle partie => position zéro, on garde le spawn.
-		if (GameState.Instance.CheckpointIdActif != "" && GameState.Instance.CheckpointPosition != Vector2.Zero)
+		// Le joueur peut entrer dans cette scène de trois façons :
+		//  - « Continuer » depuis le menu : le checkpoint sauvegardé appartient À CETTE
+		//    scène (CheminScene) -> on l'y replace.
+		//  - transition depuis une AUTRE scène par une porte nommée (ZoneChargementScene
+		//    avec un PointEntreeCible) : on spawn sur le PointEntree d'Id correspondant,
+		//    pas à la position authorée -> revenir de monde2 arrive côté est de monde1,
+		//    pas au village.
+		//  - transition sans porte précisée (ou premier lancement) : le spawn authoré du
+		//    nœud Joueur DEVIENT le point d'entrée/respawn du niveau.
+		// Le checkpoint en mémoire peut venir du niveau précédent (GameState est un autoload
+		// persistant) : sans la vérification de CheminScene, arriver dans monde2 téléportait
+		// le joueur à la position du checkpoint de monde1.
+		string sceneCourante = GetTree().CurrentScene?.SceneFilePath ?? "";
+		bool checkpointDeCetteScene = GameState.Instance.CheckpointIdActif != ""
+			&& GameState.Instance.CheckpointPosition != Vector2.Zero
+			&& GameState.Instance.CheminScene == sceneCourante;
+
+		if (checkpointDeCetteScene)
+		{
 			TeleporterAuCheckpoint();
+		}
+		else
+		{
+			// Une porte demandée place le joueur sur son PointEntree ; sinon il reste à
+			// la position authorée. Dans les deux cas cette position devient le point de
+			// respawn du niveau. La demande est consommée pour ne pas resservir à un
+			// respawn/rechargement ultérieur.
+			var porte = PointEntree.Trouver(GetTree(), GameState.Instance.PointEntreeDemande);
+			GameState.Instance.PointEntreeDemande = "";
+			if (porte != null)
+				GlobalPosition = porte.GlobalPosition;
+
+			GameState.Instance.DefinirPointEntree(sceneCourante, GlobalPosition);
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)

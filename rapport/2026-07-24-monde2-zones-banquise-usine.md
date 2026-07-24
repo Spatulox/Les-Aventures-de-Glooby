@@ -19,6 +19,25 @@
 Longueur totale 4800 px, départ x=0. Zones adjacentes non chevauchantes (bord commun x=1680) :
 Banquise 1680 px (35%), UsinePereNoel 3120 px (65%). Vertical repris de la banquise de monde1.
 
+## Nodes de racine ajoutés (comme monde1)
+- **`Joueur`** = instance de `player.tscn`, `position=(180,200)` → **c'est le point de spawn** (début de la Banquise). ⚠️ Pas encore de sol sous lui : il tombera tant que `Banquise/Sol` reste vide.
+- **`Meteo`** = instance de `blizzard.tscn` (météo globale).
+- **`MenuPause`** = `CanvasLayer` + script `MenuPause.cs`.
+- **`Hud` NON ajouté** : c'est un **autoload** (`project.godot`), déjà présent dans toutes les scènes.
+
+## Sol de la Banquise (monde2)
+5 segments individuels sous `Banquise/Sol` (embout gauche + 3 centres `SolBanquise` + embout droit,
+pas de 344 px, surface de marche y locale −46), instances `.tscn` visibles dans l'éditeur — même
+approche que monde1. Positions ajustées ensuite à la main dans l'éditeur.
+
+## SolBanquiseLigne / SolGrotteLigne → supprimés
+Les composeurs runtime `SolBanquiseLigne` et `SolGrotteLigne` (scènes + scripts + `.uid`) ont été
+**supprimés** : on pose désormais les segments `SolBanquise` / `SolGrotte` individuellement et visibles
+dans l'éditeur (cf. `Banquise/Sol` de monde2). Références nettoyées dans `CLAUDE.md` et le commentaire
+de `scripts/Entities/GuirlandeNoel.cs`.
+
 ## Vérif
-`godot --headless --quit-after 5 scenes/niveaux/monde2.tscn` : chargement sans erreur.
-La scène n'a pas encore de `Joueur`/`Hud`/`MenuPause` (à ajouter pour la rendre jouable).
+`godot --headless --quit-after 10 scenes/niveaux/monde2.tscn` : scène chargée, pas d'erreur de
+ressource/instanciation. Les erreurs `Not supported by this display server` (libellé clavier via
+`EvenementEntree.Libelle` → `EcranParametres`) sont un artefact **headless uniquement** (pas de
+DisplayServer), absent en lancement graphique normal.
