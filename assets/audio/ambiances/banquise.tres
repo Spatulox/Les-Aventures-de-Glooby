@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="AmbianceSonore" load_steps=10 format=3]
+[gd_resource type="Resource" script_class="AmbianceSonore" format=3 uid="uid://cvmh8d1exnnk7"]
 
 [ext_resource type="Script" uid="uid://bvc1x82wporg4" path="res://scripts/Core/AmbianceSonore.cs" id="1_ambiance"]
 [ext_resource type="Script" uid="uid://cxveo4dosu75i" path="res://scripts/Core/VarianteAmbiance.cs" id="2_variante"]
@@ -9,24 +9,21 @@
 [sub_resource type="Resource" id="PisteFrozen"]
 script = ExtResource("3_piste")
 Musique = ExtResource("4_frozen")
-Probabilite = 100.0
+
+[sub_resource type="Resource" id="VarianteNormale"]
+script = ExtResource("2_variante")
+Musiques = Array[ExtResource("3_piste")]([SubResource("PisteFrozen")])
 
 [sub_resource type="Resource" id="PisteFrost"]
 script = ExtResource("3_piste")
 Musique = ExtResource("5_frost")
-Probabilite = 100.0
-
-[sub_resource type="Resource" id="VarianteNormale"]
-script = ExtResource("2_variante")
-Etat = "normal"
-Musiques = Array[PisteMusicale]([SubResource("PisteFrozen")])
 
 [sub_resource type="Resource" id="VarianteBlizzard"]
 script = ExtResource("2_variante")
 Etat = "blizzard"
-Musiques = Array[PisteMusicale]([SubResource("PisteFrost")])
+Musiques = Array[ExtResource("3_piste")]([SubResource("PisteFrost")])
 
 [resource]
 script = ExtResource("1_ambiance")
 Nom = "banquise"
-Variantes = Array[VarianteAmbiance]([SubResource("VarianteNormale"), SubResource("VarianteBlizzard")])
+Variantes = Array[ExtResource("2_variante")]([SubResource("VarianteNormale"), SubResource("VarianteBlizzard")])

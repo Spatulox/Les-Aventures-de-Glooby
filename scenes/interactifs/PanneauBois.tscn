@@ -46,5 +46,5 @@ script = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue" unique_id=2146258169]
 position = Vector2(2, 1.0000019)
-scale = Vector2(0.8400005, 0.80000055)
+scale = Vector2(0.58379585, 0.80000055)
 shape = SubResource("RectProximite")

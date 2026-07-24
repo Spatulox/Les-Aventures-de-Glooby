@@ -22,9 +22,9 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	private BulleDialogue _bulle;
 	private bool _joueurProche;
 	private bool _enDialogue;
-	// Génération LLM en cours (streaming) ; _fluxPret = génération terminée (l'action ferme alors).
+	// Génération LLM en cours (streaming). Le dialogue dynamique est piloté par la proximité,
+	// jamais par la touche : il démarre à l'approche et se ferme à la sortie de zone.
 	private bool _enFlux;
-	private bool _fluxPret;
 	private int _ligne;
 	private float _minuteurAuto;
 	private readonly RandomNumberGenerator _rng = new();
@@ -69,9 +69,11 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		if (!PeutDialoguer())
 			return;
 
-		// Un bavard automatique démarre toujours au passage (son défilement ne dépend
-		// pas de la touche) ; sinon on suit le mode déclaré par le Talkative.
-		if (_parlant.DeclencheAuPassage || _auto != null)
+		// Démarrent tout seuls à l'approche : le bavard automatique (défilement au minuteur)
+		// ET le PNJ à dialogue dynamique actif (génération LLM) — dans les deux cas la touche
+		// n'est pas détournée, Espace reste le saut. Le statique manuel, lui, passe par le
+		// rappel de touche et attend l'appui.
+		if (_parlant.DeclencheAuPassage || _auto != null || (_dyn?.DialogueDynamiqueActif ?? false))
 			DemarrerDialogue();
 		else
 			AfficherRappel();
@@ -90,14 +92,11 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		if (!_joueurProche || _parlant == null)
 			return;
 
-		// Flux LLM : on attend la fin de génération (l'action ne fait rien pendant le
-		// streaming), puis un appui « action » ferme la bulle.
+		// Flux LLM (dialogue dynamique) : entièrement piloté par la proximité, jamais par la
+		// touche. La bulle grandit à mesure que le texte arrive et la fermeture se fait à la
+		// sortie de zone (OnBodyExited) — Espace n'y touche pas et garde son rôle de saut.
 		if (_enFlux)
-		{
-			if (_fluxPret && Input.IsActionJustPressed("action"))
-				TerminerDialogue(sortie: false);
 			return;
-		}
 
 		// Défilement automatique : la bulle avance sur minuteur, sans appui de touche.
 		if (_enDialogue && _auto != null)
@@ -112,6 +111,12 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		}
 
 		if (!Input.IsActionJustPressed("action"))
+			return;
+
+		// Espace ne pilote le dialogue (démarrage / ligne suivante) que si le joueur est
+		// immobile : s'il se déplace, la même touche sert à sauter (voir Player) et ne doit
+		// donc pas aussi déclencher ni faire avancer le dialogue.
+		if (!Mathf.IsZeroApprox(Input.GetAxis("move_left", "move_right")))
 			return;
 
 		if (_enDialogue)
@@ -150,16 +155,15 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		DemarrerDialogueStatique();
 	}
 
-	// Lance la génération LLM : bulle « … » immédiate, puis rendu incrémental token par
-	// token. Traité comme un dialogue manuel (la touche de saut parle, pas de minuteur auto).
+	// Lance la génération LLM : bulle « … » immédiate, puis rendu incrémental token par token.
+	// Déclenché automatiquement à l'approche et fermé à la sortie de zone : la touche de saut
+	// n'est PAS détournée (on ne pose pas DialogueDisponible), Espace reste le saut.
 	private void DemarrerFlux()
 	{
 		_enDialogue = true;
 		_enFlux = true;
-		_fluxPret = false;
 		_parlant.SurDebutDialogue();
 		_bulle.Position = ToLocal(_parlant.PointBulle);
-		GameState.Instance.DialogueDisponible = true;
 
 		_bulle.AfficherDialogue("…"); // retour visuel avant le 1er token
 
@@ -169,7 +173,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 			_dyn.Invite,
 			_dyn.MotMoyenParReponse,
 			surChunk: texte => { if (_enFlux) _bulle.MettreAJourFlux(texte); },
-			surFin: () => _fluxPret = true,
+			surFin: null,
 			surErreur: ReplierSurStatique);
 	}
 
@@ -178,7 +182,6 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	private void ReplierSurStatique()
 	{
 		_enFlux = false;
-		_fluxPret = false;
 		if (_parlant.Dialogue.Count == 0)
 		{
 			TerminerDialogue(sortie: false);
@@ -247,7 +250,6 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		{
 			OllamaService.Instance?.AnnulerGeneration();
 			_enFlux = false;
-			_fluxPret = false;
 		}
 
 		bool etaitEnDialogue = _enDialogue;
@@ -256,9 +258,11 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		if (etaitEnDialogue)
 			_parlant.SurFinDialogue();
 
-		// Fin « normale » avec le joueur encore proche (mode touche) et dialogue encore
-		// autorisé : on revient au rappel de touche pour pouvoir reparler.
-		if (!sortie && _joueurProche && !_parlant.DeclencheAuPassage && PeutDialoguer())
+		// Fin « normale » du dialogue statique manuel avec le joueur encore proche : on revient
+		// au rappel de touche pour pouvoir reparler. Exclu pour le dynamique actif, qui ne doit
+		// jamais détourner Espace (il se relance tout seul à la prochaine approche).
+		if (!sortie && _joueurProche && !_parlant.DeclencheAuPassage
+			&& !(_dyn?.DialogueDynamiqueActif ?? false) && PeutDialoguer())
 		{
 			AfficherRappel();
 			return;

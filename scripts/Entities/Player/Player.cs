@@ -211,9 +211,12 @@ public partial class Player : LivingEntity
 		var auSol = IsOnFloor();
 		_coyoteTimer = auSol ? CoyoteTime : Mathf.Max(0f, _coyoteTimer - dt);
 
-		// À portée d'un PNJ parlant, Espace (partagé avec "action") sert à parler :
-		// on n'arme pas le saut pour éviter un saut parasite pendant le dialogue.
-		if (!GameState.Instance.DialogueDisponible && Input.IsActionJustPressed("jump"))
+		// À portée d'un PNJ parlant, Espace (partagé avec "action") sert à parler — mais
+		// SEULEMENT si le joueur est immobile : dès qu'il presse une direction, Espace
+		// redevient le saut normal (le dialogue ne se déclenche pas en marchant).
+		bool bougeHorizon = !Mathf.IsZeroApprox(Input.GetAxis("move_left", "move_right"));
+		bool espaceCaptureParDialogue = GameState.Instance.DialogueDisponible && !bougeHorizon;
+		if (!espaceCaptureParDialogue && Input.IsActionJustPressed("jump"))
 			_bufferSautTimer = JumpBufferTime;
 		else
 			_bufferSautTimer = Mathf.Max(0f, _bufferSautTimer - dt);
