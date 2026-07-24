@@ -1,13 +1,25 @@
-[gd_resource type="Resource" script_class="AmbianceSonore" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="AmbianceSonore" load_steps=9 format=3]
 
 [ext_resource type="Script" uid="uid://bvc1x82wporg4" path="res://scripts/Core/AmbianceSonore.cs" id="1_ambiance"]
 [ext_resource type="Script" uid="uid://cxveo4dosu75i" path="res://scripts/Core/VarianteAmbiance.cs" id="2_variante"]
-[ext_resource type="AudioStream" uid="uid://6rce3upeoomw" path="res://assets/audio/musiques/ice_cave_lofi.ogg" id="3_ice_cave"]
+[ext_resource type="Script" uid="uid://catvxyahhpuka" path="res://scripts/Core/PisteMusicale.cs" id="3_piste"]
+[ext_resource type="AudioStream" uid="uid://qrogxeeyv0su" path="res://assets/audio/musiques/Winter Wonderland Quest.mp3" id="4_winter"]
+[ext_resource type="AudioStream" uid="uid://c7hr0wq3yjnc8" path="res://assets/audio/musiques/Snowy Village Morning.mp3" id="5_snowy"]
+
+[sub_resource type="Resource" id="PisteWinter"]
+script = ExtResource("3_piste")
+Musique = ExtResource("4_winter")
+Probabilite = 50.0
+
+[sub_resource type="Resource" id="PisteSnowy"]
+script = ExtResource("3_piste")
+Musique = ExtResource("5_snowy")
+Probabilite = 50.0
 
 [sub_resource type="Resource" id="VarianteNormale"]
 script = ExtResource("2_variante")
 Etat = "normal"
-Musiques = Array[AudioStream]([ExtResource("3_ice_cave")])
+Musiques = Array[PisteMusicale]([SubResource("PisteWinter"), SubResource("PisteSnowy")])
 
 [resource]
 script = ExtResource("1_ambiance")

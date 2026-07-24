@@ -1,7 +1,29 @@
-[gd_resource type="Resource" script_class="AmbianceSonore" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="AmbianceSonore" format=3 uid="uid://cvmh8d1exnnk7"]
 
 [ext_resource type="Script" uid="uid://bvc1x82wporg4" path="res://scripts/Core/AmbianceSonore.cs" id="1_ambiance"]
+[ext_resource type="Script" uid="uid://cxveo4dosu75i" path="res://scripts/Core/VarianteAmbiance.cs" id="2_variante"]
+[ext_resource type="Script" uid="uid://catvxyahhpuka" path="res://scripts/Core/PisteMusicale.cs" id="3_piste"]
+[ext_resource type="AudioStream" uid="uid://bs0h24gm5qjds" path="res://assets/audio/musiques/Frozen Horizon.mp3" id="4_frozen"]
+[ext_resource type="AudioStream" uid="uid://cyvwsd0v883m0" path="res://assets/audio/musiques/The Frost Before the Fall.mp3" id="5_frost"]
+
+[sub_resource type="Resource" id="PisteFrozen"]
+script = ExtResource("3_piste")
+Musique = ExtResource("4_frozen")
+
+[sub_resource type="Resource" id="VarianteNormale"]
+script = ExtResource("2_variante")
+Musiques = Array[ExtResource("3_piste")]([SubResource("PisteFrozen")])
+
+[sub_resource type="Resource" id="PisteFrost"]
+script = ExtResource("3_piste")
+Musique = ExtResource("5_frost")
+
+[sub_resource type="Resource" id="VarianteBlizzard"]
+script = ExtResource("2_variante")
+Etat = "blizzard"
+Musiques = Array[ExtResource("3_piste")]([SubResource("PisteFrost")])
 
 [resource]
 script = ExtResource("1_ambiance")
 Nom = "banquise"
+Variantes = Array[ExtResource("2_variante")]([SubResource("VarianteNormale"), SubResource("VarianteBlizzard")])
