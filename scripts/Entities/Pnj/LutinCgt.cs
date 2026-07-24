@@ -8,11 +8,23 @@ using System.Collections.Generic;
 // l'aplat vide de sa pancarte — jamais dessiné dans le sprite, donc changeable par instance
 // ("EN GRÈVE", "Non à la hotte 35h"...). Visuel via l'AnimatedSprite2D de la scène, chargé
 // depuis le dossier de la pose choisie (invisible si ce dossier est vide).
+//
+// Le script est [Tool] (comme PanneauBois) : changer Pose dans l'inspecteur réapplique aussitôt
+// la 1re frame de la pose sur le Sprite2D « Apercu », si bien que monde.tscn montre le lutin dans
+// la pose telle qu'elle sera en jeu (l'aperçu éditeur n'est plus figé sur une seule pose).
+[Tool]
 public partial class LutinCgt : PnjAmical
 {
 	public enum PoseLutin { BrasCroises, PancarteLevee, AssisCaisse }
 
-	[Export] public PoseLutin Pose = PoseLutin.PancarteLevee;
+	private PoseLutin _pose = PoseLutin.PancarteLevee;
+
+	[Export]
+	public PoseLutin Pose
+	{
+		get => _pose;
+		set { _pose = value; AppliquerApercu(); }
+	}
 	[Export(PropertyHint.MultilineText)] public string Slogan = "EN GRÈVE";
 
 	private record Config(string Dossier, Vector2 ZoneSlogan, Vector2 TailleSlogan);
@@ -27,6 +39,30 @@ public partial class LutinCgt : PnjAmical
 	};
 
 	private Config _config;
+
+	// En éditeur ([Tool]) : met à jour l'aperçu selon la pose et n'exécute PAS le pipeline runtime
+	// de la base — base._Ready() masquerait justement le Sprite2D « Apercu » qu'on veut voir ici.
+	public override void _Ready()
+	{
+		if (Engine.IsEditorHint())
+		{
+			AppliquerApercu();
+			return;
+		}
+		base._Ready();
+	}
+
+	// Charge la 1re frame du dossier de la pose sur le Sprite2D « Apercu » (aperçu éditeur).
+	// Comme les setters d'export tournent avant que les enfants existent, on attend IsNodeReady.
+	private void AppliquerApercu()
+	{
+		if (!IsNodeReady())
+			return;
+
+		var apercu = GetNodeOrNull<Sprite2D>("Apercu");
+		if (apercu != null)
+			apercu.Texture = GD.Load<Texture2D>($"{Configs[_pose].Dossier}/00.png");
+	}
 
 	// Init (avant ConstruireAnimations) : fige le lutin sur place, résout la pose et câble
 	// le Label du slogan sur l'aplat de la pancarte.
