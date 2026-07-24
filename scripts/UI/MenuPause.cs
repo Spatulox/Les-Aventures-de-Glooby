@@ -4,7 +4,7 @@ using Godot;
 // un panneau semi-opaque derrière les boutons pour la lisibilité. Met la partie
 // en pause et propose Continuer / Retour au menu principal. S'ouvre et se ferme
 // avec la touche "menu" (Échap). Construit via MenuFabrique, comme le menu
-// principal. Placé dans scenes/monde.tscn (le monde ne recharge jamais de scène).
+// principal. Placé dans scenes/monde1.tscn (le monde ne recharge jamais de scène).
 public partial class MenuPause : CanvasLayer
 {
 	private Control _racine;

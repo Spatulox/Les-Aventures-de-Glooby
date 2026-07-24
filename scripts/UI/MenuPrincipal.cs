@@ -96,7 +96,7 @@ public partial class MenuPrincipal : Control
 		ChargerMonde();
 	}
 
-	private void ChargerMonde() => GetTree().ChangeSceneToFile("res://scenes/niveaux/monde.tscn");
+	private void ChargerMonde() => GetTree().ChangeSceneToFile("res://scenes/niveaux/monde1.tscn");
 
 	// Affiche dans la BoiteMob de la scène un mob tiré au hasard (joueur ou PNJ) en
 	// animation « idle », purement décoratif (non contrôlable) : on ne réutilise pas les
@@ -224,7 +224,7 @@ public partial class MenuPrincipal : Control
 			return null;
 
 		// Le fond de l'arène du Boss Cerf est réservé au combat (voir la région
-		// "boss_cerf" de monde.tscn) : on l'exclut du tirage du menu pour ne pas
+		// "boss_cerf" de monde1.tscn) : on l'exclut du tirage du menu pour ne pas
 		// déflorer le boss sur l'écran-titre.
 		var fichiers = new List<string>();
 		foreach (var nom in dossier.GetFiles())
