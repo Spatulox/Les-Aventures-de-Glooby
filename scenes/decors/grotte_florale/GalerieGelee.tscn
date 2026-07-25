@@ -1,0 +1,604 @@
+[gd_scene format=3 uid="uid://klvrruyqhh88"]
+
+[ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
+[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/entites/fonceur.tscn" id="pF"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="pP"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="pS"]
+[ext_resource type="Texture2D" uid="uid://c8dcokcvpk7d3" path="res://assets/decors/grotte_florale/galerie/fond.png" id="t1"]
+[ext_resource type="Texture2D" uid="uid://dvpt3bsvx4k7m" path="res://assets/decors/grotte_florale/galerie/terrain.png" id="t2"]
+[ext_resource type="Texture2D" uid="uid://d18hb5libsoph" path="res://assets/decors/grotte_florale/region/glow_magenta.png" id="t3"]
+[ext_resource type="Texture2D" uid="uid://x3xykpe78quo" path="res://assets/decors/grotte_florale/region/glow_cyan.png" id="t4"]
+[ext_resource type="Texture2D" uid="uid://dy6yfny0c6740" path="res://assets/decors/grotte_florale/kit/arbre_givre.png" id="t5"]
+[ext_resource type="Texture2D" uid="uid://bkgrbs5jxbhrq" path="res://assets/decors/grotte_florale/kit/buisson_gele_b.png" id="t6"]
+[ext_resource type="Texture2D" uid="uid://dy6qa8m6i8uee" path="res://assets/decors/grotte_florale/kit/champignons_b.png" id="t7"]
+[ext_resource type="Texture2D" uid="uid://cqk03j7ffgax6" path="res://assets/decors/grotte_florale/kit/cristal_geant.png" id="t8"]
+[ext_resource type="Texture2D" uid="uid://dhvj2ivhr5eol" path="res://assets/decors/grotte_florale/kit/cristaux.png" id="t9"]
+[ext_resource type="Texture2D" uid="uid://dmo5kbm74yroh" path="res://assets/decors/grotte_florale/kit/fleur_accent.png" id="t10"]
+[ext_resource type="Texture2D" uid="uid://lr4e4iyfp2ju" path="res://assets/decors/grotte_florale/kit/fleur_violet.png" id="t11"]
+[ext_resource type="Texture2D" uid="uid://0frkjt3esy81" path="res://assets/decors/grotte_florale/kit/masse_avant.png" id="t12"]
+[ext_resource type="Texture2D" uid="uid://dnegty16gfn3p" path="res://assets/decors/grotte_florale/kit/pod_lumineux.png" id="t13"]
+[ext_resource type="Texture2D" uid="uid://qt1dsxigpnl" path="res://assets/decors/grotte_florale/kit/reeds_b.png" id="t14"]
+[ext_resource type="Texture2D" uid="uid://bwj3t74gkv0ca" path="res://assets/decors/grotte_florale/kit/rideau_lianes.png" id="t15"]
+[ext_resource type="Texture2D" uid="uid://b6vd487fbndlk" path="res://assets/decors/grotte_florale/kit/rideau_plafond.png" id="t16"]
+[ext_resource type="Texture2D" uid="uid://c7jb4j3d1vxjn" path="res://assets/decors/grotte_florale/kit/touffe_bord.png" id="t17"]
+[ext_resource type="Texture2D" uid="uid://dk2a13qy3vae2" path="res://assets/decors/grotte_florale/kit/touffe_bord_b.png" id="t18"]
+
+[sub_resource type="RectangleShape2D" id="s1"]
+size = Vector2(2016, 32)
+
+[sub_resource type="RectangleShape2D" id="s2"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s3"]
+size = Vector2(2016, 32)
+
+[sub_resource type="RectangleShape2D" id="s4"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s5"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s6"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s7"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s8"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="s9"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s10"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="s11"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s12"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="s13"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s14"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="s15"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s16"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="s17"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s18"]
+size = Vector2(288, 32)
+
+[sub_resource type="RectangleShape2D" id="s19"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s20"]
+size = Vector2(288, 32)
+
+[sub_resource type="RectangleShape2D" id="s21"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s22"]
+size = Vector2(224, 32)
+
+[sub_resource type="RectangleShape2D" id="s23"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="s24"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="s25"]
+size = Vector2(288, 32)
+
+[sub_resource type="RectangleShape2D" id="s26"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s27"]
+size = Vector2(480, 32)
+
+[sub_resource type="RectangleShape2D" id="s28"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="s29"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="s30"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="s31"]
+size = Vector2(64, 32)
+
+[sub_resource type="RectangleShape2D" id="s32"]
+size = Vector2(480, 32)
+
+[sub_resource type="RectangleShape2D" id="s33"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="s34"]
+size = Vector2(256, 32)
+
+[sub_resource type="RectangleShape2D" id="s35"]
+size = Vector2(96, 32)
+
+[sub_resource type="RectangleShape2D" id="s36"]
+size = Vector2(1312, 32)
+
+[sub_resource type="RectangleShape2D" id="s37"]
+size = Vector2(672, 32)
+
+[sub_resource type="RectangleShape2D" id="s38"]
+size = Vector2(2176, 32)
+
+[sub_resource type="RectangleShape2D" id="s39"]
+size = Vector2(2176, 32)
+
+[sub_resource type="RectangleShape2D" id="s40"]
+size = Vector2(2176, 32)
+
+[sub_resource type="RectangleShape2D" id="s41"]
+size = Vector2(2176, 32)
+
+[node name="Galerie" type="Node2D" unique_id=1052637523]
+
+[node name="Grade" type="CanvasModulate" parent="." unique_id=863204061]
+color = Color(1.08, 1.08, 1.12, 1)
+
+[node name="Fond" type="Parallax2D" parent="." unique_id=950516003]
+scroll_scale = Vector2(0.3, 0.4)
+
+[node name="Img" type="Sprite2D" parent="Fond" unique_id=1292622084]
+z_index = -100
+position = Vector2(1088, 288)
+texture = ExtResource("t1")
+
+[node name="DecorFar" type="Parallax2D" parent="." unique_id=937552327]
+scroll_scale = Vector2(0.5, 0.55)
+
+[node name="D1" type="Sprite2D" parent="DecorFar" unique_id=2106963626]
+modulate = Color(0.45, 0.5, 0.62, 1)
+z_index = -60
+position = Vector2(699, 318)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("t8")
+
+[node name="D2" type="Sprite2D" parent="DecorFar" unique_id=1776964315]
+modulate = Color(0.45, 0.5, 0.62, 1)
+z_index = -60
+position = Vector2(1664, 205)
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("t8")
+
+[node name="D3" type="Sprite2D" parent="DecorFar" unique_id=843418067]
+modulate = Color(0.45, 0.5, 0.62, 1)
+z_index = -60
+position = Vector2(256, 462)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="D4" type="Sprite2D" parent="DecorFar" unique_id=1097582214]
+modulate = Color(0.45, 0.5, 0.62, 1)
+z_index = -60
+position = Vector2(896, 462)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="D5" type="Sprite2D" parent="DecorFar" unique_id=1143848135]
+modulate = Color(0.45, 0.5, 0.62, 1)
+z_index = -60
+position = Vector2(1472, 462)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="D6" type="Sprite2D" parent="DecorFar" unique_id=2015121361]
+modulate = Color(0.45, 0.5, 0.62, 1)
+z_index = -60
+position = Vector2(1856, 462)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="DecorMid" type="Parallax2D" parent="." unique_id=1271514764]
+scroll_scale = Vector2(0.62, 0.66)
+
+[node name="M1" type="Sprite2D" parent="DecorMid" unique_id=221699412]
+modulate = Color(0.55, 0.6, 0.7, 1)
+z_index = -50
+position = Vector2(512, 160)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t15")
+flip_h = true
+
+[node name="M2" type="Sprite2D" parent="DecorMid" unique_id=231928658]
+modulate = Color(0.55, 0.6, 0.7, 1)
+z_index = -50
+position = Vector2(1216, 160)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t15")
+flip_h = true
+
+[node name="M3" type="Sprite2D" parent="DecorMid" unique_id=1709445678]
+modulate = Color(0.55, 0.6, 0.7, 1)
+z_index = -50
+position = Vector2(1728, 160)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t15")
+flip_h = true
+
+[node name="Terrain" type="Sprite2D" parent="." unique_id=1987552197]
+position = Vector2(1088, 288)
+texture = ExtResource("t2")
+
+[node name="Sol" type="StaticBody2D" parent="." unique_id=686266038]
+
+[node name="C0" type="CollisionShape2D" parent="Sol" unique_id=1211209084]
+position = Vector2(1008, 16)
+shape = SubResource("s1")
+
+[node name="C1" type="CollisionShape2D" parent="Sol" unique_id=108289627]
+position = Vector2(2144, 16)
+shape = SubResource("s2")
+
+[node name="C2" type="CollisionShape2D" parent="Sol" unique_id=968709955]
+position = Vector2(1008, 48)
+shape = SubResource("s3")
+
+[node name="C3" type="CollisionShape2D" parent="Sol" unique_id=584518504]
+position = Vector2(2144, 48)
+shape = SubResource("s4")
+
+[node name="C4" type="CollisionShape2D" parent="Sol" unique_id=175046830]
+position = Vector2(32, 80)
+shape = SubResource("s5")
+
+[node name="C5" type="CollisionShape2D" parent="Sol" unique_id=889123459]
+position = Vector2(2144, 80)
+shape = SubResource("s6")
+
+[node name="C6" type="CollisionShape2D" parent="Sol" unique_id=641901728]
+position = Vector2(32, 112)
+shape = SubResource("s7")
+
+[node name="C7" type="CollisionShape2D" parent="Sol" unique_id=1338019712]
+position = Vector2(2128, 112)
+shape = SubResource("s8")
+
+[node name="C8" type="CollisionShape2D" parent="Sol" unique_id=1979884989]
+position = Vector2(32, 144)
+shape = SubResource("s9")
+
+[node name="C9" type="CollisionShape2D" parent="Sol" unique_id=114405724]
+position = Vector2(2128, 144)
+shape = SubResource("s10")
+
+[node name="C10" type="CollisionShape2D" parent="Sol" unique_id=1778924109]
+position = Vector2(32, 176)
+shape = SubResource("s11")
+
+[node name="C11" type="CollisionShape2D" parent="Sol" unique_id=1175751354]
+position = Vector2(2128, 176)
+shape = SubResource("s12")
+
+[node name="C12" type="CollisionShape2D" parent="Sol" unique_id=1559905142]
+position = Vector2(32, 208)
+shape = SubResource("s13")
+
+[node name="C13" type="CollisionShape2D" parent="Sol" unique_id=522971180]
+position = Vector2(2128, 208)
+shape = SubResource("s14")
+
+[node name="C14" type="CollisionShape2D" parent="Sol" unique_id=1113059123]
+position = Vector2(32, 240)
+shape = SubResource("s15")
+
+[node name="C15" type="CollisionShape2D" parent="Sol" unique_id=807773157]
+position = Vector2(2128, 240)
+shape = SubResource("s16")
+
+[node name="C16" type="CollisionShape2D" parent="Sol" unique_id=125735524]
+position = Vector2(32, 272)
+shape = SubResource("s17")
+
+[node name="C17" type="CollisionShape2D" parent="Sol" unique_id=1635300437]
+position = Vector2(2032, 272)
+shape = SubResource("s18")
+
+[node name="C18" type="CollisionShape2D" parent="Sol" unique_id=372289841]
+position = Vector2(32, 304)
+shape = SubResource("s19")
+
+[node name="C19" type="CollisionShape2D" parent="Sol" unique_id=86552720]
+position = Vector2(2032, 304)
+shape = SubResource("s20")
+
+[node name="C20" type="CollisionShape2D" parent="Sol" unique_id=132688591]
+position = Vector2(32, 336)
+shape = SubResource("s21")
+
+[node name="C21" type="CollisionShape2D" parent="Sol" unique_id=297173652]
+position = Vector2(464, 336)
+shape = SubResource("s22")
+
+[node name="C22" type="CollisionShape2D" parent="Sol" unique_id=1156498548]
+position = Vector2(1056, 336)
+shape = SubResource("s23")
+
+[node name="C23" type="CollisionShape2D" parent="Sol" unique_id=2700610]
+position = Vector2(1696, 336)
+shape = SubResource("s24")
+
+[node name="C24" type="CollisionShape2D" parent="Sol" unique_id=1710295177]
+position = Vector2(2032, 336)
+shape = SubResource("s25")
+
+[node name="C25" type="CollisionShape2D" parent="Sol" unique_id=1816311997]
+position = Vector2(32, 368)
+shape = SubResource("s26")
+
+[node name="C26" type="CollisionShape2D" parent="Sol" unique_id=1778673108]
+position = Vector2(592, 368)
+shape = SubResource("s27")
+
+[node name="C27" type="CollisionShape2D" parent="Sol" unique_id=1284698083]
+position = Vector2(1056, 368)
+shape = SubResource("s28")
+
+[node name="C28" type="CollisionShape2D" parent="Sol" unique_id=203503011]
+position = Vector2(1696, 368)
+shape = SubResource("s29")
+
+[node name="C29" type="CollisionShape2D" parent="Sol" unique_id=1144342455]
+position = Vector2(2128, 368)
+shape = SubResource("s30")
+
+[node name="C30" type="CollisionShape2D" parent="Sol" unique_id=117843534]
+position = Vector2(32, 400)
+shape = SubResource("s31")
+
+[node name="C31" type="CollisionShape2D" parent="Sol" unique_id=70770955]
+position = Vector2(592, 400)
+shape = SubResource("s32")
+
+[node name="C32" type="CollisionShape2D" parent="Sol" unique_id=2084358498]
+position = Vector2(1056, 400)
+shape = SubResource("s33")
+
+[node name="C33" type="CollisionShape2D" parent="Sol" unique_id=309023520]
+position = Vector2(1696, 400)
+shape = SubResource("s34")
+
+[node name="C34" type="CollisionShape2D" parent="Sol" unique_id=337183980]
+position = Vector2(2128, 400)
+shape = SubResource("s35")
+
+[node name="C35" type="CollisionShape2D" parent="Sol" unique_id=238574840]
+position = Vector2(656, 432)
+shape = SubResource("s36")
+
+[node name="C36" type="CollisionShape2D" parent="Sol" unique_id=15268388]
+position = Vector2(1840, 432)
+shape = SubResource("s37")
+
+[node name="C37" type="CollisionShape2D" parent="Sol" unique_id=1535688980]
+position = Vector2(1088, 464)
+shape = SubResource("s38")
+
+[node name="C38" type="CollisionShape2D" parent="Sol" unique_id=280325855]
+position = Vector2(1088, 496)
+shape = SubResource("s39")
+
+[node name="C39" type="CollisionShape2D" parent="Sol" unique_id=2011757032]
+position = Vector2(1088, 528)
+shape = SubResource("s40")
+
+[node name="C40" type="CollisionShape2D" parent="Sol" unique_id=450990853]
+position = Vector2(1088, 560)
+shape = SubResource("s41")
+
+[node name="DecorBord" type="Node2D" parent="." unique_id=1480395614]
+
+[node name="G1" type="Sprite2D" parent="DecorBord" unique_id=2053646286]
+z_index = -1
+position = Vector2(786, 391)
+texture = ExtResource("t4")
+
+[node name="G2" type="Sprite2D" parent="DecorBord" unique_id=940327764]
+z_index = -1
+position = Vector2(1664, 192)
+texture = ExtResource("t4")
+
+[node name="G3" type="Sprite2D" parent="DecorBord" unique_id=122201311]
+z_index = -1
+position = Vector2(352, 384)
+texture = ExtResource("t4")
+
+[node name="G4" type="Sprite2D" parent="DecorBord" unique_id=143644359]
+z_index = -1
+position = Vector2(1344, 440)
+texture = ExtResource("t4")
+
+[node name="G5" type="Sprite2D" parent="DecorBord" unique_id=588705022]
+z_index = -1
+position = Vector2(1408, 440)
+texture = ExtResource("t4")
+
+[node name="G6" type="Sprite2D" parent="DecorBord" unique_id=915081923]
+z_index = -1
+position = Vector2(1472, 440)
+texture = ExtResource("t4")
+
+[node name="G7" type="Sprite2D" parent="DecorBord" unique_id=1717568564]
+z_index = -1
+position = Vector2(1408, 430)
+texture = ExtResource("t3")
+
+[node name="G8" type="Sprite2D" parent="DecorBord" unique_id=985739737]
+z_index = -1
+position = Vector2(2080, 250)
+texture = ExtResource("t4")
+
+[node name="G9" type="Sprite2D" parent="DecorBord" unique_id=1059219802]
+z_index = -1
+position = Vector2(2048, 66)
+texture = ExtResource("t3")
+
+[node name="B1" type="Sprite2D" parent="DecorBord" unique_id=822721204]
+z_index = 2
+position = Vector2(352, 364)
+texture = ExtResource("t8")
+
+[node name="B2" type="Sprite2D" parent="DecorBord" unique_id=316999962]
+z_index = 2
+position = Vector2(288, 425)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t9")
+
+[node name="B3" type="Sprite2D" parent="DecorBord" unique_id=1213806887]
+z_index = 2
+position = Vector2(416, 425)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t9")
+
+[node name="B4" type="Sprite2D" parent="DecorBord" unique_id=581374832]
+z_index = 2
+position = Vector2(1344, 443)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("t13")
+flip_h = true
+
+[node name="B5" type="Sprite2D" parent="DecorBord" unique_id=1246640868]
+z_index = 2
+position = Vector2(1408, 443)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("t13")
+flip_h = true
+
+[node name="B6" type="Sprite2D" parent="DecorBord" unique_id=1810311653]
+z_index = 2
+position = Vector2(1472, 443)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("t13")
+flip_h = true
+
+[node name="B7" type="Sprite2D" parent="DecorBord" unique_id=1000274136]
+z_index = 2
+position = Vector2(1408, 423)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("t10")
+
+[node name="B8" type="Sprite2D" parent="DecorBord" unique_id=1099557732]
+z_index = 2
+position = Vector2(448, 335)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("t17")
+
+[node name="B9" type="Sprite2D" parent="DecorBord" unique_id=2023372039]
+z_index = 2
+position = Vector2(1056, 330)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("t9")
+flip_h = true
+
+[node name="B10" type="Sprite2D" parent="DecorBord" unique_id=1595908611]
+z_index = 2
+position = Vector2(1696, 328)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("t6")
+flip_h = true
+
+[node name="B11" type="Sprite2D" parent="DecorBord" unique_id=591821466]
+z_index = 2
+position = Vector2(2016, 265)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("t7")
+
+[node name="B12" type="Sprite2D" parent="DecorBord" unique_id=1707213847]
+z_index = 2
+position = Vector2(2080, 258)
+scale = Vector2(0.65, 0.65)
+texture = ExtResource("t13")
+flip_h = true
+
+[node name="B13" type="Sprite2D" parent="DecorBord" unique_id=1123901292]
+z_index = 2
+position = Vector2(2048, 65)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("t11")
+
+[node name="B14" type="Sprite2D" parent="DecorBord" unique_id=765837536]
+z_index = 2
+position = Vector2(192, 434)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("t18")
+
+[node name="B15" type="Sprite2D" parent="DecorBord" unique_id=80879020]
+z_index = 2
+position = Vector2(704, 373)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("t14")
+flip_h = true
+
+[node name="B16" type="Sprite2D" parent="DecorBord" unique_id=962496410]
+z_index = 2
+position = Vector2(128, 2)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t16")
+flip_h = true
+
+[node name="B17" type="Sprite2D" parent="DecorBord" unique_id=1599063629]
+z_index = 2
+position = Vector2(1856, 2)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t16")
+flip_h = true
+
+[node name="B18" type="Sprite2D" parent="DecorBord" unique_id=2126116]
+z_index = 2
+position = Vector2(1984, 2)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("t16")
+flip_h = true
+
+[node name="DecorAvant" type="Parallax2D" parent="." unique_id=856528232]
+scroll_scale = Vector2(1.15, 1.06)
+
+[node name="A1" type="Sprite2D" parent="DecorAvant" unique_id=1071794479]
+modulate = Color(0.16, 0.18, 0.26, 1)
+z_index = 50
+position = Vector2(96, 478)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("t12")
+
+[node name="A2" type="Sprite2D" parent="DecorAvant" unique_id=1948818171]
+modulate = Color(0.16, 0.18, 0.26, 1)
+z_index = 50
+position = Vector2(2048, 478)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("t12")
+flip_h = true
+
+[node name="CheckpointPeche" parent="." unique_id=1596553461 instance=ExtResource("pC")]
+position = Vector2(160, 434)
+IdCheckpoint = "galerie"
+
+[node name="Fonceur" parent="." unique_id=1378514941 instance=ExtResource("pF")]
+position = Vector2(1056, 432)
+
+[node name="StalactitePiege" parent="." unique_id=1329653647 instance=ExtResource("pS")]
+position = Vector2(1152, 94)
+
+[node name="Sortie" type="Marker2D" parent="." unique_id=1475312454]
+position = Vector2(2048, 64)
+
+[node name="Joueur" parent="." unique_id=30630169 instance=ExtResource("pP")]
+position = Vector2(160, 384)
