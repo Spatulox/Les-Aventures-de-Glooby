@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/sol/grotte/SolGrotte.tscn" id="2_sol"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/GardienRonces.tscn" id="3_gardien"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/FleurCarnivore.tscn" id="4_fleur"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/BulbeExplosif.tscn" id="5_bulbe"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/NueePollen.tscn" id="6_pollen"]
+
+[node name="TestEnnemisGrotteFlorale" type="Node2D"]
+
+[node name="Sol" type="Node2D" parent="."]
+
+[node name="SolGrotte" parent="Sol" instance=ExtResource("2_sol")]
+
+[node name="SolGrotte2" parent="Sol" instance=ExtResource("2_sol")]
+position = Vector2(256, 0)
+
+[node name="SolGrotte3" parent="Sol" instance=ExtResource("2_sol")]
+position = Vector2(512, 0)
+
+[node name="SolGrotte4" parent="Sol" instance=ExtResource("2_sol")]
+position = Vector2(768, 0)
+
+[node name="Ennemis" type="Node2D" parent="."]
+
+[node name="GardienRonces" parent="Ennemis" instance=ExtResource("3_gardien")]
+position = Vector2(220, -120)
+
+[node name="FleurCarnivore" parent="Ennemis" instance=ExtResource("4_fleur")]
+position = Vector2(430, -130)
+
+[node name="BulbeExplosif" parent="Ennemis" instance=ExtResource("5_bulbe")]
+position = Vector2(620, -120)
+
+[node name="NueePollen" parent="Ennemis" instance=ExtResource("6_pollen")]
+position = Vector2(800, -170)
+
+[node name="Joueur" parent="." instance=ExtResource("1_player")]
+position = Vector2(40, -140)

@@ -7,7 +7,7 @@ using Godot;
 // de DeniveleTotal. La collision est un CollisionPolygon2D qui épouse la surface
 // et la base : pas de marches invisibles.
 //
-// Chaque type a sa propre scène (scenes/decors/usine/PenteUsineXxx.tscn) qui
+// Chaque type a sa propre scène (scenes/sol/usine/PenteUsineXxx.tscn) qui
 // porte le Sprite2D ET le CollisionPolygon2D : la scène est la seule source de
 // vérité, le script ne réapplique rien au runtime (comme PenteBanquise).
 public partial class PenteUsineBois : StaticBody2D
