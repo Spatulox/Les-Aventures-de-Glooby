@@ -382,8 +382,8 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		_bulleChoix.Cacher();
 		MemoriserHistorique($"Glooby t'a répondu : « {choix.Texte} »");
 
-		if (choix.CoutPoissons > 0)
-			GameState.Instance.DepenserPoissons(choix.CoutPoissons);
+		if (choix.CoutEffectif > 0)
+			GameState.Instance.DepenserPoissons(choix.CoutEffectif);
 		if (!string.IsNullOrEmpty(choix.IdMemoire))
 			GameState.Instance.MarquerConsomme(choix.IdMemoire);
 		_aChoix.SurChoixRetenu(choix);

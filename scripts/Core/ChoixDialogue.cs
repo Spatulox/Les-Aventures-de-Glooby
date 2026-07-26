@@ -35,6 +35,11 @@ public partial class ChoixDialogue : Resource
 	// Vrai : le choix disparaît de la liste une fois retenu (nécessite IdMemoire).
 	[Export] public bool UneSeuleFois;
 
+	// Id mémoire d'un AUTRE choix qui rend celui-ci caduc. Ex. le regret « je n'ai pas
+	// assez de poissons... » ne doit plus s'afficher une fois le don fait, même si la
+	// réserve est retombée à zéro — c'est le don qui l'a vidée.
+	[Export] public string MasqueSiMemoire = "";
+
 	// Poissons que ce choix coûte à Glooby (0 = gratuit). Le choix n'est PAS proposé
 	// si la réserve est insuffisante — donc une réponse du type « tiens, prends mes
 	// 50 poissons » ne peut jamais mentir — et la dépense est faite à la validation.
@@ -42,11 +47,25 @@ public partial class ChoixDialogue : Resource
 	// une ligne de code (voir DeclencheurDialogue.ValiderChoix).
 	[Export] public int CoutPoissons;
 
+	// Inverse le test de CoutPoissons : le choix n'apparaît QUE si la réserve est
+	// insuffisante. C'est le PENDANT d'un choix payant — « je n'ai pas assez de
+	// poissons... » s'affiche exactement quand « tiens, prends mes 50 poissons »
+	// disparaît, au lieu de laisser le joueur devant une liste amputée sans
+	// explication. Un tel choix ne coûte évidemment rien (voir CoutEffectif).
+	[Export] public bool SiReserveInsuffisante;
+
+	// Ce que le choix retire réellement à Glooby : une réplique de regret annoncée
+	// par CoutPoissons ne doit rien prélever.
+	public int CoutEffectif => SiReserveInsuffisante ? 0 : CoutPoissons;
+
 	// Le choix doit-il encore être proposé ? Un choix à usage unique déjà retenu
-	// dans cette partie est masqué, comme un choix que le joueur ne peut pas payer.
+	// dans cette partie est masqué, comme un choix que le joueur ne peut pas payer
+	// (ou, pour son pendant, un choix que le joueur PEUT payer).
 	public bool EstDisponible()
 	{
-		if (CoutPoissons > 0 && GameState.Instance.Poissons < CoutPoissons)
+		if (CoutPoissons > 0 && GameState.Instance.Poissons >= CoutPoissons == SiReserveInsuffisante)
+			return false;
+		if (!string.IsNullOrEmpty(MasqueSiMemoire) && GameState.Instance.EstConsomme(MasqueSiMemoire))
 			return false;
 		if (!UneSeuleFois || string.IsNullOrEmpty(IdMemoire))
 			return true;

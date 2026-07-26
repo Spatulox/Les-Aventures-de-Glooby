@@ -172,6 +172,31 @@ une couche de parallaxe, en donnant son chemin — c'est ce qui a permis de les 
 un prop se met sous le **nœud de lieu** (`Sanctuaire`, `Galerie`…) ou sous `Salle/DecorBord`
 (un `Node2D`, espace monde), jamais dans `Fond` / `DecorFar` / `DecorMid` / `DecorAvant`.
 
+## Don des 50 poissons au lutin CGT
+
+Déjà en place et vérifié : `ChoixDialogue.CoutPoissons = 50` **masque** le don quand la
+réserve est insuffisante (le choix ne peut donc jamais mentir), et `ValiderChoix` dépense les
+poissons **puis** marque `IdMemoire = "lutin_cgt_don_poissons"` via
+`GameState.MarquerConsomme` — la grève financée est donc notée dans la partie (persistée au
+prochain checkpoint, `Checkpoint.cs` appelant `Sauvegarder`). Le don est `UneSeuleFois`.
+
+Ce qui manquait : le joueur trop pauvre voyait juste la ligne disparaître. Deux exports
+ajoutés à `ChoixDialogue`, génériques et data-driven :
+
+- **`SiReserveInsuffisante`** — inverse le test de `CoutPoissons` : le choix n'apparaît QUE si
+  Glooby ne peut pas payer. Il ne prélève rien (`CoutEffectif`, utilisé par `ValiderChoix`).
+- **`MasqueSiMemoire`** — masque le choix si un AUTRE `IdMemoire` est déjà consommé : une fois
+  le don fait, le regret ne se réaffiche pas alors que c'est le don qui a vidé la réserve.
+
+`assets/dialogues/banquise_fin_lutin_cgt.tres` gagne `ChoixPasAssez` (« Je n'ai pas assez de
+poissons... »), branché sur les deux nœuds qui proposent le don. Sonde headless :
+
+```
+50 poissons        -> « Tiens, prends mes 50 poissons. » / revendications / bon courage
+5 poissons         -> « Je n'ai pas assez de poissons... » / revendications / bon courage
+après le don (0)   -> revendications / bon courage      (EstConsomme = True, réserve 0)
+```
+
 ## Reste à faire / à l'œil
 
 - **Play-test manuel** (`godot res://scenes/niveaux/ReindeerBoss.tscn`) : vérifier le calage
