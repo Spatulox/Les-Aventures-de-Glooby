@@ -1329,4 +1329,16 @@ limit_bottom = 400
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
 
+[node name="LutinCgt" parent="." unique_id=1619686424 instance=ExtResource("59_0ihna")]
+position = Vector2(5017, 262)
+Slogan = "35H OU RIEN !"
+Lignes = PackedStringArray("On lâche rien. Même pas les jouets !", "Camarade ! Il me manque encore des poissons pour tenir le piquet !", "50 poissons, pas un de moins, sinon on retourne à l\'atelier !", "On lâche rien ! Mais on a faim !", "")
+DialogueDynamique = true
+Contexte = "Tu es un ouvrier de la fabrique du Père Noël, délégué syndical CGT, en grève depuis ce matin.
+Tu tiens le piquet de grève avec ta pancarte : la direction impose des cadences folles, vous emballez les cadeaux jour et nuit, et la hotte n'est toujours pas passée aux 35 heures.
+Ton problème immédiat : le piquet n'a plus rien à manger. Tu ravitailles tes camarades grévistes et il te faut au 50 poissons pour tenir ; en dessous, la grève s'effondre et tout le monde retourne à l'atelier.
+Tu réclames donc des poissons à quiconque passe devant toi, tu comptes ce qu'il te manque, tu promets un reçu de la caisse de solidarité.
+Ton ton : combatif et syndical (camarade, revendications, piquet de grève, on lâche rien), râleur envers la direction, chaleureux envers ceux qui te soutiennent, jamais méchant ni menaçant."
+MotMoyenParReponse = 12
+
 [editable path="Joueur"]
