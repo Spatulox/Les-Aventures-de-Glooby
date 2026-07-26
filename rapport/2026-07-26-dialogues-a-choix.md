@@ -150,6 +150,63 @@ puis retirée du dépôt sur demande — la relecture de code, elle, n'avait rie
   choix don absent si moins de 50 poissons, et repli propre avec les dialogues IA
   désactivés dans Paramètres.
 
+## Correctif : slogan décentré sur la pancarte du lutin
+
+Le slogan apparaissait décalé **quelle que soit la `Pose`**. Cause : `LutinCgt` est
+décalqué de `PanneauBois`, qui mesure ses rectangles d'écriture sur un sprite affiché
+**×2** et applique donc `sprite.Scale = (2,2)`. Le lutin a copié les rectangles mais pas
+la mise à l'échelle — il reste à l'échelle 1 comme tous les PNJ 64×64. Les 3 poses
+étaient donc placées ~2× trop haut/à gauche et dimensionnées ~2× trop grand ; le
+commentaire du bloc `Configs` l'avouait encore (« sprite x2 centré »).
+
+Corrections dans **`scripts/Entities/Pnj/LutinCgt.cs`** :
+
+- **`Configs` re-mesuré au pixel** sur les PNG 64×64 (local = pixel − 32) et exprimé par
+  le **centre** de l'aplat plutôt que son coin : `BrasCroises` (15, −8.5) 12×17,
+  `PancarteLevee` (−6.5, −16) 27×22, `AssisCaisse` (10.5, −16.5) 19×17. Le coin se
+  déduit (`centre − taille/2`), ce qui rend le centrage explicite.
+- **`ClipText = true`** : sans lui, `Control.Size` est écrasé par
+  `GetCombinedMinimumSize()` — avec `autowrap`, Godot regonflait la boîte à la hauteur
+  du texte replié et le centrage vertical se faisait dans la boîte gonflée. Mesuré :
+  taille minimale ramenée à (1,1), `Size` enfin honoré.
+- **Police auto-ajustée** (`AjusterPolice`) : on descend de la taille d'auteur (9)
+  jusqu'à 4 tant que le texte ne rentre pas, mesuré avec `GetMultilineStringSize` comme
+  `BulleDialogue`. Les aplats vont de 12×17 à 27×22 px : une taille fixe ne pouvait pas
+  convenir aux trois poses. Le `LabelSettings` est **dupliqué** (sous-ressource partagée
+  par toutes les instances de la scène), et on repart toujours de la taille d'origine —
+  sinon un slogan long rapetissait la police définitivement pour les suivants.
+- **Aperçu éditeur** : `Slogan` passe de champ à propriété avec setter (comme `Pose`), et
+  `AppliquerApercu` replace le Label. Changer `Pose` ou `Slogan` dans l'inspecteur
+  recentre aussitôt — le réglage se fait à vue dans `monde1.tscn`.
+
+**`scenes/entites/lutin_cgt.tscn`** : offsets de la pose par défaut posés sur le Label
+(le rect était nul avant exécution) + `clip_text`.
+
+### Piège rencontré : `IsNodeReady()` est faux *pendant* `_Ready()`
+
+Le garde `if (!IsNodeReady()) return;` (copié de `AppliquerApercu`, où il protège les
+setters d'export qui tournent avant l'existence des enfants) bloquait **aussi** le
+placement au démarrage du jeu : le Label gardait les valeurs de la scène pour les trois
+poses. Remplacé par un simple `GetNodeOrNull` + test de nullité, qui couvre les deux cas.
+
+Trouvé par un harnais headless jetable, pas par relecture — la relecture voyait un
+`_Ready` → `Initialiser` → `AppliquerSlogan` d'apparence correcte.
+
+### Vérification
+
+- Build : **0 erreur CS**. Boot headless de `monde1.tscn` (400 frames) : aucune
+  exception côté lutin (le « 1 resources still in use at exit » est pré-existant — la
+  scène de menu, sans aucun lutin, le produit aussi).
+- Harnais headless sur **3 poses × 4 slogans** (dont le texte vide), mesuré après 5
+  frames pour laisser le layout se résoudre : **12/12** au centre et à la taille
+  attendus, `min=(1,1)`, police retenue 9/7/6/5/4 selon le texte.
+- Ratchet de police vérifié : après « MERCI CAMARADE » (plancher 4), repasser à un
+  slogan court remonte à 8.
+- **Reste à faire : un vrai F5.** Le headless valide la géométrie, pas la lisibilité —
+  sur `PancarteLevee`, « MERCI CAMARADE » tombe au plancher (police 4) dans un aplat de
+  27×22 px. À juger à l'œil : si c'est illisible, raccourcir le slogan est préférable à
+  agrandir la police.
+
 ## Limite connue
 
 Déclencher la conversation en pleine glissade fige le lutin… pardon, fige **Glooby**
