@@ -29,7 +29,22 @@ public partial class PorteInterne : DeclencheurZone
 	// recouvre le point d'arrivée.
 	[Export] public float DelaiReactivation = 0.8f;
 
+	// Marqueur de la salle sur lequel se caler au lancement (typiquement son
+	// « Sortie »). La salle est une scène réutilisable : son marqueur peut bouger d'un
+	// coup de souris, et la porte doit suivre au lieu de rester sur des coordonnées
+	// recopiées à la main — une sortie oubliée en hauteur est infranchissable.
+	// Vide = la porte reste où elle est posée dans le niveau.
+	[Export] public NodePath Marqueur;
+
 	private float _repos;
+
+	protected override bool PreparerDeclencheur()
+	{
+		if (GetNodeOrNull<Node2D>(Marqueur) is Node2D marqueur)
+			GlobalPosition = marqueur.GlobalPosition;
+
+		return base.PreparerDeclencheur();
+	}
 
 	public override void _Process(double delta)
 	{

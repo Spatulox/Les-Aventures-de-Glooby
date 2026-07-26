@@ -197,6 +197,26 @@ poissons... »), branché sur les deux nœuds qui proposent le don. Sonde headle
 après le don (0)   -> revendications / bon courage      (EstConsomme = True, réserve 0)
 ```
 
+## Portes calées sur le marqueur `Sortie` de leur salle
+
+Les portes portaient les coordonnées du marqueur **recopiées à la main** dans le niveau.
+Déplacer `Sortie` dans la salle (l'arène est passée de (2080, 64) à (2097, 460), au sol) ne
+faisait donc plus bouger la porte : la sortie du boss restait en hauteur, inatteignable.
+
+`PorteInterne` gagne un export **`Marqueur`** (NodePath) : au `_Ready` elle se pose sur le
+marqueur visé. Les cinq portes du niveau pointent sur `../../Salle/Sortie` — déplacer le
+marqueur dans la scène de salle suffit désormais, sans toucher au niveau. Les positions
+authorées ont été remises en accord avec les marqueurs pour que l'éditeur ne mente pas.
+
+Vérifié en jeu, Rodolphe vaincu, Glooby posé sur le sol de l'arène et touche « droite »
+maintenue (vraies entrées, pas de téléportation) :
+
+```
+portes : Sanctuaire / Galerie / Puits / Caverne / ArenBoss -> toutes calées sur leur marqueur
+t=1,0s : (10161, 480)  ← marche sur le sol de l'arène
+t=2,0s : (10792, 575)  ← dans le Jardin
+```
+
 ## Reste à faire / à l'œil
 
 - **Play-test manuel** (`godot res://scenes/niveaux/ReindeerBoss.tscn`) : vérifier le calage
