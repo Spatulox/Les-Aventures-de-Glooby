@@ -142,12 +142,6 @@ PvBoss = 40
 [node name="C26" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="24" unique_id=1339672554]
 position = Vector2(23.5, 400)
 
-[node name="C29" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="26" unique_id=1444482630]
-position = Vector2(23.5, 432)
-
-[node name="C35" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="28" unique_id=1122533943]
-position = Vector2(23.5, 475)
-
 [node name="Interactifs" type="Node2D" parent="ArenBoss" unique_id=1978714151]
 
 [node name="Entree" parent="ArenBoss/Interactifs" unique_id=1486611322 instance=ExtResource("entree")]

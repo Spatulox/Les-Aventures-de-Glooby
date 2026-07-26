@@ -34,118 +34,31 @@
 size = Vector2(1856, 46)
 
 [sub_resource type="RectangleShape2D" id="s2"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s4"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s5"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s6"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s7"]
-size = Vector2(64, 32)
+size = Vector2(79, 707)
 
 [sub_resource type="RectangleShape2D" id="s8"]
 size = Vector2(121, 30)
 
-[sub_resource type="RectangleShape2D" id="s9"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s10"]
-size = Vector2(64, 32)
-
 [sub_resource type="RectangleShape2D" id="s11"]
 size = Vector2(222.71423, 26)
-
-[sub_resource type="RectangleShape2D" id="s12"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s13"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s15"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s16"]
-size = Vector2(64, 32)
 
 [sub_resource type="RectangleShape2D" id="s17"]
 size = Vector2(224, 60)
 
-[sub_resource type="RectangleShape2D" id="s18"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s19"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s22"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s23"]
-size = Vector2(64, 32)
-
 [sub_resource type="RectangleShape2D" id="s24"]
 size = Vector2(224, 59)
-
-[sub_resource type="RectangleShape2D" id="s25"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s26"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s28"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s29"]
-size = Vector2(64, 32)
 
 [sub_resource type="RectangleShape2D" id="s30"]
 size = Vector2(224, 58)
 
-[sub_resource type="RectangleShape2D" id="s31"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s32"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s35"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s36"]
-size = Vector2(64, 32)
-
 [sub_resource type="RectangleShape2D" id="s37"]
 size = Vector2(207.95453, 59)
-
-[sub_resource type="RectangleShape2D" id="s38"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s39"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s41"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s42"]
-size = Vector2(64, 32)
 
 [sub_resource type="RectangleShape2D" id="s43"]
 size = Vector2(224, 56)
 
-[sub_resource type="RectangleShape2D" id="s44"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s45"]
-size = Vector2(45, 32)
-
-[sub_resource type="RectangleShape2D" id="s49"]
-size = Vector2(96, 32)
-
 [sub_resource type="RectangleShape2D" id="s50"]
-size = Vector2(45, 55)
+size = Vector2(45, 525)
 
 [sub_resource type="RectangleShape2D" id="s51"]
 size = Vector2(192, 69)
@@ -153,38 +66,20 @@ size = Vector2(192, 69)
 [sub_resource type="RectangleShape2D" id="s52"]
 size = Vector2(224, 57)
 
-[sub_resource type="RectangleShape2D" id="s53"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s56"]
-size = Vector2(96, 32)
-
 [sub_resource type="RectangleShape2D" id="s57"]
 size = Vector2(524, 59)
 
 [sub_resource type="RectangleShape2D" id="s58"]
 size = Vector2(557, 60)
 
-[sub_resource type="RectangleShape2D" id="s59"]
-size = Vector2(96, 32)
-
 [sub_resource type="RectangleShape2D" id="s60"]
 size = Vector2(1312, 14)
-
-[sub_resource type="RectangleShape2D" id="s61"]
-size = Vector2(96, 32)
 
 [sub_resource type="RectangleShape2D" id="s62"]
 size = Vector2(1312, 32)
 
-[sub_resource type="RectangleShape2D" id="s63"]
-size = Vector2(96, 32)
-
 [sub_resource type="RectangleShape2D" id="s64"]
 size = Vector2(1312, 32)
-
-[sub_resource type="RectangleShape2D" id="s65"]
-size = Vector2(96, 32)
 
 [node name="Sanctuaire" type="Node2D" unique_id=124651202]
 
@@ -326,161 +221,45 @@ position = Vector2(928, 23)
 shape = SubResource("s1")
 
 [node name="C1" type="CollisionShape2D" parent="Sol" unique_id=1463352677]
-position = Vector2(2000, 16)
+position = Vector2(2008.5, 353.5)
 shape = SubResource("s2")
-
-[node name="C3" type="CollisionShape2D" parent="Sol" unique_id=580057237]
-position = Vector2(2000, 48)
-shape = SubResource("s4")
-
-[node name="C4" type="CollisionShape2D" parent="Sol" unique_id=227840402]
-position = Vector2(32, 80)
-shape = SubResource("s5")
-
-[node name="C5" type="CollisionShape2D" parent="Sol" unique_id=2014434207]
-position = Vector2(2000, 80)
-shape = SubResource("s6")
-
-[node name="C6" type="CollisionShape2D" parent="Sol" unique_id=379614378]
-position = Vector2(32, 112)
-shape = SubResource("s7")
 
 [node name="C7" type="CollisionShape2D" parent="Sol" unique_id=774684703]
 position = Vector2(1775.5, 130)
 shape = SubResource("s8")
-
-[node name="C8" type="CollisionShape2D" parent="Sol" unique_id=2105906668]
-position = Vector2(2000, 112)
-shape = SubResource("s9")
-
-[node name="C9" type="CollisionShape2D" parent="Sol" unique_id=918377540]
-position = Vector2(32, 148)
-shape = SubResource("s10")
 
 [node name="C10" type="CollisionShape2D" parent="Sol" unique_id=2038077759]
 position = Vector2(1808.54, 160)
 scale = Vector2(0.84000003, 1)
 shape = SubResource("s11")
 
-[node name="C11" type="CollisionShape2D" parent="Sol" unique_id=602417330]
-position = Vector2(2000, 144)
-shape = SubResource("s12")
-
-[node name="C12" type="CollisionShape2D" parent="Sol" unique_id=292078410]
-position = Vector2(32, 176)
-shape = SubResource("s13")
-
-[node name="C14" type="CollisionShape2D" parent="Sol" unique_id=822886975]
-position = Vector2(2000, 176)
-shape = SubResource("s15")
-
-[node name="C15" type="CollisionShape2D" parent="Sol" unique_id=1386717201]
-position = Vector2(32, 208)
-shape = SubResource("s16")
-
 [node name="C16" type="CollisionShape2D" parent="Sol" unique_id=353447994]
 position = Vector2(1776, 208)
 scale = Vector2(0.8399805, 1)
 shape = SubResource("s17")
-
-[node name="C17" type="CollisionShape2D" parent="Sol" unique_id=2142026012]
-position = Vector2(2000, 208)
-shape = SubResource("s18")
-
-[node name="C18" type="CollisionShape2D" parent="Sol" unique_id=1179111717]
-position = Vector2(32, 240)
-shape = SubResource("s19")
-
-[node name="C21" type="CollisionShape2D" parent="Sol" unique_id=961277454]
-position = Vector2(2000, 240)
-shape = SubResource("s22")
-
-[node name="C22" type="CollisionShape2D" parent="Sol" unique_id=698325469]
-position = Vector2(32, 272)
-shape = SubResource("s23")
 
 [node name="C23" type="CollisionShape2D" parent="Sol" unique_id=924677917]
 position = Vector2(1520, 272.5)
 scale = Vector2(0.84000003, 1)
 shape = SubResource("s24")
 
-[node name="C24" type="CollisionShape2D" parent="Sol" unique_id=320047086]
-position = Vector2(2000, 272)
-shape = SubResource("s25")
-
-[node name="C25" type="CollisionShape2D" parent="Sol" unique_id=620490085]
-position = Vector2(32, 304)
-shape = SubResource("s26")
-
-[node name="C27" type="CollisionShape2D" parent="Sol" unique_id=1131456109]
-position = Vector2(2000, 304)
-shape = SubResource("s28")
-
-[node name="C28" type="CollisionShape2D" parent="Sol" unique_id=412634277]
-position = Vector2(32, 336)
-shape = SubResource("s29")
-
 [node name="C29" type="CollisionShape2D" parent="Sol" unique_id=1845288747]
 position = Vector2(1712, 337)
 scale = Vector2(0.84000975, 1)
 shape = SubResource("s30")
-
-[node name="C30" type="CollisionShape2D" parent="Sol" unique_id=300875004]
-position = Vector2(2000, 336)
-shape = SubResource("s31")
-
-[node name="C31" type="CollisionShape2D" parent="Sol" unique_id=139558584]
-position = Vector2(32, 368)
-shape = SubResource("s32")
-
-[node name="C34" type="CollisionShape2D" parent="Sol" unique_id=1663652360]
-position = Vector2(2000, 368)
-shape = SubResource("s35")
-
-[node name="C35" type="CollisionShape2D" parent="Sol" unique_id=1468840738]
-position = Vector2(32, 400)
-shape = SubResource("s36")
 
 [node name="C36" type="CollisionShape2D" parent="Sol" unique_id=1293016100]
 position = Vector2(1457, 399)
 scale = Vector2(0.88, 1)
 shape = SubResource("s37")
 
-[node name="C37" type="CollisionShape2D" parent="Sol" unique_id=2016883514]
-position = Vector2(2000, 400)
-shape = SubResource("s38")
-
-[node name="C38" type="CollisionShape2D" parent="Sol" unique_id=277285442]
-position = Vector2(32, 432)
-shape = SubResource("s39")
-
-[node name="C40" type="CollisionShape2D" parent="Sol" unique_id=1751162431]
-position = Vector2(2000, 432)
-shape = SubResource("s41")
-
-[node name="C41" type="CollisionShape2D" parent="Sol" unique_id=878875316]
-position = Vector2(32, 464)
-shape = SubResource("s42")
-
 [node name="C42" type="CollisionShape2D" parent="Sol" unique_id=1596349839]
 position = Vector2(1680, 465)
 scale = Vector2(0.83582485, 1)
 shape = SubResource("s43")
 
-[node name="C43" type="CollisionShape2D" parent="Sol" unique_id=1888312384]
-position = Vector2(2000, 464)
-shape = SubResource("s44")
-
-[node name="C44" type="CollisionShape2D" parent="Sol" unique_id=1129853298]
-position = Vector2(22.5, 496)
-shape = SubResource("s45")
-
-[node name="C48" type="CollisionShape2D" parent="Sol" unique_id=1900074712]
-position = Vector2(2000, 496)
-shape = SubResource("s49")
-
 [node name="C49" type="CollisionShape2D" parent="Sol" unique_id=1040405058]
-position = Vector2(22.5, 539.5)
+position = Vector2(22.5, 304.5)
 shape = SubResource("s50")
 
 [node name="C50" type="CollisionShape2D" parent="Sol" unique_id=676370183]
@@ -493,14 +272,6 @@ position = Vector2(1424, 526.5)
 scale = Vector2(0.84000003, 1)
 shape = SubResource("s52")
 
-[node name="C52" type="CollisionShape2D" parent="Sol" unique_id=793662779]
-position = Vector2(2000, 528)
-shape = SubResource("s53")
-
-[node name="C55" type="CollisionShape2D" parent="Sol" unique_id=1258978224]
-position = Vector2(2000, 560)
-shape = SubResource("s56")
-
 [node name="C56" type="CollisionShape2D" parent="Sol" unique_id=1586298418]
 position = Vector2(262, 596.5)
 shape = SubResource("s57")
@@ -509,33 +280,17 @@ shape = SubResource("s57")
 position = Vector2(1033.5, 595)
 shape = SubResource("s58")
 
-[node name="C58" type="CollisionShape2D" parent="Sol" unique_id=1394234262]
-position = Vector2(2000, 592)
-shape = SubResource("s59")
-
 [node name="C59" type="CollisionShape2D" parent="Sol" unique_id=1943755724]
 position = Vector2(656, 633)
 shape = SubResource("s60")
-
-[node name="C60" type="CollisionShape2D" parent="Sol" unique_id=1456970947]
-position = Vector2(2000, 624)
-shape = SubResource("s61")
 
 [node name="C61" type="CollisionShape2D" parent="Sol" unique_id=1313259495]
 position = Vector2(656, 656)
 shape = SubResource("s62")
 
-[node name="C62" type="CollisionShape2D" parent="Sol" unique_id=527959807]
-position = Vector2(2000, 656)
-shape = SubResource("s63")
-
 [node name="C63" type="CollisionShape2D" parent="Sol" unique_id=227778790]
 position = Vector2(656, 688)
 shape = SubResource("s64")
-
-[node name="C64" type="CollisionShape2D" parent="Sol" unique_id=571336760]
-position = Vector2(2000, 688)
-shape = SubResource("s65")
 
 [node name="PlateformeGivre1" parent="Sol" unique_id=910700073 instance=ExtResource("8_32g6j")]
 position = Vector2(1555.9999, 502.00003)
@@ -776,14 +531,14 @@ texture = ExtResource("t7")
 [node name="A2" type="Sprite2D" parent="DecorAvant" unique_id=356744670]
 modulate = Color(0.16, 0.18, 0.26, 1)
 z_index = 39
-position = Vector2(-28.999992, 537.00006)
+position = Vector2(-46.000015, 605)
 scale = Vector2(1.3, 1.3)
 texture = ExtResource("t17")
 
 [node name="A3" type="Sprite2D" parent="DecorAvant" unique_id=245813632]
 modulate = Color(0.16, 0.18, 0.26, 1)
 z_index = 50
-position = Vector2(1920, 597)
+position = Vector2(1924.0001, 598.00006)
 scale = Vector2(1.3, 1.3)
 texture = ExtResource("t17")
 flip_h = true
