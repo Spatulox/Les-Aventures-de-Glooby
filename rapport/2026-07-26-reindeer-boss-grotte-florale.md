@@ -153,11 +153,24 @@ Les trois PNG de `assets/ui/boss/` font **642×159** pour un viewport de **640×
 prenait toute la largeur et 44 % de la hauteur. Jamais vu jusqu'ici, faute de `ZoneBoss` posée
 en scène.
 
-`scenes/ui/boss_hud_barre.tscn` : `Barre` passe en `scale = (0.5, 0.5)` calée à (160, 6) —
-soit **321×80 à l'écran, 50 % de la largeur et 22 % de la hauteur**, centrée en haut. Le label
-`NomBoss` suit (font 12 au lieu de 18, contour 3, centré sur la jauge interne). Aucun code
-touché : `BossHudBarre` ne gère pas la mise en page. Pour ajuster encore, un seul curseur —
-le `scale` du nœud `Barre` (0.4 → 257×64).
+`scenes/ui/boss_hud_barre.tscn` : `Barre` passe en `scale = (0.25, 0.25)` calée à (240, 6) —
+soit **160×40 à l'écran, 25 % de la largeur et 11 % de la hauteur**, centrée en haut (jauge
+interne x 259..382, y 18..34). Le label `NomBoss` suit (font 8, contour 2). Aucun code touché :
+`BossHudBarre` ne gère pas la mise en page. Un seul curseur pour ajuster : le `scale` du nœud
+`Barre`.
+
+## Props qui volent — décor de parallaxe vs espace monde
+
+Trois éléments posés à la main (`PlateformeGlace`, `PlateformeGlace2`, `PanneauBois`) vivaient
+dans `CaverneCristalline/DecorAvant`, c'est-à-dire **dans un `Parallax2D`** (`scroll_scale`
+1.15) : ils défilaient 15 % plus vite que le sol. Invisible dans l'éditeur, où rien ne défile.
+Remontés à la racine de la salle **à coordonnées identiques** (la couche est à (0, 0), donc le
+rendu éditeur ne bouge pas), ils sont désormais solidaires du terrain.
+
+`RecalageParallaxe` avertit maintenant au lancement dès qu'un nœud à collision se trouve dans
+une couche de parallaxe, en donnant son chemin — c'est ce qui a permis de les trouver. Règle :
+un prop se met sous le **nœud de lieu** (`Sanctuaire`, `Galerie`…) ou sous `Salle/DecorBord`
+(un `Node2D`, espace monde), jamais dans `Fond` / `DecorFar` / `DecorMid` / `DecorAvant`.
 
 ## Reste à faire / à l'œil
 

@@ -42,6 +42,8 @@ public partial class RecalageParallaxe : Node
 				var ancrage = (couche.GetParent() as Node2D)?.GlobalPosition ?? Vector2.Zero;
 				if (ancrage != Vector2.Zero)
 					Decaler(couche, -ancrage * (Vector2.One - couche.ScrollScale));
+
+				VerifierContenu(couche);
 				continue;   // une couche de parallaxe ne contient pas d'autre couche
 			}
 
@@ -59,5 +61,18 @@ public partial class RecalageParallaxe : Node
 		foreach (var enfant in couche.GetChildren())
 			if (enfant is Node2D visuel)
 				visuel.Position += decalage;
+	}
+
+	// Une couche de parallaxe ne contient QUE du décor peint : elle défile à une autre
+	// vitesse que le monde, donc tout ce qui doit rester solidaire du sol (plateforme,
+	// panneau, piège...) y « vole ». Le cas est invisible dans l'éditeur, où rien ne
+	// défile - d'où cet avertissement au lancement, qui nomme le fautif.
+	private static void VerifierContenu(Parallax2D couche)
+	{
+		foreach (var enfant in couche.GetChildren())
+			if (enfant is CollisionObject2D)
+				GD.PushWarning($"RecalageParallaxe : '{enfant.Name}' porte une collision mais vit dans "
+					+ $"la couche de parallaxe '{couche.GetPath()}' - il défilera à côté du sol. "
+					+ "À déplacer sous le nœud de lieu (ou sous Salle/DecorBord).");
 	}
 }

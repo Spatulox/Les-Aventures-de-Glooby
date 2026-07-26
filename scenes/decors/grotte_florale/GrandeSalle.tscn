@@ -119,7 +119,7 @@ size = Vector2(224, 58)
 size = Vector2(256, 66)
 
 [sub_resource type="RectangleShape2D" id="s41"]
-size = Vector2(96, 32)
+size = Vector2(96, 55)
 
 [sub_resource type="RectangleShape2D" id="s44"]
 size = Vector2(973, 62)
@@ -366,7 +366,7 @@ scale = Vector2(0.84000975, 1)
 shape = SubResource("s40")
 
 [node name="C40" type="CollisionShape2D" parent="Sol" unique_id=1794772160]
-position = Vector2(2192, 464)
+position = Vector2(2192, 475.5)
 shape = SubResource("s41")
 
 [node name="C43" type="CollisionShape2D" parent="Sol" unique_id=1523795227]
@@ -421,11 +421,6 @@ texture = ExtResource("t4")
 z_index = -1
 position = Vector2(480, 410)
 texture = ExtResource("t4")
-
-[node name="G8" type="Sprite2D" parent="DecorBord" unique_id=2039456986]
-z_index = -1
-position = Vector2(2080, 66)
-texture = ExtResource("t3")
 
 [node name="B1" type="Sprite2D" parent="DecorBord" unique_id=46194457]
 z_index = 1
@@ -504,12 +499,6 @@ scale = Vector2(0.7, 0.7)
 texture = ExtResource("t8")
 flip_h = true
 
-[node name="B13" type="Sprite2D" parent="DecorBord" unique_id=1160636706]
-z_index = 2
-position = Vector2(2080, 65)
-scale = Vector2(0.9, 0.9)
-texture = ExtResource("t10")
-
 [node name="B14" type="Sprite2D" parent="DecorBord" unique_id=84362859]
 z_index = 2
 position = Vector2(192, 498)
@@ -556,8 +545,8 @@ texture = ExtResource("t11")
 
 [node name="A2" type="Sprite2D" parent="DecorAvant" unique_id=48487948]
 modulate = Color(0.16, 0.18, 0.26, 1)
-z_index = 50
-position = Vector2(2112, 540)
+z_index = -52
+position = Vector2(2016, 519)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("t11")
 flip_h = true
@@ -569,5 +558,19 @@ IdCheckpoint = "grande"
 [node name="OursDeNeige" parent="." unique_id=160782261 instance=ExtResource("pO")]
 position = Vector2(1556, 460)
 
-[node name="Sortie" type="Marker2D" parent="." unique_id=1176838423]
-position = Vector2(2080, 64)
+[node name="Sortie" type="Node2D" parent="." unique_id=519654873]
+position = Vector2(2097, 460)
+
+[node name="G8" type="Sprite2D" parent="Sortie" unique_id=2039456986]
+z_index = -1
+position = Vector2(-5, 1)
+texture = ExtResource("t3")
+
+[node name="B13" type="Sprite2D" parent="Sortie" unique_id=1160636706]
+z_index = 2
+position = Vector2(-5, 0)
+scale = Vector2(0.9, 0.9)
+texture = ExtResource("t10")
+
+[node name="Sortie" type="Marker2D" parent="Sortie" unique_id=1176838423]
+position = Vector2(-5, -1)

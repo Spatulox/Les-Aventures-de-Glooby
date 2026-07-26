@@ -640,18 +640,18 @@ scale = Vector2(1.3, 1.3)
 texture = ExtResource("t12")
 flip_h = true
 
-[node name="PlateformeGlace" parent="DecorAvant" unique_id=1692231335 instance=ExtResource("19_5yydb")]
+[node name="PlateformeGlace" parent="." unique_id=1692231335 instance=ExtResource("19_5yydb")]
 z_index = -25
 position = Vector2(1844, 293)
 DureeVie = 0.0
 
-[node name="PanneauBois" parent="DecorAvant" unique_id=197425152 instance=ExtResource("20_a7x72")]
+[node name="PanneauBois" parent="." unique_id=197425152 instance=ExtResource("20_a7x72")]
 position = Vector2(1664.0001, 340.99994)
 rotation = -0.82030475
 scale = Vector2(0.525, 0.525)
 Type = 3
 
-[node name="PlateformeGlace2" parent="DecorAvant" unique_id=110698086 instance=ExtResource("19_5yydb")]
+[node name="PlateformeGlace2" parent="." unique_id=110698086 instance=ExtResource("19_5yydb")]
 position = Vector2(1669, 214)
 DureeVie = 0.0
 
