@@ -208,6 +208,21 @@ public partial class Player : LivingEntity
 		var dt = (float)delta;
 		var velocity = Velocity;
 
+		// Conversation à choix en cours : le joueur ne joue plus, ses touches
+		// pilotent la liste de réponses (cf. GameState.DialogueModal). On sort AVANT
+		// toute lecture d'entrée — ce seul garde neutralise saut, glissade, lancer,
+		// pouvoirs et traversée de plateforme. Gravité + MoveAndSlide sont conservés
+		// pour qu'il reste posé au sol au lieu de flotter.
+		if (GameState.Instance.DialogueModal)
+		{
+			AppliquerGravite(ref velocity, dt);
+			velocity.X = 0f;
+			Velocity = velocity;
+			MoveAndSlide();
+			MettreAJourAnimation(IsOnFloor(), 0f);
+			return;
+		}
+
 		var auSol = IsOnFloor();
 		_coyoteTimer = auSol ? CoyoteTime : Mathf.Max(0f, _coyoteTimer - dt);
 
