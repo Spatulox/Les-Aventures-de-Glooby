@@ -19,7 +19,7 @@
 [ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/touffe_bord.png" id="t17"]
 [ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/touffe_bord_b.png" id="t18"]
 [ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="pP"]
-[ext_resource type="PackedScene" path="res://scenes/entites/fonceur.tscn" id="pF"]
+[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="pS"]
 
@@ -578,7 +578,7 @@ texture = ExtResource("t12")
 position = Vector2(160, 562)
 IdCheckpoint = "caverne"
 
-[node name="Fonceur" parent="." instance=ExtResource("pF")]
+[node name="OursDeNeige" parent="." instance=ExtResource("pO")]
 position = Vector2(512, 560)
 
 [node name="StalactitePiege" parent="." instance=ExtResource("pS")]

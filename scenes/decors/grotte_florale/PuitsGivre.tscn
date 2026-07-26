@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://jki8u4nckct0"]
 
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
-[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/entites/fonceur.tscn" id="pF"]
+[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="pP"]
 [ext_resource type="Texture2D" uid="uid://djeajqlr4lc7r" path="res://assets/decors/grotte_florale/puits/fond.png" id="t1"]
 [ext_resource type="Texture2D" uid="uid://d33jfcoyyah3u" path="res://assets/decors/grotte_florale/puits/terrain.png" id="t2"]
@@ -870,7 +870,7 @@ scroll_scale = Vector2(1.15, 1.06)
 position = Vector2(224, 1010)
 IdCheckpoint = "puits"
 
-[node name="Fonceur" parent="." unique_id=108704823 instance=ExtResource("pF")]
+[node name="OursDeNeige" parent="." unique_id=108704823 instance=ExtResource("pO")]
 position = Vector2(576, 656)
 
 [node name="Sortie" type="Marker2D" parent="." unique_id=1303272556]

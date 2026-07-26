@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://klvrruyqhh88"]
 
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
-[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/entites/fonceur.tscn" id="pF"]
+[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="pP"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="pS"]
 [ext_resource type="Texture2D" uid="uid://c8dcokcvpk7d3" path="res://assets/decors/grotte_florale/galerie/fond.png" id="t1"]
@@ -591,7 +591,7 @@ flip_h = true
 position = Vector2(160, 434)
 IdCheckpoint = "galerie"
 
-[node name="Fonceur" parent="." unique_id=1378514941 instance=ExtResource("pF")]
+[node name="OursDeNeige" parent="." unique_id=1378514941 instance=ExtResource("pO")]
 position = Vector2(1056, 432)
 
 [node name="StalactitePiege" parent="." unique_id=1329653647 instance=ExtResource("pS")]
