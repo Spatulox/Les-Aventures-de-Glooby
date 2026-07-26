@@ -14,7 +14,6 @@
 [ext_resource type="Resource" uid="uid://brk0m24hh3ybq" path="res://assets/dialogues/banquise_fin_lutin_cgt.tres" id="60_dlgcgt"]
 [ext_resource type="Texture2D" uid="uid://d1x48h11kcry7" path="res://assets/props/tas_neige/tas_neige_b.png" id="62_v2sbg"]
 [ext_resource type="Texture2D" uid="uid://cnar0j6pp2oii" path="res://assets/props/poisson.png" id="63_v2sbg"]
-[ext_resource type="Texture2D" uid="uid://c5d5j6vgunm1q" path="res://assets/props/grotte/toile_givre.png" id="64_kqdy7"]
 [ext_resource type="Texture2D" uid="uid://hoeyfknx78n5" path="res://assets/props/noel/sapin_grand.png" id="65_nyqwg"]
 [ext_resource type="Texture2D" uid="uid://cfafajwqshgwh" path="res://assets/props/grotte/glace_empilee.png" id="66_e3dtk"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
@@ -1080,11 +1079,6 @@ rotation = -3.1415925
 scale = Vector2(3.6170883, 4.925616)
 texture = ExtResource("20_hau0f")
 
-[node name="ToileGivre" type="Sprite2D" parent="Grotte/Decor" unique_id=269302164]
-position = Vector2(2919.0002, 1105)
-scale = Vector2(6.275, 6.1)
-texture = ExtResource("64_kqdy7")
-
 [node name="VeineCristalMur" type="Sprite2D" parent="Grotte/Decor" unique_id=968063961]
 z_index = -3
 position = Vector2(3770, 1137)
@@ -1211,12 +1205,6 @@ texture = ExtResource("20_hau0f")
 [node name="Congere" type="Sprite2D" parent="Grotte/Decor" unique_id=917963467]
 position = Vector2(2794, 853)
 texture = ExtResource("g_congere")
-
-[node name="FissureLumineuse" type="Sprite2D" parent="Grotte/Decor" unique_id=2124993980]
-z_index = -3
-position = Vector2(4645.0005, 626.99994)
-scale = Vector2(6.875, 8.9375)
-texture = ExtResource("g_fissure")
 
 [node name="Glace1" parent="Grotte/Decor" unique_id=1402786529 instance=ExtResource("g_glace")]
 z_index = -1
