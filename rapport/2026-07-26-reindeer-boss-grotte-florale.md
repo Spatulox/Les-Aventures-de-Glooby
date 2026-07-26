@@ -32,11 +32,30 @@ comme `DecorGrotteDemo` / `DemoUsine`.
 Un seul `Joueur`, un `BossHudBarre`, un `MenuPause`. Zones en `Type = Souterrain` (pas de
 blizzard) et `NomAmbiance = "grotte"` / `"boss_cerf"` pour l'arène.
 
-**Recalage des parallaxes, côté niveau uniquement.** Un `Parallax2D` se place depuis la
-caméra (`−camX × scroll_scale`) : une salle posée à `dx` verrait son fond dériver d'autant.
-Corrigé par **override d'instance** (`[editable path=...]` + `scroll_offset.x = dx ×
-scroll_scale.x`) sur les 4 couches de chaque salle — les `.tscn` de salle ne sont pas touchés.
-Ex. arène : `Fond` 2438.4, `DecorFar` 4064, `DecorMid` 5039.36, `DecorAvant` 9347.2.
+**Recalage des parallaxes — `RecalageParallaxe` (nouveau, réutilisable).**
+Première approche (des `scroll_offset` écrits en dur dans le niveau) : **fausse deux fois**.
+`Parallax2D` réécrit `scroll_offset` à chaque frame, donc le réglage était effacé en jeu ; et
+l'éditeur, qui n'a pas de caméra, l'appliquait tel quel — d'où les props envoyés très loin à
+droite dans `ReindeerBoss.tscn` alors que les salles seules étaient correctes.
+
+Comportement réel mesuré : `position = screen_offset × (1 − ScrollScale)`, en coordonnées
+monde, **et** la transform du parent s'applique par-dessus. Le décalage correct vaut donc
+`−ancrage × (1 − ScrollScale)`, appliqué aux **enfants** de la couche (les seuls que
+`Parallax2D` ne réécrit pas).
+
+`scripts/Core/RecalageParallaxe.cs` + `scenes/core/recalage_parallaxe.tscn` : un nœud à
+déposer sous la racine du niveau, qui traite tous les `Parallax2D` de ses frères au `_Ready`.
+Les 20 `scroll_offset` du niveau ont disparu, ainsi que les `[editable path]` qui n'existaient
+que pour eux — **l'éditeur remontre chaque salle telle qu'elle est authorée**, et déplacer une
+salle ne demande plus aucun recalcul.
+
+Vérification différentielle (Galerie, caméra au même point de la salle) — position monde
+relative à la salle, salle seule puis dans le niveau :
+
+```
+Fond 1628,5 | DecorFar 1085,1 | DecorMid 805,4 | DecorAvant 47,2   (salle seule)
+Fond 1628,5 | DecorFar 1085,1 | DecorMid 805,4 | DecorAvant 47,2   (dans ReindeerBoss)
+```
 
 **`PorteInterne` (nouveau, réutilisable).** `scripts/Core/PorteInterne.cs` +
 `scenes/core/porte_interne.tscn` : pendant intra-scène de `ZoneChargementScene`. Téléporte le
@@ -127,6 +146,18 @@ joueur (design documenté) — d'où son absence dans l'éditeur, qui est normal
 le monde) : l'override posé sur l'instance était perdu à chaque sauvegarde de l'éditeur, et
 le jeu repartait sur `ecran_fin.tscn` sitôt Rodolphe tombé. Un boss qui doit terminer la
 partie renseigne désormais explicitement le chemin.
+
+## Barre de vie du boss trop grande
+
+Les trois PNG de `assets/ui/boss/` font **642×159** pour un viewport de **640×360** : le cadre
+prenait toute la largeur et 44 % de la hauteur. Jamais vu jusqu'ici, faute de `ZoneBoss` posée
+en scène.
+
+`scenes/ui/boss_hud_barre.tscn` : `Barre` passe en `scale = (0.5, 0.5)` calée à (160, 6) —
+soit **321×80 à l'écran, 50 % de la largeur et 22 % de la hauteur**, centrée en haut. Le label
+`NomBoss` suit (font 12 au lieu de 18, contour 3, centré sur la jauge interne). Aucun code
+touché : `BossHudBarre` ne gère pas la mise en page. Pour ajuster encore, un seul curseur —
+le `scale` du nœud `Barre` (0.4 → 257×64).
 
 ## Reste à faire / à l'œil
 

@@ -2,6 +2,10 @@
 
 [ext_resource type="PackedScene" uid="uid://cc554bace5c53" path="res://scenes/plateformes/PlateformeGlace.tscn" id="5_ak6ja"]
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="6_8loph"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/BulbeExplosif.tscn" id="7_0u4hw"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/GardienRonces.tscn" id="8_wj7rl"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/FleurCarnivore.tscn" id="9_uua21"]
+[ext_resource type="PackedScene" uid="uid://21qfi1kw4uu" path="res://scenes/ennemis/BonhommeDeNeige.tscn" id="20_7vocy"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
 [ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
 [ext_resource type="Texture2D" uid="uid://djeajqlr4lc7r" path="res://assets/decors/grotte_florale/puits/fond.png" id="t1"]
@@ -643,6 +647,18 @@ rotation = -0.49741885
 scale = Vector2(0.57, 0.57)
 Type = 3
 
+[node name="BulbeExplosif" parent="Sol" unique_id=1150993006 instance=ExtResource("7_0u4hw")]
+position = Vector2(617, 981)
+
+[node name="GardienRonces" parent="Sol" unique_id=832360000 instance=ExtResource("8_wj7rl")]
+position = Vector2(743, 978)
+
+[node name="FleurCarnivore" parent="Sol" unique_id=198761626 instance=ExtResource("9_uua21")]
+position = Vector2(-409, 1052)
+
+[node name="FleurCarnivore2" parent="Sol" unique_id=920094518 instance=ExtResource("9_uua21")]
+position = Vector2(214, 520)
+
 [node name="DecorBord" type="Node2D" parent="." unique_id=274422560]
 
 [node name="G1" type="Sprite2D" parent="DecorBord" unique_id=1672595073]
@@ -803,3 +819,6 @@ position = Vector2(576, 627)
 
 [node name="Sortie" type="Marker2D" parent="." unique_id=1303272556]
 position = Vector2(832, 64)
+
+[node name="BonhommeDeNeige" parent="." unique_id=153493064 instance=ExtResource("20_7vocy")]
+position = Vector2(340, 144)

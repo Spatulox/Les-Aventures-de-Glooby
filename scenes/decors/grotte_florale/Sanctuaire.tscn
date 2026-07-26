@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cc554bace5c53" path="res://scenes/plateformes/PlateformeGlace.tscn" id="8_32g6j"]
 [ext_resource type="PackedScene" uid="uid://kjhdxmbys0gl" path="res://scenes/core/zone_chargement_scene.tscn" id="28_cksw3"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/FleurCarnivore.tscn" id="29_hsjwj"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
 [ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="pS"]
@@ -804,3 +805,6 @@ position = Vector2(1920, 96)
 position = Vector2(65, 471)
 CheminSceneSuivante = "uid://67grwk8edwci"
 PointEntreeCible = "monde1End"
+
+[node name="FleurCarnivore" parent="." unique_id=2063007804 instance=ExtResource("29_hsjwj")]
+position = Vector2(913, 526)

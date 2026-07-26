@@ -8,9 +8,11 @@
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/core/porte_interne.tscn" id="porte"]
+[ext_resource type="PackedScene" path="res://scenes/core/recalage_parallaxe.tscn" id="recalage"]
 [ext_resource type="PackedScene" uid="uid://6uey8iexsnrv" path="res://scenes/decors/grotte_florale/CaverneCristalline.tscn" id="salle_cavernecristalline"]
 [ext_resource type="PackedScene" uid="uid://klvrruyqhh88" path="res://scenes/decors/grotte_florale/GalerieGelee.tscn" id="salle_galeriegelee"]
 [ext_resource type="PackedScene" uid="uid://crhj5wew8ccsx" path="res://scenes/decors/grotte_florale/GrandeSalle.tscn" id="salle_grandesalle"]
+[ext_resource type="PackedScene" uid="uid://beg75xoad1vmg" path="res://scenes/decors/grotte_florale/JardinGrotte.tscn" id="salle_jardingrotte"]
 [ext_resource type="PackedScene" uid="uid://jki8u4nckct0" path="res://scenes/decors/grotte_florale/PuitsGivre.tscn" id="salle_puitsgivre"]
 [ext_resource type="PackedScene" uid="uid://lbswtl10yrkt" path="res://scenes/decors/grotte_florale/Sanctuaire.tscn" id="salle_sanctuaire"]
 [ext_resource type="PackedScene" path="res://scenes/boss/zone_boss_cerf.tscn" id="zoneboss"]
@@ -59,18 +61,6 @@ Type = 1
 
 [node name="Salle" parent="Galerie" unique_id=578693259 instance=ExtResource("salle_galeriegelee")]
 
-[node name="Fond" parent="Galerie/Salle" index="1" unique_id=950516003]
-scroll_offset = Vector2(691.2, 0)
-
-[node name="DecorFar" parent="Galerie/Salle" index="2" unique_id=937552327]
-scroll_offset = Vector2(1152, 0)
-
-[node name="DecorMid" parent="Galerie/Salle" index="3" unique_id=1271514764]
-scroll_offset = Vector2(1428.48, 0)
-
-[node name="DecorAvant" parent="Galerie/Salle" index="7" unique_id=856528232]
-scroll_offset = Vector2(2649.6, 0)
-
 [node name="Interactifs" type="Node2D" parent="Galerie" unique_id=1715543352]
 
 [node name="Entree" parent="Galerie/Interactifs" unique_id=657531944 instance=ExtResource("entree")]
@@ -79,6 +69,7 @@ Id = "galerie"
 
 [node name="PorteSortie" parent="Galerie/Interactifs" unique_id=835649432 instance=ExtResource("porte")]
 position = Vector2(2048, 64)
+scale = Vector2(1.3857454, 0.6800003)
 IdDestination = "puits"
 
 [node name="Puits" type="Node2D" parent="." unique_id=709671414]
@@ -93,18 +84,6 @@ NomAmbiance = "grotte"
 Type = 1
 
 [node name="Salle" parent="Puits" unique_id=1744855050 instance=ExtResource("salle_puitsgivre")]
-
-[node name="Fond" parent="Puits/Salle" index="1" unique_id=559316169]
-scroll_offset = Vector2(1420.8, 0)
-
-[node name="DecorFar" parent="Puits/Salle" index="2" unique_id=1836797597]
-scroll_offset = Vector2(2368, 0)
-
-[node name="DecorMid" parent="Puits/Salle" index="3" unique_id=1669346213]
-scroll_offset = Vector2(2936.32, 0)
-
-[node name="DecorAvant" parent="Puits/Salle" index="7" unique_id=545219225]
-scroll_offset = Vector2(5446.4, 0)
 
 [node name="Interactifs" type="Node2D" parent="Puits" unique_id=991821378]
 
@@ -129,23 +108,11 @@ Type = 1
 
 [node name="Salle" parent="Caverne" unique_id=1685491796 instance=ExtResource("salle_cavernecristalline")]
 
-[node name="Fond" parent="Caverne/Salle" index="1" unique_id=1608032001]
-scroll_offset = Vector2(1785.6, 0)
-
-[node name="DecorFar" parent="Caverne/Salle" index="2" unique_id=1595392268]
-scroll_offset = Vector2(2976, 0)
-
-[node name="DecorMid" parent="Caverne/Salle" index="3" unique_id=113526093]
-scroll_offset = Vector2(3690.24, 0)
-
-[node name="C41" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="32" unique_id=585606707]
+[node name="C41" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="31" unique_id=585606707]
 position = Vector2(1881, 496)
 
-[node name="C46" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="36" unique_id=1313986370]
+[node name="C46" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="35" unique_id=1313986370]
 position = Vector2(1880, 538.5)
-
-[node name="DecorAvant" parent="Caverne/Salle" index="7" unique_id=1138431475]
-scroll_offset = Vector2(6844.8, 0)
 
 [node name="Interactifs" type="Node2D" parent="Caverne" unique_id=1464526556]
 
@@ -172,29 +139,41 @@ PvBoss = 40
 
 [node name="Salle" parent="ArenBoss" unique_id=412134817 instance=ExtResource("salle_grandesalle")]
 
-[node name="Fond" parent="ArenBoss/Salle" index="1" unique_id=246135231]
-scroll_offset = Vector2(2438.4, 0)
-
-[node name="DecorFar" parent="ArenBoss/Salle" index="2" unique_id=1170042886]
-scroll_offset = Vector2(4064, 0)
-
-[node name="DecorMid" parent="ArenBoss/Salle" index="3" unique_id=2000463453]
-scroll_offset = Vector2(5039.36, 0)
-
 [node name="C29" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="26" unique_id=1444482630]
 position = Vector2(23.5, 432)
 
 [node name="C35" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="28" unique_id=1122533943]
 position = Vector2(23.5, 475)
 
-[node name="DecorAvant" parent="ArenBoss/Salle" index="7" unique_id=449386050]
-scroll_offset = Vector2(9347.2, 0)
-
 [node name="Interactifs" type="Node2D" parent="ArenBoss" unique_id=1978714151]
 
 [node name="Entree" parent="ArenBoss/Interactifs" unique_id=1486611322 instance=ExtResource("entree")]
 position = Vector2(192, 448)
 Id = "grande"
+
+[node name="PorteSortie" parent="ArenBoss/Interactifs" unique_id=1033927479 instance=ExtResource("porte")]
+position = Vector2(2080, 64)
+IdDestination = "jardin"
+BossRequis = "Rodolphe"
+
+[node name="Jardin" type="Node2D" parent="." unique_id=1454712437]
+position = Vector2(10624, 0)
+
+[node name="Camera" type="Node2D" parent="Jardin" unique_id=989173702]
+
+[node name="ZoneJardin" parent="Jardin/Camera" unique_id=699557260 instance=ExtResource("camzone")]
+position = Vector2(896, 352)
+scale = Vector2(7, 2.75)
+NomAmbiance = "grotte"
+Type = 1
+
+[node name="Salle" parent="Jardin" unique_id=1450961454 instance=ExtResource("salle_jardingrotte")]
+
+[node name="Interactifs" type="Node2D" parent="Jardin" unique_id=148874441]
+
+[node name="Entree" parent="Jardin/Interactifs" unique_id=2114286978 instance=ExtResource("entree")]
+position = Vector2(150, 548)
+Id = "jardin"
 
 [node name="Joueur" parent="." unique_id=2016580396 instance=ExtResource("player")]
 position = Vector2(160, 512)
@@ -204,7 +183,7 @@ position = Vector2(160, 512)
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=101310228]
 script = ExtResource("mpause")
 
-[editable path="Galerie/Salle"]
-[editable path="Puits/Salle"]
+[node name="RecalageParallaxe" parent="." unique_id=65139707 instance=ExtResource("recalage")]
+
 [editable path="Caverne/Salle"]
 [editable path="ArenBoss/Salle"]

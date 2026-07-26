@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://klvrruyqhh88"]
 
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/GardienRonces.tscn" id="6_ne87o"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/BulbeExplosif.tscn" id="7_2ohs3"]
 [ext_resource type="PackedScene" uid="uid://cc554bace5c53" path="res://scenes/plateformes/PlateformeGlace.tscn" id="18_vfvgi"]
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="22_0kkhm"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
@@ -97,7 +99,7 @@ size = Vector2(256, 53)
 size = Vector2(256, 54)
 
 [sub_resource type="RectangleShape2D" id="s30"]
-size = Vector2(96, 32)
+size = Vector2(96, 55)
 
 [sub_resource type="RectangleShape2D" id="s31"]
 size = Vector2(64, 52)
@@ -106,7 +108,7 @@ size = Vector2(64, 52)
 size = Vector2(218, 63)
 
 [sub_resource type="RectangleShape2D" id="s35"]
-size = Vector2(96, 32)
+size = Vector2(96, 54)
 
 [sub_resource type="RectangleShape2D" id="s37"]
 size = Vector2(653, 32)
@@ -317,7 +319,7 @@ scale = Vector2(0.84000486, 1)
 shape = SubResource("s29")
 
 [node name="C29" type="CollisionShape2D" parent="Sol" unique_id=1144342455]
-position = Vector2(2128, 368)
+position = Vector2(2128, 356.5)
 shape = SubResource("s30")
 
 [node name="C30" type="CollisionShape2D" parent="Sol" unique_id=117843534]
@@ -329,7 +331,7 @@ position = Vector2(704, 406.5)
 shape = SubResource("s32")
 
 [node name="C34" type="CollisionShape2D" parent="Sol" unique_id=337183980]
-position = Vector2(2128, 400)
+position = Vector2(2128, 411)
 shape = SubResource("s35")
 
 [node name="C36" type="CollisionShape2D" parent="Sol" unique_id=15268388]
@@ -351,6 +353,15 @@ shape = SubResource("s40")
 [node name="C40" type="CollisionShape2D" parent="Sol" unique_id=450990853]
 position = Vector2(1088, 560)
 shape = SubResource("s41")
+
+[node name="GardienRonces" parent="Sol" unique_id=100868562 instance=ExtResource("6_ne87o")]
+position = Vector2(1013, 314)
+
+[node name="GardienRonces2" parent="Sol" unique_id=695144288 instance=ExtResource("6_ne87o")]
+position = Vector2(1927, 406)
+
+[node name="BulbeExplosif" parent="Sol" unique_id=363142857 instance=ExtResource("7_2ohs3")]
+position = Vector2(1257, 412)
 
 [node name="DecorBord" type="Node2D" parent="." unique_id=1480395614]
 
@@ -533,8 +544,8 @@ texture = ExtResource("t12")
 
 [node name="A2" type="Sprite2D" parent="DecorAvant" unique_id=1948818171]
 modulate = Color(0.16, 0.18, 0.26, 1)
-z_index = 50
-position = Vector2(2048, 478)
+z_index = -18
+position = Vector2(2012, 400)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("t12")
 flip_h = true
