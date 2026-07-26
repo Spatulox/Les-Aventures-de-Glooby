@@ -69,6 +69,10 @@ public static class CatalogueActions
 			new[] { Key.Shift }, new[] { JoyButton.X }),
 		new("bas", "Descendre / traverser une plateforme", CategorieAction.Deplacement,
 			new[] { Key.Down }, new[] { JoyButton.DpadDown }, new[] { (JoyAxis.LeftY, 1) }),
+		// Symétrique de "bas", utilisé aujourd'hui par la liste de réponses des
+		// dialogues à choix (haut/bas naviguent, "action" valide).
+		new("haut", "Monter / choix précédent", CategorieAction.Deplacement,
+			new[] { Key.Up }, new[] { JoyButton.DpadUp }, new[] { (JoyAxis.LeftY, -1) }),
 
 		// Actions
 		new("lancer", "Lancer une boule de neige", CategorieAction.Actions,

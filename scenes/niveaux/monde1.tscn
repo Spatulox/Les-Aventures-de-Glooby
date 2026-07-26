@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://s1ycefd1kkcg" path="res://assets/props/grotte/brasero_eteint.png" id="53_a0dla"]
 [ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="55_dejuv"]
 [ext_resource type="PackedScene" uid="uid://civtsuvy2xvd8" path="res://scenes/entites/lutin_cgt.tscn" id="59_0ihna"]
+[ext_resource type="Resource" uid="uid://brk0m24hh3ybq" path="res://assets/dialogues/banquise_fin_lutin_cgt.tres" id="60_dlgcgt"]
 [ext_resource type="Texture2D" uid="uid://d1x48h11kcry7" path="res://assets/props/tas_neige/tas_neige_b.png" id="62_v2sbg"]
 [ext_resource type="Texture2D" uid="uid://cnar0j6pp2oii" path="res://assets/props/poisson.png" id="63_v2sbg"]
 [ext_resource type="Texture2D" uid="uid://c5d5j6vgunm1q" path="res://assets/props/grotte/toile_givre.png" id="64_kqdy7"]
@@ -1328,5 +1329,18 @@ limit_bottom = 400
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
+
+[node name="LutinCgt" parent="." unique_id=1619686424 instance=ExtResource("59_0ihna")]
+position = Vector2(5015, 258)
+Slogan = "35H OU RIEN !"
+Lignes = PackedStringArray("On lâche rien. Même pas les jouets !", "Camarade ! Il me manque encore des poissons pour tenir le piquet !", "50 poissons, pas un de moins, sinon on retourne à l\'atelier !", "On lâche rien ! Mais on a faim !", "")
+DialogueDynamique = true
+Contexte = "Tu es un ouvrier de la fabrique du Père Noël, délégué syndical CGT, en grève depuis ce matin.
+Tu tiens le piquet de grève avec ta pancarte : la direction impose des cadences folles, vous emballez les cadeaux jour et nuit, et la hotte n'est toujours pas passée aux 35 heures.
+Ton problème immédiat : le piquet n'a plus rien à manger. Tu ravitailles tes camarades grévistes et il te faut au 50 poissons pour tenir ; en dessous, la grève s'effondre et tout le monde retourne à l'atelier.
+Tu réclames donc des poissons à quiconque passe devant toi, tu comptes ce qu'il te manque, tu promets un reçu de la caisse de solidarité.
+Ton ton : combatif et syndical (camarade, revendications, piquet de grève, on lâche rien), râleur envers la direction, chaleureux envers ceux qui te soutiennent, jamais méchant ni menaçant."
+MotMoyenParReponse = 12
+ConversationRessource = ExtResource("60_dlgcgt")
 
 [editable path="Joueur"]

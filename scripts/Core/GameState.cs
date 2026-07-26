@@ -85,6 +85,12 @@ public partial class GameState : Node
 	// ne fait pas sauter le joueur (voir Player._PhysicsProcess et DeclencheurDialogue).
 	public bool DialogueDisponible { get; set; }
 
+	// Vrai pendant une conversation à choix : le joueur ne joue plus, ses touches
+	// pilotent la liste de réponses (haut/bas pour naviguer, "action" pour valider).
+	// Player._PhysicsProcess s'arrête net dessus, ce qui neutralise d'un coup saut,
+	// glissade, traversée de plateforme et pouvoirs — donc tout conflit de touche.
+	public bool DialogueModal { get; set; }
+
 	public override void _Ready()
 	{
 		Instance = this;
@@ -179,6 +185,20 @@ public partial class GameState : Node
 		Poissons--;
 		EmitSignal(SignalName.PoissonsChanges, Poissons);
 		Soigner(1);
+		return true;
+	}
+
+	// Prélève des poissons pour autre chose que se soigner (don à un PNJ, troc...).
+	// Rien n'est prélevé si la réserve est insuffisante : l'appelant sait alors que
+	// l'échange n'a pas eu lieu. Pendant générique de ManagerPoisson, réutilisable
+	// par tout élément qui « coûte » des poissons.
+	public bool DepenserPoissons(int nombre)
+	{
+		if (nombre <= 0 || Poissons < nombre)
+			return false;
+
+		Poissons -= nombre;
+		EmitSignal(SignalName.PoissonsChanges, Poissons);
 		return true;
 	}
 

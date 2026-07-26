@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 // Bulle de dialogue « banquise » : rendu procédural (aucun asset généré) d'une bulle
@@ -27,6 +28,8 @@ public partial class BulleDialogue : Node2D
 	private const int RayonCoin = 7;
 	private const int EpaisseurContour = 2;
 	private const float MargeCadre = 4f;     // garde entre la bulle et le bord de l'écran
+	private const float LargeurCurseur = 14f;// gouttière du « > » devant le choix sélectionné
+	private const string Curseur = ">";
 
 	private Font _police;
 	private string _texte = "";
@@ -36,6 +39,10 @@ public partial class BulleDialogue : Node2D
 	private Color _fond;
 	private Color _contour;
 	private bool _avecQueue;
+	// Mode « liste de réponses » : non nul, la bulle dessine une option par ligne
+	// avec la sélection en surbrillance au lieu d'un bloc de texte unique.
+	private IReadOnlyList<string> _options;
+	private int _selection;
 	// Décalages de la boîte pour la maintenir dans le cadre visible de la caméra (la
 	// queue, elle, reste ancrée sur le PNJ). Recalculés chaque frame tant que la bulle
 	// est visible, car la caméra bouge avec le joueur.
@@ -68,6 +75,28 @@ public partial class BulleDialogue : Node2D
 	public void AfficherRappel(string texte)
 		=> Composer(texte, FondRappel, ContourBulle, TexteRappel, avecQueue: false);
 
+	// Affiche une LISTE DE RÉPONSES (dialogue à choix) : une option par ligne, celle
+	// d'indice `selection` en surbrillance. Même bulle, même recadrage caméra que le
+	// dialogue — seule la mise en page change. Posée sur le joueur par le moteur,
+	// puisque c'est lui qui parle.
+	public void AfficherChoix(IReadOnlyList<string> options, int selection)
+	{
+		_options = options;
+		_selection = selection;
+		_texte = "";
+
+		// Largeur = la plus longue option (pas de retour à la ligne : une réponse
+		// tient sur une ligne, c'est aussi ce qui rend la liste lisible d'un coup).
+		float largeur = 0f;
+		foreach (var option in options)
+			largeur = Mathf.Max(largeur, _police.GetStringSize(option, HorizontalAlignment.Left, -1, TaillePolice).X);
+
+		_tailleTexte = new Vector2(largeur + LargeurCurseur, HauteurLigne() * options.Count);
+		Appliquer(FondBulle, ContourBulle, TexteBulle, avecQueue: true);
+	}
+
+	private float HauteurLigne() => _police.GetHeight(TaillePolice);
+
 	public void Cacher()
 	{
 		Visible = false;
@@ -76,16 +105,26 @@ public partial class BulleDialogue : Node2D
 
 	private void Composer(string texte, Color fond, Color contour, Color couleurTexte, bool avecQueue)
 	{
+		_options = null;   // retour au mode « bloc de texte »
+		_texte = texte;
+		_tailleTexte = _police.GetMultilineStringSize(
+			texte, HorizontalAlignment.Center, LargeurMax, TaillePolice);
+
+		Appliquer(fond, contour, couleurTexte, avecQueue);
+	}
+
+	// Partie commune aux deux modes : couleurs, taille du fond et réaffichage. La
+	// mesure du contenu (bloc de texte ou liste) est faite par l'appelant, qui seul
+	// sait comment son contenu s'agence.
+	private void Appliquer(Color fond, Color contour, Color couleurTexte, bool avecQueue)
+	{
 		_fond = fond;
 		_contour = contour;
 		_couleurTexte = couleurTexte;
 		_avecQueue = avecQueue;
-		_texte = texte;
 		_decalageX = 0f;
 		_decalageY = 0f;
 
-		_tailleTexte = _police.GetMultilineStringSize(
-			texte, HorizontalAlignment.Center, LargeurMax, TaillePolice);
 		_tailleFond = _tailleTexte + new Vector2(Marge * 2f, Marge * 2f);
 
 		Visible = true;
@@ -170,9 +209,43 @@ public partial class BulleDialogue : Node2D
 			DrawLine(droite, pointe, _contour, EpaisseurContour);
 		}
 
+		if (_options != null)
+		{
+			DessinerOptions(coinHautGauche);
+			return;
+		}
+
 		// Texte centré dans la marge : baseline de la 1re ligne = haut intérieur + ascent.
 		// Placement au pixel (pas de layout de Control) => centré dès le premier affichage.
 		var posTexte = new Vector2(coinHautGauche.X + Marge, coinHautGauche.Y + Marge + _police.GetAscent(TaillePolice));
 		DrawMultilineString(_police, posTexte, _texte, HorizontalAlignment.Center, _tailleTexte.X, TaillePolice, -1, _couleurTexte);
+	}
+
+	// Liste de réponses : une option par ligne, alignée à gauche (une liste centrée
+	// se lit mal), la sélection soulignée d'un bandeau plein + un « > » en gouttière
+	// — la couleur seule ne suffirait pas sur un écran pixel-art.
+	private void DessinerOptions(Vector2 coinHautGauche)
+	{
+		float hauteurLigne = HauteurLigne();
+		float ascent = _police.GetAscent(TaillePolice);
+		var bandeau = new StyleBoxFlat { BgColor = FondRappel, CornerRadiusTopLeft = 3, CornerRadiusTopRight = 3, CornerRadiusBottomLeft = 3, CornerRadiusBottomRight = 3 };
+
+		for (int i = 0; i < _options.Count; i++)
+		{
+			float haut = coinHautGauche.Y + Marge + i * hauteurLigne;
+			bool active = i == _selection;
+
+			if (active)
+			{
+				var rect = new Rect2(coinHautGauche.X + Marge * 0.4f, haut, _tailleFond.X - Marge * 0.8f, hauteurLigne);
+				DrawStyleBox(bandeau, rect);
+			}
+
+			var couleur = active ? TexteRappel : _couleurTexte;
+			var baseline = haut + ascent;
+			if (active)
+				DrawString(_police, new Vector2(coinHautGauche.X + Marge, baseline), Curseur, HorizontalAlignment.Left, -1, TaillePolice, couleur);
+			DrawString(_police, new Vector2(coinHautGauche.X + Marge + LargeurCurseur, baseline), _options[i], HorizontalAlignment.Left, -1, TaillePolice, couleur);
+		}
 	}
 }

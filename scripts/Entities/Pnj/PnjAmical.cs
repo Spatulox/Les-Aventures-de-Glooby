@@ -16,7 +16,7 @@ using Godot;
 // l'instance qui décide si elle parle. Un PNJ est bavard uniquement si on lui renseigne
 // des Lignes ET qu'on lui ajoute un DeclencheurDialogue enfant (comme PanneauBois) ;
 // sinon il reste muet. Il s'immobilise pendant une conversation.
-public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, OllamaTalkative
+public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, OllamaTalkative, TalkativeAChoix
 {
 	// ---- Déambulation (réglages) ----
 	[Export] public float DistancePatrouille = 60f; // amplitude du va-et-vient autour du point de départ
@@ -179,6 +179,27 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 
 	// Dynamique réellement actif seulement si l'opt-in est coché ET qu'Ollama est prêt.
 	public bool DialogueDynamiqueActif => DialogueDynamique && OllamaService.Instance is { Disponible: true };
+
+	// ---- Dialogue à choix (TalkativeAChoix) ----
+	// Arbre de dialogue du PNJ (.tres de assets/dialogues/). Renseigné, le joueur
+	// répond en choisissant sa réplique ; vide, le PNJ garde le dialogue à sens
+	// unique ci-dessus (Lignes ou génération IA).
+	//
+	// Typé `Resource` + filtre d'inspecteur, et NON `NoeudDialogue`, à cause des PNJ
+	// [Tool] (LutinCgt) : dans l'éditeur, la propriété est posée avant que la ressource
+	// n'ait son instance C#, si bien qu'un export fortement typé recevait un
+	// `Godot.Resource` nu et levait un InvalidCastException — l'éditeur perdait alors la
+	// liaison et l'effaçait à la sauvegarde. Le filtre garde le glisser-déposer typé
+	// dans l'inspecteur ; la conversion se fait ici, une seule fois.
+	[Export(PropertyHint.ResourceType, nameof(NoeudDialogue))]
+	public Resource ConversationRessource { get; set; }
+
+	NoeudDialogue TalkativeAChoix.Conversation => ConversationRessource as NoeudDialogue;
+
+	// Hook « choix retenu » : rien par défaut. Les PNJ qui font agir un choix sur le
+	// jeu (le lutin gréviste et ses poissons...) l'override et se repèrent à
+	// choix.IdMemoire.
+	public virtual void SurChoixRetenu(ChoixDialogue choix) { }
 
 	public IReadOnlyList<string> Dialogue => Lignes;
 

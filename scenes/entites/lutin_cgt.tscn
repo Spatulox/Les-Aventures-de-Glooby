@@ -33,7 +33,12 @@ scale = Vector2(1.3350095, 1.4799994)
 shape = SubResource("CapsuleShape2D_1")
 
 [node name="Slogan" type="Label" parent="." unique_id=990887194]
+offset_left = -20.0
+offset_top = -27.0
+offset_right = 7.0
+offset_bottom = -5.0
 label_settings = SubResource("LabelSettings_slogan")
+clip_text = true
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
