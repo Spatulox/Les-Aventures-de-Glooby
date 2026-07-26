@@ -250,14 +250,30 @@ boss poussait dans le vide jusqu'à atteindre la coordonnée limite. Et `Velocit
 - Les obstacles ne sont jugés **que sabots au sol** : sans ce garde, les rayons perdaient la
   marche dès le décollage et la charge s'interrompait en plein saut.
 
-Exports de réglage : `HauteurFranchissable` (48, à garder sous l'apex de saut ≈ 73 px) et
-`PorteeObstacle` (26). Testé en bac à sable (sol plat, marche de 28 px, mur de 200 px) :
+**Mesure de l'obstacle.** Un rayon horizontal parti du museau ne marche pas : les ressauts du
+décor sont des dalles dont le bas s'arrête au-dessus des sabots (7 px de vide sous la face),
+le rayon passait dessous sans rien voir. On repart donc du **point de contact** rendu par
+`MoveAndSlide` et on cherche le sommet de l'obstacle avec un **rayon vertical descendant**,
+lancé depuis la hauteur franchissable : il part toujours du ciel libre, et s'il ne touche
+rien c'est que l'obstacle monte plus haut que ce que Rodolphe sait franchir — un mur.
+
+Exports : `HauteurFranchissable` (96 — couvre les ressauts de l'arène, 64 à 67 px, sans
+approcher ses murs) et `MargeFranchissement` (16). L'impulsion de saut est **calculée**
+(`v = √(2·g·h)`), donc un seul nombre à régler.
+
+Testé dans l'arène réelle, boss lâché à droite et joueur posé sur le plateau haut :
 
 ```
-SAUT en x=681            (marche à x=700)
-MARCHE FRANCHIE : retombé en x=828, y=432   (dessus de la marche à y=452)
-arrêt net à x=1041       (mur à x=1060 — le boss le touche exactement et s'étourdit)
+charge vers la gauche : sauts en x 1422, 1265 (monte à y=323, le plateau haut), 983, 827,
+                        556, 283  ->  arrêt net à x=78, mur gauche (face à 46)
+charge vers la droite : sauts en x 289, 562, 831, 988, 1270, 1426
+                        ->  arrêt net à x=2144, mur droit (face à 2163)
 ```
+
+Les murs de l'arène étaient au départ faits de dalles décalées, avec un vide de 11 px au ras
+du sol : le boss y lisait une « marche de 65 px » et sautillait sur place. Ils ont été refaits
+d'un seul tenant (gauche x[0, 46] y[45, 503], droit x[2163, 2240] y[0, 503]) — **c'est la
+géométrie qui a été corrigée, aucun garde-fou logiciel n'a été laissé dans l'IA**.
 
 ## Reste à faire / à l'œil
 

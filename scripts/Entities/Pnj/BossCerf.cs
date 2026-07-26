@@ -34,11 +34,6 @@ public partial class BossCerf : Boss
 	// autre gabarit de boss reste correct).
 	private float _bordPieds;
 
-	// X du dernier saut de franchissement de la charge en cours : s'il ressaute au même
-	// endroit, c'est qu'il n'a rien franchi (décor irrégulier, corniche trop étroite
-	// pour s'y poser) — la charge s'arrête alors comme contre un mur, au lieu de le
-	// laisser sautiller indéfiniment.
-	private float _xDernierSaut = float.NaN;
 
 	public int Phase { get; private set; } = 1;
 
@@ -192,7 +187,6 @@ public partial class BossCerf : Boss
 	private void DemarrerCharge()
 	{
 		_etat = Etat.Charge;
-		_xDernierSaut = float.NaN;
 		_dejaToucheCetteCharge = false;
 		Sprite.Play("charge");
 		Sprite.FlipH = _direction < 0;
@@ -221,9 +215,8 @@ public partial class BossCerf : Boss
 
 		// Obstacle franchissable (marche du sol, bloc, plateforme) : Rodolphe
 		// l'enjambe et poursuit sa course vers le joueur au lieu de s'y arrêter.
-		if (ObstacleFranchissable() && ProgresseDepuisDernierSaut())
+		if (ObstacleFranchissable())
 		{
-			_xDernierSaut = GlobalPosition.X;
 			// Impulsion taillée pour l'obstacle le plus haut qu'il accepte, et non le
 			// JumpVelocity générique de LivingEntity (calibré pour le joueur, trop
 			// court pour les ressauts de l'arène).
@@ -245,11 +238,6 @@ public partial class BossCerf : Boss
 
 		_bordPieds = forme.Position.Y + rect.Size.Y / 2f;
 	}
-
-	// A-t-il avancé depuis son dernier saut de franchissement ? Sinon, il retombe au
-	// même endroit : l'obstacle n'était pas franchissable pour de bon.
-	private bool ProgresseDepuisDernierSaut()
-		=> float.IsNaN(_xDernierSaut) || Mathf.Abs(GlobalPosition.X - _xDernierSaut) > 8f;
 
 	// L'obstacle heurté est-il assez bas pour être enjambé ? On repart du point de
 	// contact donné par MoveAndSlide, puis on cherche le SOMMET de l'obstacle avec un
