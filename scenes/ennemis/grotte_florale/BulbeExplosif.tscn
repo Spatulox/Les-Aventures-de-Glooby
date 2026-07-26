@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://d37uetp4s21fb" path="res://scripts/Entities/Ennemis/GrotteFlorale/BulbeExplosif.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://d130rvg8t27wo" path="res://assets/ennemis/grotte_florale/bulbe_explosif/idle/00.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectCorps"]
+size = Vector2(32, 34)
+
+[sub_resource type="CircleShape2D" id="CercleExplosion"]
+radius = 52.0
+
+[sub_resource type="CircleShape2D" id="CercleDetection"]
+radius = 60.0
+
+[node name="BulbeExplosif" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 17
+script = ExtResource("1")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="Apercu" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("RectCorps")
+
+[node name="ZoneExplosion" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneExplosion"]
+shape = SubResource("CercleExplosion")
+
+[node name="ZoneDetection" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection"]
+shape = SubResource("CercleDetection")

@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://g1wws65u2sg1" path="res://scripts/Entities/Ennemis/GrotteFlorale/NueePollen.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://q8vir16vuiia" path="res://assets/ennemis/grotte_florale/nuee_pollen/vol/00.png" id="2"]
+
+[sub_resource type="CircleShape2D" id="CercleCorps"]
+radius = 15.0
+
+[sub_resource type="CircleShape2D" id="CercleContact"]
+radius = 18.0
+
+[sub_resource type="CircleShape2D" id="CercleDetection"]
+radius = 130.0
+
+[node name="NueePollen" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 17
+script = ExtResource("1")
+ContactContinu = true
+DistancePatrouille = 50.0
+VitessePatrouille = 22.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="Apercu" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("CercleCorps")
+
+[node name="ZoneContact" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneContact"]
+position = Vector2(0, -2)
+shape = SubResource("CercleContact")
+
+[node name="ZoneDetection" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection"]
+shape = SubResource("CercleDetection")
