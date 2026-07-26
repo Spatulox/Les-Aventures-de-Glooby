@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://oxm40x6htksc"]
+
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/decors/usine/SolUsineBois.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://busnpdm01" path="res://scenes/decors/usine/PenteUsineDouceMontante.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="3"]
+[ext_resource type="Script" path="res://scripts/Test/TestPenteUsineDebug.cs" id="4"]
+
+[node name="TestPenteUsine" type="Node2D"]
+
+[node name="SolBas" parent="." instance=ExtResource("1")]
+position = Vector2(-1376, 200)
+NombreSegments = 3
+EmboutGauche = true
+EmboutDroit = false
+
+[node name="Pente" parent="." instance=ExtResource("2")]
+position = Vector2(0, 200)
+
+[node name="SolHaut" parent="." instance=ExtResource("1")]
+position = Vector2(344, 64)
+NombreSegments = 3
+EmboutGauche = false
+EmboutDroit = true
+
+[node name="Joueur" parent="." instance=ExtResource("3")]
+position = Vector2(-300, 100)
+
+[node name="Sonde" type="Node" parent="."]
+script = ExtResource("4")

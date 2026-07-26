@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b8usinebois01"]
+
+[ext_resource type="Script" path="res://scripts/sol/SolUsineBois.cs" id="1"]
+
+[node name="SolUsineBois" type="Node2D"]
+script = ExtResource("1")
+NombreSegments = 3
+EmboutGauche = true
+EmboutDroit = true

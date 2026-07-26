@@ -1,0 +1,35 @@
+[gd_scene load_steps=7 format=3 uid="uid://busntestplatbois"]
+
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/decors/usine/SolUsineBois.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://busnplmobbois1" path="res://scenes/plateformes/usine/PlateformeMobileBois.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="3"]
+[ext_resource type="Script" path="res://scripts/Test/TestPlateformeBoisDebug.cs" id="4"]
+[ext_resource type="PackedScene" uid="uid://busnplsuspbois1" path="res://scenes/plateformes/usine/PlateformeMobileBoisSuspendue.tscn" id="5"]
+
+[node name="TestPlateformesBois" type="Node2D"]
+
+[node name="Sol" parent="." instance=ExtResource("1")]
+position = Vector2(-688, 260)
+NombreSegments = 3
+
+[node name="PlatVert" parent="." instance=ExtResource("2")]
+position = Vector2(0, 0)
+AngleDegres = 90.0
+Distance = 120.0
+Vitesse = 40.0
+
+[node name="PlatHoriz" parent="." instance=ExtResource("2")]
+position = Vector2(420, -30)
+AngleDegres = 0.0
+Distance = 200.0
+Vitesse = 70.0
+
+[node name="Joueur" parent="." instance=ExtResource("3")]
+position = Vector2(0, -170)
+
+[node name="Sonde" type="Node" parent="."]
+script = ExtResource("4")
+PlateformeASuivre = NodePath("../PlatVert")
+
+[node name="PlatSuspendue" parent="." instance=ExtResource("5")]
+position = Vector2(760, 0)
