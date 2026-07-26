@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://busolboiscb"]
+
+[ext_resource type="Script" uid="uid://21a8askqsplx" path="res://scripts/sol/SegmentSolUsineBois.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://8x0tx0ngmbld" path="res://assets/sol/usine/sol_centre_b.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectSegment"]
+size = Vector2(344, 172)
+
+[node name="SolUsineBoisCentreB" type="StaticBody2D"]
+script = ExtResource("1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+centered = false
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(172, 94)
+shape = SubResource("RectSegment")

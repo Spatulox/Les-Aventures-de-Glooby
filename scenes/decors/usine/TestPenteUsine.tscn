@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://oxm40x6htksc"]
 
-[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/decors/usine/SolUsineBois.tscn" id="1"]
-[ext_resource type="PackedScene" uid="uid://busnpdm01" path="res://scenes/decors/usine/PenteUsineDouceMontante.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://busnpdm01" path="res://scenes/sol/usine/PenteUsineDouceMontante.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="3"]
 [ext_resource type="Script" path="res://scripts/Test/TestPenteUsineDebug.cs" id="4"]
 

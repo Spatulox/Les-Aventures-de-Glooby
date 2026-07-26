@@ -9,9 +9,9 @@
 [ext_resource type="PackedScene" path="res://scenes/meteo/blizzard.tscn" id="meteo"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
-[ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/SolBanquise.tscn" id="sol_banquise"]
-[ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/SolBanquiseEmboutDroit.tscn" id="sol_embout_d"]
-[ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
+[ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/banquise/SolBanquise.tscn" id="sol_banquise"]
+[ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/banquise/SolBanquiseEmboutDroit.tscn" id="sol_embout_d"]
+[ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/banquise/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
 
 [node name="Monde2" type="Node2D" unique_id=1283461592]
 

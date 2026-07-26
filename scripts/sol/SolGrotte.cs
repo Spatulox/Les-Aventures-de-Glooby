@@ -6,7 +6,7 @@ using Godot;
 // bords, auto-tuilables) ; les embouts (fin gauche/droite) portent la cassure
 // de glace et les stalactites décoratives qui débordent hors collision.
 //
-// Chaque type a sa propre scène (scenes/sol/SolGrotteXxx.tscn) qui porte son
+// Chaque type a sa propre scène (scenes/sol/grotte/SolGrotteXxx.tscn) qui porte son
 // sprite ET sa CollisionShape2D : la scène est la SEULE source de vérité, le
 // script ne réapplique rien au runtime (sinon régler la collision dans l'éditeur
 // serait inutile). Surface de marche : y = -84 en local sur toutes les pièces —
