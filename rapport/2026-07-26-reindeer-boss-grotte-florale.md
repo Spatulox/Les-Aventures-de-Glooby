@@ -234,6 +234,31 @@ L'aller-retour avec `monde2` est cohérent : le Jardin pointe sur `uid://qopyq3e
 (monde2), qui renvoie sur `uid://dfcn030tpflmp` (ReindeerBoss) avec
 `PointEntreeCible = "JardinGrotteEnd"`.
 
+## Charge de Rodolphe : murs et franchissement
+
+La charge ne s'arrêtait qu'aux bornes `LimiteGauche/Droite` de l'arène : contre un mur, le
+boss poussait dans le vide jusqu'à atteindre la coordonnée limite. Et `Velocity.Y` était forcé
+à 0 — il chargeait en lévitation à sa hauteur d'apparition.
+
+- **Gravité** appliquée dans `_PhysicsProcess` (`LivingEntity.AppliquerGravite`) ; chaque état
+  ne pilote plus que l'horizontale.
+- **Mur = fin de charge** : `IsOnWall()` déclenche `PasserEnEtourdi()`, donc la fenêtre de
+  vulnérabilité ×3 s'ouvre là où le décor l'arrête, pas seulement aux bornes de l'arène.
+- **Obstacle bas = saut** : deux rayons devant lui (au ras des sabots, puis à
+  `HauteurFranchissable`) distinguent une marche d'un mur plein. Marche → `Sauter`, il garde
+  son élan et poursuit vers le joueur ; mur → étourdissement.
+- Les obstacles ne sont jugés **que sabots au sol** : sans ce garde, les rayons perdaient la
+  marche dès le décollage et la charge s'interrompait en plein saut.
+
+Exports de réglage : `HauteurFranchissable` (48, à garder sous l'apex de saut ≈ 73 px) et
+`PorteeObstacle` (26). Testé en bac à sable (sol plat, marche de 28 px, mur de 200 px) :
+
+```
+SAUT en x=681            (marche à x=700)
+MARCHE FRANCHIE : retombé en x=828, y=432   (dessus de la marche à y=452)
+arrêt net à x=1041       (mur à x=1060 — le boss le touche exactement et s'étourdit)
+```
+
 ## Reste à faire / à l'œil
 
 - **Play-test manuel** (`godot res://scenes/niveaux/ReindeerBoss.tscn`) : vérifier le calage

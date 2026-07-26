@@ -139,6 +139,9 @@ PvBoss = 40
 
 [node name="Salle" parent="ArenBoss" unique_id=412134817 instance=ExtResource("salle_grandesalle")]
 
+[node name="C26" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="24" unique_id=1339672554]
+position = Vector2(23.5, 400)
+
 [node name="C29" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="26" unique_id=1444482630]
 position = Vector2(23.5, 432)
 
