@@ -112,8 +112,8 @@ toute seule), mais `_Process` refusait de démarrer sur `action` tant que
 s'ouvrait jamais**. La condition de démarrage accepte désormais explicitement le cas
 `ConversationAChoix`, comme `SurEntreeJoueur`.
 
-Ajout de **`scenes/test/test_dialogue_choix.tscn`** (+ `.gd`) pour ne plus attraper ce
-genre de bug à la relecture : entrées scriptées en headless sur la vraie scène.
+Attrapé par une scène de test à entrées scriptées en headless, écrite pour l'occasion
+puis retirée du dépôt sur demande — la relecture de code, elle, n'avait rien vu.
 
 ## Vérification
 
@@ -130,7 +130,7 @@ genre de bug à la relecture : entrées scriptées en headless sur la vraie scè
 - Type réel à l'exécution vérifié par instrumentation temporaire de
   `PreparerDeclencheur` : `LutinCgt aChoix=True conversation=True` (les autres PNJ,
   sans arbre, restent à `conversation=False` — donc comportement inchangé pour eux).
-- **Traversée scriptée headless** (`scenes/test/test_dialogue_choix.tscn`, Ollama
+- **Traversée scriptée headless** (scène de test temporaire, Ollama
   disponible) : rappel de touche → 1er appui ouvre la conversation (`DialogueModal`
   passe à vrai) → réplique générée → liste de choix → validation du don : **poissons
   50 → 0** → fin de branche, **modal relâché** (Glooby rendu au joueur). Un 2e passage
