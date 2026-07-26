@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="NoeudDialogue" format=3 uid="uid://brk0m24hh3ybq"]
+
+[ext_resource type="Script" uid="uid://dmuxq1b11lf7k" path="res://scripts/Core/NoeudDialogue.cs" id="1_noeud"]
+[ext_resource type="Script" uid="uid://b0k7gjkfw4ix" path="res://scripts/Core/ChoixDialogue.cs" id="2_choix"]
+
+[sub_resource type="Resource" id="NoeudMerci"]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("La grève est sauvée pour aujourd\'hui. Reviens quand tu veux !")
+
+[sub_resource type="Resource" id="ChoixDon"]
+script = ExtResource("2_choix")
+Texte = "Tiens, prends mes 50 poissons."
+Reponse = PackedStringArray("Cinquante poissons ! La caisse de solidarité te remercie.", "Le piquet mangera chaud ce soir.")
+Suite = SubResource("NoeudMerci")
+IdMemoire = "lutin_cgt_don_poissons"
+UneSeuleFois = true
+CoutPoissons = 50
+
+[sub_resource type="Resource" id="ChoixPartir"]
+script = ExtResource("2_choix")
+Texte = "Bon courage, camarade."
+Reponse = PackedStringArray("On lâche rien !")
+
+[sub_resource type="Resource" id="NoeudRevendications"]
+script = ExtResource("1_noeud")
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixDon"), SubResource("ChoixPartir")])
+
+[sub_resource type="Resource" id="ChoixRevendications"]
+script = ExtResource("2_choix")
+Texte = "C'est quoi vos revendications ?"
+Suite = SubResource("NoeudRevendications")
+
+[resource]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Halte-là ! Piquet de grève, on ne passe pas sans saluer la lutte.", "On tient depuis l\'aube, mais la caisse est vide et les ventres aussi.")
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixDon"), SubResource("ChoixRevendications"), SubResource("ChoixPartir")])

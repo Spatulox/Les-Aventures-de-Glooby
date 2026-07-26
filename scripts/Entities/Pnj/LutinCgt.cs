@@ -39,6 +39,12 @@ public partial class LutinCgt : PnjAmical
 	};
 
 	private Config _config;
+	private Label _slogan;
+
+	// Identifiant du choix « je te donne mes poissons » dans l'arbre de dialogue
+	// (assets/dialogues/banquise_fin_lutin_cgt.tres) : c'est la clé qui relie la
+	// réponse écrite dans l'éditeur à son effet en jeu.
+	public const string IdDonPoissons = "lutin_cgt_don_poissons";
 
 	// En éditeur ([Tool]) : met à jour l'aperçu selon la pose et n'exécute PAS le pipeline runtime
 	// de la base — base._Ready() masquerait justement le Sprite2D « Apercu » qu'on veut voir ici.
@@ -71,10 +77,22 @@ public partial class LutinCgt : PnjAmical
 		DistancePatrouille = 0f;   // gréviste immobile
 		_config = Configs[Pose];
 
-		var slogan = GetNode<Label>("Slogan");
-		slogan.Text = Slogan;
-		slogan.Position = _config.ZoneSlogan;
-		slogan.Size = _config.TailleSlogan;
+		_slogan = GetNode<Label>("Slogan");
+		_slogan.Text = Slogan;
+		_slogan.Position = _config.ZoneSlogan;
+		_slogan.Size = _config.TailleSlogan;
+	}
+
+	// Le joueur a retenu une réponse : le ravitaillement du piquet de grève se voit
+	// tout de suite sur la pancarte. La dépense des poissons, elle, est portée par le
+	// choix lui-même (ChoixDialogue.CoutPoissons) — ici on ne gère que la réaction.
+	public override void SurChoixRetenu(ChoixDialogue choix)
+	{
+		if (choix.IdMemoire != IdDonPoissons || _slogan == null)
+			return;
+
+		Slogan = "MERCI CAMARADE";
+		_slogan.Text = Slogan;
 	}
 
 	// Une seule animation « idle » depuis le dossier de la pose (lutin statique, pas de marche).
