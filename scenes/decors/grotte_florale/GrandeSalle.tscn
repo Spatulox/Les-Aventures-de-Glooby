@@ -17,7 +17,7 @@
 [ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/rideau_plafond.png" id="t15"]
 [ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/touffe_bord_b.png" id="t16"]
 [ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="pP"]
-[ext_resource type="PackedScene" path="res://scenes/entites/fonceur.tscn" id="pF"]
+[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
 
 [sub_resource type="RectangleShape2D" id="s1"]
@@ -503,7 +503,7 @@ texture = ExtResource("t11")
 position = Vector2(192, 498)
 IdCheckpoint = "grande"
 
-[node name="Fonceur" parent="." instance=ExtResource("pF")]
+[node name="OursDeNeige" parent="." instance=ExtResource("pO")]
 position = Vector2(1600, 496)
 
 [node name="Sortie" type="Marker2D" parent="."]

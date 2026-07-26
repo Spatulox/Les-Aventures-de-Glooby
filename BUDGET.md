@@ -21,7 +21,7 @@ Solde compte au départ de la mission : 1812 restantes / 2000 (hors plafond miss
 | 14 | (hors jalon, demande directe) | Usine du Père Noël : fond 2 couches (mur + poutres), tapis segment + embout (1 régénéré, bûche au lieu d'extrémité), 2 établis — défilement de bande et embout droit procéduraux | 7 | 97 |
 | 15 | (hors jalon, demande directe) | 3 flocons de neige — générés en PROCÉDURAL (symétrie 6 branches exacte, contour fin, meilleur que PixelLab à petite échelle) ; servent désormais les 3 couches du blizzard (`scenes/meteo/blizzard.tscn`) | 0 | 97 |
 | 16 | (hors jalon, demande directe) | 5 vignettes concept ennemis (ours/ver/morse + bonhomme malicieux/grognon), choix user | 5 | 102 |
-| 17 | (hors jalon, demande directe) | Ours polaire : 6 animations (idle/marche/detection/charge/etourdi/mort) via animate_object — frames déposées dans TES dossiers (code Fonceur non modifié) | ~14 | 116 |
+| 17 | (hors jalon, demande directe) | Ours polaire : 6 animations (idle/marche/detection/charge/etourdi/mort) via animate_object — frames déposées dans TES dossiers (code OursDeNeige non modifié) | ~14 | 116 |
 | 18 | (hors jalon, demande directe) | Bonhomme malicieux : 4 animations (idle/armer/lancer/mort) + fichiers neufs BonhommeDeNeige/BouleDeNeige (impact procédural) | ~13 | 129 |
 | 19 | (hors jalon, demande directe) | Murs de grotte empilables : 5 gén. (3 centres colonnes + couronnement + base) puis 3 centres régénérés « texture pleine » — traités en tuilage vertical, 2 variantes dérivées du meilleur | 8 | 137 |
 | 20 | (hors jalon, demande directe) | Sol de grotte décoré : 3 centres (dessous stalactites/cristaux, densité variable) + 2 fins à falaise cassée — surface alignée, bords greffés | 5 | 142 |
