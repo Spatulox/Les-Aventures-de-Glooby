@@ -275,6 +275,24 @@ du sol : le boss y lisait une « marche de 65 px » et sautillait sur place. Ils
 d'un seul tenant (gauche x[0, 46] y[45, 503], droit x[2163, 2240] y[0, 503]) — **c'est la
 géométrie qui a été corrigée, aucun garde-fou logiciel n'a été laissé dans l'IA**.
 
+## Menu de debug : charger un niveau
+
+Le bouton « Debug » du menu principal lançait `monde1` en mode debug. Il ouvre désormais
+`scenes/ui/ecran_scenes_debug.tscn` + `scripts/UI/EcranScenesDebug.cs` : la liste des
+**niveaux jouables**, chargeables d'un clic (superposé, masqué au départ, Échap ferme —
+même patron qu'`EcranParametres`, fond et boutons via `MenuFabrique`).
+
+La liste est **déduite du disque** (parcours récursif de `res://scenes/niveaux`, avec
+filtre au clavier et regroupement par sous-dossier) : déposer un niveau suffit à l'y
+faire apparaître, rien à tenir à jour. Le dossier fait office de déclaration de ce qui
+est jouable. Chargement via `NouvellePartieDebug` — pouvoirs débloqués et, surtout,
+aucune écriture dans la sauvegarde (`GameState.ModeDebug`).
+
+Relevé à l'ouverture : `monde1`, `monde2`, `ReindeerBoss`.
+
+Au passage, `run/main_scene` du projet pointait sur `monde1.tscn` : remis sur
+`scenes/ui/menu_principal.tscn` (`uid://2m6bfkmrvh65`), conformément à `CLAUDE.md`.
+
 ## Reste à faire / à l'œil
 
 - **Play-test manuel** (`godot res://scenes/niveaux/ReindeerBoss.tscn`) : vérifier le calage
