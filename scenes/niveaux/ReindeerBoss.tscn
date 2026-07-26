@@ -40,7 +40,6 @@ Id = "reindeerBossStart"
 [node name="PorteSortie" parent="Sanctuaire/Interactifs" unique_id=2091600737 instance=ExtResource("porte")]
 position = Vector2(1920, 96)
 IdDestination = "galerie"
-Marqueur = NodePath("../../Salle/Sortie")
 
 [node name="PanneauBois" parent="Sanctuaire" unique_id=197425152 instance=ExtResource("5_hn7gu")]
 z_index = -1
@@ -72,7 +71,6 @@ Id = "galerie"
 position = Vector2(2048, 64)
 scale = Vector2(1.3857454, 0.6800003)
 IdDestination = "puits"
-Marqueur = NodePath("../../Salle/Sortie")
 
 [node name="Puits" type="Node2D" parent="." unique_id=709671414]
 position = Vector2(4736, 0)
@@ -96,7 +94,6 @@ Id = "puits"
 [node name="PorteSortie" parent="Puits/Interactifs" unique_id=280771720 instance=ExtResource("porte")]
 position = Vector2(832, 64)
 IdDestination = "caverne"
-Marqueur = NodePath("../../Salle/Sortie")
 
 [node name="Caverne" type="Node2D" parent="." unique_id=158544432]
 position = Vector2(5952, 0)
@@ -126,7 +123,6 @@ Id = "caverne"
 [node name="PorteSortie" parent="Caverne/Interactifs" unique_id=1773588689 instance=ExtResource("porte")]
 position = Vector2(1792, 96)
 IdDestination = "grande"
-Marqueur = NodePath("../../Salle/Sortie")
 
 [node name="ArenBoss" type="Node2D" parent="." unique_id=1896369560]
 position = Vector2(8128, 0)
@@ -159,7 +155,6 @@ Id = "grande"
 position = Vector2(2097, 460)
 IdDestination = "jardin"
 BossRequis = "Rodolphe"
-Marqueur = NodePath("../../Salle/Sortie")
 
 [node name="Jardin" type="Node2D" parent="." unique_id=1454712437]
 position = Vector2(10624, 0)

@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://crhj5wew8ccsx"]
 
+[ext_resource type="PackedScene" uid="uid://cc554bace5c53" path="res://scenes/plateformes/PlateformeGlace.tscn" id="19_0dpcm"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
 [ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
 [ext_resource type="Texture2D" uid="uid://dvkmbtpekkcvo" path="res://assets/decors/grotte_florale/grande/fond.png" id="t1"]
@@ -574,3 +575,15 @@ texture = ExtResource("t10")
 
 [node name="Sortie" type="Marker2D" parent="Sortie" unique_id=1176838423]
 position = Vector2(-5, -1)
+
+[node name="PlateformeGlace" parent="Sortie" unique_id=1692231335 instance=ExtResource("19_0dpcm")]
+z_index = -12
+position = Vector2(-1127, -32.00003)
+rotation = -0.5497787
+DureeVie = 0.0
+
+[node name="PlateformeGlace2" parent="Sortie" unique_id=669300400 instance=ExtResource("19_0dpcm")]
+z_index = -11
+position = Vector2(-852, -47.99997)
+rotation = 0.5497787
+DureeVie = 0.0

@@ -1424,11 +1424,11 @@ scale = Vector2(1.4, 1.4)
 texture = ExtResource("t11")
 flip_h = true
 
-[node name="ZoneChargementScene" parent="DecorAvant" unique_id=250970092 instance=ExtResource("16_v1wsm")]
+[node name="ZoneChargementScene" parent="." unique_id=250970092 instance=ExtResource("16_v1wsm")]
 position = Vector2(1673, 493)
 CheminSceneSuivante = "uid://qopyq3e1vk2k"
 
-[node name="Marker2D" type="Marker2D" parent="DecorAvant/ZoneChargementScene" unique_id=420753347]
+[node name="Marker2D" type="Marker2D" parent="ZoneChargementScene" unique_id=420753347]
 position = Vector2(-64, 15)
 script = ExtResource("17_h1ran")
 Id = "JardinGrotteEnd"

@@ -217,6 +217,23 @@ t=1,0s : (10161, 480)  ← marche sur le sol de l'arène
 t=2,0s : (10792, 575)  ← dans le Jardin
 ```
 
+## Sortie du Jardin décalée en jeu
+
+`ZoneChargementScene` (et son `Marker2D`/`PointEntree` « JardinGrotteEnd ») avaient été posés
+dans `JardinGrotte/DecorAvant`, donc **dans un `Parallax2D`** (`scroll_scale` 1.15) : la zone
+défilait plus vite que le sol, et le recalage de salle la déportait en plus de +1594 px. Même
+famille que les props volants. Remontés à la racine de la salle, coordonnées inchangées :
+
+```
+Jardin posé à (10624, 0)
+ZoneChargementScene : local salle (1673, 493)   (authoré (1673, 493))
+Marker2D            : local salle (1609, 508)   (authoré (1609, 508))
+```
+
+L'aller-retour avec `monde2` est cohérent : le Jardin pointe sur `uid://qopyq3e1vk2k`
+(monde2), qui renvoie sur `uid://dfcn030tpflmp` (ReindeerBoss) avec
+`PointEntreeCible = "JardinGrotteEnd"`.
+
 ## Reste à faire / à l'œil
 
 - **Play-test manuel** (`godot res://scenes/niveaux/ReindeerBoss.tscn`) : vérifier le calage
