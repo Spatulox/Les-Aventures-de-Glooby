@@ -4,11 +4,11 @@
 [ext_resource type="Texture2D" uid="uid://de4ucrtui0h75" path="res://assets/pnj/ours_de_neige/idle/00.png" id="2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
-radius = 6.0
-height = 22.0
+radius = 20.0
+height = 40.0
 
 [sub_resource type="RectangleShape2D" id="RectContact"]
-size = Vector2(24, 24)
+size = Vector2(11.358974, 28.999998)
 
 [sub_resource type="CircleShape2D" id="CercleDetection"]
 radius = 140.0
@@ -20,10 +20,11 @@ script = ExtResource("1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=190736037]
 
-[node name="Apercu" type="Sprite2D" parent="."]
+[node name="Apercu" type="Sprite2D" parent="." unique_id=1240422369]
 texture = ExtResource("2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1930108254]
+position = Vector2(0, 5)
 shape = SubResource("CapsuleShape2D_1")
 
 [node name="ZoneContact" type="Area2D" parent="." unique_id=1769905639]
@@ -31,11 +32,13 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneContact" unique_id=331566648]
+position = Vector2(19.035, 5.5)
+scale = Vector2(1.5599995, 1)
 shape = SubResource("RectContact")
 
-[node name="ZoneDetection" type="Area2D" parent="."]
+[node name="ZoneDetection" type="Area2D" parent="." unique_id=1675557866]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection" unique_id=694221812]
 shape = SubResource("CercleDetection")

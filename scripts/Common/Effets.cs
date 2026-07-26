@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 // Effets visuels procéduraux partagés (tweens) : réutilisés à la place de
 // frames dédiées, pour économiser le budget de génération et centraliser les
@@ -53,6 +54,44 @@ public static class Effets
 	{
 		var tween = cible.CreateTween();
 		tween.TweenProperty(cible, "modulate:a", alphaCible, duree);
+	}
+
+	// Voile noir plein écran : fondu d'entrée (alpha 0→1), exécution de l'action au
+	// noir, puis fondu de sortie (1→0) et nettoyage du voile. Sert aux transitions
+	// qui coupent la vue le temps d'un changement brutal — chargement d'une autre
+	// scène (ZoneChargementScene) comme téléportation d'une salle à l'autre
+	// (PorteInterne).
+	//
+	// Le voile est rattaché à Root, PAS à l'appelant : un ChangeSceneToFile libère la
+	// scène courante (et donc l'appelant) au milieu du tween. Pour la même raison le
+	// tween est créé SUR le voile — sans quoi le fondu de sortie ne jouerait jamais et
+	// l'écran resterait noir par-dessus la nouvelle scène.
+	public static void FondreAuNoirPuis(Node source, float duree, Action action)
+	{
+		if (duree <= 0f)
+		{
+			action();
+			return;
+		}
+
+		var couche = new CanvasLayer { Layer = 128 };
+		var voile = new ColorRect
+		{
+			Color = Colors.Black,
+			Modulate = new Color(1f, 1f, 1f, 0f),
+			MouseFilter = Control.MouseFilterEnum.Ignore,
+		};
+		voile.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+		couche.AddChild(voile);
+		source.GetTree().Root.AddChild(couche);
+
+		var tween = voile.CreateTween();
+		tween.TweenProperty(voile, "modulate:a", 1f, duree);
+		tween.TweenCallback(Callable.From(action));
+		// Laisse la destination s'instancier/s'afficher avant de révéler.
+		tween.TweenInterval(0.1);
+		tween.TweenProperty(voile, "modulate:a", 0f, duree);
+		tween.TweenCallback(Callable.From(couche.QueueFree));
 	}
 
 	// Flottaison verticale en boucle (objets à ramasser) : oscillation douce

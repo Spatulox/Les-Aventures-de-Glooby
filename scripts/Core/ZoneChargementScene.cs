@@ -44,42 +44,10 @@ public partial class ZoneChargementScene : DeclencheurZone
 			return;
 		}
 
-		if (DureeFondu <= 0f)
-		{
-			ChangerScene();
-			return;
-		}
-
-		FondreAuNoirPuisCharger();
-	}
-
-	// Voile noir plein écran (CanvasLayer au-dessus du jeu) : fondu d'entrée (alpha
-	// 0→1), bascule vers la scène cible, puis fondu de sortie (1→0) et nettoyage.
-	// Le voile est rattaché à Root (il survit au ChangeSceneToFile, qui ne libère
-	// que la scène courante) ET le tween est créé SUR le voile, pas sur cette zone :
-	// il continue donc de tourner après que l'ancienne scène (dont ce nœud) est
-	// libérée. Sans le fondu de sortie + QueueFree, le voile resterait opaque au-dessus
-	// de la nouvelle scène — c'était la cause de l'écran noir persistant.
-	private void FondreAuNoirPuisCharger()
-	{
-		var couche = new CanvasLayer { Layer = 128 };
-		var voile = new ColorRect
-		{
-			Color = Colors.Black,
-			Modulate = new Color(1f, 1f, 1f, 0f),
-			MouseFilter = Control.MouseFilterEnum.Ignore,
-		};
-		voile.SetAnchorsPreset(Control.LayoutPreset.FullRect);
-		couche.AddChild(voile);
-		GetTree().Root.AddChild(couche);
-
-		var tween = voile.CreateTween();
-		tween.TweenProperty(voile, "modulate:a", 1f, DureeFondu);
-		tween.TweenCallback(Callable.From(ChangerScene));
-		// Laisse la nouvelle scène s'instancier/s'afficher avant de révéler.
-		tween.TweenInterval(0.1);
-		tween.TweenProperty(voile, "modulate:a", 0f, DureeFondu);
-		tween.TweenCallback(Callable.From(couche.QueueFree));
+		// Voile noir mutualisé (Effets) : il est rattaché à Root et non à cette zone,
+		// donc il survit au ChangeSceneToFile qui libère la scène courante — sans quoi
+		// le fondu de sortie ne jouerait jamais et l'écran resterait noir.
+		Effets.FondreAuNoirPuis(this, DureeFondu, ChangerScene);
 	}
 
 	// Bascule effective vers la scène suivante (différée pour rester hors du

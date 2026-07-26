@@ -45,6 +45,10 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		// et verrouille la caméra sur l'arène. On garde BodyEntered (retour true) pour
 		// déclencher l'apparition du boss à l'entrée du joueur.
 		AddToGroup(CameraZone.Groupe);
+		// Le combat ne s'arme qu'UNE fois. BodyEntered se réémet à chaque nouvelle
+		// entrée du joueur - retour après un respawn, recul qui le fait sortir puis
+		// rentrer, téléportation - et chacune faisait apparaître un boss de plus.
+		UneSeuleFois = true;
 		return true;
 	}
 
@@ -56,6 +60,11 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	{
 		// Boss déjà vaincu (partie chargée) : ne pas le faire réapparaître, barre masquée.
 		if (GameState.Instance.EstBossVaincu(NomBoss))
+			return;
+
+		// Ceinture et bretelles avec UneSeuleFois : un boss encore en vie dans l'arène
+		// interdit d'en faire apparaître un second, même si la zone était réarmée.
+		if (Boss != null && IsInstanceValid(Boss))
 			return;
 
 		Boss = FaireApparaitreBoss();

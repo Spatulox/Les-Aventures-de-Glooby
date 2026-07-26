@@ -1,1271 +1,1423 @@
-[gd_scene load_steps=70 format=3]
+[gd_scene format=3 uid="uid://beg75xoad1vmg"]
 
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/jardin/fond.png" id="t1"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/jardin/terrain.png" id="t2"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/region/glow_magenta.png" id="t3"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/region/glow_cyan.png" id="t4"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/arbre_givre.png" id="t5"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/buisson_gele.png" id="t6"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/champignons.png" id="t7"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/cristaux.png" id="t8"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/feuillage_mural.png" id="t9"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/fleur_accent.png" id="t10"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/masse_avant.png" id="t11"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/masse_feuillage.png" id="t12"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/pod_lumineux.png" id="t13"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/rideau_lianes.png" id="t14"]
-[ext_resource type="Texture2D" path="res://assets/decors/grotte_florale/kit/touffe_bord.png" id="t15"]
-[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="tP"]
+[ext_resource type="Texture2D" uid="uid://cmaxoj3msaif1" path="res://assets/decors/grotte_florale/jardin/fond.png" id="t1"]
+[ext_resource type="Texture2D" uid="uid://6kurjxsvffqm" path="res://assets/decors/grotte_florale/jardin/terrain.png" id="t2"]
+[ext_resource type="Texture2D" uid="uid://d18hb5libsoph" path="res://assets/decors/grotte_florale/region/glow_magenta.png" id="t3"]
+[ext_resource type="Texture2D" uid="uid://x3xykpe78quo" path="res://assets/decors/grotte_florale/region/glow_cyan.png" id="t4"]
+[ext_resource type="Texture2D" uid="uid://dy6yfny0c6740" path="res://assets/decors/grotte_florale/kit/arbre_givre.png" id="t5"]
+[ext_resource type="Texture2D" uid="uid://04bpyy7k520g" path="res://assets/decors/grotte_florale/kit/buisson_gele.png" id="t6"]
+[ext_resource type="Texture2D" uid="uid://bf1rtsqhqpetg" path="res://assets/decors/grotte_florale/kit/champignons.png" id="t7"]
+[ext_resource type="Texture2D" uid="uid://dhvj2ivhr5eol" path="res://assets/decors/grotte_florale/kit/cristaux.png" id="t8"]
+[ext_resource type="Texture2D" uid="uid://cshri3naalr64" path="res://assets/decors/grotte_florale/kit/feuillage_mural.png" id="t9"]
+[ext_resource type="Texture2D" uid="uid://dmo5kbm74yroh" path="res://assets/decors/grotte_florale/kit/fleur_accent.png" id="t10"]
+[ext_resource type="Texture2D" uid="uid://0frkjt3esy81" path="res://assets/decors/grotte_florale/kit/masse_avant.png" id="t11"]
+[ext_resource type="Texture2D" uid="uid://bgslcha0cc4ba" path="res://assets/decors/grotte_florale/kit/masse_feuillage.png" id="t12"]
+[ext_resource type="Texture2D" uid="uid://dnegty16gfn3p" path="res://assets/decors/grotte_florale/kit/pod_lumineux.png" id="t13"]
+[ext_resource type="Texture2D" uid="uid://bwj3t74gkv0ca" path="res://assets/decors/grotte_florale/kit/rideau_lianes.png" id="t14"]
+[ext_resource type="Texture2D" uid="uid://c7jb4j3d1vxjn" path="res://assets/decors/grotte_florale/kit/touffe_bord.png" id="t15"]
 
 [sub_resource type="RectangleShape2D" id="s1"]
 size = Vector2(1792, 32)
+
 [sub_resource type="RectangleShape2D" id="s2"]
 size = Vector2(1792, 32)
+
 [sub_resource type="RectangleShape2D" id="s3"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s4"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s5"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s6"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s7"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s8"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s9"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s10"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s11"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s12"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s13"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s14"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s15"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s16"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s17"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s18"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s19"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s20"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s21"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s22"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s23"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s24"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s25"]
 size = Vector2(64, 32)
-[sub_resource type="RectangleShape2D" id="s26"]
-size = Vector2(224, 32)
-[sub_resource type="RectangleShape2D" id="s27"]
-size = Vector2(224, 32)
+
 [sub_resource type="RectangleShape2D" id="s28"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s29"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s30"]
-size = Vector2(224, 32)
+size = Vector2(224, 56)
+
 [sub_resource type="RectangleShape2D" id="s31"]
-size = Vector2(224, 32)
+size = Vector2(232.49707, 57)
+
 [sub_resource type="RectangleShape2D" id="s32"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s33"]
 size = Vector2(64, 32)
-[sub_resource type="RectangleShape2D" id="s34"]
-size = Vector2(224, 32)
-[sub_resource type="RectangleShape2D" id="s35"]
-size = Vector2(224, 32)
-[sub_resource type="RectangleShape2D" id="s36"]
-size = Vector2(224, 32)
-[sub_resource type="RectangleShape2D" id="s37"]
-size = Vector2(224, 32)
+
 [sub_resource type="RectangleShape2D" id="s38"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s39"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s40"]
-size = Vector2(224, 32)
+size = Vector2(224, 58)
+
 [sub_resource type="RectangleShape2D" id="s41"]
-size = Vector2(224, 32)
-[sub_resource type="RectangleShape2D" id="s42"]
-size = Vector2(224, 32)
+size = Vector2(224, 44.74814)
+
 [sub_resource type="RectangleShape2D" id="s43"]
 size = Vector2(96, 32)
+
 [sub_resource type="RectangleShape2D" id="s44"]
 size = Vector2(64, 32)
+
 [sub_resource type="RectangleShape2D" id="s45"]
 size = Vector2(224, 32)
-[sub_resource type="RectangleShape2D" id="s46"]
-size = Vector2(224, 32)
-[sub_resource type="RectangleShape2D" id="s47"]
-size = Vector2(224, 32)
+
 [sub_resource type="RectangleShape2D" id="s48"]
-size = Vector2(224, 32)
+size = Vector2(188, 53)
+
 [sub_resource type="RectangleShape2D" id="s49"]
 size = Vector2(96, 32)
-[sub_resource type="RectangleShape2D" id="s50"]
-size = Vector2(1792, 32)
+
 [sub_resource type="RectangleShape2D" id="s51"]
-size = Vector2(1792, 32)
+size = Vector2(1792, 42)
+
 [sub_resource type="RectangleShape2D" id="s52"]
 size = Vector2(1792, 32)
+
 [sub_resource type="RectangleShape2D" id="s53"]
 size = Vector2(1792, 32)
 
-[node name="JardinGrotte" type="Node2D"]
+[node name="JardinGrotte" type="Node2D" unique_id=2087554613]
 
-[node name="Grade" type="CanvasModulate" parent="."]
+[node name="Grade" type="CanvasModulate" parent="." unique_id=1284554105]
 color = Color(0.95, 0.98, 1.05, 1)
 
-[node name="Fond" type="Parallax2D" parent="."]
+[node name="Fond" type="Parallax2D" parent="." unique_id=1771590976]
 scroll_scale = Vector2(0.3, 0.4)
-repeat_size = Vector2(0, 0)
-[node name="Img" type="Sprite2D" parent="Fond"]
-position = Vector2(896, 352)
+
+[node name="Img" type="Sprite2D" parent="Fond" unique_id=1067099901]
 z_index = -100
+position = Vector2(896, 352)
 texture = ExtResource("t1")
 
-[node name="DecorFond" type="Parallax2D" parent="."]
+[node name="DecorFond" type="Parallax2D" parent="." unique_id=408941443]
 scroll_scale = Vector2(0.55, 0.6)
-repeat_size = Vector2(0, 0)
-[node name="F1" type="Sprite2D" parent="DecorFond"]
+
+[node name="F1" type="Sprite2D" parent="DecorFond" unique_id=1737255378]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(1085, 507)
 scale = Vector2(0.84, 0.84)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t5")
-[node name="F2" type="Sprite2D" parent="DecorFond"]
+
+[node name="F2" type="Sprite2D" parent="DecorFond" unique_id=1990265942]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(1757, 391)
 scale = Vector2(0.851, 0.851)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F3" type="Sprite2D" parent="DecorFond"]
+
+[node name="F3" type="Sprite2D" parent="DecorFond" unique_id=954553217]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(353, 465)
 scale = Vector2(1.247, 1.247)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F4" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F4" type="Sprite2D" parent="DecorFond" unique_id=1837343925]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(1530, 504)
 scale = Vector2(0.9, 0.9)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F5" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F5" type="Sprite2D" parent="DecorFond" unique_id=123769012]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(610, 371)
 scale = Vector2(1.095, 1.095)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t5")
-[node name="F6" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F6" type="Sprite2D" parent="DecorFond" unique_id=1672108173]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(0, 310)
 scale = Vector2(1.013, 1.013)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F7" type="Sprite2D" parent="DecorFond"]
+
+[node name="F7" type="Sprite2D" parent="DecorFond" unique_id=411403037]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(770, 269)
 scale = Vector2(1.153, 1.153)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F8" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F8" type="Sprite2D" parent="DecorFond" unique_id=1612344585]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(1297, 407)
 scale = Vector2(1.048, 1.048)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F9" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F9" type="Sprite2D" parent="DecorFond" unique_id=1384885101]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(304, 478)
 scale = Vector2(0.924, 0.924)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F10" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F10" type="Sprite2D" parent="DecorFond" unique_id=982452135]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(345, 572)
 scale = Vector2(1.12, 1.12)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t5")
-[node name="F11" type="Sprite2D" parent="DecorFond"]
+
+[node name="F11" type="Sprite2D" parent="DecorFond" unique_id=675225118]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(1465, 305)
 scale = Vector2(1.085, 1.085)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t14")
-[node name="F12" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F12" type="Sprite2D" parent="DecorFond" unique_id=1020755021]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(1157, 593)
 scale = Vector2(1.119, 1.119)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t5")
-[node name="F13" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F13" type="Sprite2D" parent="DecorFond" unique_id=1640676808]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(567, 643)
 scale = Vector2(0.609, 0.609)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t12")
-[node name="F14" type="Sprite2D" parent="DecorFond"]
+flip_h = true
+
+[node name="F14" type="Sprite2D" parent="DecorFond" unique_id=1548556791]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
 position = Vector2(172, 398)
 scale = Vector2(1.041, 1.041)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t12")
-[node name="F15" type="Sprite2D" parent="DecorFond"]
-position = Vector2(79, 356)
-scale = Vector2(0.79, 0.79)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t6")
-[node name="F16" type="Sprite2D" parent="DecorFond"]
-position = Vector2(1346, 504)
-scale = Vector2(0.74, 0.74)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t12")
-[node name="F17" type="Sprite2D" parent="DecorFond"]
-position = Vector2(458, 561)
-scale = Vector2(1.047, 1.047)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t12")
-[node name="F18" type="Sprite2D" parent="DecorFond"]
-position = Vector2(216, 592)
-scale = Vector2(0.608, 0.608)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t12")
-[node name="F19" type="Sprite2D" parent="DecorFond"]
-position = Vector2(577, 553)
-scale = Vector2(0.944, 0.944)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t5")
-[node name="F20" type="Sprite2D" parent="DecorFond"]
-position = Vector2(1076, 580)
-scale = Vector2(1.016, 1.016)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t5")
-[node name="F21" type="Sprite2D" parent="DecorFond"]
-position = Vector2(772, 340)
-scale = Vector2(1.035, 1.035)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t5")
-[node name="F22" type="Sprite2D" parent="DecorFond"]
-position = Vector2(1384, 542)
-scale = Vector2(0.605, 0.605)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t5")
-[node name="F23" type="Sprite2D" parent="DecorFond"]
-position = Vector2(1789, 339)
-scale = Vector2(0.98, 0.98)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t5")
-[node name="F24" type="Sprite2D" parent="DecorFond"]
-position = Vector2(1339, 398)
-scale = Vector2(0.639, 0.639)
-z_index = -60
-flip_h = true
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t5")
-[node name="F25" type="Sprite2D" parent="DecorFond"]
-position = Vector2(846, 555)
-scale = Vector2(0.774, 0.774)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t6")
-[node name="F26" type="Sprite2D" parent="DecorFond"]
-position = Vector2(673, 585)
-scale = Vector2(0.603, 0.603)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t12")
-[node name="F27" type="Sprite2D" parent="DecorFond"]
-position = Vector2(104, 569)
-scale = Vector2(0.917, 0.917)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
-texture = ExtResource("t12")
-[node name="F28" type="Sprite2D" parent="DecorFond"]
-position = Vector2(335, 432)
-scale = Vector2(1.032, 1.032)
-z_index = -60
-modulate = Color(0.42, 0.48, 0.6, 1)
 texture = ExtResource("t12")
 
-[node name="Terrain" type="Sprite2D" parent="."]
+[node name="F15" type="Sprite2D" parent="DecorFond" unique_id=828763764]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(79, 356)
+scale = Vector2(0.79, 0.79)
+texture = ExtResource("t6")
+
+[node name="F16" type="Sprite2D" parent="DecorFond" unique_id=343165147]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(1346, 504)
+scale = Vector2(0.74, 0.74)
+texture = ExtResource("t12")
+flip_h = true
+
+[node name="F17" type="Sprite2D" parent="DecorFond" unique_id=1877603461]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(458, 561)
+scale = Vector2(1.047, 1.047)
+texture = ExtResource("t12")
+
+[node name="F18" type="Sprite2D" parent="DecorFond" unique_id=205261936]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(216, 592)
+scale = Vector2(0.608, 0.608)
+texture = ExtResource("t12")
+flip_h = true
+
+[node name="F19" type="Sprite2D" parent="DecorFond" unique_id=1233572270]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(577, 553)
+scale = Vector2(0.944, 0.944)
+texture = ExtResource("t5")
+
+[node name="F20" type="Sprite2D" parent="DecorFond" unique_id=754963946]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(1076, 580)
+scale = Vector2(1.016, 1.016)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="F21" type="Sprite2D" parent="DecorFond" unique_id=757839463]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(772, 340)
+scale = Vector2(1.035, 1.035)
+texture = ExtResource("t5")
+
+[node name="F22" type="Sprite2D" parent="DecorFond" unique_id=798724322]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(1384, 542)
+scale = Vector2(0.605, 0.605)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="F23" type="Sprite2D" parent="DecorFond" unique_id=20351169]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(1789, 339)
+scale = Vector2(0.98, 0.98)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="F24" type="Sprite2D" parent="DecorFond" unique_id=498418678]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(1339, 398)
+scale = Vector2(0.639, 0.639)
+texture = ExtResource("t5")
+flip_h = true
+
+[node name="F25" type="Sprite2D" parent="DecorFond" unique_id=105330818]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(846, 555)
+scale = Vector2(0.774, 0.774)
+texture = ExtResource("t6")
+
+[node name="F26" type="Sprite2D" parent="DecorFond" unique_id=1804735251]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(673, 585)
+scale = Vector2(0.603, 0.603)
+texture = ExtResource("t12")
+
+[node name="F27" type="Sprite2D" parent="DecorFond" unique_id=1445750395]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(104, 569)
+scale = Vector2(0.917, 0.917)
+texture = ExtResource("t12")
+
+[node name="F28" type="Sprite2D" parent="DecorFond" unique_id=403412065]
+modulate = Color(0.42, 0.48, 0.6, 1)
+z_index = -60
+position = Vector2(335, 432)
+scale = Vector2(1.032, 1.032)
+texture = ExtResource("t12")
+
+[node name="Terrain" type="Sprite2D" parent="." unique_id=157101229]
 position = Vector2(896, 352)
 texture = ExtResource("t2")
 
-[node name="Sol" type="StaticBody2D" parent="."]
-collision_layer = 1
-[node name="C0" type="CollisionShape2D" parent="Sol"]
+[node name="Sol" type="StaticBody2D" parent="." unique_id=1673393944]
+
+[node name="C0" type="CollisionShape2D" parent="Sol" unique_id=713207037]
 position = Vector2(896, 16)
 shape = SubResource("s1")
-[node name="C1" type="CollisionShape2D" parent="Sol"]
+
+[node name="C1" type="CollisionShape2D" parent="Sol" unique_id=1623565617]
 position = Vector2(896, 48)
 shape = SubResource("s2")
-[node name="C2" type="CollisionShape2D" parent="Sol"]
+
+[node name="C2" type="CollisionShape2D" parent="Sol" unique_id=174932734]
 position = Vector2(32, 80)
 shape = SubResource("s3")
-[node name="C3" type="CollisionShape2D" parent="Sol"]
+
+[node name="C3" type="CollisionShape2D" parent="Sol" unique_id=295955847]
 position = Vector2(1744, 80)
 shape = SubResource("s4")
-[node name="C4" type="CollisionShape2D" parent="Sol"]
+
+[node name="C4" type="CollisionShape2D" parent="Sol" unique_id=1647251048]
 position = Vector2(32, 112)
 shape = SubResource("s5")
-[node name="C5" type="CollisionShape2D" parent="Sol"]
+
+[node name="C5" type="CollisionShape2D" parent="Sol" unique_id=758560181]
 position = Vector2(1744, 112)
 shape = SubResource("s6")
-[node name="C6" type="CollisionShape2D" parent="Sol"]
+
+[node name="C6" type="CollisionShape2D" parent="Sol" unique_id=1369407188]
 position = Vector2(32, 144)
 shape = SubResource("s7")
-[node name="C7" type="CollisionShape2D" parent="Sol"]
+
+[node name="C7" type="CollisionShape2D" parent="Sol" unique_id=1763864863]
 position = Vector2(1744, 144)
 shape = SubResource("s8")
-[node name="C8" type="CollisionShape2D" parent="Sol"]
+
+[node name="C8" type="CollisionShape2D" parent="Sol" unique_id=1244566452]
 position = Vector2(32, 176)
 shape = SubResource("s9")
-[node name="C9" type="CollisionShape2D" parent="Sol"]
+
+[node name="C9" type="CollisionShape2D" parent="Sol" unique_id=980515710]
 position = Vector2(1744, 176)
 shape = SubResource("s10")
-[node name="C10" type="CollisionShape2D" parent="Sol"]
+
+[node name="C10" type="CollisionShape2D" parent="Sol" unique_id=70869847]
 position = Vector2(32, 208)
 shape = SubResource("s11")
-[node name="C11" type="CollisionShape2D" parent="Sol"]
+
+[node name="C11" type="CollisionShape2D" parent="Sol" unique_id=1651425408]
 position = Vector2(1744, 208)
 shape = SubResource("s12")
-[node name="C12" type="CollisionShape2D" parent="Sol"]
+
+[node name="C12" type="CollisionShape2D" parent="Sol" unique_id=370108950]
 position = Vector2(32, 240)
 shape = SubResource("s13")
-[node name="C13" type="CollisionShape2D" parent="Sol"]
+
+[node name="C13" type="CollisionShape2D" parent="Sol" unique_id=752342445]
 position = Vector2(1744, 240)
 shape = SubResource("s14")
-[node name="C14" type="CollisionShape2D" parent="Sol"]
+
+[node name="C14" type="CollisionShape2D" parent="Sol" unique_id=2131480319]
 position = Vector2(32, 272)
 shape = SubResource("s15")
-[node name="C15" type="CollisionShape2D" parent="Sol"]
+
+[node name="C15" type="CollisionShape2D" parent="Sol" unique_id=2014384011]
 position = Vector2(1744, 272)
 shape = SubResource("s16")
-[node name="C16" type="CollisionShape2D" parent="Sol"]
+
+[node name="C16" type="CollisionShape2D" parent="Sol" unique_id=670133203]
 position = Vector2(32, 304)
 shape = SubResource("s17")
-[node name="C17" type="CollisionShape2D" parent="Sol"]
+
+[node name="C17" type="CollisionShape2D" parent="Sol" unique_id=1625989592]
 position = Vector2(1744, 304)
 shape = SubResource("s18")
-[node name="C18" type="CollisionShape2D" parent="Sol"]
+
+[node name="C18" type="CollisionShape2D" parent="Sol" unique_id=116737420]
 position = Vector2(32, 336)
 shape = SubResource("s19")
-[node name="C19" type="CollisionShape2D" parent="Sol"]
+
+[node name="C19" type="CollisionShape2D" parent="Sol" unique_id=18325138]
 position = Vector2(1744, 336)
 shape = SubResource("s20")
-[node name="C20" type="CollisionShape2D" parent="Sol"]
+
+[node name="C20" type="CollisionShape2D" parent="Sol" unique_id=1530410690]
 position = Vector2(32, 368)
 shape = SubResource("s21")
-[node name="C21" type="CollisionShape2D" parent="Sol"]
+
+[node name="C21" type="CollisionShape2D" parent="Sol" unique_id=409842033]
 position = Vector2(1744, 368)
 shape = SubResource("s22")
-[node name="C22" type="CollisionShape2D" parent="Sol"]
+
+[node name="C22" type="CollisionShape2D" parent="Sol" unique_id=222339689]
 position = Vector2(32, 400)
 shape = SubResource("s23")
-[node name="C23" type="CollisionShape2D" parent="Sol"]
+
+[node name="C23" type="CollisionShape2D" parent="Sol" unique_id=2013421491]
 position = Vector2(1744, 400)
 shape = SubResource("s24")
-[node name="C24" type="CollisionShape2D" parent="Sol"]
+
+[node name="C24" type="CollisionShape2D" parent="Sol" unique_id=1010435578]
 position = Vector2(32, 432)
 shape = SubResource("s25")
-[node name="C25" type="CollisionShape2D" parent="Sol"]
-position = Vector2(784, 432)
-shape = SubResource("s26")
-[node name="C26" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1296, 432)
-shape = SubResource("s27")
-[node name="C27" type="CollisionShape2D" parent="Sol"]
+
+[node name="C27" type="CollisionShape2D" parent="Sol" unique_id=853015898]
 position = Vector2(1744, 432)
 shape = SubResource("s28")
-[node name="C28" type="CollisionShape2D" parent="Sol"]
+
+[node name="C28" type="CollisionShape2D" parent="Sol" unique_id=873081975]
 position = Vector2(32, 464)
 shape = SubResource("s29")
-[node name="C29" type="CollisionShape2D" parent="Sol"]
-position = Vector2(784, 464)
+
+[node name="C29" type="CollisionShape2D" parent="Sol" unique_id=580513138]
+position = Vector2(784, 465)
+scale = Vector2(0.84000003, 1)
 shape = SubResource("s30")
-[node name="C30" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1296, 464)
+
+[node name="C30" type="CollisionShape2D" parent="Sol" unique_id=2046969959]
+position = Vector2(1296, 464.5)
+scale = Vector2(0.8000098, 1)
 shape = SubResource("s31")
-[node name="C31" type="CollisionShape2D" parent="Sol"]
+
+[node name="C31" type="CollisionShape2D" parent="Sol" unique_id=557471238]
 position = Vector2(1744, 464)
 shape = SubResource("s32")
-[node name="C32" type="CollisionShape2D" parent="Sol"]
+
+[node name="C32" type="CollisionShape2D" parent="Sol" unique_id=2012733090]
 position = Vector2(32, 496)
 shape = SubResource("s33")
-[node name="C33" type="CollisionShape2D" parent="Sol"]
-position = Vector2(528, 496)
-shape = SubResource("s34")
-[node name="C34" type="CollisionShape2D" parent="Sol"]
-position = Vector2(784, 496)
-shape = SubResource("s35")
-[node name="C35" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1040, 496)
-shape = SubResource("s36")
-[node name="C36" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1296, 496)
-shape = SubResource("s37")
-[node name="C37" type="CollisionShape2D" parent="Sol"]
+
+[node name="C37" type="CollisionShape2D" parent="Sol" unique_id=882774428]
 position = Vector2(1744, 496)
 shape = SubResource("s38")
-[node name="C38" type="CollisionShape2D" parent="Sol"]
+
+[node name="C38" type="CollisionShape2D" parent="Sol" unique_id=151774925]
 position = Vector2(32, 528)
 shape = SubResource("s39")
-[node name="C39" type="CollisionShape2D" parent="Sol"]
+
+[node name="C39" type="CollisionShape2D" parent="Sol" unique_id=368507468]
 position = Vector2(528, 528)
+scale = Vector2(0.84000003, 1)
 shape = SubResource("s40")
-[node name="C40" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1040, 528)
+
+[node name="C40" type="CollisionShape2D" parent="Sol" unique_id=144440239]
+position = Vector2(1040, 528.5)
+scale = Vector2(0.8332927, 1.2737952)
 shape = SubResource("s41")
-[node name="C41" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1552, 528)
-shape = SubResource("s42")
-[node name="C42" type="CollisionShape2D" parent="Sol"]
+
+[node name="C42" type="CollisionShape2D" parent="Sol" unique_id=2085609665]
 position = Vector2(1744, 528)
 shape = SubResource("s43")
-[node name="C43" type="CollisionShape2D" parent="Sol"]
+
+[node name="C43" type="CollisionShape2D" parent="Sol" unique_id=1748228098]
 position = Vector2(32, 560)
 shape = SubResource("s44")
-[node name="C44" type="CollisionShape2D" parent="Sol"]
-position = Vector2(272, 560)
+
+[node name="C44" type="CollisionShape2D" parent="Sol" unique_id=1868058085]
+position = Vector2(274, 582)
+scale = Vector2(0.8400012, 1)
 shape = SubResource("s45")
-[node name="C45" type="CollisionShape2D" parent="Sol"]
-position = Vector2(528, 560)
-shape = SubResource("s46")
-[node name="C46" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1040, 560)
-shape = SubResource("s47")
-[node name="C47" type="CollisionShape2D" parent="Sol"]
-position = Vector2(1552, 560)
+
+[node name="C47" type="CollisionShape2D" parent="Sol" unique_id=1843420197]
+position = Vector2(1551, 570.5)
 shape = SubResource("s48")
-[node name="C48" type="CollisionShape2D" parent="Sol"]
+
+[node name="C48" type="CollisionShape2D" parent="Sol" unique_id=452712281]
 position = Vector2(1744, 560)
 shape = SubResource("s49")
-[node name="C49" type="CollisionShape2D" parent="Sol"]
-position = Vector2(896, 592)
-shape = SubResource("s50")
-[node name="C50" type="CollisionShape2D" parent="Sol"]
-position = Vector2(896, 624)
+
+[node name="C50" type="CollisionShape2D" parent="Sol" unique_id=1852995832]
+position = Vector2(896, 619)
 shape = SubResource("s51")
-[node name="C51" type="CollisionShape2D" parent="Sol"]
+
+[node name="C51" type="CollisionShape2D" parent="Sol" unique_id=1355726551]
 position = Vector2(896, 656)
 shape = SubResource("s52")
-[node name="C52" type="CollisionShape2D" parent="Sol"]
+
+[node name="C52" type="CollisionShape2D" parent="Sol" unique_id=33620338]
 position = Vector2(896, 688)
 shape = SubResource("s53")
 
-[node name="DecorBord" type="Node2D" parent="."]
-[node name="G1" type="Sprite2D" parent="DecorBord"]
+[node name="DecorBord" type="Node2D" parent="." unique_id=1837450782]
+
+[node name="G1" type="Sprite2D" parent="DecorBord" unique_id=1882522573]
+z_index = -1
 position = Vector2(80, 574)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t4")
-[node name="G2" type="Sprite2D" parent="DecorBord"]
+
+[node name="G2" type="Sprite2D" parent="DecorBord" unique_id=432628445]
+z_index = -1
 position = Vector2(144, 574)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t4")
-[node name="G3" type="Sprite2D" parent="DecorBord"]
+
+[node name="G3" type="Sprite2D" parent="DecorBord" unique_id=1368055865]
+z_index = -1
 position = Vector2(464, 484)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G4" type="Sprite2D" parent="DecorBord"]
+
+[node name="G4" type="Sprite2D" parent="DecorBord" unique_id=792515519]
+z_index = -1
 position = Vector2(528, 484)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G5" type="Sprite2D" parent="DecorBord"]
+
+[node name="G5" type="Sprite2D" parent="DecorBord" unique_id=2001806390]
+z_index = -1
 position = Vector2(560, 484)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G6" type="Sprite2D" parent="DecorBord"]
+
+[node name="G6" type="Sprite2D" parent="DecorBord" unique_id=1997586139]
+z_index = -1
 position = Vector2(592, 580)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G7" type="Sprite2D" parent="DecorBord"]
+
+[node name="G7" type="Sprite2D" parent="DecorBord" unique_id=1795310566]
+z_index = -1
 position = Vector2(592, 574)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t4")
-[node name="G8" type="Sprite2D" parent="DecorBord"]
+
+[node name="G8" type="Sprite2D" parent="DecorBord" unique_id=427935321]
+z_index = -1
 position = Vector2(624, 484)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G9" type="Sprite2D" parent="DecorBord"]
+
+[node name="G9" type="Sprite2D" parent="DecorBord" unique_id=945212737]
+z_index = -1
 position = Vector2(848, 414)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t4")
-[node name="G10" type="Sprite2D" parent="DecorBord"]
+
+[node name="G10" type="Sprite2D" parent="DecorBord" unique_id=1295953261]
+z_index = -1
 position = Vector2(976, 580)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G11" type="Sprite2D" parent="DecorBord"]
+
+[node name="G11" type="Sprite2D" parent="DecorBord" unique_id=768484422]
+z_index = -1
 position = Vector2(1008, 484)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G12" type="Sprite2D" parent="DecorBord"]
+
+[node name="G12" type="Sprite2D" parent="DecorBord" unique_id=105832989]
+z_index = -1
 position = Vector2(1072, 574)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t4")
-[node name="G13" type="Sprite2D" parent="DecorBord"]
+
+[node name="G13" type="Sprite2D" parent="DecorBord" unique_id=450544752]
+z_index = -1
 position = Vector2(1168, 580)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G14" type="Sprite2D" parent="DecorBord"]
+
+[node name="G14" type="Sprite2D" parent="DecorBord" unique_id=1119107947]
+z_index = -1
 position = Vector2(1232, 574)
-z_index = -1
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t4")
-[node name="G15" type="Sprite2D" parent="DecorBord"]
-position = Vector2(1392, 580)
+
+[node name="G15" type="Sprite2D" parent="DecorBord" unique_id=347642105]
 z_index = -1
+position = Vector2(1392, 580)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t3")
-[node name="G16" type="Sprite2D" parent="DecorBord"]
-position = Vector2(1712, 574)
+
+[node name="G16" type="Sprite2D" parent="DecorBord" unique_id=1249553525]
 z_index = -1
+position = Vector2(1712, 574)
 scale = Vector2(0.7, 0.7)
 texture = ExtResource("t4")
-[node name="B1" type="Sprite2D" parent="DecorBord"]
-position = Vector2(96, 224)
-scale = Vector2(0.723, 0.723)
+
+[node name="B6" type="Sprite2D" parent="DecorBord" unique_id=1399665405]
 z_index = 2
-texture = ExtResource("t9")
-[node name="B2" type="Sprite2D" parent="DecorBord"]
-position = Vector2(96, 320)
-scale = Vector2(0.66, 0.66)
-z_index = 2
-texture = ExtResource("t9")
-[node name="B3" type="Sprite2D" parent="DecorBord"]
-position = Vector2(96, 608)
-scale = Vector2(0.71, 0.71)
-z_index = 2
-texture = ExtResource("t9")
-[node name="B4" type="Sprite2D" parent="DecorBord"]
-position = Vector2(1696, 224)
-scale = Vector2(0.571, 0.571)
-z_index = 2
-flip_h = true
-texture = ExtResource("t9")
-[node name="B5" type="Sprite2D" parent="DecorBord"]
-position = Vector2(1696, 320)
-scale = Vector2(0.509, 0.509)
-z_index = 2
-flip_h = true
-texture = ExtResource("t9")
-[node name="B6" type="Sprite2D" parent="DecorBord"]
-position = Vector2(1696, 512)
+position = Vector2(1696, 527)
 scale = Vector2(0.699, 0.699)
-z_index = 2
-flip_h = true
 texture = ExtResource("t9")
-[node name="B7" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B7" type="Sprite2D" parent="DecorBord" unique_id=1318059029]
+z_index = 2
 position = Vector2(75, 582)
 scale = Vector2(0.646, 0.646)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B8" type="Sprite2D" parent="DecorBord"]
+
+[node name="B8" type="Sprite2D" parent="DecorBord" unique_id=1523822301]
+z_index = 2
 position = Vector2(76, 601)
 scale = Vector2(0.509, 0.509)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B9" type="Sprite2D" parent="DecorBord"]
-position = Vector2(119, 584)
-scale = Vector2(0.782, 0.782)
-z_index = 2
 flip_h = true
+
+[node name="B9" type="Sprite2D" parent="DecorBord" unique_id=1266049256]
+z_index = 2
+position = Vector2(111, 594)
+scale = Vector2(0.782, 0.782)
 texture = ExtResource("t6")
-[node name="B10" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B10" type="Sprite2D" parent="DecorBord" unique_id=1905367953]
+z_index = 2
 position = Vector2(140, 599)
 scale = Vector2(0.522, 0.522)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B11" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B11" type="Sprite2D" parent="DecorBord" unique_id=2045790970]
+z_index = 2
 position = Vector2(168, 593)
 scale = Vector2(0.808, 0.808)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B12" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B12" type="Sprite2D" parent="DecorBord" unique_id=1740119478]
+z_index = 2
 position = Vector2(212, 551)
 scale = Vector2(0.62, 0.62)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B13" type="Sprite2D" parent="DecorBord"]
+
+[node name="B13" type="Sprite2D" parent="DecorBord" unique_id=1526211772]
+z_index = 2
 position = Vector2(202, 565)
 scale = Vector2(0.646, 0.646)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B14" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B14" type="Sprite2D" parent="DecorBord" unique_id=1709151023]
+z_index = 2
 position = Vector2(306, 558)
 scale = Vector2(0.608, 0.608)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B15" type="Sprite2D" parent="DecorBord"]
+
+[node name="B15" type="Sprite2D" parent="DecorBord" unique_id=911102718]
+z_index = 2
 position = Vector2(331, 567)
 scale = Vector2(0.563, 0.563)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B16" type="Sprite2D" parent="DecorBord"]
+
+[node name="B16" type="Sprite2D" parent="DecorBord" unique_id=1136557159]
+z_index = 2
 position = Vector2(333, 563)
 scale = Vector2(0.733, 0.733)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B17" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B17" type="Sprite2D" parent="DecorBord" unique_id=1796901637]
+z_index = 2
 position = Vector2(372, 552)
 scale = Vector2(0.592, 0.592)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B18" type="Sprite2D" parent="DecorBord"]
+
+[node name="B18" type="Sprite2D" parent="DecorBord" unique_id=139520399]
+z_index = 2
 position = Vector2(429, 582)
 scale = Vector2(0.823, 0.823)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B19" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B19" type="Sprite2D" parent="DecorBord" unique_id=1944231600]
+z_index = 2
 position = Vector2(464, 489)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B20" type="Sprite2D" parent="DecorBord"]
+
+[node name="B20" type="Sprite2D" parent="DecorBord" unique_id=1102777724]
+z_index = 2
 position = Vector2(467, 594)
 scale = Vector2(0.816, 0.816)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B21" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B21" type="Sprite2D" parent="DecorBord" unique_id=154287092]
+z_index = 2
 position = Vector2(456, 600)
 scale = Vector2(0.535, 0.535)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B22" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B22" type="Sprite2D" parent="DecorBord" unique_id=1497745996]
+z_index = 2
 position = Vector2(492, 500)
 scale = Vector2(0.682, 0.682)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B23" type="Sprite2D" parent="DecorBord"]
+
+[node name="B23" type="Sprite2D" parent="DecorBord" unique_id=1413334439]
+z_index = 2
 position = Vector2(492, 486)
 scale = Vector2(0.818, 0.818)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B24" type="Sprite2D" parent="DecorBord"]
+
+[node name="B24" type="Sprite2D" parent="DecorBord" unique_id=7446617]
+z_index = 2
 position = Vector2(496, 586)
 scale = Vector2(0.835, 0.835)
-z_index = 2
-flip_h = true
 texture = ExtResource("t8")
-[node name="B25" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B25" type="Sprite2D" parent="DecorBord" unique_id=1240658525]
+z_index = 2
 position = Vector2(503, 586)
 scale = Vector2(0.727, 0.727)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B26" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B26" type="Sprite2D" parent="DecorBord" unique_id=1156065886]
+z_index = 2
 position = Vector2(524, 496)
 scale = Vector2(0.627, 0.627)
-z_index = 2
 texture = ExtResource("t8")
-[node name="B27" type="Sprite2D" parent="DecorBord"]
+
+[node name="B27" type="Sprite2D" parent="DecorBord" unique_id=1863162695]
+z_index = 2
 position = Vector2(520, 497)
 scale = Vector2(0.612, 0.612)
-z_index = 2
 texture = ExtResource("t8")
-[node name="B28" type="Sprite2D" parent="DecorBord"]
+
+[node name="B28" type="Sprite2D" parent="DecorBord" unique_id=1583983869]
+z_index = 2
 position = Vector2(528, 489)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B29" type="Sprite2D" parent="DecorBord"]
+
+[node name="B29" type="Sprite2D" parent="DecorBord" unique_id=428481696]
+z_index = 2
 position = Vector2(524, 577)
 scale = Vector2(0.74, 0.74)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B30" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B30" type="Sprite2D" parent="DecorBord" unique_id=82874346]
+z_index = 2
 position = Vector2(559, 502)
 scale = Vector2(0.608, 0.608)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B31" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B31" type="Sprite2D" parent="DecorBord" unique_id=839157155]
+z_index = 2
 position = Vector2(556, 487)
 scale = Vector2(0.803, 0.803)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B32" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B32" type="Sprite2D" parent="DecorBord" unique_id=1912013464]
+z_index = 2
 position = Vector2(560, 489)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B33" type="Sprite2D" parent="DecorBord"]
+
+[node name="B33" type="Sprite2D" parent="DecorBord" unique_id=714489577]
+z_index = 2
 position = Vector2(565, 577)
 scale = Vector2(0.752, 0.752)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B34" type="Sprite2D" parent="DecorBord"]
+
+[node name="B34" type="Sprite2D" parent="DecorBord" unique_id=296569623]
+z_index = 2
 position = Vector2(592, 585)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B35" type="Sprite2D" parent="DecorBord"]
+
+[node name="B35" type="Sprite2D" parent="DecorBord" unique_id=1366430330]
+z_index = 2
 position = Vector2(616, 483)
 scale = Vector2(0.696, 0.696)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B36" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B36" type="Sprite2D" parent="DecorBord" unique_id=2038661979]
+z_index = 2
 position = Vector2(624, 489)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B37" type="Sprite2D" parent="DecorBord"]
+
+[node name="B37" type="Sprite2D" parent="DecorBord" unique_id=1921328675]
+z_index = 2
 position = Vector2(631, 597)
 scale = Vector2(0.627, 0.627)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B38" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B38" type="Sprite2D" parent="DecorBord" unique_id=584084231]
+z_index = 2
 position = Vector2(627, 575)
 scale = Vector2(0.803, 0.803)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B39" type="Sprite2D" parent="DecorBord"]
+
+[node name="B39" type="Sprite2D" parent="DecorBord" unique_id=1732466011]
+z_index = 2
 position = Vector2(652, 592)
 scale = Vector2(0.827, 0.827)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B40" type="Sprite2D" parent="DecorBord"]
+
+[node name="B40" type="Sprite2D" parent="DecorBord" unique_id=1519687244]
+z_index = 2
 position = Vector2(685, 576)
 scale = Vector2(0.772, 0.772)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B41" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B41" type="Sprite2D" parent="DecorBord" unique_id=1635648803]
+z_index = 2
 position = Vector2(726, 436)
 scale = Vector2(0.518, 0.518)
-z_index = 2
-flip_h = true
 texture = ExtResource("t8")
-[node name="B42" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B42" type="Sprite2D" parent="DecorBord" unique_id=639528940]
+z_index = 2
 position = Vector2(720, 584)
 scale = Vector2(0.608, 0.608)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B43" type="Sprite2D" parent="DecorBord"]
+
+[node name="B43" type="Sprite2D" parent="DecorBord" unique_id=824532934]
+z_index = 2
 position = Vector2(750, 428)
 scale = Vector2(0.783, 0.783)
-z_index = 2
 texture = ExtResource("t8")
-[node name="B44" type="Sprite2D" parent="DecorBord"]
+
+[node name="B44" type="Sprite2D" parent="DecorBord" unique_id=717317800]
+z_index = 2
 position = Vector2(749, 424)
 scale = Vector2(0.771, 0.771)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B45" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B45" type="Sprite2D" parent="DecorBord" unique_id=942582877]
+z_index = 2
 position = Vector2(754, 600)
 scale = Vector2(0.532, 0.532)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B46" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B46" type="Sprite2D" parent="DecorBord" unique_id=395418050]
+z_index = 2
 position = Vector2(789, 423)
 scale = Vector2(0.617, 0.617)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B47" type="Sprite2D" parent="DecorBord"]
+
+[node name="B47" type="Sprite2D" parent="DecorBord" unique_id=1094622381]
+z_index = 2
 position = Vector2(790, 584)
 scale = Vector2(0.593, 0.593)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B48" type="Sprite2D" parent="DecorBord"]
+
+[node name="B48" type="Sprite2D" parent="DecorBord" unique_id=1442564813]
+z_index = 2
 position = Vector2(818, 440)
 scale = Vector2(0.523, 0.523)
-z_index = 2
 texture = ExtResource("t7")
-[node name="B49" type="Sprite2D" parent="DecorBord"]
+
+[node name="B49" type="Sprite2D" parent="DecorBord" unique_id=1067859466]
+z_index = 2
 position = Vector2(816, 436)
 scale = Vector2(0.686, 0.686)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B50" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B50" type="Sprite2D" parent="DecorBord" unique_id=2036361469]
+z_index = 2
 position = Vector2(810, 577)
 scale = Vector2(0.756, 0.756)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B51" type="Sprite2D" parent="DecorBord"]
+
+[node name="B51" type="Sprite2D" parent="DecorBord" unique_id=1259162265]
+z_index = 2
 position = Vector2(843, 435)
 scale = Vector2(0.701, 0.701)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B52" type="Sprite2D" parent="DecorBord"]
+
+[node name="B52" type="Sprite2D" parent="DecorBord" unique_id=1300427609]
+z_index = 2
 position = Vector2(840, 597)
 scale = Vector2(0.639, 0.639)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B53" type="Sprite2D" parent="DecorBord"]
+
+[node name="B53" type="Sprite2D" parent="DecorBord" unique_id=708192438]
+z_index = 2
 position = Vector2(887, 433)
 scale = Vector2(0.591, 0.591)
-z_index = 2
-flip_h = true
 texture = ExtResource("t8")
-[node name="B54" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B54" type="Sprite2D" parent="DecorBord" unique_id=738828478]
+z_index = 2
 position = Vector2(875, 587)
 scale = Vector2(0.697, 0.697)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B55" type="Sprite2D" parent="DecorBord"]
+
+[node name="B55" type="Sprite2D" parent="DecorBord" unique_id=131876581]
+z_index = 2
 position = Vector2(881, 597)
 scale = Vector2(0.639, 0.639)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B56" type="Sprite2D" parent="DecorBord"]
+
+[node name="B56" type="Sprite2D" parent="DecorBord" unique_id=1977158110]
+z_index = 2
 position = Vector2(911, 597)
 scale = Vector2(0.673, 0.673)
-z_index = 2
 texture = ExtResource("t7")
-[node name="B57" type="Sprite2D" parent="DecorBord"]
+
+[node name="B57" type="Sprite2D" parent="DecorBord" unique_id=487064094]
+z_index = 2
 position = Vector2(940, 580)
 scale = Vector2(0.68, 0.68)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B58" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B58" type="Sprite2D" parent="DecorBord" unique_id=116059520]
+z_index = 2
 position = Vector2(947, 592)
 scale = Vector2(0.551, 0.551)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B59" type="Sprite2D" parent="DecorBord"]
+
+[node name="B59" type="Sprite2D" parent="DecorBord" unique_id=605687793]
+z_index = 2
 position = Vector2(975, 484)
 scale = Vector2(0.693, 0.693)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B60" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B60" type="Sprite2D" parent="DecorBord" unique_id=448936645]
+z_index = 2
 position = Vector2(983, 499)
 scale = Vector2(0.555, 0.555)
-z_index = 2
 texture = ExtResource("t8")
-[node name="B61" type="Sprite2D" parent="DecorBord"]
+
+[node name="B61" type="Sprite2D" parent="DecorBord" unique_id=2007258057]
+z_index = 2
 position = Vector2(976, 587)
 scale = Vector2(0.816, 0.816)
-z_index = 2
-flip_h = true
 texture = ExtResource("t8")
-[node name="B62" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B62" type="Sprite2D" parent="DecorBord" unique_id=342515292]
+z_index = 2
 position = Vector2(976, 585)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B63" type="Sprite2D" parent="DecorBord"]
+
+[node name="B63" type="Sprite2D" parent="DecorBord" unique_id=621422401]
+z_index = 2
 position = Vector2(1015, 486)
 scale = Vector2(0.837, 0.837)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B64" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B64" type="Sprite2D" parent="DecorBord" unique_id=1172163181]
+z_index = 2
 position = Vector2(1008, 489)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B65" type="Sprite2D" parent="DecorBord"]
+
+[node name="B65" type="Sprite2D" parent="DecorBord" unique_id=1854522721]
+z_index = 2
 position = Vector2(1008, 584)
 scale = Vector2(0.607, 0.607)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B66" type="Sprite2D" parent="DecorBord"]
+
+[node name="B66" type="Sprite2D" parent="DecorBord" unique_id=753765544]
+z_index = 2
 position = Vector2(1007, 596)
 scale = Vector2(0.672, 0.672)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B67" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B67" type="Sprite2D" parent="DecorBord" unique_id=341661350]
+z_index = 2
 position = Vector2(1042, 503)
 scale = Vector2(0.57, 0.57)
-z_index = 2
 texture = ExtResource("t7")
-[node name="B68" type="Sprite2D" parent="DecorBord"]
+
+[node name="B68" type="Sprite2D" parent="DecorBord" unique_id=1376044103]
+z_index = 2
 position = Vector2(1047, 574)
 scale = Vector2(0.81, 0.81)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B69" type="Sprite2D" parent="DecorBord"]
+
+[node name="B69" type="Sprite2D" parent="DecorBord" unique_id=817983424]
+z_index = 2
 position = Vector2(1066, 493)
 scale = Vector2(0.644, 0.644)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B70" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B70" type="Sprite2D" parent="DecorBord" unique_id=1315298614]
+z_index = 2
 position = Vector2(1068, 499)
 scale = Vector2(0.554, 0.554)
-z_index = 2
 texture = ExtResource("t8")
-[node name="B71" type="Sprite2D" parent="DecorBord"]
+
+[node name="B71" type="Sprite2D" parent="DecorBord" unique_id=244935050]
+z_index = 2
 position = Vector2(1068, 586)
 scale = Vector2(0.549, 0.549)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B72" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B72" type="Sprite2D" parent="DecorBord" unique_id=1549242891]
+z_index = 2
 position = Vector2(1099, 496)
 scale = Vector2(0.558, 0.558)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B73" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B73" type="Sprite2D" parent="DecorBord" unique_id=603062651]
+z_index = 2
 position = Vector2(1105, 502)
 scale = Vector2(0.591, 0.591)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B74" type="Sprite2D" parent="DecorBord"]
+
+[node name="B74" type="Sprite2D" parent="DecorBord" unique_id=319336071]
+z_index = 2
 position = Vector2(1133, 487)
 scale = Vector2(0.629, 0.629)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B75" type="Sprite2D" parent="DecorBord"]
+
+[node name="B75" type="Sprite2D" parent="DecorBord" unique_id=290726329]
+z_index = 2
 position = Vector2(1142, 493)
 scale = Vector2(0.622, 0.622)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B76" type="Sprite2D" parent="DecorBord"]
+
+[node name="B76" type="Sprite2D" parent="DecorBord" unique_id=1416230030]
+z_index = 2
 position = Vector2(1128, 595)
 scale = Vector2(0.784, 0.784)
-z_index = 2
 texture = ExtResource("t7")
-[node name="B77" type="Sprite2D" parent="DecorBord"]
+
+[node name="B77" type="Sprite2D" parent="DecorBord" unique_id=547673548]
+z_index = 2
 position = Vector2(1142, 588)
 scale = Vector2(0.667, 0.667)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B78" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B78" type="Sprite2D" parent="DecorBord" unique_id=877769520]
+z_index = 2
 position = Vector2(1175, 589)
 scale = Vector2(0.638, 0.638)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B79" type="Sprite2D" parent="DecorBord"]
+
+[node name="B79" type="Sprite2D" parent="DecorBord" unique_id=138589162]
+z_index = 2
 position = Vector2(1162, 573)
 scale = Vector2(0.843, 0.843)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B80" type="Sprite2D" parent="DecorBord"]
+
+[node name="B80" type="Sprite2D" parent="DecorBord" unique_id=1798016732]
+z_index = 2
 position = Vector2(1168, 585)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B81" type="Sprite2D" parent="DecorBord"]
+
+[node name="B81" type="Sprite2D" parent="DecorBord" unique_id=623202589]
+z_index = 2
 position = Vector2(1203, 598)
 scale = Vector2(0.607, 0.607)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B82" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B82" type="Sprite2D" parent="DecorBord" unique_id=887830011]
+z_index = 2
 position = Vector2(1201, 593)
 scale = Vector2(0.801, 0.801)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B83" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B83" type="Sprite2D" parent="DecorBord" unique_id=1282530905]
+z_index = 2
 position = Vector2(1231, 428)
 scale = Vector2(0.514, 0.514)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B84" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B84" type="Sprite2D" parent="DecorBord" unique_id=959734267]
+z_index = 2
 position = Vector2(1230, 598)
 scale = Vector2(0.602, 0.602)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B85" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B85" type="Sprite2D" parent="DecorBord" unique_id=1256547866]
+z_index = 2
 position = Vector2(1267, 425)
 scale = Vector2(0.575, 0.575)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B86" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B86" type="Sprite2D" parent="DecorBord" unique_id=500693649]
+z_index = 2
 position = Vector2(1259, 594)
 scale = Vector2(0.749, 0.749)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B87" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B87" type="Sprite2D" parent="DecorBord" unique_id=1564214441]
+z_index = 2
 position = Vector2(1288, 422)
 scale = Vector2(0.818, 0.818)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B88" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B88" type="Sprite2D" parent="DecorBord" unique_id=1297424083]
+z_index = 2
 position = Vector2(1296, 423)
 scale = Vector2(0.791, 0.791)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B89" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B89" type="Sprite2D" parent="DecorBord" unique_id=813359862]
+z_index = 2
 position = Vector2(1321, 438)
 scale = Vector2(0.595, 0.595)
-z_index = 2
-flip_h = true
 texture = ExtResource("t15")
-[node name="B90" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B90" type="Sprite2D" parent="DecorBord" unique_id=1998301169]
+z_index = 2
 position = Vector2(1362, 436)
 scale = Vector2(0.506, 0.506)
-z_index = 2
-flip_h = true
 texture = ExtResource("t8")
-[node name="B91" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B91" type="Sprite2D" parent="DecorBord" unique_id=215282038]
+z_index = 2
 position = Vector2(1355, 584)
 scale = Vector2(0.774, 0.774)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B92" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B92" type="Sprite2D" parent="DecorBord" unique_id=1971575966]
+z_index = 2
 position = Vector2(1364, 593)
 scale = Vector2(0.529, 0.529)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B93" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B93" type="Sprite2D" parent="DecorBord" unique_id=611672765]
+z_index = 2
 position = Vector2(1392, 424)
 scale = Vector2(0.763, 0.763)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B94" type="Sprite2D" parent="DecorBord"]
+
+[node name="B94" type="Sprite2D" parent="DecorBord" unique_id=260010875]
+z_index = 2
 position = Vector2(1395, 434)
 scale = Vector2(0.575, 0.575)
-z_index = 2
-flip_h = true
 texture = ExtResource("t8")
-[node name="B95" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B95" type="Sprite2D" parent="DecorBord" unique_id=860843809]
+z_index = 2
 position = Vector2(1393, 581)
 scale = Vector2(0.672, 0.672)
-z_index = 2
-flip_h = true
 texture = ExtResource("t13")
-[node name="B96" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B96" type="Sprite2D" parent="DecorBord" unique_id=1481265115]
+z_index = 2
 position = Vector2(1392, 585)
 scale = Vector2(0.8, 0.8)
-z_index = 2
 texture = ExtResource("t10")
-[node name="B97" type="Sprite2D" parent="DecorBord"]
+
+[node name="B97" type="Sprite2D" parent="DecorBord" unique_id=1561126455]
+z_index = 2
 position = Vector2(1428, 587)
 scale = Vector2(0.788, 0.788)
-z_index = 2
 texture = ExtResource("t8")
-[node name="B98" type="Sprite2D" parent="DecorBord"]
+
+[node name="B98" type="Sprite2D" parent="DecorBord" unique_id=350771536]
+z_index = 2
 position = Vector2(1456, 583)
 scale = Vector2(0.805, 0.805)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B99" type="Sprite2D" parent="DecorBord"]
+
+[node name="B99" type="Sprite2D" parent="DecorBord" unique_id=2042306058]
+z_index = 2
 position = Vector2(1460, 598)
 scale = Vector2(0.608, 0.608)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B100" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B100" type="Sprite2D" parent="DecorBord" unique_id=128589255]
+z_index = 2
 position = Vector2(1487, 525)
 scale = Vector2(0.748, 0.748)
-z_index = 2
-flip_h = true
 texture = ExtResource("t8")
-[node name="B101" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B101" type="Sprite2D" parent="DecorBord" unique_id=473246299]
+z_index = 2
 position = Vector2(1483, 531)
 scale = Vector2(0.752, 0.752)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B102" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B102" type="Sprite2D" parent="DecorBord" unique_id=138189700]
+z_index = 2
 position = Vector2(1515, 520)
 scale = Vector2(0.766, 0.766)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B103" type="Sprite2D" parent="DecorBord"]
+
+[node name="B103" type="Sprite2D" parent="DecorBord" unique_id=552603869]
+z_index = 2
 position = Vector2(1559, 528)
 scale = Vector2(0.538, 0.538)
-z_index = 2
 texture = ExtResource("t6")
-[node name="B104" type="Sprite2D" parent="DecorBord"]
+
+[node name="B104" type="Sprite2D" parent="DecorBord" unique_id=884300928]
+z_index = 2
 position = Vector2(1555, 536)
 scale = Vector2(0.527, 0.527)
-z_index = 2
 texture = ExtResource("t7")
-[node name="B105" type="Sprite2D" parent="DecorBord"]
+
+[node name="B105" type="Sprite2D" parent="DecorBord" unique_id=710489304]
+z_index = 2
 position = Vector2(1590, 529)
 scale = Vector2(0.847, 0.847)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B106" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B106" type="Sprite2D" parent="DecorBord" unique_id=1111788444]
+z_index = 2
 position = Vector2(1584, 532)
 scale = Vector2(0.654, 0.654)
-z_index = 2
 texture = ExtResource("t15")
-[node name="B107" type="Sprite2D" parent="DecorBord"]
+
+[node name="B107" type="Sprite2D" parent="DecorBord" unique_id=296770232]
+z_index = 2
 position = Vector2(1644, 522)
 scale = Vector2(0.71, 0.71)
-z_index = 2
-flip_h = true
 texture = ExtResource("t6")
-[node name="B108" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B108" type="Sprite2D" parent="DecorBord" unique_id=1552300316]
+z_index = 2
 position = Vector2(1651, 531)
 scale = Vector2(0.781, 0.781)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
-[node name="B109" type="Sprite2D" parent="DecorBord"]
+flip_h = true
+
+[node name="B109" type="Sprite2D" parent="DecorBord" unique_id=353477969]
+z_index = 2
 position = Vector2(1679, 586)
 scale = Vector2(0.547, 0.547)
-z_index = 2
 texture = ExtResource("t13")
-[node name="B110" type="Sprite2D" parent="DecorBord"]
+
+[node name="B110" type="Sprite2D" parent="DecorBord" unique_id=593410108]
+z_index = 2
 position = Vector2(1713, 599)
 scale = Vector2(0.603, 0.603)
-z_index = 2
-flip_h = true
 texture = ExtResource("t7")
+flip_h = true
 
-[node name="DecorAvant" type="Parallax2D" parent="."]
+[node name="DecorAvant" type="Parallax2D" parent="." unique_id=2031172438]
 scroll_scale = Vector2(1.15, 1.06)
-repeat_size = Vector2(0, 0)
-[node name="A1" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(882, 613)
+
+[node name="A1" type="Sprite2D" parent="DecorAvant" unique_id=1347685208]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(279.00003, 667.00006)
 scale = Vector2(1.227, 1.227)
-z_index = 50
-flip_h = true
-modulate = Color(0.12, 0.14, 0.2, 1)
 texture = ExtResource("t11")
-[node name="A2" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(1753, 664)
+flip_h = true
+
+[node name="A2" type="Sprite2D" parent="DecorAvant" unique_id=937280659]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(1712, 594.00006)
 scale = Vector2(1.259, 1.259)
-z_index = 50
-modulate = Color(0.12, 0.14, 0.2, 1)
 texture = ExtResource("t12")
-[node name="A3" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(1649, 663)
+
+[node name="A3" type="Sprite2D" parent="DecorAvant" unique_id=942388013]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(759.0002, 603.00006)
 scale = Vector2(1.281, 1.281)
-z_index = 50
-modulate = Color(0.12, 0.14, 0.2, 1)
 texture = ExtResource("t12")
-[node name="A4" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(87, 619)
-scale = Vector2(1.166, 1.166)
-z_index = 50
-flip_h = true
+
+[node name="A5" type="Sprite2D" parent="DecorAvant" unique_id=337397229]
 modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A5" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(1238, 625)
+z_index = 50
+position = Vector2(1077.0001, 689)
 scale = Vector2(1.09, 1.09)
-z_index = 50
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A6" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(1470, 640)
-scale = Vector2(0.926, 0.926)
-z_index = 50
-flip_h = true
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A7" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(809, 603)
-scale = Vector2(1.336, 1.336)
-z_index = 50
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A8" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(1449, 665)
-scale = Vector2(1.242, 1.242)
-z_index = 50
-flip_h = true
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t12")
-[node name="A9" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(12, 611)
-scale = Vector2(1.246, 1.246)
-z_index = 50
-flip_h = true
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A10" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(642, 642)
-scale = Vector2(0.905, 0.905)
-z_index = 50
-flip_h = true
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A11" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(503, 615)
-scale = Vector2(1.203, 1.203)
-z_index = 50
-flip_h = true
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A12" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(53, 588)
-scale = Vector2(1.4, 1.4)
-z_index = 50
-modulate = Color(0.12, 0.14, 0.2, 1)
-texture = ExtResource("t11")
-[node name="A13" type="Sprite2D" parent="DecorAvant"]
-position = Vector2(1738, 588)
-scale = Vector2(1.4, 1.4)
-z_index = 50
-flip_h = true
-modulate = Color(0.12, 0.14, 0.2, 1)
 texture = ExtResource("t11")
 
-[node name="Joueur" parent="." instance=ExtResource("tP")]
-position = Vector2(150, 548)
+[node name="A6" type="Sprite2D" parent="DecorAvant" unique_id=2014078084]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(1373, 690.00006)
+scale = Vector2(0.926, 0.926)
+texture = ExtResource("t11")
+flip_h = true
+
+[node name="A7" type="Sprite2D" parent="DecorAvant" unique_id=1693587513]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(859, 667)
+scale = Vector2(1.336, 1.336)
+texture = ExtResource("t11")
+
+[node name="A8" type="Sprite2D" parent="DecorAvant" unique_id=707452710]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(1231, 613)
+scale = Vector2(1.242, 1.242)
+texture = ExtResource("t12")
+flip_h = true
+
+[node name="A10" type="Sprite2D" parent="DecorAvant" unique_id=1137178724]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(681, 677)
+scale = Vector2(0.905, 0.905)
+texture = ExtResource("t11")
+flip_h = true
+
+[node name="A11" type="Sprite2D" parent="DecorAvant" unique_id=678835512]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 51
+position = Vector2(464, 660.00006)
+scale = Vector2(1.203, 1.203)
+texture = ExtResource("t11")
+flip_h = true
+
+[node name="A12" type="Sprite2D" parent="DecorAvant" unique_id=1532144977]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 12
+position = Vector2(-7.0000153, 599.00006)
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("t11")
+
+[node name="A13" type="Sprite2D" parent="DecorAvant" unique_id=1318445923]
+modulate = Color(0.12, 0.14, 0.2, 1)
+z_index = 50
+position = Vector2(1565, 691)
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("t11")
+flip_h = true

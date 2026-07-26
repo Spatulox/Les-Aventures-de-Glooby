@@ -1,13 +1,15 @@
 using Godot;
 
-// Plateforme de glace éphémère posée par le pouvoir de glace du joueur : elle
-// réutilise le comportement one-way de PlateformeUnidirectionnelle (le joueur
-// s'y tient comme sur le sol et peut sauter au travers), s'affiche avec une
-// teinte glacée et un petit pop, puis fond automatiquement après DureeVie.
-// Ainsi le joueur comble un trou le temps de le traverser, sans pouvoir bâtir
-// de structures permanentes.
+// Plateforme de glace posée par le pouvoir de glace du joueur : elle réutilise le
+// comportement one-way de PlateformeUnidirectionnelle (le joueur s'y tient comme
+// sur le sol et peut sauter au travers), s'affiche avec une teinte glacée et un
+// petit pop, puis fond automatiquement après DureeVie. Ainsi le joueur comble un
+// trou le temps de le traverser, sans pouvoir bâtir de structures permanentes.
 public partial class PlateformeGlace : PlateformeUnidirectionnelle
 {
+	// Délai avant la fonte. À 0 (ou moins) la plateforme est PERMANENTE et n'a pas
+	// de pop d'apparition : c'est le cas d'une plateforme posée à la main dans un
+	// niveau (palier de givre), par opposition à celle que le pouvoir conjure.
 	[Export] public float DureeVie = 4f;
 
 	public override void _Ready()
@@ -16,6 +18,9 @@ public partial class PlateformeGlace : PlateformeUnidirectionnelle
 
 		var sprite = GetNode<Sprite2D>("Sprite2D");
 		sprite.Modulate = new Color(0.6f, 0.85f, 1f);
+
+		if (DureeVie <= 0f)
+			return;
 
 		// Petit pop d'apparition (même esprit que Player.JouerApparition).
 		var echelleFinale = Scale;
