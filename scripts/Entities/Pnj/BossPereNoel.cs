@@ -11,8 +11,8 @@ using Godot;
 //   Salve de cadeaux — il plonge la main dans sa hotte (télégraphe : il se ramasse et
 //                      rougit) puis largue des MiniJouetExplosif ; il reste essoufflé
 //                      ensuite, fenêtre où les coups portés comptent double ;
-//   Jet de givre     — il se givre visiblement puis tire un EclatGlace (éventail de
-//                      trois en phase 2) ;
+//   Jet de givre     — il se givre visiblement puis tire un EclatGlace DANS L'AXE DU
+//                      JOUEUR (éventail de trois autour de cette visée en phase 2) ;
 //   Cheminée         — il s'évapore et se rematérialise de l'autre côté du joueur,
 //                      intouchable le temps du passage. Repositionnement ponctuel, à ne
 //                      pas confondre avec l'approche : c'est une esquive, pas un trajet.
@@ -345,16 +345,38 @@ public partial class BossPereNoel : Boss, BossBorne
 		TirerEclat(AngleEventail);
 	}
 
-	// Un éclat tiré à angleDegres au-dessus/en dessous de l'horizontale. On passe par
-	// la surcharge vectorielle de Projectile.Initialiser : c'est elle qui gère un tir
-	// autre qu'à plat.
+	// Un éclat tiré DANS L'AXE DU JOUEUR, à angleDegres de part et d'autre de cette ligne
+	// de visée (c'est l'ouverture de l'éventail de phase 2, plus l'ouverture autour de
+	// l'horizontale). On passe par la surcharge vectorielle de Projectile.Initialiser :
+	// c'est elle qui gère un tir autre qu'à plat.
+	//
+	// L'angle d'éventail n'est plus multiplié par _direction : la visée porte déjà le
+	// sens du tir, une rotation symétrique suffit.
 	private void TirerEclat(float angleDegres)
 	{
 		var eclat = SceneEclatGlace.Instantiate<Projectile>();
-		var velocite = new Vector2(_direction * VitesseEclat, 0f).Rotated(Mathf.DegToRad(angleDegres) * _direction);
+		var bouche = GlobalPosition + new Vector2(_direction * 30f, -70f);
+		var velocite = ViserJoueur(bouche).Rotated(Mathf.DegToRad(angleDegres)) * VitesseEclat;
 		eclat.Initialiser(this, velocite);
-		eclat.GlobalPosition = GlobalPosition + new Vector2(_direction * 30f, -70f);
+		eclat.GlobalPosition = bouche;
 		GetParent().AddChild(eclat);
+	}
+
+	// Ligne de visée unitaire, de la bouche du canon vers le joueur. L'éclat vole en
+	// LIGNE DROITE (sa scène règle Gravite = 0) : tiré à l'horizontale, il filait donc à
+	// plat sur toute la longueur de la salle sans jamais menacer un joueur qui n'était pas
+	// exactement à sa hauteur — il fallait le viser.
+	//
+	// Replis sur l'horizontale dans le sens du regard : pas de joueur en scène, ou joueur
+	// pile sur la bouche. Un vecteur nul normalisé enverrait l'éclat n'importe où.
+	private Vector2 ViserJoueur(Vector2 origine)
+	{
+		var joueur = JoueurLePlusProche(out _);
+		if (joueur == null)
+			return new Vector2(_direction, 0f);
+
+		var vers = joueur.GlobalPosition - origine;
+		return vers.LengthSquared() < 1f ? new Vector2(_direction, 0f) : vers.Normalized();
 	}
 
 	// Départ par la cheminée : il s'efface. La position ne change qu'une fois invisible

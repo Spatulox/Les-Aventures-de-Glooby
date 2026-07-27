@@ -5,14 +5,14 @@
 [ext_resource type="PackedScene" path="res://scenes/boss/BossLutinMecha.tscn" id="boss_lutin_mecha"]
 [ext_resource type="PackedScene" path="res://scenes/boss/BossPereNoel.tscn" id="boss_pere_noel"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/CagePereNoel.tscn" id="cage"]
-[ext_resource type="PackedScene" path="res://scenes/boss/EpilogueLutinNoel.tscn" id="epilogue_lutin_noel"]
 [ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
+[ext_resource type="PackedScene" path="res://scenes/boss/EpilogueLutinNoel.tscn" id="epilogue_lutin_noel"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
+[ext_resource type="PackedScene" path="res://scenes/mur/MurArene.tscn" id="mur_arene"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/boss/PrologueLutinUsine.tscn" id="prologue_lutin_usine"]
 [ext_resource type="PackedScene" path="res://scenes/boss/ProloguePereNoel.tscn" id="prologue_pere_noel"]
-[ext_resource type="PackedScene" path="res://scenes/mur/MurArene.tscn" id="mur_arene"]
 [ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="sol_usine"]
 [ext_resource type="PackedScene" path="res://scenes/boss/zone_boss_pere_noel.tscn" id="zoneboss"]
 
@@ -54,10 +54,10 @@ position = Vector2(520, 240.07)
 position = Vector2(-116, 240.07)
 NombreSegments = 1
 
-[node name="MurGauche" parent="Arene/Sol" instance=ExtResource("mur_arene")]
+[node name="MurGauche" parent="Arene/Sol" unique_id=2043298650 instance=ExtResource("mur_arene")]
 position = Vector2(1, -15.785)
 
-[node name="MurDroit" parent="Arene/Sol" instance=ExtResource("mur_arene")]
+[node name="MurDroit" parent="Arene/Sol" unique_id=570347880 instance=ExtResource("mur_arene")]
 position = Vector2(798, -15.785)
 
 [node name="Decor" type="Node2D" parent="Arene" unique_id=889985770]
