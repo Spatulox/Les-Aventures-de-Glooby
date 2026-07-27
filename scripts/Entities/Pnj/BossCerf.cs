@@ -18,6 +18,23 @@ public partial class BossCerf : Boss
 	[Export] public float LimiteGauche = 80f;
 	[Export] public float LimiteDroite = 2800f;
 
+	// Hauteur d'obstacle que Rodolphe accepte d'enjamber en pleine charge (marche du
+	// sol, bloc, plateforme). Au-delà, c'est un mur : la charge s'y écrase. Le défaut
+	// couvre les ressauts de l'arène florale (64 à 67 px) tout en restant loin de ses
+	// murs (215 à 242 px), qui doivent continuer de l'arrêter.
+	[Export] public float HauteurFranchissable = 96f;
+
+	// Battement au-dessus de l'obstacle : l'impulsion de saut est CALCULÉE pour que
+	// l'apex dépasse HauteurFranchissable + cette marge (v = √(2·g·h)). Un seul
+	// nombre à régler - la hauteur d'obstacle - et le saut suit tout seul, au lieu
+	// d'un JumpVelocity à retoucher en parallèle et à garder cohérent.
+	[Export] public float MargeFranchissement = 16f;
+
+	// Bas de sa boîte de collision, relevé sur la scène (aucun nombre en dur : un
+	// autre gabarit de boss reste correct).
+	private float _bordPieds;
+
+
 	public int Phase { get; private set; } = 1;
 
 	private Area2D _zoneChargeDegats;
@@ -35,6 +52,7 @@ public partial class BossCerf : Boss
 	{
 		_zoneChargeDegats = GetNode<Area2D>("ZoneChargeDegats");
 		_zoneChargeDegats.BodyEntered += OnZoneChargeDegatsEntered;
+		MesurerGabarit();
 		_rng.Randomize();
 		Sprite.Play("idle");
 	}
@@ -57,6 +75,13 @@ public partial class BossCerf : Boss
 	{
 		var dt = (float)delta;
 		_timerEtat -= dt;
+
+		// Rodolphe est soumis à la gravité comme tout le monde : sans elle il chargeait
+		// en lévitation à sa hauteur d'apparition, et sauter n'aurait aucun sens.
+		// Chaque état ne pilote donc que la composante horizontale.
+		var chute = Velocity;
+		AppliquerGravite(ref chute, dt);
+		Velocity = chute;
 
 		switch (_etat)
 		{
@@ -165,17 +190,91 @@ public partial class BossCerf : Boss
 		_dejaToucheCetteCharge = false;
 		Sprite.Play("charge");
 		Sprite.FlipH = _direction < 0;
-		Velocity = new Vector2(_direction * VitesseCharge, 0f);
+		Velocity = new Vector2(_direction * VitesseCharge, Velocity.Y);
 	}
 
 	private void AvancerCharge(float dt)
 	{
-		Velocity = new Vector2(_direction * VitesseCharge, 0f);
+		Velocity = new Vector2(_direction * VitesseCharge, Velocity.Y);
 
 		if ((_direction > 0 && GlobalPosition.X >= LimiteDroite) || (_direction < 0 && GlobalPosition.X <= LimiteGauche))
 		{
 			PasserEnEtourdi();
+			return;
 		}
+
+		// En l'air (saut de franchissement en cours), on ne juge rien : il garde son
+		// élan. Sans ce garde, les rayons perdent la marche dès qu'il s'élève et la
+		// charge s'interrompait en plein saut.
+		if (!IsOnFloor())
+			return;
+
+		// Rien devant : on continue.
+		if (!IsOnWall())
+			return;
+
+		// Obstacle franchissable (marche du sol, bloc, plateforme) : Rodolphe
+		// l'enjambe et poursuit sa course vers le joueur au lieu de s'y arrêter.
+		if (ObstacleFranchissable())
+		{
+			// Impulsion taillée pour l'obstacle le plus haut qu'il accepte, et non le
+			// JumpVelocity générique de LivingEntity (calibré pour le joueur, trop
+			// court pour les ressauts de l'arène).
+			Velocity = new Vector2(Velocity.X, -Mathf.Sqrt(2f * Gravity * (HauteurFranchissable + MargeFranchissement)));
+			return;
+		}
+
+		// Vrai mur : la charge s'y écrase, ce qui ouvre la fenêtre de vulnérabilité.
+		PasserEnEtourdi();
+	}
+
+	// Relève une fois pour toutes les bords de la boîte de collision : c'est de là que
+	// partent les rayons de détection d'obstacle.
+	private void MesurerGabarit()
+	{
+		if (GetNodeOrNull<CollisionShape2D>("CollisionShape2D") is not CollisionShape2D forme
+			|| forme.Shape is not RectangleShape2D rect)
+			return;
+
+		_bordPieds = forme.Position.Y + rect.Size.Y / 2f;
+	}
+
+	// L'obstacle heurté est-il assez bas pour être enjambé ? On repart du point de
+	// contact donné par MoveAndSlide, puis on cherche le SOMMET de l'obstacle avec un
+	// rayon vertical descendant, lancé depuis la hauteur franchissable.
+	//
+	// Un rayon horizontal parti du museau ne convient pas : les ressauts du décor sont
+	// des dalles dont le bas s'arrête au-dessus des sabots (7 px de vide sous la face
+	// dans l'arène florale), si bien que le rayon passait dessous sans rien voir. Le
+	// rayon vertical, lui, part toujours du ciel libre - et s'il ne touche rien, c'est
+	// que l'obstacle monte plus haut que ce que Rodolphe sait franchir : un vrai mur.
+	private bool ObstacleFranchissable()
+	{
+		float pieds = GlobalPosition.Y + _bordPieds;
+
+		for (int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			var contact = GetSlideCollision(i);
+			var normale = contact.GetNormal();
+			if (Mathf.Abs(normale.X) < 0.7f)
+				continue;   // sol ou plafond, pas un obstacle devant lui
+
+			// Deux pixels au-delà de la face heurtée, donc au-dessus de l'obstacle.
+			var sommet = new Vector2(contact.GetPosition().X - normale.X * 2f, pieds - HauteurFranchissable);
+			if (RayonTouche(sommet, new Vector2(0f, HauteurFranchissable)))
+				return true;
+		}
+
+		return false;
+	}
+
+	private bool RayonTouche(Vector2 depart, Vector2 avant)
+	{
+		var requete = PhysicsRayQueryParameters2D.Create(depart, depart + avant, Constantes.MasqueMarcheur);
+		requete.Exclude = new Godot.Collections.Array<Rid> { GetRid() };
+		// Pas de HitFromInside : un rayon qui DÉMARRE dans le solide signifie que
+		// l'obstacle dépasse la hauteur franchissable — donc « mur », pas « marche ».
+		return GetWorld2D().DirectSpaceState.IntersectRay(requete).Count > 0;
 	}
 
 	private void PasserEnEtourdi()

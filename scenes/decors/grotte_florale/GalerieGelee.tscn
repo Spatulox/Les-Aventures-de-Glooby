@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://klvrruyqhh88"]
 
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/GardienRonces.tscn" id="6_ne87o"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/BulbeExplosif.tscn" id="7_2ohs3"]
+[ext_resource type="PackedScene" uid="uid://cc554bace5c53" path="res://scenes/plateformes/PlateformeGlace.tscn" id="18_vfvgi"]
+[ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="22_0kkhm"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
 [ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
-[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="pP"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/stalactite_piege.tscn" id="pS"]
 [ext_resource type="Texture2D" uid="uid://c8dcokcvpk7d3" path="res://assets/decors/grotte_florale/galerie/fond.png" id="t1"]
 [ext_resource type="Texture2D" uid="uid://dvpt3bsvx4k7m" path="res://assets/decors/grotte_florale/galerie/terrain.png" id="t2"]
@@ -27,118 +30,40 @@
 size = Vector2(2016, 32)
 
 [sub_resource type="RectangleShape2D" id="s2"]
-size = Vector2(64, 32)
+size = Vector2(48, 116)
 
 [sub_resource type="RectangleShape2D" id="s3"]
 size = Vector2(2016, 32)
 
-[sub_resource type="RectangleShape2D" id="s4"]
-size = Vector2(64, 32)
-
 [sub_resource type="RectangleShape2D" id="s5"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s6"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s7"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s8"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s9"]
-size = Vector2(64, 32)
+size = Vector2(46, 375)
 
 [sub_resource type="RectangleShape2D" id="s10"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s11"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s12"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s13"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s14"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s15"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s16"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s17"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s18"]
-size = Vector2(288, 32)
-
-[sub_resource type="RectangleShape2D" id="s19"]
-size = Vector2(64, 32)
+size = Vector2(80, 330)
 
 [sub_resource type="RectangleShape2D" id="s20"]
-size = Vector2(288, 32)
-
-[sub_resource type="RectangleShape2D" id="s21"]
-size = Vector2(64, 32)
+size = Vector2(267, 57)
 
 [sub_resource type="RectangleShape2D" id="s22"]
-size = Vector2(224, 32)
-
-[sub_resource type="RectangleShape2D" id="s23"]
-size = Vector2(256, 32)
-
-[sub_resource type="RectangleShape2D" id="s24"]
-size = Vector2(256, 32)
-
-[sub_resource type="RectangleShape2D" id="s25"]
-size = Vector2(288, 32)
-
-[sub_resource type="RectangleShape2D" id="s26"]
-size = Vector2(64, 32)
-
-[sub_resource type="RectangleShape2D" id="s27"]
-size = Vector2(480, 32)
+size = Vector2(184, 58)
 
 [sub_resource type="RectangleShape2D" id="s28"]
-size = Vector2(256, 32)
+size = Vector2(256, 53)
 
 [sub_resource type="RectangleShape2D" id="s29"]
-size = Vector2(256, 32)
-
-[sub_resource type="RectangleShape2D" id="s30"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s31"]
-size = Vector2(64, 32)
+size = Vector2(256, 54)
 
 [sub_resource type="RectangleShape2D" id="s32"]
-size = Vector2(480, 32)
-
-[sub_resource type="RectangleShape2D" id="s33"]
-size = Vector2(256, 32)
-
-[sub_resource type="RectangleShape2D" id="s34"]
-size = Vector2(256, 32)
-
-[sub_resource type="RectangleShape2D" id="s35"]
-size = Vector2(96, 32)
-
-[sub_resource type="RectangleShape2D" id="s36"]
-size = Vector2(1312, 32)
+size = Vector2(218, 63)
 
 [sub_resource type="RectangleShape2D" id="s37"]
-size = Vector2(672, 32)
+size = Vector2(653, 32)
 
 [sub_resource type="RectangleShape2D" id="s38"]
-size = Vector2(2176, 32)
+size = Vector2(1291, 42)
 
 [sub_resource type="RectangleShape2D" id="s39"]
-size = Vector2(2176, 32)
+size = Vector2(2176, 41)
 
 [sub_resource type="RectangleShape2D" id="s40"]
 size = Vector2(2176, 32)
@@ -246,155 +171,53 @@ position = Vector2(1008, 16)
 shape = SubResource("s1")
 
 [node name="C1" type="CollisionShape2D" parent="Sol" unique_id=108289627]
-position = Vector2(2144, 16)
+position = Vector2(2152, 58)
 shape = SubResource("s2")
 
 [node name="C2" type="CollisionShape2D" parent="Sol" unique_id=968709955]
 position = Vector2(1008, 48)
 shape = SubResource("s3")
 
-[node name="C3" type="CollisionShape2D" parent="Sol" unique_id=584518504]
-position = Vector2(2144, 48)
-shape = SubResource("s4")
-
 [node name="C4" type="CollisionShape2D" parent="Sol" unique_id=175046830]
-position = Vector2(32, 80)
+position = Vector2(23, 251.5)
 shape = SubResource("s5")
 
-[node name="C5" type="CollisionShape2D" parent="Sol" unique_id=889123459]
-position = Vector2(2144, 80)
-shape = SubResource("s6")
-
-[node name="C6" type="CollisionShape2D" parent="Sol" unique_id=641901728]
-position = Vector2(32, 112)
-shape = SubResource("s7")
-
-[node name="C7" type="CollisionShape2D" parent="Sol" unique_id=1338019712]
-position = Vector2(2128, 112)
-shape = SubResource("s8")
-
-[node name="C8" type="CollisionShape2D" parent="Sol" unique_id=1979884989]
-position = Vector2(32, 144)
-shape = SubResource("s9")
-
 [node name="C9" type="CollisionShape2D" parent="Sol" unique_id=114405724]
-position = Vector2(2128, 144)
+position = Vector2(2136, 282)
 shape = SubResource("s10")
 
-[node name="C10" type="CollisionShape2D" parent="Sol" unique_id=1778924109]
-position = Vector2(32, 176)
-shape = SubResource("s11")
-
-[node name="C11" type="CollisionShape2D" parent="Sol" unique_id=1175751354]
-position = Vector2(2128, 176)
-shape = SubResource("s12")
-
-[node name="C12" type="CollisionShape2D" parent="Sol" unique_id=1559905142]
-position = Vector2(32, 208)
-shape = SubResource("s13")
-
-[node name="C13" type="CollisionShape2D" parent="Sol" unique_id=522971180]
-position = Vector2(2128, 208)
-shape = SubResource("s14")
-
-[node name="C14" type="CollisionShape2D" parent="Sol" unique_id=1113059123]
-position = Vector2(32, 240)
-shape = SubResource("s15")
-
-[node name="C15" type="CollisionShape2D" parent="Sol" unique_id=807773157]
-position = Vector2(2128, 240)
-shape = SubResource("s16")
-
-[node name="C16" type="CollisionShape2D" parent="Sol" unique_id=125735524]
-position = Vector2(32, 272)
-shape = SubResource("s17")
-
-[node name="C17" type="CollisionShape2D" parent="Sol" unique_id=1635300437]
-position = Vector2(2032, 272)
-shape = SubResource("s18")
-
-[node name="C18" type="CollisionShape2D" parent="Sol" unique_id=372289841]
-position = Vector2(32, 304)
-shape = SubResource("s19")
-
 [node name="C19" type="CollisionShape2D" parent="Sol" unique_id=86552720]
-position = Vector2(2032, 304)
+position = Vector2(2042.5, 304.5)
 shape = SubResource("s20")
 
-[node name="C20" type="CollisionShape2D" parent="Sol" unique_id=132688591]
-position = Vector2(32, 336)
-shape = SubResource("s21")
-
 [node name="C21" type="CollisionShape2D" parent="Sol" unique_id=297173652]
-position = Vector2(464, 336)
+position = Vector2(464, 368)
 shape = SubResource("s22")
 
-[node name="C22" type="CollisionShape2D" parent="Sol" unique_id=1156498548]
-position = Vector2(1056, 336)
-shape = SubResource("s23")
-
-[node name="C23" type="CollisionShape2D" parent="Sol" unique_id=2700610]
-position = Vector2(1696, 336)
-shape = SubResource("s24")
-
-[node name="C24" type="CollisionShape2D" parent="Sol" unique_id=1710295177]
-position = Vector2(2032, 336)
-shape = SubResource("s25")
-
-[node name="C25" type="CollisionShape2D" parent="Sol" unique_id=1816311997]
-position = Vector2(32, 368)
-shape = SubResource("s26")
-
-[node name="C26" type="CollisionShape2D" parent="Sol" unique_id=1778673108]
-position = Vector2(592, 368)
-shape = SubResource("s27")
-
 [node name="C27" type="CollisionShape2D" parent="Sol" unique_id=1284698083]
-position = Vector2(1056, 368)
+position = Vector2(1056, 368.5)
+scale = Vector2(0.88, 1)
 shape = SubResource("s28")
 
 [node name="C28" type="CollisionShape2D" parent="Sol" unique_id=203503011]
-position = Vector2(1696, 368)
+position = Vector2(1696, 369)
+scale = Vector2(0.84000486, 1)
 shape = SubResource("s29")
 
-[node name="C29" type="CollisionShape2D" parent="Sol" unique_id=1144342455]
-position = Vector2(2128, 368)
-shape = SubResource("s30")
-
-[node name="C30" type="CollisionShape2D" parent="Sol" unique_id=117843534]
-position = Vector2(32, 400)
-shape = SubResource("s31")
-
 [node name="C31" type="CollisionShape2D" parent="Sol" unique_id=70770955]
-position = Vector2(592, 400)
+position = Vector2(704, 406.5)
 shape = SubResource("s32")
 
-[node name="C32" type="CollisionShape2D" parent="Sol" unique_id=2084358498]
-position = Vector2(1056, 400)
-shape = SubResource("s33")
-
-[node name="C33" type="CollisionShape2D" parent="Sol" unique_id=309023520]
-position = Vector2(1696, 400)
-shape = SubResource("s34")
-
-[node name="C34" type="CollisionShape2D" parent="Sol" unique_id=337183980]
-position = Vector2(2128, 400)
-shape = SubResource("s35")
-
-[node name="C35" type="CollisionShape2D" parent="Sol" unique_id=238574840]
-position = Vector2(656, 432)
-shape = SubResource("s36")
-
 [node name="C36" type="CollisionShape2D" parent="Sol" unique_id=15268388]
-position = Vector2(1840, 432)
+position = Vector2(1850, 453)
 shape = SubResource("s37")
 
 [node name="C37" type="CollisionShape2D" parent="Sol" unique_id=1535688980]
-position = Vector2(1088, 464)
+position = Vector2(645.5, 459)
 shape = SubResource("s38")
 
 [node name="C38" type="CollisionShape2D" parent="Sol" unique_id=280325855]
-position = Vector2(1088, 496)
+position = Vector2(1088, 491.5)
 shape = SubResource("s39")
 
 [node name="C39" type="CollisionShape2D" parent="Sol" unique_id=2011757032]
@@ -404,6 +227,15 @@ shape = SubResource("s40")
 [node name="C40" type="CollisionShape2D" parent="Sol" unique_id=450990853]
 position = Vector2(1088, 560)
 shape = SubResource("s41")
+
+[node name="GardienRonces" parent="Sol" unique_id=100868562 instance=ExtResource("6_ne87o")]
+position = Vector2(1013, 314)
+
+[node name="GardienRonces2" parent="Sol" unique_id=695144288 instance=ExtResource("6_ne87o")]
+position = Vector2(1927, 406)
+
+[node name="BulbeExplosif" parent="Sol" unique_id=363142857 instance=ExtResource("7_2ohs3")]
+position = Vector2(1257, 412)
 
 [node name="DecorBord" type="Node2D" parent="." unique_id=1480395614]
 
@@ -453,7 +285,7 @@ position = Vector2(2048, 66)
 texture = ExtResource("t3")
 
 [node name="B1" type="Sprite2D" parent="DecorBord" unique_id=822721204]
-z_index = 2
+z_index = -5
 position = Vector2(352, 364)
 texture = ExtResource("t8")
 
@@ -569,20 +401,25 @@ scale = Vector2(0.75, 0.75)
 texture = ExtResource("t16")
 flip_h = true
 
+[node name="PlateformeGlace" parent="DecorBord" unique_id=1692231335 instance=ExtResource("18_vfvgi")]
+position = Vector2(1998, 178)
+scale = Vector2(0.44, 1)
+DureeVie = 0.0
+
 [node name="DecorAvant" type="Parallax2D" parent="." unique_id=856528232]
 scroll_scale = Vector2(1.15, 1.06)
 
 [node name="A1" type="Sprite2D" parent="DecorAvant" unique_id=1071794479]
 modulate = Color(0.16, 0.18, 0.26, 1)
-z_index = 50
-position = Vector2(96, 478)
+z_index = -84
+position = Vector2(163, 409.00003)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("t12")
 
 [node name="A2" type="Sprite2D" parent="DecorAvant" unique_id=1948818171]
 modulate = Color(0.16, 0.18, 0.26, 1)
-z_index = 50
-position = Vector2(2048, 478)
+z_index = -18
+position = Vector2(2012, 400)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("t12")
 flip_h = true
@@ -592,7 +429,7 @@ position = Vector2(160, 434)
 IdCheckpoint = "galerie"
 
 [node name="OursDeNeige" parent="." unique_id=1378514941 instance=ExtResource("pO")]
-position = Vector2(1056, 432)
+position = Vector2(876, 411)
 
 [node name="StalactitePiege" parent="." unique_id=1329653647 instance=ExtResource("pS")]
 position = Vector2(1152, 94)
@@ -600,5 +437,9 @@ position = Vector2(1152, 94)
 [node name="Sortie" type="Marker2D" parent="." unique_id=1475312454]
 position = Vector2(2048, 64)
 
-[node name="Joueur" parent="." unique_id=30630169 instance=ExtResource("pP")]
-position = Vector2(160, 384)
+[node name="PanneauBois" parent="." unique_id=197425152 instance=ExtResource("22_0kkhm")]
+z_index = -1
+position = Vector2(2082, 160)
+rotation = -1.5707964
+scale = Vector2(0.605, 0.605)
+Type = 3

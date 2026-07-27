@@ -29,6 +29,10 @@ public partial class MenuPrincipal : Control
 	// l'ancien panneau en lecture seule et son tableau de touches codé en dur.
 	private EcranParametres _ecranParametres;
 
+	// Écran de debug : la liste de toutes les scènes du jeu, chargeables d'un clic.
+	// Même patron que l'écran Paramètres (superposé, masqué au départ, Échap ferme).
+	private EcranScenesDebug _ecranScenesDebug;
+
 	// Boîte de la scène dans laquelle le mob décoratif est cantonné, et le sprite
 	// qu'on y a monté (null si aucun mob n'était affichable).
 	private Control _boiteMob;
@@ -54,7 +58,7 @@ public partial class MenuPrincipal : Control
 		AjouterFondAleatoire();
 
 		GetNode<Button>("Colonne/BoutonNouvelle").Pressed += DemarrerNouvellePartie;
-		GetNode<Button>("Colonne/BoutonDebug").Pressed += DemarrerPartieDebug;
+		GetNode<Button>("Colonne/BoutonDebug").Pressed += () => _ecranScenesDebug.Visible = true;
 		GetNode<Button>("Colonne/BoutonParametres").Pressed += () => _ecranParametres.Visible = true;
 		GetNode<Button>("Colonne/BoutonQuitter").Pressed += () => GetTree().Quit();
 
@@ -72,19 +76,15 @@ public partial class MenuPrincipal : Control
 		AjusterMob();
 
 		ConstruireParametres();
+
+		_ecranScenesDebug = GD.Load<PackedScene>("res://scenes/ui/ecran_scenes_debug.tscn")
+			.Instantiate<EcranScenesDebug>();
+		AddChild(_ecranScenesDebug);
 	}
 
 	private void DemarrerNouvellePartie()
 	{
 		GameState.Instance.NouvellePartie();
-		ChargerMonde();
-	}
-
-	// Partie de test : tous les pouvoirs débloqués et les mobs tués d'un coup, pour
-	// parcourir le monde rapidement sans refaire la progression.
-	private void DemarrerPartieDebug()
-	{
-		GameState.Instance.NouvellePartieDebug();
 		ChargerMonde();
 	}
 
@@ -255,6 +255,13 @@ public partial class MenuPrincipal : Control
 		if (_ecranParametres.Visible && !_ecranParametres.EnCapture)
 		{
 			_ecranParametres.Visible = false;
+			GetViewport().SetInputAsHandled();
+			return;
+		}
+
+		if (_ecranScenesDebug.Visible)
+		{
+			_ecranScenesDebug.Visible = false;
 			GetViewport().SetInputAsHandled();
 		}
 	}

@@ -1,8 +1,186 @@
 [gd_scene format=3 uid="uid://dfcn030tpflmp"]
 
-[ext_resource type="PackedScene" uid="uid://lbswtl10yrkt" path="res://scenes/decors/grotte_florale/Sanctuaire.tscn" id="1_5ubi2"]
+[ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="5_hn7gu"]
+[ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="barreboss"]
+[ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss_cerf.tscn" id="bosscerf"]
+[ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
+[ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
+[ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
+[ext_resource type="PackedScene" path="res://scenes/core/porte_interne.tscn" id="porte"]
+[ext_resource type="PackedScene" path="res://scenes/core/recalage_parallaxe.tscn" id="recalage"]
+[ext_resource type="PackedScene" uid="uid://6uey8iexsnrv" path="res://scenes/decors/grotte_florale/CaverneCristalline.tscn" id="salle_cavernecristalline"]
+[ext_resource type="PackedScene" uid="uid://klvrruyqhh88" path="res://scenes/decors/grotte_florale/GalerieGelee.tscn" id="salle_galeriegelee"]
+[ext_resource type="PackedScene" uid="uid://crhj5wew8ccsx" path="res://scenes/decors/grotte_florale/GrandeSalle.tscn" id="salle_grandesalle"]
+[ext_resource type="PackedScene" uid="uid://beg75xoad1vmg" path="res://scenes/decors/grotte_florale/JardinGrotte.tscn" id="salle_jardingrotte"]
+[ext_resource type="PackedScene" uid="uid://jki8u4nckct0" path="res://scenes/decors/grotte_florale/PuitsGivre.tscn" id="salle_puitsgivre"]
+[ext_resource type="PackedScene" uid="uid://lbswtl10yrkt" path="res://scenes/decors/grotte_florale/Sanctuaire.tscn" id="salle_sanctuaire"]
+[ext_resource type="PackedScene" path="res://scenes/boss/zone_boss_cerf.tscn" id="zoneboss"]
 
-[node name="ReindeerBoss" type="Node2D" unique_id=529035607]
+[node name="ReindeerBoss" type="Node2D" unique_id=1209880775]
 
-[node name="Sanctuaire" parent="." unique_id=124651202 instance=ExtResource("1_5ubi2")]
-position = Vector2(0, -1)
+[node name="Sanctuaire" type="Node2D" parent="." unique_id=42589020]
+
+[node name="Camera" type="Node2D" parent="Sanctuaire" unique_id=357263924]
+
+[node name="ZoneSanctuaire" parent="Sanctuaire/Camera" unique_id=375178062 instance=ExtResource("camzone")]
+position = Vector2(1024, 352)
+scale = Vector2(8, 2.75)
+NomAmbiance = "grotte"
+Type = 1
+
+[node name="Salle" parent="Sanctuaire" unique_id=450307941 instance=ExtResource("salle_sanctuaire")]
+
+[node name="Interactifs" type="Node2D" parent="Sanctuaire" unique_id=57865524]
+
+[node name="Entree" parent="Sanctuaire/Interactifs" unique_id=1292424370 instance=ExtResource("entree")]
+position = Vector2(160, 512)
+Id = "reindeerBossStart"
+
+[node name="PorteSortie" parent="Sanctuaire/Interactifs" unique_id=2091600737 instance=ExtResource("porte")]
+position = Vector2(1920, 96)
+IdDestination = "galerie"
+
+[node name="PanneauBois" parent="Sanctuaire" unique_id=197425152 instance=ExtResource("5_hn7gu")]
+z_index = -1
+position = Vector2(1950.9999, 78.99999)
+rotation = -1.5707964
+scale = Vector2(0.565, 0.565)
+Type = 3
+
+[node name="Galerie" type="Node2D" parent="." unique_id=870332336]
+position = Vector2(2304, 0)
+
+[node name="Camera" type="Node2D" parent="Galerie" unique_id=558773218]
+
+[node name="ZoneGalerie" parent="Galerie/Camera" unique_id=257473484 instance=ExtResource("camzone")]
+position = Vector2(1088, 288)
+scale = Vector2(8.5, 2.25)
+NomAmbiance = "grotte"
+Type = 1
+
+[node name="Salle" parent="Galerie" unique_id=578693259 instance=ExtResource("salle_galeriegelee")]
+
+[node name="Interactifs" type="Node2D" parent="Galerie" unique_id=1715543352]
+
+[node name="Entree" parent="Galerie/Interactifs" unique_id=657531944 instance=ExtResource("entree")]
+position = Vector2(160, 384)
+Id = "galerie"
+
+[node name="PorteSortie" parent="Galerie/Interactifs" unique_id=835649432 instance=ExtResource("porte")]
+position = Vector2(2048, 64)
+scale = Vector2(1.3857454, 0.6800003)
+IdDestination = "puits"
+
+[node name="Puits" type="Node2D" parent="." unique_id=709671414]
+position = Vector2(4736, 0)
+
+[node name="Camera" type="Node2D" parent="Puits" unique_id=1526468833]
+
+[node name="ZonePuits" parent="Puits/Camera" unique_id=1882079228 instance=ExtResource("camzone")]
+position = Vector2(480, 544)
+scale = Vector2(3.75, 4.25)
+NomAmbiance = "grotte"
+Type = 1
+
+[node name="Salle" parent="Puits" unique_id=1744855050 instance=ExtResource("salle_puitsgivre")]
+
+[node name="Interactifs" type="Node2D" parent="Puits" unique_id=991821378]
+
+[node name="Entree" parent="Puits/Interactifs" unique_id=944929121 instance=ExtResource("entree")]
+position = Vector2(224, 960)
+Id = "puits"
+
+[node name="PorteSortie" parent="Puits/Interactifs" unique_id=280771720 instance=ExtResource("porte")]
+position = Vector2(832, 64)
+IdDestination = "caverne"
+
+[node name="Caverne" type="Node2D" parent="." unique_id=158544432]
+position = Vector2(5952, 0)
+
+[node name="Camera" type="Node2D" parent="Caverne" unique_id=1033795128]
+
+[node name="ZoneCaverne" parent="Caverne/Camera" unique_id=416442056 instance=ExtResource("camzone")]
+position = Vector2(960, 352)
+scale = Vector2(7.5, 2.75)
+NomAmbiance = "grotte"
+Type = 1
+
+[node name="Salle" parent="Caverne" unique_id=1685491796 instance=ExtResource("salle_cavernecristalline")]
+
+[node name="C41" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="31" unique_id=585606707]
+position = Vector2(1881, 496)
+
+[node name="C46" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="35" unique_id=1313986370]
+position = Vector2(1880, 538.5)
+
+[node name="Interactifs" type="Node2D" parent="Caverne" unique_id=1464526556]
+
+[node name="Entree" parent="Caverne/Interactifs" unique_id=1879812789 instance=ExtResource("entree")]
+position = Vector2(160, 512)
+Id = "caverne"
+
+[node name="PorteSortie" parent="Caverne/Interactifs" unique_id=1773588689 instance=ExtResource("porte")]
+position = Vector2(1792, 96)
+IdDestination = "grande"
+
+[node name="ArenBoss" type="Node2D" parent="." unique_id=1896369560]
+position = Vector2(8128, 0)
+
+[node name="ZoneBossCerf" parent="ArenBoss" unique_id=1268721765 instance=ExtResource("zoneboss")]
+position = Vector2(1120, 320)
+scale = Vector2(8.75, 2.5)
+SceneBoss = ExtResource("bosscerf")
+NomBoss = "Rodolphe"
+PositionApparition = Vector2(1600, 440)
+NomAmbiance = "boss_cerf"
+CheminBarre = NodePath("../../BossHudBarre")
+PvBoss = 40
+
+[node name="Salle" parent="ArenBoss" unique_id=412134817 instance=ExtResource("salle_grandesalle")]
+
+[node name="C26" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="24" unique_id=1339672554]
+position = Vector2(23.5, 400)
+
+[node name="Interactifs" type="Node2D" parent="ArenBoss" unique_id=1978714151]
+
+[node name="Entree" parent="ArenBoss/Interactifs" unique_id=1486611322 instance=ExtResource("entree")]
+position = Vector2(192, 448)
+Id = "grande"
+
+[node name="PorteSortie" parent="ArenBoss/Interactifs" unique_id=1033927479 instance=ExtResource("porte")]
+position = Vector2(2097, 460)
+IdDestination = "jardin"
+BossRequis = "Rodolphe"
+
+[node name="Jardin" type="Node2D" parent="." unique_id=1454712437]
+position = Vector2(10624, 0)
+
+[node name="Camera" type="Node2D" parent="Jardin" unique_id=989173702]
+
+[node name="ZoneJardin" parent="Jardin/Camera" unique_id=699557260 instance=ExtResource("camzone")]
+position = Vector2(896, 352)
+scale = Vector2(7, 2.75)
+NomAmbiance = "grotte"
+Type = 1
+
+[node name="Salle" parent="Jardin" unique_id=1450961454 instance=ExtResource("salle_jardingrotte")]
+
+[node name="Interactifs" type="Node2D" parent="Jardin" unique_id=148874441]
+
+[node name="Entree" parent="Jardin/Interactifs" unique_id=2114286978 instance=ExtResource("entree")]
+position = Vector2(150, 548)
+Id = "jardin"
+
+[node name="Joueur" parent="." unique_id=2016580396 instance=ExtResource("player")]
+position = Vector2(160, 512)
+
+[node name="BossHudBarre" parent="." unique_id=434634252 instance=ExtResource("barreboss")]
+
+[node name="MenuPause" type="CanvasLayer" parent="." unique_id=101310228]
+script = ExtResource("mpause")
+
+[node name="RecalageParallaxe" parent="." unique_id=65139707 instance=ExtResource("recalage")]
+
+[editable path="Caverne/Salle"]
+[editable path="ArenBoss/Salle"]

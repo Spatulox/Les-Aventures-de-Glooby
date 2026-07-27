@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" uid="uid://beg75xoad1vmg" path="res://scenes/decors/grotte_florale/JardinGrotte.tscn" id="1_salle"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="2_joueur"]
+
+[node name="JardinGrotteDemo" type="Node2D"]
+
+[node name="JardinGrotte" parent="." instance=ExtResource("1_salle")]
+
+[node name="Joueur" parent="." instance=ExtResource("2_joueur")]
+position = Vector2(150, 548)

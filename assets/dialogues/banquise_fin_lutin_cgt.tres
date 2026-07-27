@@ -16,6 +16,14 @@ IdMemoire = "lutin_cgt_don_poissons"
 UneSeuleFois = true
 CoutPoissons = 50
 
+[sub_resource type="Resource" id="ChoixPasAssez"]
+script = ExtResource("2_choix")
+Texte = "Je n'ai pas assez de poissons..."
+Reponse = PackedStringArray("Cinquante, camarade, pas quarante-neuf. La caisse ne fait pas crédit.", "Reviens quand la pêche aura donné : le piquet tiendra bien jusque-là.")
+MasqueSiMemoire = "lutin_cgt_don_poissons"
+CoutPoissons = 50
+SiReserveInsuffisante = true
+
 [sub_resource type="Resource" id="ChoixPartir"]
 script = ExtResource("2_choix")
 Texte = "Bon courage, camarade."
@@ -23,7 +31,7 @@ Reponse = PackedStringArray("On lâche rien !")
 
 [sub_resource type="Resource" id="NoeudRevendications"]
 script = ExtResource("1_noeud")
-Choix = Array[ExtResource("2_choix")]([SubResource("ChoixDon"), SubResource("ChoixPartir")])
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixDon"), SubResource("ChoixPasAssez"), SubResource("ChoixPartir")])
 
 [sub_resource type="Resource" id="ChoixRevendications"]
 script = ExtResource("2_choix")
@@ -33,4 +41,4 @@ Suite = SubResource("NoeudRevendications")
 [resource]
 script = ExtResource("1_noeud")
 Repliques = PackedStringArray("Halte-là ! Piquet de grève, on ne passe pas sans saluer la lutte.", "On tient depuis l\'aube, mais la caisse est vide et les ventres aussi.")
-Choix = Array[ExtResource("2_choix")]([SubResource("ChoixDon"), SubResource("ChoixRevendications"), SubResource("ChoixPartir")])
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixDon"), SubResource("ChoixPasAssez"), SubResource("ChoixRevendications"), SubResource("ChoixPartir")])

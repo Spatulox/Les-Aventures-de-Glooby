@@ -27,8 +27,8 @@ script = ExtResource("bgmgr")
 [node name="ZoneChargementScene" parent="Fonds/banquise" unique_id=1796732815 instance=ExtResource("4_544ey")]
 z_index = 1
 position = Vector2(4.415, 120)
-CheminSceneSuivante = "res://scenes/niveaux/monde1.tscn"
-PointEntreeCible = "monde1End"
+CheminSceneSuivante = "uid://dfcn030tpflmp"
+PointEntreeCible = "JardinGrotteEnd"
 
 [node name="usine" type="Node2D" parent="Fonds" unique_id=1204741556]
 modulate = Color(1, 1, 1, 0)
@@ -86,6 +86,11 @@ Type = 1
 [node name="Pnj" type="Node2D" parent="UsinePereNoel" unique_id=2000834972]
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
+
+[node name="ZoneSortieUsine" parent="UsinePereNoel/Interactifs" unique_id=1710568238 instance=ExtResource("4_544ey")]
+position = Vector2(4700, 200)
+CheminSceneSuivante = "uid://d3ixspn6np4ud"
+PointEntreeCible = "bossEnd"
 
 [node name="Frontiere" type="Node2D" parent="UsinePereNoel" unique_id=82496359]
 

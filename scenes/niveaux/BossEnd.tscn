@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://d3ixspn6np4ud"]
+
+[ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="barreboss"]
+[ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
+[ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss_cerf.tscn" id="bosscerf"]
+[ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
+[ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
+[ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="sol_usine"]
+[ext_resource type="PackedScene" path="res://scenes/boss/zone_boss_cerf.tscn" id="zoneboss"]
+
+[node name="BossEnd" type="Node2D" unique_id=889985762]
+
+[node name="Fonds" type="Node2D" parent="." unique_id=889985763]
+script = ExtResource("bgmgr")
+
+[node name="usine" type="Node2D" parent="Fonds" unique_id=889985764]
+
+[node name="FondUsine" parent="Fonds/usine" unique_id=889985765 instance=ExtResource("fond_usine")]
+
+[node name="Arene" type="Node2D" parent="." unique_id=889985766]
+
+[node name="ZoneBossCerf" parent="Arene" unique_id=889985767 instance=ExtResource("zoneboss")]
+position = Vector2(1376, 240)
+scale = Vector2(10.75, 2.5)
+SceneBoss = ExtResource("bosscerf")
+NomBoss = "PereNoel"
+PositionApparition = Vector2(2200, 400)
+MemoireRequise = "lutin_cgt_don_poissons"
+SceneBossAlternative = ExtResource("bosscerf")
+NomBossAlternatif = "BossCache"
+PvBossAlternatif = 60
+NomRegion = "usine"
+NomAmbiance = "boss_cerf"
+CheminBarre = NodePath("../../BossHudBarre")
+PvBoss = 40
+CheminSceneVictoire = "res://scenes/ui/ecran_fin.tscn"
+
+[node name="Sol" type="Node2D" parent="Arene" unique_id=889985768]
+
+[node name="SolUsineBois" parent="Arene/Sol" unique_id=889985769 instance=ExtResource("sol_usine")]
+position = Vector2(0, 400)
+NombreSegments = 6
+
+[node name="Decor" type="Node2D" parent="Arene" unique_id=889985770]
+
+[node name="Interactifs" type="Node2D" parent="Arene" unique_id=889985771]
+
+[node name="Entree" parent="Arene/Interactifs" unique_id=889985772 instance=ExtResource("entree")]
+position = Vector2(200, 380)
+Id = "bossEnd"
+
+[node name="Joueur" parent="." unique_id=889985773 instance=ExtResource("player")]
+position = Vector2(200, 380)
+
+[node name="BossHudBarre" parent="." unique_id=889985774 instance=ExtResource("barreboss")]
+
+[node name="MenuPause" type="CanvasLayer" parent="." unique_id=889985775]
+script = ExtResource("mpause")
