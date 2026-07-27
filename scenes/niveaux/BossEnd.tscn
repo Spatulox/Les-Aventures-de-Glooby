@@ -4,13 +4,14 @@
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/boss/BossLutinMecha.tscn" id="boss_lutin_mecha"]
 [ext_resource type="PackedScene" path="res://scenes/boss/BossPereNoel.tscn" id="boss_pere_noel"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/CagePereNoel.tscn" id="cage"]
+[ext_resource type="PackedScene" path="res://scenes/boss/EpilogueLutinNoel.tscn" id="epilogue_lutin_noel"]
 [ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
-[ext_resource type="PackedScene" path="res://scenes/boss/ProloguePereNoel.tscn" id="prologue_pere_noel"]
 [ext_resource type="PackedScene" path="res://scenes/boss/PrologueLutinUsine.tscn" id="prologue_lutin_usine"]
-[ext_resource type="PackedScene" path="res://scenes/interactifs/CagePereNoel.tscn" id="cage"]
+[ext_resource type="PackedScene" path="res://scenes/boss/ProloguePereNoel.tscn" id="prologue_pere_noel"]
 [ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="sol_usine"]
 [ext_resource type="PackedScene" path="res://scenes/boss/zone_boss_pere_noel.tscn" id="zoneboss"]
 
@@ -26,8 +27,8 @@ script = ExtResource("bgmgr")
 [node name="Arene" type="Node2D" parent="." unique_id=889985766]
 
 [node name="ZoneBossFinale" parent="Arene" unique_id=889985767 instance=ExtResource("zoneboss")]
-position = Vector2(860, -15.785)
-scale = Vector2(6.589, 2.5)
+position = Vector2(399.6, -15.785)
+scale = Vector2(2.9890032, 2.5)
 SceneBoss = ExtResource("boss_pere_noel")
 NomBoss = "Pere Noel"
 MarqueurApparition = NodePath("../ApparitionBoss")
@@ -41,6 +42,7 @@ CheminBarre = NodePath("../../BossHudBarre")
 PvBoss = 45
 ScenePnjPrologue = ExtResource("prologue_pere_noel")
 ScenePnjPrologueAlternatif = ExtResource("prologue_lutin_usine")
+ScenePnjEpilogueAlternatif = ExtResource("epilogue_lutin_noel")
 
 [node name="ApparitionBoss" type="Marker2D" parent="Arene" unique_id=889985776]
 position = Vector2(1450, 240.07)
@@ -58,13 +60,13 @@ position = Vector2(0, 240.07)
 position = Vector2(200, 240.07)
 Id = "bossEnd"
 
-[node name="CagePereNoel" parent="Arene/Interactifs" instance=ExtResource("cage")]
+[node name="CagePereNoel" parent="Arene/Interactifs" unique_id=184546834 instance=ExtResource("cage")]
 position = Vector2(1600, 188)
 MemoireRequise = "lutin_cgt_don_poissons"
 BossRequis = "Lutin Mecha"
 DecalageContenu = Vector2(-50, 91)
-LignesAvant = PackedStringArray("Ho ho... ho. Sors-moi de là, petit, je t'en prie !", "Ce tas de boulons ne te laissera pas approcher.")
-LignesApres = PackedStringArray("Ho ho ho ! Tu as couché leur machine, petit !", "Tiens, prends ce pantalon. Tu l'as bien mérité.")
+LignesAvant = PackedStringArray("Ho ho... ho. Sors-moi de là, petit, je t\'en prie !", "Ce tas de boulons ne te laissera pas approcher.")
+LignesApres = PackedStringArray("Ho ho ho ! Tu as couché leur machine, petit !", "Tiens, prends ce pantalon. Tu l\'as bien mérité.")
 
 [node name="Joueur" parent="." unique_id=889985773 instance=ExtResource("player")]
 position = Vector2(200, 240.07)

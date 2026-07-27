@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="NoeudDialogue" format=3]
+
+[ext_resource type="Script" uid="uid://dmuxq1b11lf7k" path="res://scripts/Core/NoeudDialogue.cs" id="1_noeud"]
+
+[resource]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Moi, je n'ai jamais suivi leur piquet ! Un lutin, ça termine sa tournée.", "Vite, allons libérer le père noel !")

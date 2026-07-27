@@ -12,7 +12,8 @@ using Godot;
 // ou de fin cachée sans dupliquer la scène.
 // Elle sait aussi faire PARLER avant de faire cogner (ScenePnjPrologue) : un PNJ amical
 // accueille le joueur, et sa conversation finie un fondu au noir l'échange contre le
-// boss - deux entités bien distinctes, jamais visibles ensemble.
+// boss - deux entités bien distinctes, jamais visibles ensemble. ScenePnjEpilogue fait
+// l'échange inverse une fois le boss tombé.
 public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 {
 	// Le boss : scène à instancier + nom lisible.
@@ -68,8 +69,20 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	[Export] public PackedScene ScenePnjPrologue;
 	[Export] public PackedScene ScenePnjPrologueAlternatif;
 
-	// Durée d'un demi-fondu au noir de l'échange PNJ -> boss (0 = bascule sèche).
-	[Export] public float DureeFonduPrologue = 0.5f;
+	// ÉPILOGUE : le pendant, après la chute du boss. Un dernier fondu au noir remplace le
+	// vaincu par un PNJ amical qui relance le joueur (« vite, allons délivrer... ») - le
+	// joueur ne voit jamais les deux, et l'arène ne garde pas une carcasse au sol. Même
+	// aiguillage que partout : chaque fin a le sien, vide = le combat se termine sec.
+	[Export] public PackedScene ScenePnjEpilogue;
+	[Export] public PackedScene ScenePnjEpilogueAlternatif;
+
+	// Battement entre la chute du boss et le fondu d'épilogue : le temps de le voir
+	// s'affaisser (son animation de mort) avant de couper au noir.
+	[Export] public float DelaiEpilogue = 2f;
+
+	// Durée d'un demi-fondu au noir des échanges PNJ <-> boss (0 = bascule sèche).
+	// Partagée par le prologue et l'épilogue : c'est le même effet, dans les deux sens.
+	[Export] public float DureeFonduEchange = 0.5f;
 
 	protected Boss Boss;
 	protected BossHudBarre Barre;
@@ -77,6 +90,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// Interlocuteur du prologue tant qu'il est en scène (null dès l'échange fait).
 	protected Node2D PnjPrologue;
 	private Player _joueurPrologue;
+	private bool _epilogueLance;
 
 	// Vrai quand la variante cachée est débloquée. Les deux conditions sont exigées
 	// ensemble : une mémoire sans scène alternative (ou l'inverse) est un câblage
@@ -102,6 +116,12 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// arène peut n'avoir qu'un seul PNJ pour ses deux boss).
 	protected PackedScene ScenePrologueChoisie =>
 		VariantePrise && ScenePnjPrologueAlternatif != null ? ScenePnjPrologueAlternatif : ScenePnjPrologue;
+
+	// Idem pour l'épilogue. Laisser ScenePnjEpilogue vide et ne renseigner que
+	// l'alternative donne un épilogue à la seule fin cachée : la branche normale
+	// retombe sur un champ vide, donc sur aucun épilogue.
+	protected PackedScene SceneEpilogueChoisie =>
+		VariantePrise && ScenePnjEpilogueAlternatif != null ? ScenePnjEpilogueAlternatif : ScenePnjEpilogue;
 
 	protected override bool PreparerDeclencheur()
 	{
@@ -204,6 +224,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 			if (!string.IsNullOrEmpty(NomChoisi))
 				Barre?.DefinirNom(NomChoisi);
 			Barre?.Lier(Boss);
+			Boss.Vaincu += DeclencherEpilogue;
 		}
 
 		Barre?.Afficher();
@@ -279,7 +300,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		// sauvegarde pour que le prologue reste joué même après un rechargement.
 		GameState.Instance.Sauvegarder();
 
-		Effets.FondreAuNoirPuis(this, DureeFonduPrologue, () =>
+		Effets.FondreAuNoirPuis(this, DureeFonduEchange, () =>
 		{
 			if (IsInstanceValid(pnj))
 				pnj.QueueFree();
@@ -289,6 +310,50 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 			GameState.Instance.DialogueDisponible = false;
 			GameState.Instance.DialogueModal = false;
 			LancerCombat(_joueurPrologue);
+		});
+	}
+
+	// ---- Épilogue ----
+
+	// Chute du boss : on laisse un battement, le temps que son animation de mort se joue,
+	// avant de couper au noir. Sans épilogue câblé, la victoire reste telle quelle.
+	private void DeclencherEpilogue()
+	{
+		if (_epilogueLance || SceneEpilogueChoisie == null)
+			return;
+
+		_epilogueLance = true;
+		GetTree().CreateTimer(DelaiEpilogue).Timeout += EchangerContreEpilogue;
+	}
+
+	// Échange le vaincu contre son PNJ d'épilogue, sous le même fondu que le prologue mais
+	// dans l'autre sens. Le PNJ reprend la position exacte du boss tombé.
+	private void EchangerContreEpilogue()
+	{
+		var scene = SceneEpilogueChoisie;
+		if (scene == null)
+			return;
+
+		var position = Boss != null && IsInstanceValid(Boss) ? Boss.Position : CalculerApparition();
+
+		// Le joueur reste figé pendant le noir, comme à l'aller.
+		GameState.Instance.DialogueModal = true;
+
+		Effets.FondreAuNoirPuis(this, DureeFonduEchange, () =>
+		{
+			if (Boss != null && IsInstanceValid(Boss))
+				Boss.QueueFree();
+			Boss = null;
+			Barre?.Masquer();
+
+			// Ajout DIRECT et non différé, contrairement au prologue : on est appelé
+			// depuis un tween (étape de process), pas depuis BodyEntered — aucune requête
+			// physique n'est en cours de flush ici.
+			var pnj = scene.Instantiate<Node2D>();
+			pnj.Position = position;
+			GetParent().AddChild(pnj);
+
+			GameState.Instance.DialogueModal = false;
 		});
 	}
 

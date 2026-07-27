@@ -260,6 +260,77 @@ Les deux tweens tournent, l'objet flotte ~9 px au-dessus du sol (halo compris) e
 ramasse dans les deux fins. Aucune référence restante au placeholder ; boots de
 `BossEnd` et `monde1` sans erreur nouvelle.
 
+## 10. Épilogue : le boss tombé laisse la place à un PNJ
+
+Symétrique du prologue, dans la même classe : après la chute du boss, **un second fondu
+au noir** échange le vaincu contre un PNJ amical.
+
+`scripts/Core/ZoneBoss.cs` :
+
+| Export | Rôle |
+|---|---|
+| `ScenePnjEpilogue` / `ScenePnjEpilogueAlternatif` | le PNJ d'après-combat, par branche |
+| `DelaiEpilogue` (2 s) | battement avant le fondu, le temps de voir le boss s'affaisser |
+| `DureeFonduEchange` (0,5 s) | **renommé** depuis `DureeFonduPrologue` — c'est le même effet dans les deux sens (aucune scène ne le surchargeait) |
+
+`SceneEpilogueChoisie` reprend exactement la forme de `ScenePrologueChoisie`. Laisser
+`ScenePnjEpilogue` vide et ne renseigner que l'alternative donne **un épilogue à la seule
+fin cachée** : la branche normale retombe sur un champ vide, donc sur aucun épilogue —
+c'est ce qui est câblé, le Père Noël lâchant déjà son pantalon.
+
+`ZoneBoss` s'abonne lui-même à `Boss.Vaincu` dans `LancerCombat` (`DeclencherEpilogue`),
+en plus de l'abonnement de `ZoneBossPereNoel`. La bascule libère le boss, masque la barre
+de vie et instancie le PNJ **à la position exacte du vaincu**. `DialogueModal` est tenu
+pendant le noir, comme à l'aller. Ajout **direct** et non différé ici, contrairement au
+prologue : on est appelé depuis un tween (étape de process), pas depuis `BodyEntered`.
+
+**Le lutin d'épilogue** — `scenes/boss/EpilogueLutinNoel.tscn` (un `LutinNoel`, ancrage
+aux pieds comme les prologues : sprites/collision à −28, art 64×64 au contenu 3→60) et
+`assets/dialogues/bossend_epilogue_lutin_noel.tres`, un nœud sans choix :
+
+> « Moi, je n'ai jamais suivi leur piquet ! Un lutin, ça termine sa tournée. »
+> « Vite, allons libérer le père noel ! »
+
+Deux détails imposés par le code existant :
+- **`LutinNoel.Initialiser()` force `Aleatoire = true`** (une réplique au hasard). Un
+  simple tableau `Lignes` n'aurait donc jamais délivré les deux répliques dans l'ordre :
+  d'où l'arbre `.tres`, que le chemin `TalkativeAChoix` parcourt séquentiellement en
+  ignorant `Aleatoire`. `Lignes` reste renseigné en repli.
+- **`DistancePatrouille = 0`** sur l'instance, sinon il déambule en pleine scène de fin
+  (`Initialiser` ne touche pas à ce champ, la valeur de scène survit).
+
+**Vérifié à la sonde** (jetable, supprimée), fin cachée jouée en entier :
+
+```
+[f192] MECHA VAINCU
+[f548] EPILOGUE : EpilogueLutinNoel en (1450, 279)  boss=libere  modal=False
+[f631] PANTALON RAMASSÉ
+```
+
+L'arbre se charge bien (`repliques=2 choix=0`, `conversation=True`, `patrouille=0`) — un
+`.tres` cassé serait passé inaperçu, le lutin retombant en silence sur ses `Lignes`.
+Le rappel de touche s'affiche devant lui, puis la cage et le pantalon s'enchaînent.
+
+### Incident : l'éditeur a écrasé le câblage
+
+L'éditeur Godot, ouvert sur `BossEnd.tscn`, a ré-enregistré la scène par-dessus mon
+édition et **supprimé la ligne `ScenePnjEpilogueAlternatif`** (piège connu). Remise
+depuis. **Recharger la scène dans l'éditeur** avant d'y retoucher.
+
+### ⚠️ Géométrie de l'arène désormais incohérente
+
+La même sauvegarde a **réduit `ZoneBossFinale`** (position x 860 → 416,9 ; `scale.x`
+6,589 → 3,149). Mesuré : l'arène couvre maintenant **x ∈ [17, 782]**, alors que
+
+- `ApparitionBoss` (donc le prologue, le boss et l'épilogue) est à **x = 1450** ;
+- `CagePereNoel` est à **x = 1600** ;
+- le sol `SolUsineBois` va toujours de 0 à 1720.
+
+Le rectangle de la zone sert à la fois de **limites caméra** et de **bornes de
+déplacement du boss** : tout ce qui est au-delà de 782 est hors champ et hors bornes.
+Non corrigé ici — c'est un choix d'auteur en cours, pas un bug de code. À trancher : soit
+ré-agrandir la zone, soit ramener marqueur et cage dans les nouvelles bornes.
+
 ### Reste à faire : un vrai F5
 
 Le headless ne juge ni la lisibilité de la liste de réponses, ni le rythme du fondu, ni
