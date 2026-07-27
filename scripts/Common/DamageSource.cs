@@ -12,6 +12,12 @@ public enum DamageSource
 	ChargeBoss,
 	SouffleGivre,
 
+	// Attaques du Lutin Mecha : éclat tiré par son canon, onde de choc de son saut
+	// écrasant, et explosion des mini-jouets qu'il largue.
+	EclatGlace,
+	EcrasementMecha,
+	JouetExplosif,
+
 	// Subis par le joueur au contact d'un PNJ méchant (contact simple ou charge).
 	ContactMechant,
 }
@@ -28,6 +34,9 @@ public static class DamageSourceExtensions
 		DamageSource.Stalactite => 1,
 		DamageSource.ChargeBoss => 1,
 		DamageSource.SouffleGivre => 2,
+		DamageSource.EclatGlace => 1,
+		DamageSource.EcrasementMecha => 2,
+		DamageSource.JouetExplosif => 2,
 		DamageSource.ContactMechant => 1,
 		_ => 1,
 	};
