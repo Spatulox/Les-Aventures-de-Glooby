@@ -317,7 +317,78 @@ L'éditeur Godot, ouvert sur `BossEnd.tscn`, a ré-enregistré la scène par-des
 édition et **supprimé la ligne `ScenePnjEpilogueAlternatif`** (piège connu). Remise
 depuis. **Recharger la scène dans l'éditeur** avant d'y retoucher.
 
-### ⚠️ Géométrie de l'arène désormais incohérente
+## 11. Arène recalée sur sa zone caméra, et fermée par des murs
+
+Suite du point ci-dessous : l'arène a été **rétrécie pour tenir dans `ZoneBossFinale`**,
+mesurée à **x ∈ [17, 782]** (765 px).
+
+| Nœud | Avant | Après |
+|---|---|---|
+| `SolUsineBois` | x 0, `NombreSegments` 3 (1720 px) | x −116, **`NombreSegments = 1`** (1032 px) |
+| `ApparitionBoss` | x 1450 | **x 520** |
+| `CagePereNoel` | x 1600 | **x 700** (bords 620→780) |
+| `Entree` / joueur | x 200 | inchangé |
+
+**Le sol ne peut pas faire exactement 765 px** : il se construit par segments de 344
+(`SegmentSolUsineBois.LargeurSegment`), donc les largeurs disponibles sont 688 ou 1032.
+688 laisserait un trou de 77 px au bord droit de l'arène — un piège mortel pile là où la
+caméra s'arrête. J'ai donc pris **1032, centré sur la zone** (−116 → 916) : les deux
+extrémités du plancher, embouts compris, tombent hors caméra, donc on ne voit jamais le
+bord du sol depuis l'arène.
+
+### Murs d'arène — `scenes/mur/MurArene.tscn`
+
+Les limites de caméra **ne bloquent personne** : elles cadrent l'image, mais joueur, PNJ
+et boss continuent de marcher au-delà, hors champ (c'est ce qui rendait le débordement
+possible). D'où un `MurArene` (`StaticBody2D`, couche 1 comme le sol), posé sous
+`Arene/Sol` en `MurGauche` (x 1) et `MurDroit` (x 798) : rectangle 32×640, **face
+intérieure pile sur la borne**, hauteur égale à celle de la zone.
+
+Deux choix à signaler :
+- **`MurNonAgrippable`**, et ce n'est pas un détail : le jeu a le wall jump, et une paroi
+  pleine sur toute la hauteur de la salle se remonterait jusqu'à sortir par le haut —
+  exactement ce qu'on cherche à empêcher.
+- **Pas de sprite**, contrairement à `MurGrotte` : il n'existe aucun art de mur d'usine
+  (`assets/decors/usine/usine_mur.png` est un fond 360×180, qu'il faudrait déformer), et
+  ces parois se posent au ras du bord de l'écran. C'est le rectangle de collision qui les
+  rend visibles et déplaçables dans l'éditeur ; on les étire par le `scale` de l'instance,
+  comme une `CameraZone`.
+
+### Vérification
+
+Sonde jetable (supprimée), joueur collé à chaque paroi et poussé dedans **en sautant** :
+
+```
+[arene]  x de 17 a 782, haut=-336
+[droite] x max atteint=771 (borne 782) -> BLOQUE | y min=251 -> pas d'escalade
+[gauche] x min atteint=29  (borne 17)  -> BLOQUE
+[pnj]    PrologueLutinUsine lance vers le mur droit -> x=776 -> BLOQUE
+```
+
+Les 11 px de marge correspondent au rayon de la capsule du joueur. Le `y min` prouve que
+le wall jump ne mord pas sur la paroi.
+
+Puis les **deux fins rejouées en entier**, murs et nouvelles positions en place :
+
+```
+FIN NORMALE  prologue ProloguePereNoel x=520 -> BossPereNoel VAINCU x=520 -> PANTALON RAMASSÉ
+FIN CACHÉE   prologue PrologueLutinUsine x=520 -> BossLutinMecha VAINCU x=520
+             -> EPILOGUE EpilogueLutinNoel x=520 -> cage -> PANTALON RAMASSÉ
+```
+
+Sol présent sous les deux bornes de l'arène (`279,1` des deux côtés), marqueur, entrée et
+cage tous mesurés **dans** les bornes. Boots de `BossEnd` et `monde1` au niveau de bruit
+pré-existant, à l'identique.
+
+### Point de séquence à surveiller
+
+La cage se déverrouille dès la mort du boss, alors que le lutin d'épilogue n'apparaît que
+`DelaiEpilogue + DureeFonduEchange` plus tard (2,5 s). Un joueur très rapide pourrait donc
+délivrer le Père Noël **avant** d'entendre « vite, allons libérer le père noel ! ». Traverser
+l'arène demande plus que ça, et le joueur est figé pendant le fondu — mais si le beat doit
+être garanti, il faudrait conditionner la cage à l'épilogue plutôt qu'à la seule victoire.
+
+### ⚠️ Géométrie de l'arène (résolu par le point 11)
 
 La même sauvegarde a **réduit `ZoneBossFinale`** (position x 860 → 416,9 ; `scale.x`
 6,589 → 3,149). Mesuré : l'arène couvre maintenant **x ∈ [17, 782]**, alors que

@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/boss/PrologueLutinUsine.tscn" id="prologue_lutin_usine"]
 [ext_resource type="PackedScene" path="res://scenes/boss/ProloguePereNoel.tscn" id="prologue_pere_noel"]
+[ext_resource type="PackedScene" path="res://scenes/mur/MurArene.tscn" id="mur_arene"]
 [ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="sol_usine"]
 [ext_resource type="PackedScene" path="res://scenes/boss/zone_boss_pere_noel.tscn" id="zoneboss"]
 
@@ -45,12 +46,19 @@ ScenePnjPrologueAlternatif = ExtResource("prologue_lutin_usine")
 ScenePnjEpilogueAlternatif = ExtResource("epilogue_lutin_noel")
 
 [node name="ApparitionBoss" type="Marker2D" parent="Arene" unique_id=889985776]
-position = Vector2(1450, 240.07)
+position = Vector2(520, 240.07)
 
 [node name="Sol" type="Node2D" parent="Arene" unique_id=889985768]
 
 [node name="SolUsineBois" parent="Arene/Sol" unique_id=889985769 instance=ExtResource("sol_usine")]
-position = Vector2(0, 240.07)
+position = Vector2(-116, 240.07)
+NombreSegments = 1
+
+[node name="MurGauche" parent="Arene/Sol" instance=ExtResource("mur_arene")]
+position = Vector2(1, -15.785)
+
+[node name="MurDroit" parent="Arene/Sol" instance=ExtResource("mur_arene")]
+position = Vector2(798, -15.785)
 
 [node name="Decor" type="Node2D" parent="Arene" unique_id=889985770]
 
@@ -61,7 +69,7 @@ position = Vector2(200, 240.07)
 Id = "bossEnd"
 
 [node name="CagePereNoel" parent="Arene/Interactifs" unique_id=184546834 instance=ExtResource("cage")]
-position = Vector2(1600, 188)
+position = Vector2(700, 188)
 MemoireRequise = "lutin_cgt_don_poissons"
 BossRequis = "Lutin Mecha"
 DecalageContenu = Vector2(-50, 91)
