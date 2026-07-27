@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="NoeudDialogue" format=3 uid="uid://dlld71sap8cxu"]
+
+[ext_resource type="Script" uid="uid://dmuxq1b11lf7k" path="res://scripts/Core/NoeudDialogue.cs" id="1_noeud"]
+[ext_resource type="Script" uid="uid://b0k7gjkfw4ix" path="res://scripts/Core/ChoixDialogue.cs" id="2_choix"]
+
+[sub_resource type="Resource" id="NoeudDefi"]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Puisque tu ne veux pas comprendre, je vais te le faire comprendre autrement.")
+
+[sub_resource type="Resource" id="ChoixJeLePrends"]
+script = ExtResource("2_choix")
+Texte = "Alors je le prendrai moi-même."
+Reponse = PackedStringArray("Essaie donc, petit.")
+Suite = SubResource("NoeudDefi")
+
+[sub_resource type="Resource" id="ChoixPlusDExcuse"]
+script = ExtResource("2_choix")
+Texte = "Vous n'avez plus une seule excuse."
+Reponse = PackedStringArray("J\'en ai une, et elle est très simple : dehors.")
+Suite = SubResource("NoeudDefi")
+
+[sub_resource type="Resource" id="NoeudApres"]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Toujours là ? Je t\'ai dit que je n\'avais pas le temps.")
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixJeLePrends"), SubResource("ChoixPlusDExcuse")])
+
+[sub_resource type="Resource" id="ChoixEchange"]
+script = ExtResource("2_choix")
+Texte = "Je viens échanger mon pantalon."
+Reponse = PackedStringArray("Un pantalon ? Regarde autour de toi : l\'atelier est à l\'arrêt et la tournée n\'est pas partie.", "Je n\'ai pas le temps pour ça. Reviens l\'année prochaine.")
+Suite = SubResource("NoeudApres")
+
+[sub_resource type="Resource" id="ChoixTropGrand"]
+script = ExtResource("2_choix")
+Texte = "Il est beaucoup trop grand pour moi."
+Reponse = PackedStringArray("Ils le sont tous à ton âge. Tu grandiras, ça se règlera tout seul.", "Et moi je n\'aurai toujours pas le temps.")
+Suite = SubResource("NoeudApres")
+
+[sub_resource type="Resource" id="ChoixPasComme8a"]
+script = ExtResource("2_choix")
+Texte = "Vous ne pouvez pas me renvoyer comme ça."
+Reponse = PackedStringArray("Je fais ce que je veux dans mon atelier.")
+Suite = SubResource("NoeudDefi")
+
+[resource]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Ho ho ho... un pingouin dans mon atelier, le matin de Noël.", "Fais vite, petit : je n\'ai pas une minute à moi.")
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixEchange"), SubResource("ChoixTropGrand"), SubResource("ChoixPasComme8a")])

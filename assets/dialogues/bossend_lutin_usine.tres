@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="NoeudDialogue" format=3 uid="uid://cba60codmqx78"]
+
+[ext_resource type="Script" uid="uid://dmuxq1b11lf7k" path="res://scripts/Core/NoeudDialogue.cs" id="1_noeud"]
+[ext_resource type="Script" uid="uid://b0k7gjkfw4ix" path="res://scripts/Core/ChoixDialogue.cs" id="2_choix"]
+
+[sub_resource type="Resource" id="NoeudDefi"]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Bon. Rien de personnel, camarade. Mets-toi en garde.")
+
+[sub_resource type="Resource" id="ChoixJePasse"]
+script = ExtResource("2_choix")
+Texte = "Je forcerai le piquet."
+Reponse = PackedStringArray("On va voir ça tout de suite.")
+Suite = SubResource("NoeudDefi")
+
+[sub_resource type="Resource" id="ChoixLibere"]
+script = ExtResource("2_choix")
+Texte = "Libère-le, et je m'en vais."
+Reponse = PackedStringArray("Pas de patron, pas de négociation. Il reste où il est.")
+Suite = SubResource("NoeudDefi")
+
+[sub_resource type="Resource" id="NoeudApres"]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Alors ? Tu fais demi-tour, ou tu forces le piquet ?")
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixJePasse"), SubResource("ChoixLibere")])
+
+[sub_resource type="Resource" id="ChoixRechange"]
+script = ExtResource("2_choix")
+Texte = "Il me faut juste un pantalon de rechange."
+Reponse = PackedStringArray("Pas un fil ne sort de cet atelier tant qu\'on n\'a pas nos trente-cinq heures.", "Même pour toi, camarade. Surtout pour toi : c\'est une question de principe.")
+Suite = SubResource("NoeudApres")
+
+[sub_resource type="Resource" id="ChoixOuEstLePatron"]
+script = ExtResource("2_choix")
+Texte = "Où est le Père Noël ?"
+Reponse = PackedStringArray("Au fond, bien au calme. Disons qu\'il réfléchit à nos revendications.")
+Suite = SubResource("NoeudApres")
+
+[sub_resource type="Resource" id="ChoixMesPoissons"]
+script = ExtResource("2_choix")
+Texte = "Vous avez construit ça avec mes poissons ?"
+Reponse = PackedStringArray("Avec tes poissons, trois tonnes de ferraille et beaucoup de nuits blanches.", "L\'atelier fabrique des jouets, camarade. On en a juste fait un très grand.")
+Suite = SubResource("NoeudApres")
+
+[resource]
+script = ExtResource("1_noeud")
+Repliques = PackedStringArray("Tiens, le camarade aux poissons ! Ta caisse de solidarité a fait des petits.", "Mais si tu viens pour un pantalon, tu peux repartir tout de suite.")
+Choix = Array[ExtResource("2_choix")]([SubResource("ChoixRechange"), SubResource("ChoixOuEstLePatron"), SubResource("ChoixMesPoissons")])

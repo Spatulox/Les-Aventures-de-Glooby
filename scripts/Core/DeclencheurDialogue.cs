@@ -20,6 +20,14 @@ using Godot;
 // invite, donc le PNJ improvise sa réaction à ce que le joueur vient de dire.
 public partial class DeclencheurDialogue : DeclencheurZone
 {
+	// Fin d'une conversation. `complet` = elle est allée à son terme (dernière ligne lue,
+	// ou branche de l'arbre refermée) ; faux quand le joueur s'est simplement éloigné en
+	// cours de route. C'est le point d'accroche de tout ce qui doit ENCHAÎNER sur une
+	// conversation — l'arène de boss qui échange son PNJ contre le boss, une porte qui
+	// s'ouvre... — sans que le moteur de dialogue connaisse quoi que ce soit au gameplay.
+	// Talkative.SurFinDialogue ne pouvait pas servir : il ne distingue pas les deux cas.
+	[Signal] public delegate void DialogueTermineEventHandler(bool complet);
+
 	// Nœud parlant ciblé ; par défaut le parent s'il implémente Talkative.
 	[Export] public NodePath Cible;
 
@@ -620,7 +628,12 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		_bulleChoix?.Cacher();
 
 		if (etaitEnDialogue)
+		{
 			_parlant.SurFinDialogue();
+			// Après SurFinDialogue : un PNJ à usage unique s'y marque consommé, donc les
+			// abonnés voient déjà l'état d'après (PeutParler() faux) quand ils réagissent.
+			EmitSignal(SignalName.DialogueTermine, !sortie);
+		}
 
 		// Fin « normale » avec le joueur encore proche : on revient au rappel de touche pour
 		// pouvoir reparler. Vrai pour le dialogue statique manuel et pour une conversation à

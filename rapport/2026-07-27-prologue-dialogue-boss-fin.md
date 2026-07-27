@@ -1,0 +1,203 @@
+# `BossEnd` : on parle d'abord, on se bat ensuite, et on repart avec le pantalon
+
+**Besoin** : donner une vraie fin à l'arène finale. Le joueur **discute** avec un PNJ
+amical, un **fondu au noir** l'échange contre le boss, et la victoire ne se solde plus
+par un minuteur mais par **l'objet de la quête**. Deux fins, selon le don des 50
+poissons au lutin CGT :
+
+| | Fin normale (pas de don) | Fin cachée (don) |
+|---|---|---|
+| Prologue | **Père Noël** : refuse d'échanger le pantalon, il n'a pas le temps | **Lutin d'usine**, pose *paquet* : pas de pantalon de rechange, ils sont en grève |
+| Combat | Boss Père Noël (45 PV) | Boss Lutin Mecha (40 PV) |
+| Après | le boss **lâche le pantalon** | on **délivre le Père Noël de sa cage**, il donne le pantalon |
+| Fin | ramasser le pantalon → `ecran_fin` | idem |
+
+Les deux prologues sont en **dialogue écrit** (pas d'IA) : mêmes répliques à chaque
+partie, aucune attente de génération.
+
+## 1. Le signal manquant — `scripts/Core/DeclencheurDialogue.cs`
+
+Le moteur n'avait **aucun signal de fin** : le seul point de notification était
+`Talkative.SurFinDialogue()`, qui ne distingue pas « conversation menée à son terme »
+de « le joueur s'est éloigné ». Ajout de :
+
+```csharp
+[Signal] public delegate void DialogueTermineEventHandler(bool complet);
+```
+
+émis dans `TerminerDialogue`, dans le bloc `if (etaitEnDialogue)` déjà présent, avec
+`complet = !sortie`, **après** `SurFinDialogue()` (un PNJ à usage unique s'y est déjà
+marqué consommé, les abonnés voient donc l'état d'après).
+
+Générique, sans une ligne de gameplay dans le moteur — et déjà utilisé deux fois :
+`ZoneBoss` pour lancer le combat, `CagePereNoel` pour ouvrir la cage. Vérifié qu'aucune
+propriété `DialogueTermine` n'existe (collision signal/propriété, piège Jalon B).
+
+## 2. La phase prologue — `scripts/Core/ZoneBoss.cs`
+
+Trois exports calqués sur le trio d'aiguillage existant :
+
+| Export | Rôle |
+|---|---|
+| `ScenePnjPrologue` | interlocuteur du boss normal (vide = arène sans prologue) |
+| `ScenePnjPrologueAlternatif` | celui de la fin cachée |
+| `DureeFonduPrologue` | demi-fondu de l'échange (0,5 s) |
+
+résolus par `ScenePrologueChoisie`, jumelle de `SceneChoisie` — l'alternative n'est prise
+que si elle est assignée, donc une arène peut n'avoir qu'un seul PNJ pour ses deux boss.
+
+Le corps de `SurEntreeJoueur` est extrait tel quel dans `LancerCombat(joueur)` ;
+`SurEntreeJoueur` devient un aiguillage (boss vaincu → boss vivant → prologue en cours →
+prologue à jouer → combat).
+
+**`LancerPrologue`** instancie le PNJ **au point d'apparition du boss** (`Marker2D
+ApparitionBoss`) — c'est ce qui rend l'échange invisible sous le noir — branche
+`DialogueTermine`, et ajoute le nœud en **différé** (`CallDeferred(AddChild)`), même
+raison que le boss : on arrive de `BodyEntered`, en plein flush des requêtes physiques.
+
+**Aucun identifiant de mémoire sur la zone.** C'est le PNJ qui dit s'il a encore quelque
+chose à raconter, via `Talkative.PeutParler()` — donc via `UneSeuleFois` + `IdDialogue`
+que `PnjAmical` porte déjà et que `SurFinDialogue()` mémorise dans `GameState`. La clé
+vit d'un seul côté et ne peut pas se désynchroniser. Si le PNJ n'a plus rien à dire,
+l'instance est libérée (`Free()`, jamais entrée dans l'arbre) et le combat démarre
+directement. `TrouverDeclencheur` cherche le `DeclencheurDialogue` **par type**, pas par
+nom : aucune convention de nommage à connaître.
+
+**`SurPrologueTermine(complet)`** ignore `complet == false`. Sinon : `DialogueModal = true`
+(le joueur reste figé pendant le noir, sans quoi il reprend la main pendant le fondu),
+`Sauvegarder()`, puis `Effets.FondreAuNoirPuis` — le PNJ est libéré au noir complet et
+`LancerCombat` prend le relais. `DialogueDisponible = false` au passage : filet contre un
+PNJ qui aurait laissé son rappel de touche armé, Espace resterait sinon détourné du saut.
+
+`ReinitialiserCombat` (mort du joueur) libère aussi le PNJ de prologue.
+
+## 3. Le butin de boss — `scripts/Entities/Pnj/Boss.cs`
+
+```csharp
+[Export] public PackedScene Butin;
+```
+
+Lâché par `Mourir()` **à l'endroit exact où le boss est tombé**, en frère de lui-même
+(il reste donc en place quand le boss est libéré), en `CallDeferred(AddChild)` — le coup
+fatal vient en général d'un contact, donc d'un flush de requêtes physiques.
+
+Le butin appartient au **boss** et non à l'arène : deux boss qui partagent la même salle
+ne lâchent pas la même chose, et le régler ici évite de le dupliquer sur chaque zone.
+`BossPereNoel.tscn` porte le pantalon ; `BossLutinMecha.tscn` ne lâche rien (c'est la
+cage qui donne).
+
+## 4. Le pantalon — `PantalonPickup`
+
+`scripts/Entities/Interactable/PantalonPickup.cs` + `scenes/interactifs/PantalonPickup.tscn`,
+un `ElementRamassable` de plus (contact, flottaison, auto-retrait s'il est déjà pris).
+
+Il mémorise `pantalon_obtenu`, sauvegarde, puis enchaîne sur `CheminSceneSuite`
+(`ecran_fin.tscn`) après un fondu. **C'est lui qui clôt la partie** : `CheminSceneVictoire`
+a été retiré de l'arène, parce que 2,5 s après la mort du boss ne laissent pas le temps
+d'aller chercher un objet à l'autre bout de la salle.
+
+Piège traité : `ElementRamassable` libère le nœud juste après `Ramasser()`, donc l'arbre
+est capturé **avant** le fondu (le rappel ne peut plus demander `GetTree()` à un nœud
+mort). Le voile, lui, vit sous la racine et survit au changement de scène.
+
+**Visuel : placeholder.** `assets/props/pantalon.png`, un 32×32 dessiné à la main en
+procédural — **0 génération PixelLab**. À remplacer par de l'art quand le budget rouvre :
+c'est un simple échange de texture dans la scène.
+
+## 5. La cage du Père Noël — `CagePereNoel`
+
+`scripts/Entities/Interactable/CagePereNoel.cs` + `scenes/interactifs/CagePereNoel.tscn`,
+posée **en bout d'arène et visible dès le début** : on voit le Père Noël prisonnier
+pendant tout le combat, ce qui explique visuellement qu'un lutin défende l'atelier.
+Les deux sprites existaient déjà (`assets/props/noel/perenoel_cage_{fermee,ouverte}.png`).
+
+Trois emprunts, aucune mécanique neuve :
+- **`MemoireRequise`** — la cage se retire d'elle-même au `_Ready` dans la fin normale,
+  où le Père Noël est le boss et n'a rien à faire en cage ;
+- **`BossRequis`** — le verrou de progression de `PorteInterne`
+  (`GameState.EstBossVaincu`) ;
+- **`Talkative`** sur le modèle de `PanneauBois` — tout le rappel de touche et la bulle
+  viennent du `DeclencheurDialogue` enfant. La cage ne fait qu'échanger son sprite et
+  lâcher son `Contenu`.
+
+`Dialogue` renvoie `LignesAvant` (il supplie) ou `LignesApres` (il remercie et donne le
+pantalon) selon que le boss est tombé, et c'est `DialogueTermine(complet: true)` qui
+ouvre — s'éloigner en plein milieu n'ouvre pas la cage à distance.
+
+## 6. Pose « paquet » du lutin — `scripts/Entities/Pnj/LutinUsine.cs`
+
+Export `Pose { Etabli, Paquet }` qui choisit le dossier de frames
+(`assets/pnj/lutin_usine/{idle,paquet}`), sur le modèle de `LutinCgt.Pose`. Le lutin
+étant immobile dans les deux cas, il n'y a toujours qu'une animation `idle`.
+
+## 7. Les scènes et les dialogues
+
+- **`scenes/boss/ProloguePereNoel.tscn`** / **`PrologueLutinUsine.tscn`** — deux
+  nouvelles scènes plutôt que d'éditer `scenes/props/noel/` (`LutinUsine.tscn` sert dans
+  `DemoUsine.tscn` et n'a rien à faire avec un dialogue de boss). Gabarit
+  `pingouin.tscn`, avec le nœud **`Apercu`** que les scènes `props/noel/` oubliaient.
+  `UneSeuleFois` + `IdDialogue`, `ConversationRessource`, **pas de `DialogueDynamique`**.
+- **`assets/dialogues/bossend_pere_noel.tres`** / **`bossend_lutin_usine.tres`** —
+  convention `<lieu>_<pnj>.tres`, modèle `banquise_fin_lutin_cgt.tres`. Racine (2
+  répliques + 3 réponses) → nœud intermédiaire → **nœud terminal sans `Choix`**, sur
+  lequel toutes les branches convergent : un nœud sans choix disponible referme la
+  conversation, ce qui déclenche le combat.
+- **`scenes/niveaux/BossEnd.tscn`** — édition chirurgicale : les deux prologues sur
+  `ZoneBossFinale`, la cage sous `Arene/Interactifs` en (1600, 152) avec ses répliques,
+  et retrait de `CheminSceneVictoire`. Aucun décor déplacé.
+
+## Vérification
+
+- `godot --headless --build-solutions --quit` : **0 erreur, 0 avertissement CS**.
+- Les quatre `.tres`/scènes chargent : Godot a **ré-sérialisé** les deux arbres de
+  dialogue (uid ajouté, apostrophes échappées), ce qui prouve qu'ils parsent.
+- **Deux fins jouées de bout en bout** en headless (harnais jetables, supprimés depuis :
+  ils téléportaient le joueur, martelaient `action` et abattaient le boss à coups de
+  `Degats.Infliger`) :
+
+  | Étape | Fin normale | Fin cachée |
+  |---|---|---|
+  | Entrée | `pnj=ProloguePereNoel cage=aucun` | `pnj=PrologueLutinUsine cage=CagePereNoel` |
+  | Après dialogue | `BossPereNoel 45/45` | `BossLutinMecha 40/40` |
+  | Boss vaincu | pantalon lâché en (1450, 279) | rien lâché |
+  | Délivrance | — | pantalon sorti de la cage en (1600, 192) |
+  | Ramassage | `pantalon_obtenu` → fin | `pantalon_obtenu` → fin |
+
+- **Cage verrouillée** : 20 appuis sur `action` devant la cage **avant** le combat →
+  `pantalon=aucun`, `bossVaincu=False`. Elle ne s'ouvre qu'après la chute du Mecha.
+- Traversées précédentes toujours valides : prologue rejoué une seule fois par partie
+  (2ᵉ entrée → combat direct, aucun PNJ), sortie de zone en pleine conversation
+  (`complet=false`) → aucun combat déclenché.
+- Runs complets de 900 frames (donc bien après la bascule sur `ecran_fin`) et boots de
+  600 frames de `monde1`, `monde2`, `BossEnd` : **aucune erreur nouvelle** (seuls restent
+  les 12 « Not supported by this display server » et le « resources still in use at
+  exit » pré-existants).
+
+### Reste à faire : un vrai F5
+
+Le headless ne juge ni la lisibilité de la liste de réponses, ni le rythme du fondu, ni
+le fait que l'échange PNJ→boss soit invisible, ni si la cage est bien lisible en bout
+d'arène (elle fait 160×192 et le boss se déplace jusque-là).
+
+## Incident : sauvegarde du joueur écrasée
+
+Les premiers runs de vérification ont écrit dans la **vraie sauvegarde**
+(`user://pantalon.json`, via `GameState.Sauvegarder()`). J'avais copié le mauvais fichier
+(`sauvegarde.json`, vestige du 13 juillet) : la sauvegarde du 27/07 14:57 **est perdue**.
+
+Le fichier a été remis dans un état cohérent de début de partie (`village_depart`,
+`monde1.tscn`, 50 poissons, 5 PV) — il pointait sinon sur une scène de harnais supprimée,
+ce qui aurait fait planter « Continuer ». Le supprimer donne un départ propre. Les runs
+suivants ont été encadrés d'une copie/restauration.
+
+## Limites connues
+
+- **Abandonner le prologue le consomme quand même** : `PnjAmical.SurFinDialogue()` marque
+  `IdDialogue` consommé sur **tous** les chemins de sortie. En jeu ce n'est pas
+  atteignable (une conversation à arbre est modale) — il a fallu une téléportation
+  scriptée pour le provoquer. Comportement pré-existant de `UneSeuleFois`.
+- **Musique** : `NomAmbiance = "boss_cerf"` s'applique dès l'entrée dans l'arène, donc le
+  thème de combat tourne pendant la conversation. Il faudrait un `NomAmbiancePrologue`.
+- **Art du pantalon** : placeholder procédural.
+- `scenes/ui/ecran_fin.tscn` parle encore de Rodolphe alors que les deux fins de
+  `BossEnd` y mènent. Pré-existant, non traité.
