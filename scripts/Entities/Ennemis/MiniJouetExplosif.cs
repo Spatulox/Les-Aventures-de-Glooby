@@ -24,8 +24,12 @@ public partial class MiniJouetExplosif : LivingEntity
 	[Export] public float AngleBalancement = 12f;
 	// Course kamikaze : plus lent que le joueur (220), donc distançable.
 	[Export] public float VitesseFonce = 130f;
-	// Délai avant auto-explosion une fois au sol, même si le joueur reste hors d'atteinte.
+	// Délai avant auto-explosion une fois la mèche allumée, même si le joueur reste hors
+	// d'atteinte : la mèche ne s'allume qu'à la VUE du joueur (voir PorteeVue).
 	[Export] public float DureeMeche = 4f;
+	// Portée de vue servant de repli quand la scène ne porte pas d'Area2D « ZoneDetection » ;
+	// avec la zone, c'est la taille de sa forme qui décide (réglable par instance).
+	[Export] public float PorteeVue = 200f;
 	// Rayon de souffle en pixels : le jouet blesse plus loin que son corps.
 	[Export] public float RayonSouffle = 42f;
 	// Battement entre le déclenchement et le souffle. C'est ce qui sépare le CONTACT de
@@ -40,6 +44,9 @@ public partial class MiniJouetExplosif : LivingEntity
 	private Node2D _parachute;
 	private Area2D _zoneDegats;
 	private float _minuteurMeche;
+	// La mèche est allumée par la VUE du joueur, et ne s'éteint plus ensuite : une fois
+	// amorcé, le compte à rebours va jusqu'au bout même si le joueur se dérobe.
+	private bool _mecheAllumee;
 
 	public override void _Ready()
 	{
@@ -49,6 +56,9 @@ public partial class MiniJouetExplosif : LivingEntity
 
 		AppliquerCollisionsPnj();
 		MasquerApercuEditeur();
+		// Vue du jouet : si la scène porte une Area2D « ZoneDetection », sa forme
+		// (réglable par instance) définit la portée à la place de PorteeVue.
+		CablerZoneDetection();
 		Pv = PvMax;
 		AddToGroup("pnj");
 
@@ -126,6 +136,19 @@ public partial class MiniJouetExplosif : LivingEntity
 
 		Velocity = velocite;
 		MoveAndSlide();
+
+		// La mèche ne se consume qu'une fois ALLUMÉE, et elle ne s'allume qu'à la vue du
+		// joueur : un jouet qui n'a jamais aperçu personne attend indéfiniment au lieu de
+		// se saborder tout seul dans son coin. Le joueur qui se dérobe ensuite ne l'éteint
+		// pas — d'où le test unique, qui coupe aussi la recherche du joueur une fois amorcé.
+		if (!_mecheAllumee)
+		{
+			var vu = JoueurAPortee(out float distanceVue);
+			_mecheAllumee = vu != null && distanceVue <= PorteeVue;
+		}
+
+		if (!_mecheAllumee)
+			return;
 
 		_minuteurMeche -= dt;
 		if (_minuteurMeche <= 0f)
