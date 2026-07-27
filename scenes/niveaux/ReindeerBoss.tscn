@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dfcn030tpflmp"]
+
+[ext_resource type="PackedScene" uid="uid://lbswtl10yrkt" path="res://scenes/decors/grotte_florale/Sanctuaire.tscn" id="1_5ubi2"]
+
+[node name="ReindeerBoss" type="Node2D" unique_id=529035607]
+
+[node name="Sanctuaire" parent="." unique_id=124651202 instance=ExtResource("1_5ubi2")]
+position = Vector2(0, -1)

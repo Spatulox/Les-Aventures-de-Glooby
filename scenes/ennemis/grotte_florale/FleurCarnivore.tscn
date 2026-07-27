@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" uid="uid://r8totv8i8v6x" path="res://scripts/Entities/Ennemis/GrotteFlorale/FleurCarnivore.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://ubm70phyx3a0" path="res://assets/ennemis/grotte_florale/fleur_carnivore/idle/00.png" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectTige"]
+size = Vector2(28, 34)
+
+[sub_resource type="CircleShape2D" id="CercleMorsure"]
+radius = 26.0
+
+[sub_resource type="CircleShape2D" id="CercleDetection"]
+radius = 90.0
+
+[node name="FleurCarnivore" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 17
+script = ExtResource("1")
+PvMax = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+
+[node name="Apercu" type="Sprite2D" parent="."]
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 18)
+shape = SubResource("RectTige")
+
+[node name="ZoneMorsure" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneMorsure"]
+position = Vector2(0, -18)
+shape = SubResource("CercleMorsure")
+
+[node name="ZoneDetection" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection"]
+position = Vector2(0, -10)
+shape = SubResource("CercleDetection")

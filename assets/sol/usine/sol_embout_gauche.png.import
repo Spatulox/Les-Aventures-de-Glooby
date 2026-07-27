@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cv8riu5302rb6"
-path="res://.godot/imported/pente_forte_descendante.png-3b924d98067f2dad0714d6f3a0c30bc4.ctex"
+uid="uid://dempb8wlanmhp"
+path="res://.godot/imported/sol_embout_gauche.png-b9e2522cf56fc9fb4c461efcd4f90d2b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sol_usine/pente_forte_descendante.png"
-dest_files=["res://.godot/imported/pente_forte_descendante.png-3b924d98067f2dad0714d6f3a0c30bc4.ctex"]
+source_file="res://assets/sol/usine/sol_embout_gauche.png"
+dest_files=["res://.godot/imported/sol_embout_gauche.png-b9e2522cf56fc9fb4c461efcd4f90d2b.ctex"]
 
 [params]
 

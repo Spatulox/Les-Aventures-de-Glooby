@@ -1,19 +1,19 @@
 [gd_scene format=3 uid="uid://67grwk8edwci"]
 
 [ext_resource type="Texture2D" uid="uid://b4x2egko1wruq" path="res://assets/props/grotte/racine_arbre_gele.png" id="19_uoa0f"]
-[ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/SolBanquiseEmboutDroit.tscn" id="20_1vuit"]
+[ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/banquise/SolBanquiseEmboutDroit.tscn" id="20_1vuit"]
 [ext_resource type="Texture2D" uid="uid://cb3eaprih8p0d" path="res://assets/props/grotte/racine_gelee.png" id="20_hau0f"]
 [ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="35_vq52v"]
 [ext_resource type="Texture2D" uid="uid://b3m24dymk35gl" path="res://assets/props/tas_neige/tas_neige_a.png" id="36_gw68a"]
 [ext_resource type="PackedScene" uid="uid://b230aybnrmrin" path="res://scenes/plateformes/PlateformeMobile.tscn" id="46_a0dla"]
 [ext_resource type="PackedScene" uid="uid://21qfi1kw4uu" path="res://scenes/ennemis/BonhommeDeNeige.tscn" id="49_nhnan"]
-[ext_resource type="PackedScene" path="res://scenes/sol/PenteBanquiseForteDescendante.tscn" id="52_kxqbj"]
+[ext_resource type="PackedScene" path="res://scenes/sol/banquise/PenteBanquiseForteDescendante.tscn" id="52_kxqbj"]
 [ext_resource type="Texture2D" uid="uid://s1ycefd1kkcg" path="res://assets/props/grotte/brasero_eteint.png" id="53_a0dla"]
 [ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="55_dejuv"]
 [ext_resource type="PackedScene" uid="uid://civtsuvy2xvd8" path="res://scenes/entites/lutin_cgt.tscn" id="59_0ihna"]
+[ext_resource type="Resource" uid="uid://brk0m24hh3ybq" path="res://assets/dialogues/banquise_fin_lutin_cgt.tres" id="60_dlgcgt"]
 [ext_resource type="Texture2D" uid="uid://d1x48h11kcry7" path="res://assets/props/tas_neige/tas_neige_b.png" id="62_v2sbg"]
 [ext_resource type="Texture2D" uid="uid://cnar0j6pp2oii" path="res://assets/props/poisson.png" id="63_v2sbg"]
-[ext_resource type="Texture2D" uid="uid://c5d5j6vgunm1q" path="res://assets/props/grotte/toile_givre.png" id="64_kqdy7"]
 [ext_resource type="Texture2D" uid="uid://hoeyfknx78n5" path="res://assets/props/noel/sapin_grand.png" id="65_nyqwg"]
 [ext_resource type="Texture2D" uid="uid://cfafajwqshgwh" path="res://assets/props/grotte/glace_empilee.png" id="66_e3dtk"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
@@ -52,18 +52,18 @@
 [ext_resource type="PackedScene" uid="uid://dkl1ykgr3frpp" path="res://scenes/mur/MurGrotteHaut.tscn" id="murg_h"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/mur_fondable.tscn" id="mur_fondable"]
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="panneau"]
-[ext_resource type="PackedScene" uid="uid://w5t6yendfo78" path="res://scenes/sol/PenteBanquiseDouceDescendante.tscn" id="pente_descendante"]
-[ext_resource type="PackedScene" uid="uid://b1sqxo0ogwnv" path="res://scenes/sol/PenteBanquiseDouceMontante.tscn" id="pente_montante"]
+[ext_resource type="PackedScene" uid="uid://w5t6yendfo78" path="res://scenes/sol/banquise/PenteBanquiseDouceDescendante.tscn" id="pente_descendante"]
+[ext_resource type="PackedScene" uid="uid://b1sqxo0ogwnv" path="res://scenes/sol/banquise/PenteBanquiseDouceMontante.tscn" id="pente_montante"]
 [ext_resource type="PackedScene" uid="uid://jj522styq8rs" path="res://scenes/entites/pingouin.tscn" id="pingouin"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/pouvoir_chaleur_pickup.tscn" id="pouvoir"]
 [ext_resource type="Texture2D" uid="uid://bruo6y23arcsm" path="res://assets/props/rocher_glace.png" id="rocher"]
 [ext_resource type="PackedScene" uid="uid://c0hqmgvti2q03" path="res://scenes/plateformes/PlateformeUnidirectionnelle.tscn" id="sol"]
-[ext_resource type="PackedScene" uid="uid://oywi8ac3yrsw" path="res://scenes/sol/SolGrotte.tscn" id="solg_c"]
-[ext_resource type="PackedScene" uid="uid://oywi8ac3yrsx" path="res://scenes/sol/SolGrotteCentreB.tscn" id="solg_cb"]
-[ext_resource type="PackedScene" uid="uid://oywi8ac3yrsy" path="res://scenes/sol/SolGrotteCentreC.tscn" id="solg_cc"]
-[ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/SolBanquise.tscn" id="sol_banquise"]
-[ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
+[ext_resource type="PackedScene" uid="uid://oywi8ac3yrsw" path="res://scenes/sol/grotte/SolGrotte.tscn" id="solg_c"]
+[ext_resource type="PackedScene" uid="uid://oywi8ac3yrsx" path="res://scenes/sol/grotte/SolGrotteCentreB.tscn" id="solg_cb"]
+[ext_resource type="PackedScene" uid="uid://oywi8ac3yrsy" path="res://scenes/sol/grotte/SolGrotteCentreC.tscn" id="solg_cc"]
+[ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/banquise/SolBanquise.tscn" id="sol_banquise"]
+[ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/banquise/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
 [ext_resource type="PackedScene" uid="uid://kjhdxmbys0gl" path="res://scenes/core/zone_chargement_scene.tscn" id="zone_chargement"]
 
 [sub_resource type="RectangleShape2D" id="RectMurGauche"]
@@ -1079,11 +1079,6 @@ rotation = -3.1415925
 scale = Vector2(3.6170883, 4.925616)
 texture = ExtResource("20_hau0f")
 
-[node name="ToileGivre" type="Sprite2D" parent="Grotte/Decor" unique_id=269302164]
-position = Vector2(2919.0002, 1105)
-scale = Vector2(6.275, 6.1)
-texture = ExtResource("64_kqdy7")
-
 [node name="VeineCristalMur" type="Sprite2D" parent="Grotte/Decor" unique_id=968063961]
 z_index = -3
 position = Vector2(3770, 1137)
@@ -1211,12 +1206,6 @@ texture = ExtResource("20_hau0f")
 position = Vector2(2794, 853)
 texture = ExtResource("g_congere")
 
-[node name="FissureLumineuse" type="Sprite2D" parent="Grotte/Decor" unique_id=2124993980]
-z_index = -3
-position = Vector2(4645.0005, 626.99994)
-scale = Vector2(6.875, 8.9375)
-texture = ExtResource("g_fissure")
-
 [node name="Glace1" parent="Grotte/Decor" unique_id=1402786529 instance=ExtResource("g_glace")]
 z_index = -1
 position = Vector2(3428, 608)
@@ -1328,5 +1317,18 @@ limit_bottom = 400
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
+
+[node name="LutinCgt" parent="." unique_id=1619686424 instance=ExtResource("59_0ihna")]
+position = Vector2(5015, 258)
+Slogan = "35H OU RIEN !"
+Lignes = PackedStringArray("On lâche rien. Même pas les jouets !", "Camarade ! Il me manque encore des poissons pour tenir le piquet !", "50 poissons, pas un de moins, sinon on retourne à l\'atelier !", "On lâche rien ! Mais on a faim !", "")
+DialogueDynamique = true
+Contexte = "Tu es un ouvrier de la fabrique du Père Noël, délégué syndical CGT, en grève depuis ce matin.
+Tu tiens le piquet de grève avec ta pancarte : la direction impose des cadences folles, vous emballez les cadeaux jour et nuit, et la hotte n'est toujours pas passée aux 35 heures.
+Ton problème immédiat : le piquet n'a plus rien à manger. Tu ravitailles tes camarades grévistes et il te faut au 50 poissons pour tenir ; en dessous, la grève s'effondre et tout le monde retourne à l'atelier.
+Tu réclames donc des poissons à quiconque passe devant toi, tu comptes ce qu'il te manque, tu promets un reçu de la caisse de solidarité.
+Ton ton : combatif et syndical (camarade, revendications, piquet de grève, on lâche rien), râleur envers la direction, chaleureux envers ceux qui te soutiennent, jamais méchant ni menaçant."
+MotMoyenParReponse = 12
+ConversationRessource = ExtResource("60_dlgcgt")
 
 [editable path="Joueur"]

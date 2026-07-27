@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bjedmvovub3u7"
-path="res://.godot/imported/pente_douce_descendante.png-66d08994c2dfcd1fbdc9ef610e9fb710.ctex"
+uid="uid://c34uvlvxsq6vo"
+path="res://.godot/imported/pente_douce_montante.png-f301a6ae11e23ec1cecbea08305001cf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sol_usine/pente_douce_descendante.png"
-dest_files=["res://.godot/imported/pente_douce_descendante.png-66d08994c2dfcd1fbdc9ef610e9fb710.ctex"]
+source_file="res://assets/sol/usine/pente_douce_montante.png"
+dest_files=["res://.godot/imported/pente_douce_montante.png-f301a6ae11e23ec1cecbea08305001cf.ctex"]
 
 [params]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://busntestplatbois"]
 
-[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/decors/usine/SolUsineBois.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://busnplmobbois1" path="res://scenes/plateformes/usine/PlateformeMobileBois.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="3"]
 [ext_resource type="Script" path="res://scripts/Test/TestPlateformeBoisDebug.cs" id="4"]

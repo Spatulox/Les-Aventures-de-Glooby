@@ -4,26 +4,29 @@ using Godot;
 // de segments posés côte à côte pour former un sol continu de n'importe quelle
 // longueur. Un embout gauche, N segments centraux (variantes A/B/C alternées,
 // strictement raccordables — joint invisible sur une jointure de planche) puis
-// un embout droit (planche cassée + poutre en coupe). Chaque segment porte son
-// Sprite2D et sa collision (StaticBody2D). Régler NombreSegments dans
+// un embout droit (planche cassée + poutre en coupe). Régler NombreSegments dans
 // l'inspecteur allonge le sol ; l'aperçu se reconstruit dans l'éditeur ([Tool]).
-// Même logique et mêmes dimensions que SolBanquise (172px natif ×2, surface de
-// marche calée sur le dessus dessiné).
+//
+// La rangée n'invente aucune géométrie : elle instancie les scènes de segment de
+// scenes/sol/usine/ (SegmentSolUsineBois), seule source de vérité du sprite et de
+// la collision — les mêmes scènes qu'on peut poser une par une à la main dans un
+// niveau. Même logique et mêmes dimensions que SolBanquise (172px natif ×2,
+// surface de marche calée sur le dessus dessiné).
 [Tool]
 public partial class SolUsineBois : Node2D
 {
-	// Largeur affichée d'un emplacement (172px natif ×2), identique au sol banquise.
-	public const float LargeurSegment = 344f;
+	// Largeur affichée d'un emplacement, définie par le segment lui-même.
+	public const float LargeurSegment = SegmentSolUsineBois.LargeurSegment;
 
-	private const string DossierAssets = "res://assets/sol_usine/";
+	private const string DossierScenes = "res://scenes/sol/usine/";
 	private static readonly string[] Centres =
 	{
-		DossierAssets + "sol_centre_a.png",
-		DossierAssets + "sol_centre_b.png",
-		DossierAssets + "sol_centre_c.png",
+		DossierScenes + "SolUsineBoisCentreA.tscn",
+		DossierScenes + "SolUsineBoisCentreB.tscn",
+		DossierScenes + "SolUsineBoisCentreC.tscn",
 	};
-	private const string CheminEmboutGauche = DossierAssets + "sol_embout_gauche.png";
-	private const string CheminEmboutDroit = DossierAssets + "sol_embout_droit.png";
+	private const string CheminEmboutGauche = DossierScenes + "SolUsineBoisEmboutGauche.tscn";
+	private const string CheminEmboutDroit = DossierScenes + "SolUsineBoisEmboutDroit.tscn";
 
 	private int _nombreSegments = 3;
 	private bool _emboutGauche = true;
@@ -77,27 +80,12 @@ public partial class SolUsineBois : Node2D
 			PoserSegment(CheminEmboutDroit, x);
 	}
 
-	// Un segment = un StaticBody2D à la position voulue, avec son sprite (ancré en
-	// haut-gauche, ×2) et une collision calée sous la surface de marche.
+	// Un segment = une instance de la scène correspondante, posée à l'emplacement
+	// voulu (son origine est son bord gauche, sa surface de marche y = 8).
 	private void PoserSegment(string chemin, float x)
 	{
-		var corps = new StaticBody2D { Position = new Vector2(x, 0f) };
-		corps.AddChild(new Sprite2D
-		{
-			Texture = GD.Load<Texture2D>(chemin),
-			Scale = new Vector2(2f, 2f),
-			Centered = false,
-		});
-
-		// Surface de marche = dessus dessiné (pixel 4 → local y = 8 en ×2) ;
-		// la collision descend jusqu'au bas du sprite (pixel 90 → local y = 180).
-		var collision = new CollisionShape2D
-		{
-			Position = new Vector2(LargeurSegment / 2f, 94f),
-			Shape = new RectangleShape2D { Size = new Vector2(LargeurSegment, 172f) },
-		};
-		corps.AddChild(collision);
-
-		AddChild(corps);
+		var segment = GD.Load<PackedScene>(chemin).Instantiate<Node2D>();
+		segment.Position = new Vector2(x, 0f);
+		AddChild(segment);
 	}
 }

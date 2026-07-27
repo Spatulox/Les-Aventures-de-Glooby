@@ -6,7 +6,7 @@ using Godot;
 // interchangeables ; les embouts portent la cassure de glace et les
 // stalactites décoratives (hors collision).
 //
-// Chaque type a sa propre scène (scenes/sol/SolBanquiseXxx.tscn) qui porte son
+// Chaque type a sa propre scène (scenes/sol/banquise/SolBanquiseXxx.tscn) qui porte son
 // sprite ET sa CollisionShape2D. La scène est la SEULE source de vérité : le
 // script ne réapplique plus rien au runtime, sinon régler la collision dans
 // l'éditeur ne servirait à rien (elle serait écrasée au lancement, et joueur
