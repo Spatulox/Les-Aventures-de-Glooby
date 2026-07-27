@@ -40,13 +40,13 @@ Nouveau contrat `BossBorne` (`float LimiteGauche/LimiteDroite { set; }`), implé
   - **Jet de givre** — télégraphe bleu, tire un `EclatGlace` ; éventail de trois en phase 2 (surcharge vectorielle de `Projectile.Initialiser`).
   - **Cheminée** — s'évapore et se rematérialise de l'autre côté du joueur, borné par l'arène. C'est son **seul déplacement**, faute d'animation de marche ; intouchable pendant le passage (`IsInvincibleToDamage`).
   - Deux phases (bascule à 50 % PV), `AnimationMort` renvoyée sur `idle` + affaissement procédural (pieds au sol). **Aucun `DamageSource` nouveau** : les deux projectiles portent déjà le leur.
-- **`scenes/entites/boss/BossPereNoel.tscn`** — au format des autres boss : `Apercu`, `AnimatedSprite2D` à y = −44, collision 48×78, `PvMax = 45`, layers PNJ.
+- **`scenes/boss/BossPereNoel.tscn`** — au format des autres boss : `Apercu`, `AnimatedSprite2D` à y = −44, collision 48×78, `PvMax = 45`, layers PNJ.
 - **`scripts/Core/ZoneBossPereNoel.cs`** + **`scenes/boss/zone_boss_pere_noel.tscn`** — l'arène finale : persistance de la défaite + enchaînement sur l'écran de fin. Elle ne connaît le type d'aucun des deux boss.
 - **`scenes/test/TestBossPereNoel.tscn`** — arène jouable pour le tester seul.
 
 ## 4. Câblage
 
-**`scenes/niveaux/BossEnd.tscn`** (arène remplie sur le patron de `ReindeerBoss.tscn` : sol usine 2752 px, `BossHudBarre`, `PointEntree` d'Id `bossEnd`, fond usine) :
+**`scenes/niveaux/BossEnd.tscn`** (arène remplie sur le patron de `ReindeerBoss.tscn` : sol usine, `BossHudBarre`, `PointEntree` d'Id `bossEnd`, fond usine ; longueur finale au §7) :
 
 ```
 Arene/ZoneBossFinale  (zone_boss_pere_noel.tscn)
@@ -58,7 +58,7 @@ Arene/ZoneBossFinale  (zone_boss_pere_noel.tscn)
 
 **`scenes/niveaux/monde2.tscn`** — sortie est sous `UsinePereNoel/Interactifs`, transition **simple, sans condition**, vers `BossEnd` (`PointEntreeCible = bossEnd`). `x = 4700` est juste avant le bord est de `ZoneUsine` ; le `y` est un **placeholder**, `UsinePereNoel/Sol` étant encore vide.
 
-**`scenes/test/TestBossLutinMecha.tscn`** — deux chemins morts corrigés (`scenes/boss/BossLutinMecha.tscn` → `scenes/entites/boss/`, `scenes/decors/usine/SolUsineBois.tscn` → `scenes/sol/usine/`), séquelles d'un déplacement de dossiers.
+**`scenes/test/TestBossLutinMecha.tscn`** — deux chemins morts corrigés, séquelles d'un déplacement de dossiers (`SolUsineBois.tscn` était cherché dans `scenes/decors/usine/` au lieu de `scenes/sol/usine/`, et la scène du Mecha dans un dossier disparu).
 
 ## 5. `MiniJouetExplosif` — dégâts à l'explosion uniquement
 
@@ -86,6 +86,14 @@ Câblé sur les deux arènes :
 - `ReindeerBoss.tscn` → `ArenBoss/ApparitionBoss` à (1600, 440), soit exactement l'ancienne valeur en dur : Rodolphe apparaît au même endroit qu'avant.
 
 **Arène de `BossEnd` raccourcie** : sol de 6 → 3 segments centraux, soit 2752 → **1720 px** (−37 %), et la zone suivie (centre x 860, `scale.x` 6.71875) pour que ses bornes collent au nouveau sol — ce sont elles qui bornent le déplacement des deux boss.
+
+## 8. Fusion d'`origin/main` — les scènes de boss sous `scenes/boss/`
+
+Les deux branches ayant rangé les scènes de boss **en même temps dans deux dossiers différents**, le merge a produit un conflit renommage/renommage sur `boss_cerf.tscn` (plus deux conflits de contenu sur des scènes de test, où la même correction de chemin mort avait été faite des deux côtés).
+
+Convention d'`origin/main` retenue — `scenes/boss/`, PascalCase, cohérente avec `scenes/sol/usine/` et `scenes/ennemis/`. `BossLutinMecha.tscn` et `BossPereNoel.tscn` ont donc migré de `scenes/entites/boss/` (dossier supprimé) vers `scenes/boss/`, et les références ont été réécrites dans `BossEnd.tscn`, `ReindeerBoss.tscn` et les deux scènes de test. Commit de fusion `5922daa`.
+
+**Les chemins cités dans ce rapport sont ceux d'après la fusion.**
 
 ## Vérification
 

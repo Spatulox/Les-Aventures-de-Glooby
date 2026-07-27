@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://gkwjiv57ow54"]
 
-[ext_resource type="Script" path="res://scripts/Entities/Ennemis/MiniJouetExplosif.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/ennemis/usine/mini_jouet_explosif/chute/00.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/ennemis/usine/mini_jouet_explosif/parachute.png" id="3"]
+[ext_resource type="Script" uid="uid://q5m0mnmp8bfn" path="res://scripts/Entities/Ennemis/MiniJouetExplosif.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://ddt106q5ky3j" path="res://assets/ennemis/usine/mini_jouet_explosif/chute/00.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dtp07leqxuaeo" path="res://assets/ennemis/usine/mini_jouet_explosif/parachute.png" id="3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(18, 46)
@@ -10,31 +10,30 @@ size = Vector2(18, 46)
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 14.0
 
-[node name="MiniJouetExplosif" type="CharacterBody2D"]
+[node name="MiniJouetExplosif" type="CharacterBody2D" unique_id=743188203]
 collision_layer = 4
 collision_mask = 17
 script = ExtResource("1")
-PvMax = 1
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=988193388]
 position = Vector2(0, -30)
 
-[node name="Apercu" type="Sprite2D" parent="."]
+[node name="Apercu" type="Sprite2D" parent="." unique_id=1790406336]
 position = Vector2(0, -30)
 texture = ExtResource("2")
 
-[node name="Parachute" type="Sprite2D" parent="."]
+[node name="Parachute" type="Sprite2D" parent="." unique_id=527403997]
 position = Vector2(0, -80)
 texture = ExtResource("3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1800933638]
 position = Vector2(0, -23)
 shape = SubResource("RectangleShape2D_1")
 
-[node name="ZoneDegats" type="Area2D" parent="."]
+[node name="ZoneDegats" type="Area2D" parent="." unique_id=1370559462]
 collision_layer = 0
 collision_mask = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDegats"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDegats" unique_id=2065872078]
 position = Vector2(0, -22)
 shape = SubResource("CircleShape2D_1")
