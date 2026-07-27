@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/Entities/Ennemis/Usine/MechaJouetLanceur.cs" id="1"]
+[ext_resource type="Texture2D" path="res://assets/ennemis/usine/mecha_lanceur/idle/00.png" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/BouleDeNeige.tscn" id="3"]
+
+[sub_resource type="RectangleShape2D" id="RectCorps"]
+size = Vector2(26, 46)
+
+[sub_resource type="RectangleShape2D" id="RectContact"]
+size = Vector2(30, 48)
+
+[sub_resource type="CircleShape2D" id="CercleDetection"]
+radius = 210.0
+
+[node name="MechaJouetLanceur" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 17
+script = ExtResource("1")
+PvMax = 2
+SceneBoule = ExtResource("3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -28)
+
+[node name="Apercu" type="Sprite2D" parent="."]
+position = Vector2(0, -28)
+texture = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -23)
+shape = SubResource("RectCorps")
+
+[node name="ZoneContact" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneContact"]
+position = Vector2(0, -24)
+shape = SubResource("RectContact")
+
+[node name="ZoneDetection" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection"]
+position = Vector2(0, -24)
+shape = SubResource("CercleDetection")
