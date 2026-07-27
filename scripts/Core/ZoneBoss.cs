@@ -10,6 +10,10 @@ using Godot;
 // Une même arène peut porter DEUX boss et choisir lequel apparaît selon la progression
 // (MemoireRequise/SceneBossAlternative) : c'est ainsi que BossEnd sert de fin normale
 // ou de fin cachée sans dupliquer la scène.
+// Elle sait aussi faire PARLER avant de faire cogner (ScenePnjPrologue) : un PNJ amical
+// accueille le joueur, et sa conversation finie un fondu au noir l'échange contre le
+// boss - deux entités bien distinctes, jamais visibles ensemble. ScenePnjEpilogue fait
+// l'échange inverse une fois le boss tombé.
 public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 {
 	// Le boss : scène à instancier + nom lisible.
@@ -56,8 +60,37 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// Musique de combat (optionnelle) jouée à l'entrée du joueur.
 	[Export] public AudioStream Musique;
 
+	// PROLOGUE : on parle avant de se battre. Un PNJ amical (PnjAmical + son
+	// DeclencheurDialogue) accueille le joueur dans l'arène ; la conversation finie, un
+	// fondu au noir l'échange contre le boss - le joueur ne voit jamais les deux à la
+	// fois. Vide = arène sans prologue, le combat démarre à l'entrée comme avant.
+	// L'interlocuteur suit le MÊME aiguillage que le boss (voir MemoireRequise) : une
+	// arène à deux fins a un interlocuteur par fin.
+	[Export] public PackedScene ScenePnjPrologue;
+	[Export] public PackedScene ScenePnjPrologueAlternatif;
+
+	// ÉPILOGUE : le pendant, après la chute du boss. Un dernier fondu au noir remplace le
+	// vaincu par un PNJ amical qui relance le joueur (« vite, allons délivrer... ») - le
+	// joueur ne voit jamais les deux, et l'arène ne garde pas une carcasse au sol. Même
+	// aiguillage que partout : chaque fin a le sien, vide = le combat se termine sec.
+	[Export] public PackedScene ScenePnjEpilogue;
+	[Export] public PackedScene ScenePnjEpilogueAlternatif;
+
+	// Battement entre la chute du boss et le fondu d'épilogue : le temps de le voir
+	// s'affaisser (son animation de mort) avant de couper au noir.
+	[Export] public float DelaiEpilogue = 2f;
+
+	// Durée d'un demi-fondu au noir des échanges PNJ <-> boss (0 = bascule sèche).
+	// Partagée par le prologue et l'épilogue : c'est le même effet, dans les deux sens.
+	[Export] public float DureeFonduEchange = 0.5f;
+
 	protected Boss Boss;
 	protected BossHudBarre Barre;
+
+	// Interlocuteur du prologue tant qu'il est en scène (null dès l'échange fait).
+	protected Node2D PnjPrologue;
+	private Player _joueurPrologue;
+	private bool _epilogueLance;
 
 	// Vrai quand la variante cachée est débloquée. Les deux conditions sont exigées
 	// ensemble : une mémoire sans scène alternative (ou l'inverse) est un câblage
@@ -77,6 +110,18 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		VariantePrise && !string.IsNullOrEmpty(NomBossAlternatif) ? NomBossAlternatif : NomBoss;
 
 	protected int PvChoisis => VariantePrise && PvBossAlternatif > 0 ? PvBossAlternatif : PvBoss;
+
+	// Jumelle de SceneChoisie pour le prologue : l'interlocuteur de la fin cachée n'est
+	// pris que s'il est réellement assigné, sinon on garde celui de la fin normale (une
+	// arène peut n'avoir qu'un seul PNJ pour ses deux boss).
+	protected PackedScene ScenePrologueChoisie =>
+		VariantePrise && ScenePnjPrologueAlternatif != null ? ScenePnjPrologueAlternatif : ScenePnjPrologue;
+
+	// Idem pour l'épilogue. Laisser ScenePnjEpilogue vide et ne renseigner que
+	// l'alternative donne un épilogue à la seule fin cachée : la branche normale
+	// retombe sur un champ vide, donc sur aucun épilogue.
+	protected PackedScene SceneEpilogueChoisie =>
+		VariantePrise && ScenePnjEpilogueAlternatif != null ? ScenePnjEpilogueAlternatif : ScenePnjEpilogue;
 
 	protected override bool PreparerDeclencheur()
 	{
@@ -120,6 +165,13 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 			Boss.QueueFree();
 		Boss = null;
 
+		// Mourir pendant le prologue (chute dans le vide en allant vers l'interlocuteur)
+		// laisserait sinon un PNJ orphelin dans l'arène, et le retour du joueur en ferait
+		// apparaître un second. Son dialogue n'ayant pas abouti, il sera reproposé.
+		if (PnjPrologue != null && IsInstanceValid(PnjPrologue))
+			PnjPrologue.QueueFree();
+		PnjPrologue = null;
+
 		Barre?.Masquer();
 		RearmerDeclencheur();
 		CallDeferred(MethodName.RelancerSiJoueurPresent);
@@ -146,6 +198,22 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		if (Boss != null && IsInstanceValid(Boss))
 			return;
 
+		// Idem pour l'interlocuteur du prologue : tant qu'il est là, on discute.
+		if (PnjPrologue != null && IsInstanceValid(PnjPrologue))
+			return;
+
+		// La parole d'abord, s'il y en a encore à prendre : c'est la fin de sa
+		// conversation qui enchaînera sur LancerCombat.
+		if (LancerPrologue(joueur))
+			return;
+
+		LancerCombat(joueur);
+	}
+
+	// Le combat proprement dit : boss à ses PV, barre liée et révélée, musique, hook
+	// d'héritage. Appelé à l'entrée du joueur, ou après le prologue s'il y en a un.
+	private void LancerCombat(Player joueur)
+	{
 		Boss = FaireApparaitreBoss();
 		if (Boss != null)
 		{
@@ -156,11 +224,137 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 			if (!string.IsNullOrEmpty(NomChoisi))
 				Barre?.DefinirNom(NomChoisi);
 			Barre?.Lier(Boss);
+			Boss.Vaincu += DeclencherEpilogue;
 		}
 
 		Barre?.Afficher();
 		JouerMusique();
 		DemarrerCombat(joueur);
+	}
+
+	// ---- Prologue ----
+
+	// Fait apparaître l'interlocuteur du prologue et rend la main : c'est la fin de sa
+	// conversation qui lancera le combat. Retourne FAUX - donc on enchaîne aussitôt sur
+	// le combat - si l'arène n'a pas de prologue, ou s'il a déjà été joué.
+	//
+	// C'est le PNJ lui-même qui dit s'il a encore quelque chose à raconter, via le verrou
+	// Talkative.PeutParler() (UneSeuleFois + IdDialogue, mémorisés dans GameState par
+	// PnjAmical.SurFinDialogue). Aucun identifiant à recopier ici : la clé de mémoire vit
+	// d'un seul côté, dans la scène du PNJ, et ne peut donc pas se désynchroniser.
+	private bool LancerPrologue(Player joueur)
+	{
+		if (ScenePrologueChoisie == null)
+			return false;
+
+		var pnj = ScenePrologueChoisie.Instantiate<Node2D>();
+		var declencheur = TrouverDeclencheur(pnj);
+
+		if (declencheur == null || (pnj is Talkative parlant && !parlant.PeutParler()))
+		{
+			// Jamais entré dans l'arbre : Free() et non QueueFree(), rien ne le référence.
+			pnj.Free();
+			return false;
+		}
+
+		// Même point que le boss : sous le fondu au noir, l'échange est invisible.
+		pnj.Position = CalculerApparition();
+		declencheur.DialogueTermine += SurPrologueTermine;
+		PnjPrologue = pnj;
+		_joueurPrologue = joueur;
+		// Ajout DIFFÉRÉ, pour la même raison que le boss : on arrive de BodyEntered, donc
+		// en plein flush des requêtes physiques, où Godot refuse d'ajouter un corps avec
+		// ses formes de collision.
+		GetParent().CallDeferred(Node.MethodName.AddChild, pnj);
+		return true;
+	}
+
+	// Le DeclencheurDialogue d'un PNJ est un enfant Area2D de sa scène (jamais sa racine).
+	// Cherché par TYPE et non par nom : la zone n'a ainsi à connaître aucune convention de
+	// nommage des scènes de PNJ.
+	private static DeclencheurDialogue TrouverDeclencheur(Node racine)
+	{
+		foreach (var enfant in racine.GetChildren())
+			if (enfant is DeclencheurDialogue declencheur)
+				return declencheur;
+
+		return null;
+	}
+
+	// Conversation terminée : fondu au noir, l'interlocuteur s'efface, le boss prend sa
+	// place. `complet` faux = le joueur s'est éloigné en cours de route (possible pour un
+	// PNJ sans arbre de choix, qui ne fige pas le joueur) : on ne déclenche alors rien,
+	// la conversation pourra reprendre.
+	private void SurPrologueTermine(bool complet)
+	{
+		if (!complet || PnjPrologue == null || !IsInstanceValid(PnjPrologue))
+			return;
+
+		var pnj = PnjPrologue;
+		PnjPrologue = null;
+
+		// Le joueur reste figé le temps du noir : sans ça il reprend la main pendant le
+		// fondu et peut s'écarter avant même que le boss soit là.
+		GameState.Instance.DialogueModal = true;
+		// Le PNJ vient de se marquer consommé (dialogue à usage unique) : on écrit la
+		// sauvegarde pour que le prologue reste joué même après un rechargement.
+		GameState.Instance.Sauvegarder();
+
+		Effets.FondreAuNoirPuis(this, DureeFonduEchange, () =>
+		{
+			if (IsInstanceValid(pnj))
+				pnj.QueueFree();
+
+			// Filet : si le PNJ pouvait encore parler, il a laissé le rappel de touche
+			// armé en partant, et Espace resterait détourné du saut pour tout le combat.
+			GameState.Instance.DialogueDisponible = false;
+			GameState.Instance.DialogueModal = false;
+			LancerCombat(_joueurPrologue);
+		});
+	}
+
+	// ---- Épilogue ----
+
+	// Chute du boss : on laisse un battement, le temps que son animation de mort se joue,
+	// avant de couper au noir. Sans épilogue câblé, la victoire reste telle quelle.
+	private void DeclencherEpilogue()
+	{
+		if (_epilogueLance || SceneEpilogueChoisie == null)
+			return;
+
+		_epilogueLance = true;
+		GetTree().CreateTimer(DelaiEpilogue).Timeout += EchangerContreEpilogue;
+	}
+
+	// Échange le vaincu contre son PNJ d'épilogue, sous le même fondu que le prologue mais
+	// dans l'autre sens. Le PNJ reprend la position exacte du boss tombé.
+	private void EchangerContreEpilogue()
+	{
+		var scene = SceneEpilogueChoisie;
+		if (scene == null)
+			return;
+
+		var position = Boss != null && IsInstanceValid(Boss) ? Boss.Position : CalculerApparition();
+
+		// Le joueur reste figé pendant le noir, comme à l'aller.
+		GameState.Instance.DialogueModal = true;
+
+		Effets.FondreAuNoirPuis(this, DureeFonduEchange, () =>
+		{
+			if (Boss != null && IsInstanceValid(Boss))
+				Boss.QueueFree();
+			Boss = null;
+			Barre?.Masquer();
+
+			// Ajout DIRECT et non différé, contrairement au prologue : on est appelé
+			// depuis un tween (étape de process), pas depuis BodyEntered — aucune requête
+			// physique n'est en cours de flush ici.
+			var pnj = scene.Instantiate<Node2D>();
+			pnj.Position = position;
+			GetParent().AddChild(pnj);
+
+			GameState.Instance.DialogueModal = false;
+		});
 	}
 
 	// Fait apparaître le boss : instancie SceneBoss à son point d'apparition, en frère de

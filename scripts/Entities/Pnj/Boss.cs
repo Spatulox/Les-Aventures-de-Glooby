@@ -53,15 +53,36 @@ public abstract partial class Boss : LivingEntity
 	// Nom de l'animation jouée à la mort (surchargeable).
 	protected virtual string AnimationMort => "vaincu";
 
+	// Objet lâché sur place à la mort du boss (le pantalon du Père Noël...). Le butin
+	// appartient au boss et non à l'arène : deux boss qui partagent la même salle ne
+	// lâchent pas forcément la même chose, et le régler ici évite de le dupliquer sur
+	// chaque zone. Vide = le boss ne lâche rien.
+	[Export] public PackedScene Butin;
+
 	// Séquence de mort animée : joue l'anim de mort, coupe la physique et la collision,
-	// puis délègue à la base (marque vaincu, stoppe et émet Vaincu).
+	// lâche le butin, puis délègue à la base (marque vaincu, stoppe et émet Vaincu).
 	protected override void Mourir()
 	{
 		Sprite.Play(AnimationMort);
 		SetPhysicsProcess(false);
 		GetNodeOrNull<CollisionShape2D>("CollisionShape2D")?
 			.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+		LacherButin();
 		base.Mourir();
+	}
+
+	// Dépose le butin à l'endroit exact où le boss est tombé, en frère de lui-même :
+	// il reste donc en place quand le boss est libéré. L'ajout est DIFFÉRÉ, le coup
+	// fatal arrivant en général d'un contact, donc en plein flush des requêtes
+	// physiques, où Godot refuse d'ajouter un nœud portant une forme de collision.
+	private void LacherButin()
+	{
+		if (Butin == null || GetParent() == null)
+			return;
+
+		var objet = Butin.Instantiate<Node2D>();
+		objet.Position = Position;
+		GetParent().CallDeferred(Node.MethodName.AddChild, objet);
 	}
 
 	// Helper générique : ajoute à un SpriteFrames une animation depuis un dossier de

@@ -115,4 +115,28 @@ public static class Effets
 		tween.TweenProperty(cible, "position:y", repos - amplitude, duree).SetTrans(Tween.TransitionType.Sine);
 		tween.TweenProperty(cible, "position:y", repos + amplitude, duree).SetTrans(Tween.TransitionType.Sine);
 	}
+
+	// Rotation continue en boucle, à vitesse constante (halo, cristal, roue).
+	// Contrairement à Balancement, elle ne fait pas d'aller-retour : elle boucle sur un
+	// tour complet, donc l'image doit être à peu près symétrique pour que la reprise
+	// soit invisible.
+	public static void RotationContinue(Node2D cible, float dureeTour)
+	{
+		float repos = cible.Rotation;
+		var tween = cible.CreateTween().SetLoops();
+		tween.TweenProperty(cible, "rotation", repos + Mathf.Tau, dureeTour)
+			.From(repos)
+			.SetTrans(Tween.TransitionType.Linear);
+	}
+
+	// Respiration en boucle : l'échelle enfle et retombe autour de l'échelle actuelle.
+	// `ampleur` est une FRACTION de cette échelle (0.08 = ±8 %), pour que l'effet soit
+	// identique quelle que soit la taille à laquelle l'élément a été réglé dans sa scène.
+	public static void Pulsation(Node2D cible, float ampleur, float duree)
+	{
+		var repos = cible.Scale;
+		var tween = cible.CreateTween().SetLoops();
+		tween.TweenProperty(cible, "scale", repos * (1f - ampleur), duree).SetTrans(Tween.TransitionType.Sine);
+		tween.TweenProperty(cible, "scale", repos * (1f + ampleur), duree).SetTrans(Tween.TransitionType.Sine);
+	}
 }

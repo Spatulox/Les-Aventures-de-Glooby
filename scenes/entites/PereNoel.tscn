@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/Entities/Pnj/PereNoel.cs" id="1"]
 [ext_resource type="Script" path="res://scripts/Core/DeclencheurDialogue.cs" id="3"]
+[ext_resource type="Texture2D" path="res://assets/pnj/pere_noel/idle/00.png" id="4_apercu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
 radius = 8.0
@@ -15,11 +16,18 @@ collision_layer = 4
 collision_mask = 17
 script = ExtResource("1")
 Lignes = PackedStringArray("Ho ho ho ! Te voilà enfin, petit !")
+AncrageBulle = Vector2(0, -105)
 AuPassage = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -46)
+
+[node name="Apercu" type="Sprite2D" parent="."]
+position = Vector2(0, -46)
+texture = ExtResource("4_apercu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -15)
 shape = SubResource("CapsuleShape2D_1")
 
 [node name="DeclencheurDialogue" type="Area2D" parent="."]
@@ -28,5 +36,5 @@ collision_mask = 2
 script = ExtResource("3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue"]
-position = Vector2(0, -8)
+position = Vector2(0, -45)
 shape = SubResource("RectProximite")

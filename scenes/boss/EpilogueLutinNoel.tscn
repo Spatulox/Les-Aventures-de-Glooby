@@ -1,0 +1,43 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dbbgoui3hxmn4" path="res://scripts/Entities/Pnj/LutinNoel.cs" id="1_pnj"]
+[ext_resource type="Script" uid="uid://bnskcw6i56nex" path="res://scripts/Core/DeclencheurDialogue.cs" id="2_dialogue"]
+[ext_resource type="Texture2D" uid="uid://bimrjo3q744md" path="res://assets/pnj/lutin_noel/idle/00.png" id="3_apercu"]
+[ext_resource type="Resource" path="res://assets/dialogues/bossend_epilogue_lutin_noel.tres" id="4_arbre"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
+radius = 6.0
+height = 22.0
+
+[sub_resource type="RectangleShape2D" id="RectProximite"]
+size = Vector2(72, 80)
+
+[node name="EpilogueLutinNoel" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 17
+script = ExtResource("1_pnj")
+DistancePatrouille = 0.0
+Lignes = PackedStringArray("Vite, allons libérer le père noel !")
+AncrageBulle = Vector2(0, -72)
+ConversationRessource = ExtResource("4_arbre")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -28)
+
+[node name="Apercu" type="Sprite2D" parent="."]
+position = Vector2(0, -28)
+texture = ExtResource("3_apercu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -28)
+scale = Vector2(1.8, 2.6)
+shape = SubResource("CapsuleShape2D_1")
+
+[node name="DeclencheurDialogue" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("2_dialogue")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue"]
+position = Vector2(0, -28)
+shape = SubResource("RectProximite")

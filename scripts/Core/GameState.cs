@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 // Autoload (singleton) : progression du joueur entre les écrans.
 public partial class GameState : Node
@@ -54,11 +55,18 @@ public partial class GameState : Node
 	// "Continuer" n'est actif que si un fichier de sauvegarde existe sur disque.
 	public bool SauvegardeExiste => Sauvegarde.Existe();
 
-	// Mode debug : partie de test lancée depuis le menu principal, avec tous les
-	// pouvoirs et des coups qui tuent n'importe quel mob d'un seul impact (voir
-	// LivingEntity.TakeDamage). Volontairement hors DonneesSauvegarde : c'est un
-	// état de session, il ne doit pas contaminer un fichier de sauvegarde.
+	// Mode debug : la partie en cours est une partie de TEST, lancée depuis l'écran de
+	// debug du menu principal. À ce titre elle n'écrit jamais sur disque (Sauvegarder)
+	// et ne déplace pas le campement actif (Checkpoint). Volontairement hors
+	// DonneesSauvegarde : c'est un état de session, il ne doit pas contaminer un
+	// fichier de sauvegarde.
 	public bool ModeDebug { get; private set; }
+
+	// Facilités cochées pour cette partie de test (clés du CatalogueOptionsDebug).
+	// Elles ne sont plus liées en bloc à ModeDebug : chacune s'active séparément dans
+	// l'écran de debug, ce qui permet par exemple de tester un niveau avec les pouvoirs
+	// mais sans invincibilité. Hors sauvegarde, comme ModeDebug.
+	private readonly HashSet<string> _optionsDebug = new();
 
 	// Flags de progression (débloqués une fois pour toute la partie).
 	public bool PouvoirChaleurActif { get => _donnees.PouvoirChaleurActif; private set => _donnees.PouvoirChaleurActif = value; }
@@ -125,20 +133,33 @@ public partial class GameState : Node
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
 		ManaGlace = ManaGlaceMax;
 		ModeDebug = false;
+		_optionsDebug.Clear();
 	}
 
-	// Nouvelle partie de test : tous les pouvoirs sont acquis d'emblée et les mobs
-	// tombent en un coup, pour atteindre vite n'importe quel point du monde sans
-	// rejouer la progression. Réutilise NouvellePartie plutôt que de dupliquer la
-	// remise à zéro, et passe par les ObtenirPouvoir* pour que le HUD reçoive bien
-	// les signaux de déblocage.
-	public void NouvellePartieDebug()
+	// Nouvelle partie de test : seules les facilités COCHÉES dans l'écran de debug sont
+	// accordées, pour atteindre vite n'importe quel point du monde sans rejouer la
+	// progression — mais en gardant la possibilité de tester un niveau presque normal.
+	// Réutilise NouvellePartie plutôt que de dupliquer la remise à zéro ; les effets
+	// ponctuels (déblocages, mémoires) viennent du catalogue et passent par les méthodes
+	// métier, pour que le HUD reçoive bien les signaux.
+	// options null = les cases cochées par défaut (appels hors écran de debug : sondes
+	// headless, scripts de test).
+	public void NouvellePartieDebug(ICollection<string> options = null)
 	{
 		NouvellePartie();
 		ModeDebug = true;
-		ObtenirPouvoirChaleur();
-		ObtenirPouvoirGlace();
+
+		foreach (var cle in options ?? CatalogueOptionsDebug.ClesParDefaut())
+			_optionsDebug.Add(cle);
+
+		foreach (var option in CatalogueOptionsDebug.Toutes)
+			if (option.Appliquer != null && _optionsDebug.Contains(option.Cle))
+				option.Appliquer(this);
 	}
+
+	// Vrai si la facilité de test est active. Le test sur ModeDebug garantit qu'aucune
+	// option ne peut fuir dans une vraie partie, même si le set n'était pas vidé.
+	public bool OptionDebugActive(string cle) => ModeDebug && _optionsDebug.Contains(cle);
 
 	public void Degats(int quantite = 1)
 	{
@@ -237,12 +258,13 @@ public partial class GameState : Node
 	public bool PeutUtiliserPouvoirGlace(float cout) => PouvoirGlaceActif && ManaGlace >= cout;
 
 	// Consomme du mana (pose d'une plateforme) et relance le délai avant régen.
-	// En mode debug la jauge est infinie : on ne prélève rien, donc elle reste pleine
-	// et PeutUtiliserPouvoirGlace laisse toujours passer. Bloquer ici plutôt que dans
-	// PeutUtiliserPouvoirGlace garde la jauge du HUD cohérente avec ce qu'elle affiche.
+	// Avec l'option de test « mana infini » la jauge ne descend pas, donc elle reste
+	// pleine et PeutUtiliserPouvoirGlace laisse toujours passer. Bloquer ici plutôt que
+	// dans PeutUtiliserPouvoirGlace garde la jauge du HUD cohérente avec ce qu'elle
+	// affiche.
 	public void ConsommerManaGlace(float cout)
 	{
-		if (ModeDebug)
+		if (OptionDebugActive(CatalogueOptionsDebug.ManaInfini))
 			return;
 
 		ManaGlace = Mathf.Max(0f, ManaGlace - cout);
