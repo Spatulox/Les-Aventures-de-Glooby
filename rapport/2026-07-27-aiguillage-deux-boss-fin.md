@@ -75,6 +75,18 @@ Arene/ZoneBossFinale  (zone_boss_pere_noel.tscn)
 
 Tirage désormais **propre** au choix d'attaque, et les trois attaques à parts égales (34/33/33 au lieu de 60/25/15). Le Père Noël avait hérité du même défaut : corrigé aussi.
 
+## 7. Point d'apparition par `Marker2D`, et arène raccourcie
+
+`ZoneBoss` gagne un export `MarqueurApparition` (`NodePath` vers un `Marker2D`), prioritaire sur `PositionApparition` — qui reste en repli, donc aucune arène existante ne casse. On déplace le point de spawn à la souris et il reste visible dans l'éditeur, au lieu de coordonnées recopiées qui se désynchronisent du décor dès qu'on retouche l'arène.
+
+`CalculerApparition()` renvoie la position **dans l'espace du parent de la zone** (c'est là que le boss est ajouté, et il n'est pas encore dans l'arbre — `GlobalPosition` n'aurait pas encore de sens), via `parent.ToLocal(marqueur.GlobalPosition)` : le marqueur peut donc être posé n'importe où, y compris dans une arène translatée comme `ArenBoss` (+8128 en x).
+
+Câblé sur les deux arènes :
+- `BossEnd.tscn` → `Arene/ApparitionBoss` à (1450, 408) ;
+- `ReindeerBoss.tscn` → `ArenBoss/ApparitionBoss` à (1600, 440), soit exactement l'ancienne valeur en dur : Rodolphe apparaît au même endroit qu'avant.
+
+**Arène de `BossEnd` raccourcie** : sol de 6 → 3 segments centraux, soit 2752 → **1720 px** (−37 %), et la zone suivie (centre x 860, `scale.x` 6.71875) pour que ses bornes collent au nouveau sol — ce sont elles qui bornent le déplacement des deux boss.
+
 ## Vérification
 
 - `godot --headless --build-solutions --quit` → 0 erreur C#.
@@ -88,6 +100,10 @@ Tirage désormais **propre** au choix d'attaque, et les trois attaques à parts 
   - joueur immobile dans le rayon au moment du souffle → 2 PV perdus (`JouetExplosif`) ;
   - joueur qui s'écarte pendant le battement `DelaiSouffle` → **0 dégât**. C'est la preuve que c'est bien l'explosion qui blesse, et non le contact.
 - **Répartition du Mecha remesurée** sur 180 s : 8 `SautEcrasant` / 5 `TirGlace` / 3 `DropJouets` (contre 1 seul drop auparavant sur la même durée).
+- **Apparition par marqueur vérifiée dans les deux arènes** (trace temporaire, retirée depuis) :
+  - `BossEnd` → `marqueur=ok pos_locale=(1450, 408) parent=Arene` ;
+  - `ReindeerBoss` → `marqueur=ok pos_locale=(1600, 440) parent=ArenBoss`, identique à l'ancienne valeur en dur. Testé en déplaçant temporairement le `Joueur` dans l'arène (le fichier a été restauré ensuite), puisqu'au boot il démarre au Sanctuaire et n'atteint jamais l'arène tout seul.
+  - `TestBossPereNoel` garde `PositionApparition` : le repli reste exercé.
 - `BossEnd`, `TestBossPereNoel`, `TestBossLutinMecha`, `TestMiniJouetExplosif` et `ReindeerBoss` (non-régression du refactor des bornes) bootent 900 frames sans erreur.
 - **Non testé en jeu** : `UsinePereNoel/Sol` n'a aucun sol, le joueur ne peut pas atteindre `x = 4700`. La transition `monde2 → BossEnd` ne sera jouable qu'une fois le plancher de l'usine posé.
 

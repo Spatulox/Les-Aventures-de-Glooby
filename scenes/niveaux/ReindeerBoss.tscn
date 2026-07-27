@@ -121,12 +121,15 @@ IdDestination = "grande"
 [node name="ArenBoss" type="Node2D" parent="." unique_id=1896369560]
 position = Vector2(8128, 0)
 
+[node name="ApparitionBoss" type="Marker2D" parent="ArenBoss" unique_id=1268721766]
+position = Vector2(1600, 440)
+
 [node name="ZoneBossCerf" parent="ArenBoss" unique_id=1268721765 instance=ExtResource("zoneboss")]
 position = Vector2(1120, 320)
 scale = Vector2(8.75, 2.5)
 SceneBoss = ExtResource("bosscerf")
 NomBoss = "Rodolphe"
-PositionApparition = Vector2(1600, 440)
+MarqueurApparition = NodePath("../ApparitionBoss")
 NomAmbiance = "boss_cerf"
 CheminBarre = NodePath("../../BossHudBarre")
 PvBoss = 40

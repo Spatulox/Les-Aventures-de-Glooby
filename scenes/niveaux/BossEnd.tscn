@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://d3ixspn6np4ud"]
 
-[ext_resource type="PackedScene" path="res://scenes/entites/boss/BossPereNoel.tscn" id="boss_pere_noel"]
-[ext_resource type="PackedScene" path="res://scenes/entites/boss/BossLutinMecha.tscn" id="boss_lutin_mecha"]
 [ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="barreboss"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
+[ext_resource type="PackedScene" path="res://scenes/entites/boss/BossLutinMecha.tscn" id="boss_lutin_mecha"]
+[ext_resource type="PackedScene" path="res://scenes/entites/boss/BossPereNoel.tscn" id="boss_pere_noel"]
 [ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
@@ -23,12 +23,12 @@ script = ExtResource("bgmgr")
 [node name="Arene" type="Node2D" parent="." unique_id=889985766]
 
 [node name="ZoneBossFinale" parent="Arene" unique_id=889985767 instance=ExtResource("zoneboss")]
-position = Vector2(1376, 240)
-scale = Vector2(10.75, 2.5)
+position = Vector2(860, 240)
+scale = Vector2(6.71875, 2.5)
 CheminSceneVictoire = "res://scenes/ui/ecran_fin.tscn"
 SceneBoss = ExtResource("boss_pere_noel")
 NomBoss = "Pere Noel"
-PositionApparition = Vector2(2200, 400)
+MarqueurApparition = NodePath("../ApparitionBoss")
 MemoireRequise = "lutin_cgt_don_poissons"
 SceneBossAlternative = ExtResource("boss_lutin_mecha")
 NomBossAlternatif = "Lutin Mecha"
@@ -38,11 +38,13 @@ NomAmbiance = "boss_cerf"
 CheminBarre = NodePath("../../BossHudBarre")
 PvBoss = 45
 
+[node name="ApparitionBoss" type="Marker2D" parent="Arene" unique_id=889985776]
+position = Vector2(1450, 408)
+
 [node name="Sol" type="Node2D" parent="Arene" unique_id=889985768]
 
 [node name="SolUsineBois" parent="Arene/Sol" unique_id=889985769 instance=ExtResource("sol_usine")]
 position = Vector2(0, 400)
-NombreSegments = 6
 
 [node name="Decor" type="Node2D" parent="Arene" unique_id=889985770]
 

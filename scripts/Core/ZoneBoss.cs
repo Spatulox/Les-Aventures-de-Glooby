@@ -15,6 +15,13 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// Le boss : scène à instancier + nom lisible.
 	[Export] public PackedScene SceneBoss;
 	[Export] public string NomBoss = "";
+	// Point d'apparition. Deux façons de le donner, dans cet ordre de priorité :
+	//   MarqueurApparition — un Marker2D posé dans la scène, qu'on déplace à la souris et
+	//                        qui reste visible dans l'éditeur : c'est la forme à préférer,
+	//                        des coordonnées recopiées à la main se désynchronisent du
+	//                        décor dès qu'on retouche l'arène ;
+	//   PositionApparition — repli historique, coordonnées locales au parent de la zone.
+	[Export] public NodePath MarqueurApparition;
 	[Export] public Vector2 PositionApparition;
 
 	// Boss CACHÉ : si MemoireRequise est renseignée ET déjà consommée (GameState),
@@ -118,7 +125,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		DemarrerCombat(joueur);
 	}
 
-	// Fait apparaître le boss : instancie SceneBoss à PositionApparition, en frère de
+	// Fait apparaître le boss : instancie SceneBoss à son point d'apparition, en frère de
 	// la zone. Les réglages spécifiques passent par ConfigurerBoss AVANT l'ajout à
 	// l'arbre (règle Outils : _Ready lit ses valeurs dès l'ajout).
 	//
@@ -132,7 +139,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 			return null;
 
 		var boss = SceneChoisie.Instantiate<Boss>();
-		boss.Position = PositionApparition;
+		boss.Position = CalculerApparition();
 		ConfigurerBoss(boss);
 		// Ajout DIFFÉRÉ : on est appelé depuis BodyEntered, donc en plein flush des
 		// requêtes physiques, où Godot refuse toute modification de forme de collision
@@ -141,6 +148,22 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		// silencieusement, laissant des formes dans le mauvais état.
 		GetParent().CallDeferred(Node.MethodName.AddChild, boss);
 		return boss;
+	}
+
+	// Position d'apparition, exprimée dans l'espace du PARENT de la zone — c'est là que
+	// le boss est ajouté, et il n'est pas encore dans l'arbre au moment où on la pose
+	// (donc pas de GlobalPosition, qui n'aurait pas encore de sens). Le marqueur, lui,
+	// est posé n'importe où dans la scène : on repasse par ToLocal pour que sa position
+	// reste juste même si le parent est décalé (cas des arènes translatées).
+	private Vector2 CalculerApparition()
+	{
+		var marqueur = GetNodeOrNull<Node2D>(MarqueurApparition);
+		if (marqueur == null)
+			return PositionApparition;
+
+		return GetParent() is Node2D parent
+			? parent.ToLocal(marqueur.GlobalPosition)
+			: marqueur.GlobalPosition;
 	}
 
 	// Réglages du boss avant son ajout à l'arbre. La base couvre le seul réglage commun
