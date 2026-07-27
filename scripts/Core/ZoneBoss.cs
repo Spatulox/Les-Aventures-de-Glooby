@@ -74,6 +74,11 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// Fait apparaître le boss : instancie SceneBoss à PositionApparition, en frère de
 	// la zone. Les réglages spécifiques passent par ConfigurerBoss AVANT l'ajout à
 	// l'arbre (règle Outils : _Ready lit ses valeurs dès l'ajout).
+	//
+	// L'ajout est DIFFÉRÉ : on arrive ici depuis BodyEntered, donc en plein flush des
+	// requêtes physiques, où le serveur refuse qu'on ajoute un corps avec ses formes de
+	// collision. Le reste de la séquence (PV, barre, musique) n'a pas besoin que le boss
+	// soit déjà dans l'arbre, et ConfigurerBoss passe toujours avant son _Ready.
 	protected virtual Boss FaireApparaitreBoss()
 	{
 		if (SceneBoss == null)
@@ -82,7 +87,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		var boss = SceneBoss.Instantiate<Boss>();
 		boss.Position = PositionApparition;
 		ConfigurerBoss(boss);
-		GetParent().AddChild(boss);
+		GetParent().CallDeferred(Node.MethodName.AddChild, boss);
 		return boss;
 	}
 
