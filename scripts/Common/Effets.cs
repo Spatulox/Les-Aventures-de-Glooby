@@ -55,6 +55,18 @@ public static class Effets
 		tween.TweenProperty(cible, "modulate:a", alphaCible, duree);
 	}
 
+	// Balancement en boucle (pendule) : oscillation douce de la rotation autour de
+	// l'angle de repos actuel. Pendant angulaire de Flottaison — sert à tout ce qui
+	// pend ou dérive (jouet suspendu à son parachute, enseigne, lampion).
+	public static void Balancement(Node2D cible, float angleDegres, float duree)
+	{
+		float repos = cible.Rotation;
+		float amplitude = Mathf.DegToRad(angleDegres);
+		var tween = cible.CreateTween().SetLoops();
+		tween.TweenProperty(cible, "rotation", repos - amplitude, duree).SetTrans(Tween.TransitionType.Sine);
+		tween.TweenProperty(cible, "rotation", repos + amplitude, duree).SetTrans(Tween.TransitionType.Sine);
+	}
+
 	// Flottaison verticale en boucle (objets à ramasser) : oscillation douce
 	// autour de la position de repos actuelle.
 	public static void Flottaison(Node2D cible, float amplitude, float duree)

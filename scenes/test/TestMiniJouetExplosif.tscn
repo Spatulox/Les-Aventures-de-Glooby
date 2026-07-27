@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="2_fond"]
+[ext_resource type="PackedScene" path="res://scenes/decors/usine/SolUsineBois.tscn" id="3_sol"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MiniJouetExplosif.tscn" id="4_jouet"]
+
+[node name="TestMiniJouetExplosif" type="Node2D"]
+
+[node name="FondUsine" parent="." instance=ExtResource("2_fond")]
+
+[node name="Sol" parent="." instance=ExtResource("3_sol")]
+position = Vector2(-344, 420)
+NombreSegments = 4
+
+[node name="Joueur" parent="." instance=ExtResource("1_player")]
+position = Vector2(160, 380)
+
+[node name="MiniJouetExplosif" parent="." instance=ExtResource("4_jouet")]
+position = Vector2(420, 120)
