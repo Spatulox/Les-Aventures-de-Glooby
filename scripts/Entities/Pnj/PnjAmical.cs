@@ -141,7 +141,7 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 	}
 
 	// ---- Dialogue (Talkative) ----
-	// Répliques du PNJ (vide = muet). Renseignées au cas par cas dans monde1.tscn : c'est
+	// Répliques du PNJ (vide = muet). Renseignées au cas par cas dans 01-monde1.tscn : c'est
 	// ce qui distingue un PNJ bavard d'un PNJ muet, tous deux de la même classe.
 	[Export] public string[] Lignes { get; set; } = Array.Empty<string>();
 

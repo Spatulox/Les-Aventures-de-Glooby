@@ -6,7 +6,7 @@ public partial class ZoneBossCerf : ZoneBoss
 {
 	// Scène à charger après la victoire. VIDE (défaut) = on reste dans le monde : la
 	// partie continue et c'est la suite du niveau (zone débloquée par une PorteInterne
-	// à BossRequis) qui prend le relais — cas de ReindeerBoss, dont le jardin s'ouvre
+	// à BossRequis) qui prend le relais — cas de 02-BossReindeer, dont le jardin s'ouvre
 	// après Rodolphe. À renseigner (ex. "res://scenes/ui/ecran_fin.tscn") pour qu'un
 	// boss termine la partie.
 	[Export(PropertyHint.File, "*.tscn")] public string CheminSceneVictoire = "";

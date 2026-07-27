@@ -22,9 +22,9 @@ public class DonneesSauvegarde
 
 	// Scène de niveau où la partie a été sauvegardée : le monde est désormais
 	// découpé en plusieurs .tscn reliés par ZoneChargementScene, donc « Continuer »
-	// doit rouvrir CELLE-CI (et non plus monde1.tscn en dur). La position du
+	// doit rouvrir CELLE-CI (et non plus 01-monde1.tscn en dur). La position du
 	// checkpoint est un point dans cette scène : les deux vont de pair.
-	public string CheminScene = "res://scenes/niveaux/monde1.tscn";
+	public string CheminScene = "res://scenes/niveaux/01-monde1.tscn";
 
 	// Identifiants uniques des éléments persistants consommés (murs fondus,
 	// dialogues uniques) et des boss vaincus.

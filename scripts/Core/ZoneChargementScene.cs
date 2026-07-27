@@ -16,7 +16,7 @@ using Godot;
 public partial class ZoneChargementScene : DeclencheurZone
 {
 	// Chemin de la scène à charger à l'entrée du joueur (vide = zone inerte,
-	// avertissement). Ex. "res://scenes/niveaux/monde1.tscn".
+	// avertissement). Ex. "res://scenes/niveaux/01-monde1.tscn".
 	[Export(PropertyHint.File, "*.tscn")] public string CheminSceneSuivante = "";
 
 	// Id du PointEntree où faire apparaître le joueur dans la scène cible (ex.

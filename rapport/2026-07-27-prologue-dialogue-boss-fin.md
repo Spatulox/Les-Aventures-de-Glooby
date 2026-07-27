@@ -402,6 +402,105 @@ déplacement du boss** : tout ce qui est au-delà de 782 est hors champ et hors 
 Non corrigé ici — c'est un choix d'auteur en cours, pas un bug de code. À trancher : soit
 ré-agrandir la zone, soit ramener marqueur et cage dans les nouvelles bornes.
 
+## 12. L'éclat de glace du Père Noël vise le joueur
+
+**Symptôme** : le pic de glace partait à l'horizontale et traversait toute la salle sans
+jamais menacer un joueur qui n'était pas exactement à sa hauteur.
+
+**Cause** : `TirerEclat` construisait sa vélocité à plat —
+`new Vector2(_direction * VitesseEclat, 0f)` — et `EclatGlace.tscn` règle **`Gravite = 0`**,
+donc rien ne redressait la trajectoire en vol : d'où le « horizontal à l'infini ».
+
+**Correctif** (`scripts/Entities/Pnj/BossPereNoel.cs`) : nouvelle méthode `ViserJoueur`
+qui renvoie la ligne unitaire **bouche du canon → joueur**, `TirerEclat` la multipliant par
+`VitesseEclat`. Replis sur l'horizontale dans le sens du regard si aucun joueur n'est en
+scène, ou s'il est pile sur la bouche — un vecteur nul normalisé enverrait l'éclat
+n'importe où.
+
+L'angle d'éventail de phase 2 **n'est plus multiplié par `_direction`** : la visée porte
+désormais le sens du tir, une rotation symétrique de ±`AngleEventail` autour d'elle suffit.
+
+Aucun changement dans `Projectile` : sa surcharge vectorielle `Initialiser` gérait déjà un
+tir hors horizontale, et son `Rotation = VelociteCourante.Angle()` oriente le sprite dans
+l'axe du vol. Avec `MasqueProjectile` (couche 1 comprise), l'éclat visé finit maintenant sa
+course dans le sol ou dans un mur d'arène au lieu de filer jusqu'à expiration.
+
+### Vérification
+
+Sonde jetable (supprimée) mesurant la **trajectoire réelle** de chaque éclat (déplacement
+entre deux relevés) contre la ligne bouche→joueur au moment du tir :
+
+```
+phase 1   poste(120,-110)  cap=-24,0   vise=-24,0    ecart=0,0
+          poste(120, 60)   cap= 55,3   vise= 55,3    ecart=0,0
+          poste(-120,-90)  cap=-167,5  vise=-167,5   ecart=0,0   (joueur derriere et au-dessus)
+phase 2   poste(120,-110)  cap=-6,0 / -24,0 / -42,0  ecart=18 / 0 / 18
+          poste(120, 60)   cap= 73,3 / 55,3 / 37,3   ecart=18 / 0 / 18
+```
+
+19 éclats mesurés : **écart 0° en phase 1**, et un éventail **symétrique** à ±18° autour
+de la visée en phase 2, quel que soit le côté où se trouve le joueur.
+
+Deux pièges de mesure traversés, qui valent d'être notés : lire `eclat.Rotation` au spawn
+ne vaut rien (elle n'est posée qu'à la 1re frame **physique**, la sonde tournant en
+`_Process`) — d'où la mesure par déplacement ; et le boss ne tire pas si le joueur est
+au-delà de `DistanceConfort = 200`, il s'approche indéfiniment, ce qui rendait les
+premières sondes muettes.
+
+### Non traité : le Mecha
+
+`BossLutinMecha` tire le même `EclatGlace` par la surcharge horizontale
+(`eclat.Initialiser(this, _direction)`), donc son tir reste plat. Hors de la demande, à
+dire si tu veux le même traitement.
+
+## 13. Le Père Noël vaincu s'efface
+
+**Symptôme** : après sa mort, il restait indéfiniment à plat par terre.
+
+**Cause** : n'ayant pas d'animation « vaincu » générée, sa mort est procédurale —
+`BossPereNoel.Mourir` l'écrase à 25 % de hauteur et le descend à `alpha 0.55`… puis rien.
+Le nœud n'était jamais libéré, laissant un sprite aplati et translucide dans l'arène.
+
+**Correctif, réutilisable et opt-in**, sur la base `Boss` :
+
+```csharp
+[Export] public float DelaiEffacement;          // 0 = le corps reste (défaut)
+[Export] public float DureeEffacement = 0.8f;
+```
+
+`Mourir()` programme `Effets.Disparaitre` après `DelaiEffacement`. Le défaut à 0 laisse
+**inchangés** les boss dotés d'une vraie animation de mort (Cerf, Mecha), qui se figent
+volontairement dans leur dernière frame. Seul `BossPereNoel.tscn` l'active
+(`DelaiEffacement = 1.2`), le temps de voir l'affaissement.
+
+Deux points qui rendent l'effacement sûr :
+- **le butin survit** — `LacherButin` pose l'objet en *frère* du boss, pas en enfant
+  (choix fait au §3, qui paie ici) ;
+- les abonnés à `Vaincu` (persistance, épilogue d'arène) ont tous été notifiés au moment
+  de la mort, et ceux de `ZoneBoss` relisent le boss derrière un `IsInstanceValid`.
+
+**Au passage, la barre de vie.** Elle restait affichée à zéro une fois le corps parti :
+`ZoneBoss.DeclencherEpilogue` ne s'armait que si l'arène avait un épilogue. Le minuteur
+est désormais **toujours** armé et appelle `CloreCombat`, qui masque la barre puis, s'il y
+a un épilogue, enchaîne l'échange contre le PNJ.
+
+### Vérification
+
+Sonde jetable (supprimée), **joueur volontairement écarté** du point de chute — sinon il
+ramasse le pantalon dans la foulée et la partie se termine avant qu'on ait pu observer
+quoi que ce soit :
+
+```
+[f198] BossPereNoel VAINCU        butin=aucun (largué en différé)  barre=True
+[f488] CORPS EFFACE (+290 f ≈ 2,0 s = 1,2 + 0,8)   butin=toujours la
+[f489] BARRE MASQUEE (+291 f ≈ 2,0 s = DelaiEpilogue)
+[f497] BUTIN RAMASSE apres disparition du corps
+```
+
+Fin cachée non régressée : le Mecha est toujours échangé contre le lutin d'épilogue à
++359 frames, barre masquée dans le même mouvement. Boots de `BossEnd`, `ReindeerBoss` et
+`monde1` au niveau de bruit pré-existant, à l'identique.
+
 ### Reste à faire : un vrai F5
 
 Le headless ne juge ni la lisibilité de la liste de réponses, ni le rythme du fondu, ni

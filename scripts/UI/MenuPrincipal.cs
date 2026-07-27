@@ -93,14 +93,14 @@ public partial class MenuPrincipal : Control
 		// Restaure la progression sauvegardée avant de charger le monde : le joueur
 		// se replace ensuite à son checkpoint (voir Player._Ready). On rouvre la
 		// scène où la partie a été sauvegardée (le monde est découpé en plusieurs
-		// .tscn), pas monde1.tscn en dur.
+		// .tscn), pas 01-monde1.tscn en dur.
 		GameState.Instance.Charger();
 		ChargerMonde(GameState.Instance.CheminScene);
 	}
 
 	// Une nouvelle partie démarre toujours au premier monde ; « Continuer » passe la
 	// scène sauvegardée. Le défaut garde les appels existants (nouvelle partie / debug).
-	private void ChargerMonde(string chemin = "res://scenes/niveaux/monde1.tscn")
+	private void ChargerMonde(string chemin = "res://scenes/niveaux/01-monde1.tscn")
 		=> GetTree().ChangeSceneToFile(chemin);
 
 	// Affiche dans la BoiteMob de la scène un mob tiré au hasard (joueur ou PNJ) en

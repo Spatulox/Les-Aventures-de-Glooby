@@ -59,6 +59,17 @@ public abstract partial class Boss : LivingEntity
 	// chaque zone. Vide = le boss ne lâche rien.
 	[Export] public PackedScene Butin;
 
+	// Effacement du corps après la mise à mort. Délai avant que le vaincu ne s'efface,
+	// puis durée du fondu. 0 (défaut) = le corps RESTE sur place : c'est ce que veulent
+	// les boss dotés d'une vraie animation « vaincu », qui se figent dans leur dernière
+	// frame. À renseigner pour ceux dont la mort est procédurale, qui laisseraient sinon
+	// un sprite écrasé et translucide traîner dans l'arène.
+	//
+	// Sans effet sur le butin : LacherButin le pose en FRÈRE du boss, il survit donc à
+	// l'effacement.
+	[Export] public float DelaiEffacement;
+	[Export] public float DureeEffacement = 0.8f;
+
 	// Séquence de mort animée : joue l'anim de mort, coupe la physique et la collision,
 	// lâche le butin, puis délègue à la base (marque vaincu, stoppe et émet Vaincu).
 	protected override void Mourir()
@@ -69,6 +80,23 @@ public abstract partial class Boss : LivingEntity
 			.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 		LacherButin();
 		base.Mourir();
+		ProgrammerEffacement();
+	}
+
+	// Efface le corps après DelaiEffacement, le temps que la mise à mort se joue. Le
+	// délai laisse aussi passer tout ce qui s'accroche à Vaincu (persistance, épilogue
+	// d'arène) : ces abonnés ont déjà été notifiés au moment où le nœud disparaît, et
+	// ceux de ZoneBoss vérifient IsInstanceValid avant de le relire.
+	private void ProgrammerEffacement()
+	{
+		if (DelaiEffacement <= 0f)
+			return;
+
+		GetTree().CreateTimer(DelaiEffacement).Timeout += () =>
+		{
+			if (IsInstanceValid(this))
+				Effets.Disparaitre(this, Scale, DureeEffacement);
+		};
 	}
 
 	// Dépose le butin à l'endroit exact où le boss est tombé, en frère de lui-même :

@@ -9,7 +9,7 @@ using Godot.Collections;
 //
 // Les fichiers vivent dans assets/dialogues/ et sont nommés « <lieu>_<pnj>.tres »
 // (ex. banquise_fin_lutin_cgt.tres) : le nom dit OÙ se trouve le PNJ, pour
-// retrouver la bonne conversation sans ouvrir monde1.tscn.
+// retrouver la bonne conversation sans ouvrir 01-monde1.tscn.
 //
 // RÈGLE D'ÉCRITURE : pendant les choix le joueur est figé (dialogue modal). Un nœud
 // SANS choix referme donc la conversation (c'est la fin naturelle d'une branche), et

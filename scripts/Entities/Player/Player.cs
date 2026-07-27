@@ -417,7 +417,7 @@ public partial class Player : LivingEntity
 	private void OnJoueurMort() => Reapparaitre();
 
 	// Retour au dernier campement activé. Celui-ci peut appartenir à UNE AUTRE SCÈNE —
-	// on meurt dans une arène de boss (BossEnd, ReindeerBoss) alors que le dernier feu de
+	// on meurt dans une arène de boss (04-BossEnd, 02-BossReindeer) alors que le dernier feu de
 	// camp est resté dans le niveau d'avant. Dans ce cas on recharge cette scène sous un
 	// fondu ; c'est _Ready qui y replace le joueur, puisqu'il reconnaît un checkpoint
 	// appartenant à la scène courante. Même scène = simple téléportation, comme avant.

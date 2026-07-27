@@ -127,7 +127,7 @@ public partial class GameState : Node
 	}
 
 	// Réinitialise toute la progression pour une nouvelle partie. Le monde ne
-	// se recharge pas seul : à appeler avant de charger scenes/monde1.tscn.
+	// se recharge pas seul : à appeler avant de charger scenes/01-monde1.tscn.
 	public void NouvellePartie()
 	{
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
