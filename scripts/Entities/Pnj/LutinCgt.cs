@@ -11,7 +11,7 @@ using System.Collections.Generic;
 //
 // Le script est [Tool] (comme PanneauBois) : changer Pose ou Slogan dans l'inspecteur réapplique
 // aussitôt la 1re frame de la pose sur le Sprite2D « Apercu » ET replace le Label sur l'aplat de la
-// nouvelle pancarte, si bien que monde1.tscn montre le lutin — texte compris — tel qu'il sera en
+// nouvelle pancarte, si bien que 01-monde1.tscn montre le lutin — texte compris — tel qu'il sera en
 // jeu (l'aperçu éditeur n'est plus figé sur une seule pose, et le centrage se règle à vue).
 [Tool]
 public partial class LutinCgt : PnjAmical
@@ -29,7 +29,7 @@ public partial class LutinCgt : PnjAmical
 	}
 
 	// Texte peint sur la pancarte. Propriété (et non champ) comme Pose : le setter replace et
-	// recentre aussitôt le Label, dans l'éditeur comme en jeu — d'où l'aperçu fidèle dans monde1.tscn
+	// recentre aussitôt le Label, dans l'éditeur comme en jeu — d'où l'aperçu fidèle dans 01-monde1.tscn
 	// et le recentrage automatique quand le slogan change en cours de partie (SurChoixRetenu).
 	[Export(PropertyHint.MultilineText)]
 	public string Slogan

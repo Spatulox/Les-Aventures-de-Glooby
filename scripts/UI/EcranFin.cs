@@ -14,7 +14,7 @@ public partial class EcranFin : Control
 	[Export] public CreditsGenerique Credits;
 
 	// Scène chargée quand le générique est fini (ou passé).
-	[Export(PropertyHint.File, "*.tscn")] public string CheminSuite = "res://scenes/niveaux/monde1.tscn";
+	[Export(PropertyHint.File, "*.tscn")] public string CheminSuite = "res://scenes/niveaux/01-monde1.tscn";
 
 	// Ambiance sonore du générique, par son nom (cf. GestionnaireAudio). Laissé
 	// VIDE volontairement : la musique du combat final continue sans coupure.

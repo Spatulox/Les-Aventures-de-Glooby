@@ -453,6 +453,54 @@ premières sondes muettes.
 (`eclat.Initialiser(this, _direction)`), donc son tir reste plat. Hors de la demande, à
 dire si tu veux le même traitement.
 
+## 13. Le Père Noël vaincu s'efface
+
+**Symptôme** : après sa mort, il restait indéfiniment à plat par terre.
+
+**Cause** : n'ayant pas d'animation « vaincu » générée, sa mort est procédurale —
+`BossPereNoel.Mourir` l'écrase à 25 % de hauteur et le descend à `alpha 0.55`… puis rien.
+Le nœud n'était jamais libéré, laissant un sprite aplati et translucide dans l'arène.
+
+**Correctif, réutilisable et opt-in**, sur la base `Boss` :
+
+```csharp
+[Export] public float DelaiEffacement;          // 0 = le corps reste (défaut)
+[Export] public float DureeEffacement = 0.8f;
+```
+
+`Mourir()` programme `Effets.Disparaitre` après `DelaiEffacement`. Le défaut à 0 laisse
+**inchangés** les boss dotés d'une vraie animation de mort (Cerf, Mecha), qui se figent
+volontairement dans leur dernière frame. Seul `BossPereNoel.tscn` l'active
+(`DelaiEffacement = 1.2`), le temps de voir l'affaissement.
+
+Deux points qui rendent l'effacement sûr :
+- **le butin survit** — `LacherButin` pose l'objet en *frère* du boss, pas en enfant
+  (choix fait au §3, qui paie ici) ;
+- les abonnés à `Vaincu` (persistance, épilogue d'arène) ont tous été notifiés au moment
+  de la mort, et ceux de `ZoneBoss` relisent le boss derrière un `IsInstanceValid`.
+
+**Au passage, la barre de vie.** Elle restait affichée à zéro une fois le corps parti :
+`ZoneBoss.DeclencherEpilogue` ne s'armait que si l'arène avait un épilogue. Le minuteur
+est désormais **toujours** armé et appelle `CloreCombat`, qui masque la barre puis, s'il y
+a un épilogue, enchaîne l'échange contre le PNJ.
+
+### Vérification
+
+Sonde jetable (supprimée), **joueur volontairement écarté** du point de chute — sinon il
+ramasse le pantalon dans la foulée et la partie se termine avant qu'on ait pu observer
+quoi que ce soit :
+
+```
+[f198] BossPereNoel VAINCU        butin=aucun (largué en différé)  barre=True
+[f488] CORPS EFFACE (+290 f ≈ 2,0 s = 1,2 + 0,8)   butin=toujours la
+[f489] BARRE MASQUEE (+291 f ≈ 2,0 s = DelaiEpilogue)
+[f497] BUTIN RAMASSE apres disparition du corps
+```
+
+Fin cachée non régressée : le Mecha est toujours échangé contre le lutin d'épilogue à
++359 frames, barre masquée dans le même mouvement. Boots de `BossEnd`, `ReindeerBoss` et
+`monde1` au niveau de bruit pré-existant, à l'identique.
+
 ### Reste à faire : un vrai F5
 
 Le headless ne juge ni la lisibilité de la liste de réponses, ni le rythme du fondu, ni

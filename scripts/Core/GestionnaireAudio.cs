@@ -2,7 +2,7 @@ using Godot;
 using Godot.Collections;
 
 // Musique et ambiance de fond, par lieu et par état météo. Autoload (et non nœud
-// de monde1.tscn) pour survivre au passage menu -> monde -> écran de fin.
+// de 01-monde1.tscn) pour survivre au passage menu -> monde -> écran de fin.
 //
 // Le gestionnaire ne décide RIEN, comme GestionnaireMeteo : les zones viennent
 // lui demander une ambiance par son nom (CameraZone/ZoneBoss via

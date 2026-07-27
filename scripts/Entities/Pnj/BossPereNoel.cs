@@ -200,10 +200,12 @@ public partial class BossPereNoel : Boss, BossBorne
 		base.Mourir();   // joue AnimationMort, coupe la physique et la collision
 
 		// Faute d'animation de chute, il s'affaisse sur place. Effets.FondreVersLeBas
-		// ferait exactement cet écrasement mais LIBÈRE le nœud à la fin : le boss doit
-		// rester dans l'arène (barre de vie liée, signal Vaincu déjà émis), d'où ce
-		// tween local. Descendre l'origine du même facteur que l'échelle garde les
-		// pieds au sol, le sprite étant posé à moins sa demi-hauteur.
+		// ferait exactement cet écrasement mais libérerait le nœud dès la fin de
+		// l'écrasement, sans laisser le temps de voir la chute : on garde ce tween local
+		// pour l'affaissement, et c'est DelaiEffacement (réglé sur la scène du boss) qui
+		// efface ensuite le corps — sinon il resterait à plat par terre indéfiniment.
+		// Descendre l'origine du même facteur que l'échelle garde les pieds au sol, le
+		// sprite étant posé à moins sa demi-hauteur.
 		const float facteur = 0.25f;
 		var tween = Sprite.CreateTween();
 		tween.TweenProperty(Sprite, "scale:y", facteur, 0.6f).SetTrans(Tween.TransitionType.Sine);

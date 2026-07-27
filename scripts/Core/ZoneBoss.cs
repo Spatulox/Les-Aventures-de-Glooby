@@ -315,24 +315,31 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 
 	// ---- Épilogue ----
 
-	// Chute du boss : on laisse un battement, le temps que son animation de mort se joue,
-	// avant de couper au noir. Sans épilogue câblé, la victoire reste telle quelle.
+	// Chute du boss : on laisse un battement, le temps que sa mise à mort se joue, puis on
+	// clôt le combat. Toujours armé, même sans épilogue — la barre de vie doit disparaître
+	// dans tous les cas.
 	private void DeclencherEpilogue()
 	{
-		if (_epilogueLance || SceneEpilogueChoisie == null)
+		if (_epilogueLance)
 			return;
 
 		_epilogueLance = true;
-		GetTree().CreateTimer(DelaiEpilogue).Timeout += EchangerContreEpilogue;
+		GetTree().CreateTimer(DelaiEpilogue).Timeout += CloreCombat;
 	}
 
-	// Échange le vaincu contre son PNJ d'épilogue, sous le même fondu que le prologue mais
-	// dans l'autre sens. Le PNJ reprend la position exacte du boss tombé.
-	private void EchangerContreEpilogue()
+	// Fin de combat : la barre de vie s'efface, et si l'arène a un épilogue le vaincu cède
+	// sa place à son PNJ sous le même fondu que le prologue, mais dans l'autre sens. Le
+	// PNJ reprend la position exacte du boss tombé.
+	private void CloreCombat()
 	{
 		var scene = SceneEpilogueChoisie;
 		if (scene == null)
+		{
+			// Pas d'épilogue : il ne reste qu'à retirer la barre du vaincu. Le corps, lui,
+			// s'efface tout seul si sa scène règle Boss.DelaiEffacement.
+			Barre?.Masquer();
 			return;
+		}
 
 		var position = Boss != null && IsInstanceValid(Boss) ? Boss.Position : CalculerApparition();
 

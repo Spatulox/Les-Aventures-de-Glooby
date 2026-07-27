@@ -11,7 +11,7 @@ using Godot;
 //    DeclencheurDialogue enfant (bulle au-dessus, défilement des répliques).
 // La variante Droite réutilise le sprite de la flèche gauche en miroir.
 // Le script est [Tool] : changer Type ou Texte dans l'inspecteur applique
-// aussitôt la bonne texture et la bonne étiquette, si bien que monde1.tscn
+// aussitôt la bonne texture et la bonne étiquette, si bien que 01-monde1.tscn
 // montre le panneau tel qu'il sera en jeu (aperçu dans l'éditeur).
 [Tool]
 public partial class PanneauBois : Node2D, Talkative
