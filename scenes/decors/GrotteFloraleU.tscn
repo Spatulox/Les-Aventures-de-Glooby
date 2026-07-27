@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dhdnecmdmf3tn"]
 
-[ext_resource type="Texture2D" uid="uid://b0wlrn0x8mw1o" path="res://assets/decors/sol_grotte/sol_centre_a.png" id="34_wci5p"]
+[ext_resource type="Texture2D" uid="uid://bx8glnguve7so" path="res://assets/sol/grotte/sol_centre_a.png" id="34_wci5p"]
 [ext_resource type="Texture2D" uid="uid://d3e08e0n5biby" path="res://assets/decors/grotte_florale/parallax_bleu/grotteflorale_fond_uniforme_a.png" id="t1"]
 [ext_resource type="Texture2D" uid="uid://duq25apggkr2n" path="res://assets/decors/grotte_florale/sol/sol_centre.png" id="t2"]
 [ext_resource type="Texture2D" uid="uid://1182j02qwfij" path="res://assets/decors/grotte_florale/mur/mur_centre_riche.png" id="t3"]

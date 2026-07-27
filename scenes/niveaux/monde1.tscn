@@ -25,7 +25,6 @@
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorGrotte.tscn" id="decor_grotte"]
 [ext_resource type="Texture2D" uid="uid://chsru3aestwy" path="res://assets/props/grotte/fleur_givre.png" id="fleur"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
-[ext_resource type="PackedScene" path="res://scenes/boss/FondBossCerf.tscn" id="fond_boss_cerf"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondGrotte.tscn" id="fond_grotte"]
 [ext_resource type="Texture2D" uid="uid://c2smw15se8pxl" path="res://assets/props/grotte/champignon_lumineux.png" id="g_champi"]
 [ext_resource type="Texture2D" uid="uid://bfrhgyx6lctpg" path="res://assets/props/grotte/champignon_geant.png" id="g_champi_geant"]
@@ -86,11 +85,6 @@ modulate = Color(1, 1, 1, 0)
 [node name="FondGrotte" parent="Fonds/grotte" unique_id=1347233713 instance=ExtResource("fond_grotte")]
 
 [node name="DecorGrotte" parent="Fonds/grotte" unique_id=1385095757 instance=ExtResource("decor_grotte")]
-
-[node name="boss_cerf" type="Node2D" parent="Fonds" unique_id=1524421378]
-modulate = Color(1, 1, 1, 0)
-
-[node name="FondBossCerf" parent="Fonds/boss_cerf" unique_id=1677797526 instance=ExtResource("fond_boss_cerf")]
 
 [node name="Village" type="Node2D" parent="." unique_id=681150130]
 

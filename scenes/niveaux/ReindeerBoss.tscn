@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="5_hn7gu"]
 [ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="barreboss"]
-[ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss_cerf.tscn" id="bosscerf"]
+[ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss/boss_cerf.tscn" id="bosscerf"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
@@ -108,12 +108,6 @@ Type = 1
 
 [node name="Salle" parent="Caverne" unique_id=1685491796 instance=ExtResource("salle_cavernecristalline")]
 
-[node name="C41" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="31" unique_id=585606707]
-position = Vector2(1881, 496)
-
-[node name="C46" parent="Caverne/Salle/Sol" parent_id_path=PackedInt32Array(1685491796, 186770688) index="35" unique_id=1313986370]
-position = Vector2(1880, 538.5)
-
 [node name="Interactifs" type="Node2D" parent="Caverne" unique_id=1464526556]
 
 [node name="Entree" parent="Caverne/Interactifs" unique_id=1879812789 instance=ExtResource("entree")]
@@ -138,9 +132,6 @@ CheminBarre = NodePath("../../BossHudBarre")
 PvBoss = 40
 
 [node name="Salle" parent="ArenBoss" unique_id=412134817 instance=ExtResource("salle_grandesalle")]
-
-[node name="C26" parent="ArenBoss/Salle/Sol" parent_id_path=PackedInt32Array(412134817, 991162360) index="24" unique_id=1339672554]
-position = Vector2(23.5, 400)
 
 [node name="Interactifs" type="Node2D" parent="ArenBoss" unique_id=1978714151]
 

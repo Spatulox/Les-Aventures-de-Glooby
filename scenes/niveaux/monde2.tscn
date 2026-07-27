@@ -1,6 +1,10 @@
 [gd_scene format=3 uid="uid://qopyq3e1vk2k"]
 
 [ext_resource type="PackedScene" uid="uid://kjhdxmbys0gl" path="res://scenes/core/zone_chargement_scene.tscn" id="4_544ey"]
+[ext_resource type="PackedScene" uid="uid://busolboisemg" path="res://scenes/sol/usine/SolUsineBoisEmboutGauche.tscn" id="10_544ey"]
+[ext_resource type="PackedScene" uid="uid://busolboisca" path="res://scenes/sol/usine/SolUsineBoisCentreA.tscn" id="10_bw6ma"]
+[ext_resource type="PackedScene" uid="uid://busolboiscb" path="res://scenes/sol/usine/SolUsineBoisCentreB.tscn" id="11_bw6ma"]
+[ext_resource type="PackedScene" uid="uid://busolboiscc" path="res://scenes/sol/usine/SolUsineBoisCentreC.tscn" id="12_pfk45"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -10,7 +14,6 @@
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
 [ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="player"]
 [ext_resource type="PackedScene" uid="uid://c4lfcjnl74oh" path="res://scenes/sol/banquise/SolBanquise.tscn" id="sol_banquise"]
-[ext_resource type="PackedScene" uid="uid://dvfnd6yo4qk35" path="res://scenes/sol/banquise/SolBanquiseEmboutDroit.tscn" id="sol_embout_d"]
 [ext_resource type="PackedScene" uid="uid://bmfa3yfjdqx6f" path="res://scenes/sol/banquise/SolBanquiseEmboutGauche.tscn" id="sol_embout_g"]
 
 [node name="Monde2" type="Node2D" unique_id=1283461592]
@@ -40,8 +43,8 @@ modulate = Color(1, 1, 1, 0)
 [node name="Camera" type="Node2D" parent="Banquise" unique_id=1362802562]
 
 [node name="ZoneBanquise" parent="Banquise/Camera" unique_id=414830882 instance=ExtResource("camzone")]
-position = Vector2(838.00006, 112.00001)
-scale = Vector2(6.5625, 1.6637502)
+position = Vector2(812.155, 112)
+scale = Vector2(6.268, 1.664)
 NomRegion = "banquise"
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
@@ -58,8 +61,8 @@ position = Vector2(759, 280)
 [node name="Sol3" parent="Banquise/Sol" unique_id=685372366 instance=ExtResource("sol_banquise")]
 position = Vector2(1103, 280)
 
-[node name="SolEmboutDroit" parent="Banquise/Sol" unique_id=800722113 instance=ExtResource("sol_embout_d")]
-position = Vector2(1447, 280)
+[node name="SolBanquise" parent="Banquise/Sol" unique_id=198024636 instance=ExtResource("sol_banquise")]
+position = Vector2(1445.365, 280.03)
 
 [node name="Decor" type="Node2D" parent="Banquise" unique_id=1314169779]
 
@@ -74,7 +77,7 @@ position = Vector2(1447, 280)
 [node name="Camera" type="Node2D" parent="UsinePereNoel" unique_id=1063593249]
 
 [node name="ZoneUsine" parent="UsinePereNoel/Camera" unique_id=21096232 instance=ExtResource("camzone")]
-position = Vector2(3240, 112)
+position = Vector2(3175.365, 66.705)
 scale = Vector2(12.1875, 1.6637502)
 NomRegion = "usine"
 Type = 1
@@ -88,9 +91,40 @@ Type = 1
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
 [node name="ZoneSortieUsine" parent="UsinePereNoel/Interactifs" unique_id=1710568238 instance=ExtResource("4_544ey")]
+z_index = 11
 position = Vector2(4700, 200)
 CheminSceneSuivante = "uid://d3ixspn6np4ud"
 PointEntreeCible = "bossEnd"
+
+[node name="SolUsineBoisEmboutGauche" parent="UsinePereNoel/Interactifs" unique_id=940213876 instance=ExtResource("10_544ey")]
+position = Vector2(1610.835, 206.9)
+
+[node name="SolUsineBoisCentreA" parent="UsinePereNoel/Interactifs" unique_id=875444956 instance=ExtResource("10_bw6ma")]
+position = Vector2(1954.62, 207)
+
+[node name="SolUsineBoisCentreB" parent="UsinePereNoel/Interactifs" unique_id=2096601153 instance=ExtResource("11_bw6ma")]
+position = Vector2(2298.66, 207.015)
+
+[node name="SolUsineBoisCentreC" parent="UsinePereNoel/Interactifs" unique_id=1678345921 instance=ExtResource("12_pfk45")]
+position = Vector2(2642.635, 206.88)
+
+[node name="SolUsineBoisCentreB2" parent="UsinePereNoel/Interactifs" unique_id=1060842312 instance=ExtResource("11_bw6ma")]
+position = Vector2(2985, 207.245)
+
+[node name="SolUsineBoisCentreA2" parent="UsinePereNoel/Interactifs" unique_id=991934944 instance=ExtResource("10_bw6ma")]
+position = Vector2(3326, 206.935)
+
+[node name="SolUsineBoisCentreC2" parent="UsinePereNoel/Interactifs" unique_id=875947607 instance=ExtResource("12_pfk45")]
+position = Vector2(3669, 206.81)
+
+[node name="SolUsineBoisCentreB3" parent="UsinePereNoel/Interactifs" unique_id=469558100 instance=ExtResource("11_bw6ma")]
+position = Vector2(4009, 206.8)
+
+[node name="SolUsineBoisCentreA3" parent="UsinePereNoel/Interactifs" unique_id=1162743877 instance=ExtResource("10_bw6ma")]
+position = Vector2(4352, 206.77)
+
+[node name="SolUsineBoisCentreC3" parent="UsinePereNoel/Interactifs" unique_id=1773034292 instance=ExtResource("12_pfk45")]
+position = Vector2(4695.895, 206.78)
 
 [node name="Frontiere" type="Node2D" parent="UsinePereNoel" unique_id=82496359]
 
