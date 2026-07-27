@@ -59,9 +59,10 @@ position = Vector2(200, 240.07)
 Id = "bossEnd"
 
 [node name="CagePereNoel" parent="Arene/Interactifs" instance=ExtResource("cage")]
-position = Vector2(1600, 152)
+position = Vector2(1600, 188)
 MemoireRequise = "lutin_cgt_don_poissons"
 BossRequis = "Lutin Mecha"
+DecalageContenu = Vector2(-50, 78)
 LignesAvant = PackedStringArray("Ho ho... ho. Sors-moi de là, petit, je t'en prie !", "Ce tas de boulons ne te laissera pas approcher.")
 LignesApres = PackedStringArray("Ho ho ho ! Tu as couché leur machine, petit !", "Tiens, prends ce pantalon. Tu l'as bien mérité.")
 

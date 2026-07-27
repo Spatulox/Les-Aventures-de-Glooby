@@ -173,6 +173,53 @@ Export `Pose { Etabli, Paquet }` qui choisit le dossier de frames
   les 12 « Not supported by this display server » et le « resources still in use at
   exit » pré-existants).
 
+## 8. Correctif : le Père Noël du prologue apparaissait à moitié sous l'écran
+
+**Symptôme** : l'interlocuteur amical s'affichait enfoncé, la moitié basse hors caméra.
+
+**Cause** : un conflit de conventions d'ancrage. Les scènes de boss ont leur **origine
+aux pieds** (`BossPereNoel.tscn` : sprite à y = −44), mais les scènes de `PnjAmical` ont
+leur **origine au centre du corps** (sprite à y = 0). Le PNJ de prologue partage le
+`Marker2D ApparitionBoss` du boss : posé là, un art de 96×96 débordait de 48 px sous
+son point d'ancrage. Sol de l'arène à y = 279, borne basse de la caméra à 304 : les
+pieds tombaient vers 312, **8 px sous le champ**.
+
+**Correctif** : les deux scènes de prologue passent à la convention des boss — origine
+aux pieds. Décalages calculés sur la **boîte opaque réelle** de chaque PNG (mesurée, pas
+devinée : le Père Noël occupe les lignes 3→94 d'un cadre 96×96, le lutin 12→54 d'un
+64×64) :
+
+| | `AnimatedSprite2D` / `Apercu` | `CollisionShape2D` | zone de dialogue | `AncrageBulle` |
+|---|---|---|---|---|
+| Père Noël | (0, −46) | (0, −15) | (0, −45) | (0, −105) |
+| Lutin usine | (0, −22) | (0, −11) | (0, −21) | (0, −56) |
+
+Deux erreurs voisines corrigées au passage, trouvées par la même sonde :
+
+- **`ProloguePereNoel.tscn` affichait l'`Apercu` du lutin.** J'avais relevé les deux uid
+  de texture d'un `grep` multi-fichiers sans étiquette et je les avais **intervertis** :
+  `uid://tyfrorwb8q85` est `lutin_usine/idle`, pas `pere_noel/idle`. Godot privilégiant
+  l'uid sur le chemin, c'est bien le lutin qui s'affichait — seulement dans l'éditeur
+  (`MasquerApercuEditeur` cache le nœud en jeu), mais trompeur à l'ouverture de la scène.
+- **Le sol de l'arène est à y = 279, pas 248.** J'avais déduit 248 de `CLAUDE.md`
+  (« surface at y = +8 » pour `sol/usine/`) au lieu de le mesurer. Conséquence : la cage
+  flottait 31 px au-dessus du plancher (posée à y = 152, recalée à **188**), et le
+  pantalon sortait au milieu des barreaux — `DecalageContenu` passe à (−50, 78) pour
+  qu'il tombe **au pied de la cage, côté joueur**.
+
+**Vérifié à la sonde** (jetable, supprimée) qui compare les pieds dessinés au sommet réel
+du sol (raycast) et à la borne basse de la caméra :
+
+```
+[ProloguePereNoel]  tete=190 pieds=279  sol=279  ecart=0  sousCamera=False
+[PrologueLutinUsine] tete=237 pieds=279  sol=279  ecart=0  sousCamera=False
+[CagePereNoel]      tete=96  pieds=279  sol=279  ecart=0  sousCamera=False
+```
+
+Les deux fins rejouées entièrement après le recalage (les zones de dialogue ayant bougé) :
+prologue → combat → butin/cage → ramassage, `PANTALON en (1450, 279)` côté fin normale et
+`(1550, 266)` côté fin cachée.
+
 ### Reste à faire : un vrai F5
 
 Le headless ne juge ni la lisibilité de la liste de réponses, ni le rythme du fondu, ni
