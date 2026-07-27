@@ -19,6 +19,31 @@ public abstract partial class Boss : LivingEntity
 		Initialiser();
 	}
 
+	// ---- Combat en deux phases ----
+	// Schéma commun aux boss du jeu : au premier coup qui fait passer les PV sous
+	// SeuilPhase2, le boss « s'énerve » (animation de transition) et durcit ses patterns.
+	// Mutualisé ici parce que les trois boss (Cerf, Lutin Mecha, Père Noël) le rejouaient
+	// à l'identique ; chacun ne garde que ce qui lui est propre (l'animation et le
+	// durcissement), via BasculeEnPhase2().
+
+	// Fraction de PvMax en deçà de laquelle la phase 2 se déclenche.
+	[Export] public float SeuilPhase2 = 0.5f;
+
+	// Phase courante du combat (1 puis 2). En lecture seule pour l'extérieur (barre de vie,
+	// zone d'arène) et pour les sous-classes, qui pondèrent leurs patterns dessus.
+	public int Phase { get; protected set; } = 1;
+
+	// À appeler depuis ApresDegats. Renvoie vrai UNE SEULE FOIS, à l'instant exact de la
+	// bascule, pour que la sous-classe y branche son animation et ses réglages de phase 2.
+	protected bool BasculeEnPhase2()
+	{
+		if (Phase != 1 || Pv > Mathf.CeilToInt(PvMax * SeuilPhase2))
+			return false;
+
+		Phase = 2;
+		return true;
+	}
+
 	// Hook d'init des sous-classes (récupération de nœuds, RNG, état/anim de départ...).
 	protected virtual void Initialiser() { }
 

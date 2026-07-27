@@ -52,14 +52,12 @@ public partial class BossLutinMecha : Boss, BossBorne
 	[Export] public PackedScene SceneMiniJouet;
 
 	// ---- Phases ----
-	[Export] public float SeuilPhase2 = 0.5f;        // fraction de PV déclenchant la phase 2
+	// Le seuil et le comptage de phase viennent de Boss (schéma commun aux trois boss).
 	[Export] public float DureeTransitionPhase = 0.8f;
 
 	// Bornes de l'arène (posées par ZoneBossLutinMecha depuis son rectangle).
 	[Export] public float LimiteGauche { get; set; } = 80f;
 	[Export] public float LimiteDroite { get; set; } = 2800f;
-
-	public int Phase { get; private set; } = 1;
 
 	private Etat _etat = Etat.Intro;
 	private float _timerEtat = 1.4f;
@@ -191,7 +189,7 @@ public partial class BossLutinMecha : Boss, BossBorne
 	// Bascule en phase 2 à mi-vie : le mecha se déglingue partiellement puis enchaîne plus vite.
 	protected override void ApresDegats(int degats)
 	{
-		if (Phase == 1 && Pv <= Mathf.CeilToInt(PvMax * SeuilPhase2))
+		if (BasculeEnPhase2())
 			DeclencherTransitionPhase2();
 		else
 			// Pas d'animation « touché » dédiée (économie assumée, comme le Boss Cerf) :
@@ -343,7 +341,6 @@ public partial class BossLutinMecha : Boss, BossBorne
 
 	private void DeclencherTransitionPhase2()
 	{
-		Phase = 2;
 		_etat = Etat.TransitionPhase;
 		_timerEtat = DureeTransitionPhase;
 		Velocity = Vector2.Zero;
