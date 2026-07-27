@@ -249,6 +249,11 @@ position = Vector2(3282.0002, 259.00003)
 scale = Vector2(5.474993, 4.1607146)
 texture = ExtResource("19_uoa0f")
 
+[node name="PanneauBois" parent="Village/Interactifs" unique_id=197425152 instance=ExtResource("panneau")]
+position = Vector2(4556, 1154)
+scale = Vector2(0.645, 0.645)
+Type = 3
+
 [node name="Frontiere" type="Node2D" parent="Village" unique_id=1612957047]
 
 [node name="Banquise" type="Node2D" parent="." unique_id=858809779]
@@ -1235,7 +1240,7 @@ position = Vector2(3591, 1158)
 [node name="CheckpointLabyEnd" parent="Grotte/Interactifs" unique_id=1618785671 instance=ExtResource("checkpoint")]
 position = Vector2(5005, 768)
 
-[node name="PanneauBoisLabyUp" parent="Grotte/Interactifs" unique_id=197425152 instance=ExtResource("panneau")]
+[node name="PanneauBoisLabyUp" parent="Grotte/Interactifs" unique_id=64582711 instance=ExtResource("panneau")]
 position = Vector2(3861, 1448.0001)
 scale = Vector2(0.66, 0.66)
 Lignes = PackedStringArray("Attendez là...")
