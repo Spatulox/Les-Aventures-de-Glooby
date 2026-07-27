@@ -1,23 +1,35 @@
 using Godot;
 
-// Le Père Noël : le patron de l'usine, en boss. Là où le Lutin Mecha dispose d'un jeu
-// d'animations complet, le Père Noël n'a QU'UNE animation générée (« idle », le dossier
-// du PNJ amical) — le budget PixelLab est clos (BUDGET.md), on ne régénère rien. Tout son
-// langage corporel est donc procédural (Effets + tweens), et ses attaques réutilisent des
-// scènes déjà en place plutôt que d'en inventer :
+// Le Père Noël : le patron de l'usine, en boss. Il dispose de son propre art
+// (assets/pnj/boss_pere_noel, distinct du Père Noël souriant du PNJ amical) avec deux
+// animations générées : « idle » et une marche. Les POSES de combat, elles, n'ont pas
+// d'animation dédiée — le budget PixelLab est clos (BUDGET.md), on ne régénère rien : les
+// télégraphes restent donc procéduraux (Effets + tweens d'écrasement), et les attaques
+// réutilisent des scènes déjà en place plutôt que d'en inventer :
+//   Approche         — il marche vers le joueur quand celui-ci s'éloigne trop, seule
+//                      façon pour lui de garder ses attaques à portée ;
 //   Salve de cadeaux — il plonge la main dans sa hotte (télégraphe : il se ramasse et
 //                      rougit) puis largue des MiniJouetExplosif ; il reste essoufflé
 //                      ensuite, fenêtre où les coups portés comptent double ;
 //   Jet de givre     — il se givre visiblement puis tire un EclatGlace (éventail de
 //                      trois en phase 2) ;
-//   Cheminée         — il s'évapore et se rematérialise ailleurs, de l'autre côté du
-//                      joueur. C'est son SEUL déplacement, faute d'animation de marche,
-//                      et il est intouchable le temps du passage.
+//   Cheminée         — il s'évapore et se rematérialise de l'autre côté du joueur,
+//                      intouchable le temps du passage. Repositionnement ponctuel, à ne
+//                      pas confondre avec l'approche : c'est une esquive, pas un trajet.
 // Aucun DamageSource nouveau : les deux projectiles portent déjà le leur.
 public partial class BossPereNoel : Boss, BossBorne
 {
-	private enum Etat { Intro, Idle, ArmementCadeaux, Largage, ArmementGivre, Jet, Disparition, Reapparition, TransitionPhase, Vaincu }
+	private enum Etat { Intro, Idle, Approche, ArmementCadeaux, Largage, ArmementGivre, Jet, Disparition, Reapparition, TransitionPhase, Vaincu }
 	private enum Pattern { SalveCadeaux, JetGivre, Cheminee }
+
+	// ---- Approche ----
+	// Le boss marche vers le joueur dès qu'il le laisse filer au-delà de DistanceConfort :
+	// sans ça, ses deux attaques (largage au-dessus de lui, éclat à l'horizontale) ne
+	// couvriraient jamais un joueur qui se contente de reculer.
+	[Export] public float VitesseMarche = 60f;
+	[Export] public float DistanceConfort = 200f;
+	// Garde-fou : une marche ne dure jamais plus que ça, même si le joueur fuit sans fin.
+	[Export] public float DureeApprocheMax = 1.8f;
 
 	// ---- Salve de cadeaux ----
 	// Fenêtre d'esquive : le boss fouille sa hotte tout ce temps avant de larguer.
@@ -29,7 +41,7 @@ public partial class BossPereNoel : Boss, BossBorne
 	// Même règle que le Lutin Mecha : c'est le même jouet, un seul en phase 1.
 	[Export] public int CadeauxPhase1 = 1;
 	[Export] public int CadeauxPhase2 = 3;
-	[Export] public float HauteurLargage = 90f;      // au-dessus du boss : les cadeaux descendent
+	[Export] public float HauteurLargage = 110f;     // au-dessus du boss : les cadeaux descendent
 	[Export] public float EcartLargage = 44f;
 	[Export] public PackedScene SceneCadeau;
 
@@ -52,14 +64,12 @@ public partial class BossPereNoel : Boss, BossBorne
 	[Export] public float MargeBords = 60f;
 
 	// ---- Phases ----
-	[Export] public float SeuilPhase2 = 0.5f;        // fraction de PV déclenchant la phase 2
+	// SeuilPhase2 et Phase viennent de Boss : la bascule est mutualisée (BasculeEnPhase2).
 	[Export] public float DureeTransitionPhase = 0.8f;
 
 	// Bornes de l'arène (posées par ZoneBossPereNoel depuis son rectangle).
 	[Export] public float LimiteGauche { get; set; } = 80f;
 	[Export] public float LimiteDroite { get; set; } = 2800f;
-
-	public int Phase { get; private set; } = 1;
 
 	private Etat _etat = Etat.Intro;
 	private float _timerEtat = 1.4f;
@@ -73,13 +83,17 @@ public partial class BossPereNoel : Boss, BossBorne
 		Sprite.Play("idle");
 	}
 
-	// Une seule animation : le dossier idle du Père Noël, partagé avec son PNJ amical
-	// (PereNoel.cs). Toutes les poses de combat sont jouées dessus.
+	// Deux animations générées : l'idle et la marche. Le dossier de la marche s'appelle
+	// « walk » côté assets (nommage d'origine, laissé tel quel pour ne pas casser les
+	// .import qui pointent le fichier source) ; c'est le nom d'ANIMATION qui suit la
+	// convention française du projet. Toutes les poses de combat sont jouées sur l'idle.
 	protected override SpriteFrames ConstruireAnimations()
 	{
+		const string racine = "res://assets/pnj/boss_pere_noel";
 		var frames = new SpriteFrames();
 		frames.RemoveAnimation("default");
-		AjouterAnimation(frames, "idle", "res://assets/pnj/pere_noel/idle", 5f, true);
+		AjouterAnimation(frames, "idle", $"{racine}/idle", 5f, true);
+		AjouterAnimation(frames, "marche", $"{racine}/walk", 8f, true);
 		return frames;
 	}
 
@@ -94,9 +108,10 @@ public partial class BossPereNoel : Boss, BossBorne
 
 		var velocite = Velocity;
 		AppliquerGravite(ref velocite, dt);
-		// Le Père Noël ne marche jamais : il se déplace en disparaissant. Sa vitesse
-		// horizontale est donc toujours ramenée à zéro, quel que soit l'état.
-		AppliquerFriction(ref velocite, dt);
+		// La marche est le SEUL état qui pousse le boss horizontalement : partout ailleurs
+		// il est planté (poses de combat, passage par la cheminée), d'où la friction.
+		if (_etat != Etat.Approche)
+			AppliquerFriction(ref velocite, dt);
 
 		switch (_etat)
 		{
@@ -108,6 +123,10 @@ public partial class BossPereNoel : Boss, BossBorne
 			case Etat.Idle:
 				if (_timerEtat <= 0f)
 					ChoisirPattern();
+				break;
+
+			case Etat.Approche:
+				Marcher(ref velocite);
 				break;
 
 			// Télégraphe de la salve : il fouille sa hotte, immobile — fenêtre d'esquive.
@@ -167,7 +186,7 @@ public partial class BossPereNoel : Boss, BossBorne
 	// Bascule en phase 2 à mi-vie : il perd son flegme et enchaîne bien plus vite.
 	protected override void ApresDegats(int degats)
 	{
-		if (Phase == 1 && Pv <= Mathf.CeilToInt(PvMax * SeuilPhase2))
+		if (BasculeEnPhase2())
 			DeclencherTransitionPhase2();
 		else
 			// Pas d'animation « touché » dédiée (économie assumée, comme les autres
@@ -203,25 +222,24 @@ public partial class BossPereNoel : Boss, BossBorne
 		Sprite.Play("idle");
 	}
 
-	// Choisit la prochaine action puis se tourne vers le joueur. En phase 1 il passe
-	// souvent par la cheminée (lisible, peu agressif) ; en phase 2 il attaque bien plus.
+	// Choisit la prochaine action puis se tourne vers le joueur. Un joueur trop loin est
+	// d'abord rejoint à pied — ses deux attaques ne portent pas à toute la largeur de
+	// l'arène — et ce n'est qu'à bonne distance qu'il tire son pattern.
 	private void ChoisirPattern()
 	{
 		ViserLeJoueur();
 
-		if (Phase == 1 && _rng.Randf() < 0.3f)
+		var joueur = JoueurLePlusProche(out float distance);
+		if (joueur != null && distance > DistanceConfort)
 		{
-			DisparaitreParLaCheminee();
+			CommencerApproche();
 			return;
 		}
 
-		// Tirage PROPRE au choix d'attaque : le partager avec le repli ci-dessus
-		// fausserait la répartition, le tirage retenu ne couvrant plus [0,1).
-		float tirage = _rng.Randf();
-		var pattern = tirage switch
+		var pattern = _rng.Randf() switch
 		{
 			< 0.45f => Pattern.SalveCadeaux,
-			< 0.8f => Pattern.JetGivre,
+			< 0.85f => Pattern.JetGivre,
 			_ => Pattern.Cheminee,
 		};
 
@@ -231,6 +249,40 @@ public partial class BossPereNoel : Boss, BossBorne
 			case Pattern.JetGivre: ArmerGivre(); break;
 			case Pattern.Cheminee: DisparaitreParLaCheminee(); break;
 		}
+	}
+
+	// Départ de la marche : le garde-fou de durée sert aussi de rythme, le boss ne
+	// poursuivant jamais bien longtemps sans repasser par une attaque.
+	private void CommencerApproche()
+	{
+		_etat = Etat.Approche;
+		_timerEtat = DureeApprocheMax;
+		Sprite.Play("marche");
+	}
+
+	// Un pas d'approche : il s'arrête dès qu'il est à portée, que le garde-fou expire, ou
+	// qu'il bute sur un bord de l'arène (inutile d'insister contre le mur).
+	private void Marcher(ref Vector2 velocite)
+	{
+		var joueur = JoueurLePlusProche(out float distance);
+		if (joueur == null || distance <= DistanceConfort || _timerEtat <= 0f)
+		{
+			PasserEnIdle();
+			return;
+		}
+
+		// Réorienté à chaque pas : le joueur peut très bien lui passer derrière en route.
+		_direction = joueur.GlobalPosition.X >= GlobalPosition.X ? 1 : -1;
+		Sprite.FlipH = _direction < 0;
+
+		if ((_direction < 0 && GlobalPosition.X <= LimiteGauche + MargeBords)
+			|| (_direction > 0 && GlobalPosition.X >= LimiteDroite - MargeBords))
+		{
+			PasserEnIdle();
+			return;
+		}
+
+		velocite.X = _direction * VitesseMarche;
 	}
 
 	// Télégraphe de la salve : il se ramasse sur sa hotte et rougit, assez longtemps
@@ -301,7 +353,7 @@ public partial class BossPereNoel : Boss, BossBorne
 		var eclat = SceneEclatGlace.Instantiate<Projectile>();
 		var velocite = new Vector2(_direction * VitesseEclat, 0f).Rotated(Mathf.DegToRad(angleDegres) * _direction);
 		eclat.Initialiser(this, velocite);
-		eclat.GlobalPosition = GlobalPosition + new Vector2(_direction * 30f, -50f);
+		eclat.GlobalPosition = GlobalPosition + new Vector2(_direction * 30f, -70f);
 		GetParent().AddChild(eclat);
 	}
 
@@ -336,9 +388,9 @@ public partial class BossPereNoel : Boss, BossBorne
 		Effets.Fondu(Sprite, 1f, DureeReapparition);
 	}
 
+	// La phase est déjà passée à 2 par BasculeEnPhase2 : il ne reste que la mise en scène.
 	private void DeclencherTransitionPhase2()
 	{
-		Phase = 2;
 		_etat = Etat.TransitionPhase;
 		_timerEtat = DureeTransitionPhase;
 		Velocity = Vector2.Zero;
