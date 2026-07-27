@@ -1,0 +1,57 @@
+[gd_resource type="Resource" script_class="CreditsGenerique" format=3 uid="uid://bggjgatl10aqx"]
+
+[ext_resource type="Script" uid="uid://bau6agr7r5qka" path="res://scripts/UI/CreditsGenerique.cs" id="1_credits"]
+[ext_resource type="Script" uid="uid://d3k0yngxvr03d" path="res://scripts/UI/EntreeCredits.cs" id="2_entree"]
+
+[sub_resource type="Resource" id="Resource_y3dc1"]
+script = ExtResource("2_entree")
+Categorie = "Scenariste"
+Noms = PackedStringArray("Sahiko")
+metadata/_custom_type_script = "uid://d3k0yngxvr03d"
+
+[sub_resource type="Resource" id="EntreeDeveloppement"]
+script = ExtResource("2_entree")
+Categorie = "Développement"
+Noms = PackedStringArray("Spatulox", "AlexandreDjazz", "Claude Code (c\'est le but du projet en fait...)")
+
+[sub_resource type="Resource" id="EntreeDesign"]
+script = ExtResource("2_entree")
+Categorie = "Game design & level design"
+Noms = PackedStringArray("Spatulox", "AlexandreDjazz", "Claude Code (il pue la merde)")
+
+[sub_resource type="Resource" id="EntreeArt"]
+script = ExtResource("2_entree")
+Categorie = "Art pixel & animations"
+Noms = PackedStringArray("PixelLab", "Claude Code", "AlexandreDjazz")
+
+[sub_resource type="Resource" id="EntreeMusique"]
+script = ExtResource("2_entree")
+Categorie = "Musiques & ambiances"
+Noms = PackedStringArray("Un IA perdue dans les méandre du projet", "AlexandreDjazz")
+
+[sub_resource type="Resource" id="EntreeAssistanceIa"]
+script = ExtResource("2_entree")
+Categorie = "Assistance IA & code"
+Noms = PackedStringArray("(Pas vraiment de l\'assistance, c\'est bien bien vibe claudé mais bon...", "Claude Code (Anthropic)", "")
+
+[sub_resource type="Resource" id="EntreeDialogues"]
+script = ExtResource("2_entree")
+Categorie = "Dialogues dynamiques"
+Noms = PackedStringArray("Ollama (modèle local)")
+
+[sub_resource type="Resource" id="EntreeMoteur"]
+script = ExtResource("2_entree")
+Categorie = "Moteur"
+Noms = PackedStringArray("Godot Engine 4.6")
+
+[sub_resource type="Resource" id="EntreeProjet"]
+script = ExtResource("2_entree")
+Categorie = "Projet"
+Noms = PackedStringArray("ESGI — 4ᵉ année", "IA générative")
+
+[resource]
+script = ExtResource("1_credits")
+Titre = "Pantalon"
+Entrees = Array[ExtResource("2_entree")]([SubResource("Resource_y3dc1"), SubResource("EntreeDeveloppement"), SubResource("EntreeDesign"), SubResource("EntreeArt"), SubResource("EntreeMusique"), SubResource("EntreeAssistanceIa"), SubResource("EntreeDialogues"), SubResource("EntreeMoteur"), SubResource("EntreeProjet")])
+Remerciements = "Merci d'avoir joué.
+Rodolphe s'en remettra."
