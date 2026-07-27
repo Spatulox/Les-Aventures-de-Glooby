@@ -90,7 +90,45 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		// entrée du joueur - retour après un respawn, recul qui le fait sortir puis
 		// rentrer, téléportation - et chacune faisait apparaître un boss de plus.
 		UneSeuleFois = true;
+		// Le combat se rejoue depuis le début si le joueur meurt : voir ReinitialiserCombat.
+		GameState.Instance.JoueurMort += ReinitialiserCombat;
 		return true;
+	}
+
+	// Désabonnement obligatoire : GameState est un autoload qui survit aux changements de
+	// scène, et un délégué C# ne se défait pas seul à la libération du nœud abonné (même
+	// piège que Player._ExitTree — une zone d'une scène quittée finirait par lever
+	// ObjectDisposedException et couperait la diffusion du signal aux autres abonnés).
+	public override void _ExitTree()
+	{
+		if (GameState.Instance != null)
+			GameState.Instance.JoueurMort -= ReinitialiserCombat;
+	}
+
+	// Mort du joueur : le combat repart de zéro. Le boss est retiré (le suivant
+	// réapparaîtra à PvMax plein, sans quoi le joueur retrouverait un boss à moitié
+	// entamé et flottant dans l'arène), la barre est masquée et le déclencheur réarmé.
+	//
+	// Si le joueur réapparaît HORS de l'arène, c'est son retour qui refera surgir le
+	// boss. S'il réapparaît DEDANS (campement placé dans l'arène, ou respawn qui recharge
+	// cette scène), aucun BodyEntered ne se produit puisqu'il n'a pas franchi la
+	// frontière : on relance donc nous-mêmes. Le contrôle est DIFFÉRÉ, le temps que le
+	// joueur ait été téléporté par son propre gestionnaire de mort.
+	private void ReinitialiserCombat()
+	{
+		if (Boss != null && IsInstanceValid(Boss))
+			Boss.QueueFree();
+		Boss = null;
+
+		Barre?.Masquer();
+		RearmerDeclencheur();
+		CallDeferred(MethodName.RelancerSiJoueurPresent);
+	}
+
+	private void RelancerSiJoueurPresent()
+	{
+		if (GetTree()?.GetFirstNodeInGroup("joueur") is Player joueur && Contient(joueur.GlobalPosition))
+			SurEntreeJoueur(joueur);
 	}
 
 	// IZoneCamera : verrouille la caméra du joueur sur l'arène (limites = rectangle de

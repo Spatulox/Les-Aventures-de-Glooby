@@ -25,6 +25,16 @@ public partial class GestionnaireMeteo : CanvasLayer
 	private readonly List<GpuParticles2D> _flocons = new();
 	private bool _actif;
 
+	// Le pointeur statique doit lâcher prise à la sortie d'arbre, comme celui de
+	// BackgroundManager : sans ça il désigne encore le gestionnaire de la scène quittée
+	// (chaque niveau a le sien), et la première demande de la nouvelle scène tentait un
+	// fondu sur un voile déjà libéré — ObjectDisposedException intermittente.
+	public override void _ExitTree()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	public override void _Ready()
 	{
 		Instance = this;

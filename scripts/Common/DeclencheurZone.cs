@@ -30,6 +30,11 @@ public partial class DeclencheurZone : Area2D
 		EmitSignal(SignalName.JoueurEntre, joueur);
 	}
 
+	// Réarme un déclencheur UneSeuleFois : il pourra se redéclencher à la prochaine
+	// entrée du joueur. Sert aux zones dont l'effet est annulable (arène de boss remise
+	// à zéro quand le joueur meurt et revient).
+	protected void RearmerDeclencheur() => _declenche = false;
+
 	// Init avant branchement ; retourner false pour ne pas s'activer.
 	protected virtual bool PreparerDeclencheur() => true;
 

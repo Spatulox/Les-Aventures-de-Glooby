@@ -71,6 +71,9 @@ public partial class Player : LivingEntity
 	// campement est au sol, respawn un peu plus haut évite un chevauchement avec
 	// le sol/décor et laisse le joueur retomber proprement sur le point d'appui.
 	[Export] public float OffsetRespawnY = 48f;
+	// Fondu au noir quand la réapparition impose un changement de scène (campement resté
+	// dans un autre niveau). Aligné sur celui de ZoneChargementScene.
+	[Export] public float DureeFonduMort = 0.5f;
 	// Ajusté dynamiquement par la CameraZone active (le monde continu a des
 	// salles à des profondeurs très différentes - un seuil absolu unique
 	// déclencherait le filet de sécurité en permanence dans les salles profondes).
@@ -201,6 +204,10 @@ public partial class Player : LivingEntity
 
 			GameState.Instance.DefinirPointEntree(sceneCourante, GlobalPosition);
 		}
+
+		// Toute la scène est prête à ce moment-là (fin de frame) : c'est seulement alors
+		// que le fond de région peut être appliqué de façon fiable.
+		CallDeferred(MethodName.ForcerZoneCamera);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -393,16 +400,46 @@ public partial class Player : LivingEntity
 
 	// Filet de sécurité : une chute manquée dans un trou ne doit jamais se
 	// terminer en vide sans fond, elle renvoie au dernier campement activé.
-	private void TomberDansLeVide()
+	// Désabonnement OBLIGATOIRE : GameState est un autoload qui survit aux changements de
+	// scène, et un délégué C# ne se défait PAS tout seul quand le nœud abonné est libéré.
+	// Sans ça, le joueur de la scène précédente restait branché sur JoueurMort ; à la mort
+	// suivante son handler levait ObjectDisposedException, ce qui AVORTAIT la diffusion du
+	// signal — le joueur vivant, abonné après lui, ne le recevait jamais et ne réapparaissait
+	// plus. Le bug ne se voyait qu'avec plusieurs scènes portant chacune un joueur.
+	public override void _ExitTree()
 	{
-		GameState.Instance?.RespawnAuCheckpoint();
-		TeleporterAuCheckpoint();
+		if (GameState.Instance != null)
+			GameState.Instance.JoueurMort -= OnJoueurMort;
 	}
 
-	private void OnJoueurMort()
+	private void TomberDansLeVide() => Reapparaitre();
+
+	private void OnJoueurMort() => Reapparaitre();
+
+	// Retour au dernier campement activé. Celui-ci peut appartenir à UNE AUTRE SCÈNE —
+	// on meurt dans une arène de boss (BossEnd, ReindeerBoss) alors que le dernier feu de
+	// camp est resté dans le niveau d'avant. Dans ce cas on recharge cette scène sous un
+	// fondu ; c'est _Ready qui y replace le joueur, puisqu'il reconnaît un checkpoint
+	// appartenant à la scène courante. Même scène = simple téléportation, comme avant.
+	private void Reapparaitre()
 	{
-		GameState.Instance.RespawnAuCheckpoint();
-		TeleporterAuCheckpoint();
+		GameState.Instance?.RespawnAuCheckpoint();
+
+		string sceneCheckpoint = GameState.Instance?.CheminScene ?? "";
+		string sceneCourante = GetTree().CurrentScene?.SceneFilePath ?? "";
+
+		if (string.IsNullOrEmpty(sceneCheckpoint) || sceneCheckpoint == sceneCourante)
+		{
+			TeleporterAuCheckpoint();
+			return;
+		}
+
+		// Aucune porte visée : c'est le checkpoint qui commande le placement à l'arrivée.
+		// Sans ce nettoyage, une demande laissée par une transition précédente reprendrait
+		// la main et ferait réapparaître le joueur à l'entrée du niveau.
+		GameState.Instance.PointEntreeDemande = "";
+		Effets.FondreAuNoirPuis(this, DureeFonduMort,
+			() => GetTree().CallDeferred(SceneTree.MethodName.ChangeSceneToFile, sceneCheckpoint));
 	}
 
 	private void TeleporterAuCheckpoint()
@@ -423,6 +460,16 @@ public partial class Player : LivingEntity
 	// touche à rien (requête de groupe évitée). Sinon on cherche une nouvelle
 	// zone ; si aucune ne le contient (petit trou entre zones, saut au-dessus,
 	// chute), on GARDE la zone courante - on ne réassigne qu'en cas de match.
+	// Réévalue la zone caméra en oubliant celle retenue. Appelé en différé depuis _Ready :
+	// à cet instant-là, le BackgroundManager de la nouvelle scène peut ne pas encore être
+	// enregistré (ordre des _Ready), et la zone appliquée resterait sans fond — figée,
+	// puisque MettreAJourZoneCamera sort aussitôt tant que la zone retenue convient.
+	private void ForcerZoneCamera()
+	{
+		_zoneCameraActive = null;
+		MettreAJourZoneCamera();
+	}
+
 	private void MettreAJourZoneCamera()
 	{
 		if (_zoneCameraActive is Node courant && IsInstanceValid(courant)
@@ -431,6 +478,13 @@ public partial class Player : LivingEntity
 
 		foreach (var noeud in GetTree().GetNodesInGroup(CameraZone.Groupe))
 		{
+			// IsInstanceValid indispensable : au premier _Ready qui suit un changement de
+			// scène, le groupe contient encore les zones de la scène quittée, libérées mais
+			// pas encore retirées. Les interroger levait ObjectDisposedException — de façon
+			// intermittente, selon l'instant du balayage.
+			if (!IsInstanceValid(noeud))
+				continue;
+
 			if (noeud is IZoneCamera zone && zone.Contient(GlobalPosition))
 			{
 				_zoneCameraActive = zone;
