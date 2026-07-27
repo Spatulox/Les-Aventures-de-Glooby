@@ -53,5 +53,6 @@ Noms = PackedStringArray("ESGI — 4ᵉ année", "IA générative")
 script = ExtResource("1_credits")
 Titre = "Pantalon"
 Entrees = Array[ExtResource("2_entree")]([SubResource("Resource_y3dc1"), SubResource("EntreeDeveloppement"), SubResource("EntreeDesign"), SubResource("EntreeArt"), SubResource("EntreeMusique"), SubResource("EntreeAssistanceIa"), SubResource("EntreeDialogues"), SubResource("EntreeMoteur"), SubResource("EntreeProjet")])
-Remerciements = "Merci d'avoir joué.
-Rodolphe s'en remettra."
+Remerciements = "Merci d’avoir joué.
+Glooby et ses amis vécurent heureux et eurent beaucoup d’enfants (zut, mauvaise histoire...)
+Les lutins n’ont pas eu leurs 35 heures, car les poissons sont venus à manquer, et le Père Noël en avait plein ! Vous aurez toujours des cadeaux a Noel, c'est déjà ça !"
