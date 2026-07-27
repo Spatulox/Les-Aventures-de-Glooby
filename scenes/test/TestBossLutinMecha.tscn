@@ -1,30 +1,30 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://i2skkrjbukmp"]
 
-[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="2_fond"]
-[ext_resource type="PackedScene" path="res://scenes/sol/usine/SolUsineBois.tscn" id="3_sol"]
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="3_sol"]
 [ext_resource type="PackedScene" path="res://scenes/boss/BossLutinMecha.tscn" id="4_boss"]
-[ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="5_barre"]
-[ext_resource type="Script" path="res://scripts/Core/ZoneBossLutinMecha.cs" id="6_zone"]
+[ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="5_barre"]
+[ext_resource type="Script" uid="uid://c8giruvsjcis3" path="res://scripts/Core/ZoneBossLutinMecha.cs" id="6_zone"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 resource_local_to_scene = true
 size = Vector2(1600, 400)
 
-[node name="TestBossLutinMecha" type="Node2D"]
+[node name="TestBossLutinMecha" type="Node2D" unique_id=1358780394]
 
-[node name="FondUsine" parent="." instance=ExtResource("2_fond")]
+[node name="FondUsine" parent="." unique_id=1339091608 instance=ExtResource("2_fond")]
 
-[node name="Sol" parent="." instance=ExtResource("3_sol")]
+[node name="Sol" parent="." unique_id=493048488 instance=ExtResource("3_sol")]
 position = Vector2(-344, 420)
 NombreSegments = 6
 
-[node name="Joueur" parent="." instance=ExtResource("1_player")]
+[node name="Joueur" parent="." unique_id=2140605392 instance=ExtResource("1_player")]
 position = Vector2(160, 300)
 
-[node name="BossHudBarre" parent="." instance=ExtResource("5_barre")]
+[node name="BossHudBarre" parent="." unique_id=924158092 instance=ExtResource("5_barre")]
 
-[node name="ZoneBossLutinMecha" type="Area2D" parent="."]
+[node name="ZoneBossLutinMecha" type="Area2D" parent="." unique_id=854036430]
 position = Vector2(800, 240)
 collision_layer = 0
 collision_mask = 2
@@ -36,5 +36,7 @@ NomRegion = "usine"
 CheminBarre = NodePath("../BossHudBarre")
 PvBoss = 40
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossLutinMecha"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossLutinMecha" unique_id=584469579]
+position = Vector2(189.725, 0)
+scale = Vector2(1.75, 1.75)
 shape = SubResource("RectangleShape2D_1")

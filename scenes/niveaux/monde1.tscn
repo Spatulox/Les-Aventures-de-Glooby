@@ -1062,9 +1062,9 @@ texture = ExtResource("20_hau0f")
 
 [node name="RacineGelee4" type="Sprite2D" parent="Grotte/Decor" unique_id=433795574]
 z_index = 2
-position = Vector2(2282, 1434.021)
+position = Vector2(2276, 1470.006)
 rotation = -3.1415925
-scale = Vector2(7.894998, 2.6464677)
+scale = Vector2(7.895, 2.066)
 texture = ExtResource("20_hau0f")
 
 [node name="RacineGelee5" type="Sprite2D" parent="Grotte/Decor" unique_id=1760003716]

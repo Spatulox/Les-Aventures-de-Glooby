@@ -95,6 +95,12 @@ Convention d'`origin/main` retenue — `scenes/boss/`, PascalCase, cohérente av
 
 **Les chemins cités dans ce rapport sont ceux d'après la fusion.**
 
+## 9. `MiniJouetExplosif` — orientation inversée
+
+Il courait **à reculons** : `_sprite.FlipH = direction < 0` applique la convention du projet, où le sprite au repos regarde à droite (`BossCerf`, `BossLutinMecha`, les PNJ…). Or les frames du petit soldat le montrent tourné vers la **gauche** — vérifié en agrandissant la planche `fonce/`. Il fallait donc retourner le sprite quand il court vers la droite : `FlipH = direction > 0`, avec un commentaire signalant l'exception pour qu'on ne la « recorrige » pas plus tard.
+
+Les deux nouveaux ennemis d'usine (`LocomotiveJouet`, `MechaJouetLanceur`) ont été contrôlés au passage : leur art regarde bien à droite, la convention tient pour eux.
+
 ## Vérification
 
 - `godot --headless --build-solutions --quit` → 0 erreur C#.

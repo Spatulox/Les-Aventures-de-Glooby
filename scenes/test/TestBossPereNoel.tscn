@@ -1,28 +1,28 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://kygijmue688j"]
 
-[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://bme20tm43ulhf" path="res://scenes/entites/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="2_fond"]
-[ext_resource type="PackedScene" path="res://scenes/sol/usine/SolUsineBois.tscn" id="3_sol"]
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="3_sol"]
 [ext_resource type="PackedScene" path="res://scenes/boss/BossPereNoel.tscn" id="4_boss"]
-[ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="5_barre"]
+[ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="5_barre"]
 [ext_resource type="PackedScene" path="res://scenes/boss/zone_boss_pere_noel.tscn" id="6_zone"]
 
-[node name="TestBossPereNoel" type="Node2D"]
+[node name="TestBossPereNoel" type="Node2D" unique_id=1289377296]
 
-[node name="FondUsine" parent="." instance=ExtResource("2_fond")]
+[node name="FondUsine" parent="." unique_id=2092672532 instance=ExtResource("2_fond")]
 
-[node name="Sol" parent="." instance=ExtResource("3_sol")]
+[node name="Sol" parent="." unique_id=140012609 instance=ExtResource("3_sol")]
 position = Vector2(-344, 420)
 NombreSegments = 6
 
-[node name="Joueur" parent="." instance=ExtResource("1_player")]
+[node name="Joueur" parent="." unique_id=1757642197 instance=ExtResource("1_player")]
 position = Vector2(160, 300)
 
-[node name="BossHudBarre" parent="." instance=ExtResource("5_barre")]
+[node name="BossHudBarre" parent="." unique_id=1410288623 instance=ExtResource("5_barre")]
 
-[node name="ZoneBossPereNoel" parent="." instance=ExtResource("6_zone")]
-position = Vector2(800, 240)
-scale = Vector2(6.25, 1.5625)
+[node name="ZoneBossPereNoel" parent="." unique_id=284791382 instance=ExtResource("6_zone")]
+position = Vector2(1041.4, 240)
+scale = Vector2(10.735, 2.684)
 SceneBoss = ExtResource("4_boss")
 NomBoss = "Pere Noel"
 PositionApparition = Vector2(1200, 428)

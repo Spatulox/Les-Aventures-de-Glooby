@@ -113,7 +113,11 @@ public partial class MiniJouetExplosif : LivingEntity
 		{
 			int direction = Mathf.Sign(joueur.GlobalPosition.X - GlobalPosition.X);
 			velocite.X = direction * VitesseFonce;
-			_sprite.FlipH = direction < 0;
+			// ATTENTION, sens inverse du reste du jeu : les frames du petit soldat le
+			// montrent tourné vers la GAUCHE, là où tous les autres sprites (Boss Cerf,
+			// Lutin Mecha, PNJ...) regardent à droite au repos. On retourne donc quand il
+			// court vers la droite, sinon il avance en marche arrière.
+			_sprite.FlipH = direction > 0;
 		}
 		else
 		{
