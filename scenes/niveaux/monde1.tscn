@@ -18,7 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://cfafajwqshgwh" path="res://assets/props/grotte/glace_empilee.png" id="66_e3dtk"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
-[ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="checkpoint"]
+[ext_resource type="PackedScene" uid="uid://bdtwkujmg3bxy" path="res://scenes/interactifs/checkpoint_peche.tscn" id="checkpoint"]
 [ext_resource type="Texture2D" uid="uid://b873grf55e3xa" path="res://assets/props/cristal_gros.png" id="cristalg"]
 [ext_resource type="Texture2D" uid="uid://cc6yrec3tv63a" path="res://assets/props/cristal_petit.png" id="cristalp"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -190,7 +190,7 @@ Invite = "Dis une courte réplique dans ton caractère ."
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
 [node name="CheckpointVillage" parent="Village/Interactifs" unique_id=1428675968 instance=ExtResource("checkpoint")]
-position = Vector2(330, 278)
+position = Vector2(330, 290)
 IdCheckpoint = "start_village"
 
 [node name="panneau_poteau" parent="Village/Interactifs" unique_id=700000010 instance=ExtResource("panneau")]
@@ -486,7 +486,7 @@ Texte = "Grotte"
 Lignes = PackedStringArray("Grotte")
 
 [node name="CheckpointBanquise" parent="Banquise/Interactifs" unique_id=2019026174 instance=ExtResource("checkpoint")]
-position = Vector2(2860, 281)
+position = Vector2(2860, 292)
 IdCheckpoint = "banquise_after_grotte"
 
 [node name="MurGlace" parent="Banquise/Interactifs" unique_id=70044992 instance=ExtResource("mur_fondable")]
@@ -1226,14 +1226,14 @@ Type = 2
 Lignes = PackedStringArray("Raccourci")
 
 [node name="CheckpointDown1" parent="Grotte/Interactifs" unique_id=343988124 instance=ExtResource("checkpoint")]
-position = Vector2(1769, 1472)
+position = Vector2(1769, 1483)
 IdCheckpoint = "grotte_fond"
 
 [node name="CheckpointLabyStart" parent="Grotte/Interactifs" unique_id=1551883748 instance=ExtResource("checkpoint")]
-position = Vector2(3593, 1145)
+position = Vector2(3591, 1158)
 
 [node name="CheckpointLabyEnd" parent="Grotte/Interactifs" unique_id=1618785671 instance=ExtResource("checkpoint")]
-position = Vector2(5005, 756)
+position = Vector2(5005, 768)
 
 [node name="PanneauBoisLabyUp" parent="Grotte/Interactifs" unique_id=197425152 instance=ExtResource("panneau")]
 position = Vector2(3861, 1448.0001)
