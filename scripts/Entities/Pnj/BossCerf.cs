@@ -35,7 +35,7 @@ public partial class BossCerf : Boss, BossBorne
 	private float _bordPieds;
 
 
-	public int Phase { get; private set; } = 1;
+	// Phase et seuil viennent de Boss (schéma commun aux trois boss).
 
 	private Area2D _zoneChargeDegats;
 	private Etat _etat = Etat.Intro;
@@ -127,10 +127,10 @@ public partial class BossCerf : Boss, BossBorne
 	// Coup ×3 pendant la fenêtre de vulnérabilité (boss sonné contre un mur).
 	protected override int AjusterDegats(int brut) => _vulnerableEtourdi ? brut * MultiplicateurDegatsEtourdi : brut;
 
-	// Bascule en phase 2 à mi-vie.
+	// Bascule en phase 2 à mi-vie (seuil et comptage tenus par Boss).
 	protected override void ApresDegats(int degats)
 	{
-		if (Phase == 1 && Pv <= PvMax / 2)
+		if (BasculeEnPhase2())
 			DeclencherTransitionPhase2();
 	}
 
@@ -380,7 +380,6 @@ public partial class BossCerf : Boss, BossBorne
 
 	private void DeclencherTransitionPhase2()
 	{
-		Phase = 2;
 		_chargesRestantesEnchainement = 1;
 
 		var tween = CreateTween();
