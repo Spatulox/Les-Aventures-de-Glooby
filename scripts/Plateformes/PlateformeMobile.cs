@@ -42,7 +42,10 @@ public partial class PlateformeMobile : AnimatableBody2D
 	private float _progression;
 	private int _sens = 1;
 
-	private Vector2 Direction => Vector2.Right.Rotated(Mathf.DegToRad(_angleDegres));
+	// Position posée dans l'éditeur, autour de laquelle se fait le va-et-vient.
+	protected Vector2 Origine => _origine;
+
+	protected Vector2 Direction => Vector2.Right.Rotated(Mathf.DegToRad(_angleDegres));
 
 	public override void _Ready()
 	{
@@ -61,7 +64,18 @@ public partial class PlateformeMobile : AnimatableBody2D
 		if (Engine.IsEditorHint() || _distance <= 0f)
 			return;
 
-		var dt = (float)delta;
+		GlobalPosition = _origine + AvancerDeplacement((float)delta);
+	}
+
+	// Avance le va-et-vient d'un pas de temps et renvoie le décalage à appliquer
+	// depuis Origine. Isolé de _PhysicsProcess pour que les variantes
+	// (PlateformeMobileSuspendue) composent leur propre déplacement par-dessus
+	// sans redupliquer la logique d'aller-retour.
+	protected Vector2 AvancerDeplacement(float dt)
+	{
+		if (_distance <= 0f)
+			return Vector2.Zero;
+
 		_progression += Vitesse * dt * _sens;
 
 		if (AllerRetour)
@@ -74,7 +88,7 @@ public partial class PlateformeMobile : AnimatableBody2D
 			_progression = Mathf.PosMod(_progression, _distance);
 		}
 
-		GlobalPosition = _origine + Direction * _progression;
+		return Direction * _progression;
 	}
 
 	// Gizmo éditeur : trajectoire de la plateforme (compensée de l'échelle du
