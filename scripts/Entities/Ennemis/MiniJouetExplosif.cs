@@ -7,8 +7,11 @@ using Godot;
 //               dérive), il court vers le joueur, mèche qui se consume ;
 //   Explosion — il éclate, blesse tout joueur dans le rayon, puis se libère.
 //
-// L'explosion est le SEUL dénouement : elle survient au contact du joueur, à la fin de
-// la mèche, ou si le joueur le détruit avant l'impact (PvMax = 1 => Mourir() explose).
+// L'explosion est le SEUL dénouement ET la seule source de dégâts : elle survient au
+// contact du joueur, à la fin de la mèche, ou si le joueur le détruit avant l'impact
+// (PvMax = 1 => Mourir() explose). Le contact ne blesse jamais de lui-même, et la zone
+// de contact n'est même armée qu'à partir de l'état Fonce : tant qu'il descend sous son
+// parachute, le jouet est inoffensif et traversable.
 // Le boss n'a qu'à instancier la scène et l'ajouter à l'arbre : le jouet se débrouille.
 public partial class MiniJouetExplosif : LivingEntity
 {
@@ -25,6 +28,11 @@ public partial class MiniJouetExplosif : LivingEntity
 	[Export] public float DureeMeche = 4f;
 	// Rayon de souffle en pixels : le jouet blesse plus loin que son corps.
 	[Export] public float RayonSouffle = 42f;
+	// Battement entre le déclenchement et le souffle. C'est ce qui sépare le CONTACT de
+	// l'EXPLOSION : toucher le jouet ne blesse pas, ça amorce l'éclatement ; le joueur
+	// qui sort du rayon pendant ce délai ne prend rien. Sans lui, contact et dégâts
+	// tombaient sur la même frame et se confondaient.
+	[Export] public float DelaiSouffle = 0.25f;
 
 	public Etat EtatCourant { get; private set; } = Etat.Chute;
 
@@ -49,6 +57,11 @@ public partial class MiniJouetExplosif : LivingEntity
 		_minuteurMeche = DureeMeche;
 
 		_zoneDegats.BodyEntered += SurContact;
+		// La zone de contact reste DÉSARMÉE pendant la descente : un jouet qui flotte
+		// encore sous son parachute ne doit rien faire au joueur qui le frôle. Elle ne
+		// s'arme qu'au largage (LarguerParachute) — sans quoi, sous la pluie de cadeaux
+		// du Père Noël, le joueur encaissait une explosion imparable en se déplaçant.
+		ArmerZoneDegats(false);
 
 		// Le parachute se balance pendant toute la descente (effet partagé, pas d'asset animé).
 		if (_parachute != null)
@@ -121,6 +134,8 @@ public partial class MiniJouetExplosif : LivingEntity
 	{
 		EtatCourant = Etat.Fonce;
 		_sprite.Play("fonce");
+		// C'est ici, et pas avant, que le jouet devient dangereux au contact.
+		ArmerZoneDegats(true);
 
 		if (_parachute == null)
 			return;
@@ -136,12 +151,22 @@ public partial class MiniJouetExplosif : LivingEntity
 		_parachute = null;
 	}
 
-	// Contact avec le joueur : le kamikaze fait son office.
+	// Contact avec le joueur : le kamikaze fait son office. Le contact ne blesse jamais
+	// par lui-même — il ne fait que déclencher l'explosion, seule source de dégâts du
+	// jouet. Ceinture et bretelles avec la zone désarmée : un chevauchement déjà en
+	// cours au moment du largage ne doit pas non plus valoir explosion en pleine chute.
 	private void SurContact(Node2D corps)
 	{
-		if (corps is Player)
+		if (EtatCourant == Etat.Fonce && corps is Player)
 			Exploser();
 	}
+
+	// Active/désactive la zone de contact. En différé : on peut être appelé depuis un
+	// signal de collision, donc en plein flush des requêtes physiques, où toute
+	// modification de forme est refusée.
+	private void ArmerZoneDegats(bool arme)
+		=> _zoneDegats.GetNode<CollisionShape2D>("CollisionShape2D")
+			.SetDeferred(CollisionShape2D.PropertyName.Disabled, !arme);
 
 	// Détruit avant l'impact (boule de neige du joueur) : même dénouement, l'explosion
 	// sert donc aussi d'animation de mort — d'où la surcharge plutôt qu'une anim dédiée.
@@ -162,25 +187,34 @@ public partial class MiniJouetExplosif : LivingEntity
 		Velocity = Vector2.Zero;
 		_sprite.Play("explosion");
 
-		// Le souffle porte plus loin que le corps. Il est relevé À LA DISTANCE, et non en
-		// agrandissant la zone de dégâts : Exploser() part le plus souvent d'un signal de
-		// contact, donc en plein flush des requêtes physiques — modifier une forme à cet
-		// instant est interdit, et l'agrandissement ne serait de toute façon pas encore
-		// pris en compte par la requête de chevauchement qui suivrait.
-		var joueur = JoueurLePlusProche(out float distance);
-		if (joueur != null && distance <= RayonSouffle)
-		{
-			int direction = Mathf.Sign(joueur.GlobalPosition.X - GlobalPosition.X);
-			joueur.Blesser(direction == 0 ? 1 : direction, DamageSource.JouetExplosif);
-		}
+		// Le souffle part APRÈS le battement, et seulement là : c'est l'explosion qui
+		// blesse, jamais le contact qui l'a amorcée.
+		GetTree().CreateTimer(DelaiSouffle).Timeout += AppliquerSouffle;
 
 		SetPhysicsProcess(false);
 		// Les formes se désactivent en différé (même raison : on peut être en plein flush).
-		_zoneDegats.GetNode<CollisionShape2D>("CollisionShape2D")
-			.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+		ArmerZoneDegats(false);
 		GetNodeOrNull<CollisionShape2D>("CollisionShape2D")?
 			.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
 
 		_sprite.AnimationFinished += QueueFree;
+	}
+
+	// Souffle : blesse le joueur s'il est ENCORE dans le rayon au moment de l'éclatement.
+	// Le rayon est relevé À LA DISTANCE, et non en agrandissant la zone de dégâts :
+	// modifier une forme depuis un signal de contact (flush des requêtes physiques) est
+	// interdit, et l'agrandissement ne serait pas pris en compte par la requête suivante.
+	private void AppliquerSouffle()
+	{
+		// Le jouet a pu être libéré entre-temps (fin de l'animation d'explosion).
+		if (!IsInstanceValid(this))
+			return;
+
+		var joueur = JoueurLePlusProche(out float distance);
+		if (joueur == null || distance > RayonSouffle)
+			return;
+
+		int direction = Mathf.Sign(joueur.GlobalPosition.X - GlobalPosition.X);
+		joueur.Blesser(direction == 0 ? 1 : direction, DamageSource.JouetExplosif);
 	}
 }

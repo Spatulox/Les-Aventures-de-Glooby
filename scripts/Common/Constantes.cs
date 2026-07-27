@@ -33,7 +33,7 @@ public static class Constantes
 	// Strates de rendu (z_index), de l'arrière vers l'avant. Les valeurs
 	// négatives décrivent l'existant déjà posé dans les .tscn ; elles sont
 	// listées ici pour qu'on puisse lire l'empilement d'un coup d'œil.
-	public const int ZFond = -100;    // ciels fixes : FondBanquise / FondGrotte / FondBossCerf
+	public const int ZFond = -100;    // ciels fixes : FondBanquise / FondGrotte
 	public const int ZDecor = -1;     // props de décor (Rocher, ColonneGlace, …)
 	public const int ZPlanDeJeu = 0;  // sol, plateformes, PNJ, projectiles
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 // de génération assumée (voir DECISIONS.md) : le piétinement réutilise "idle"
 // (pas de pose de cabrage dédiée) et le souffle de givre réutilise "charge" comme
 // télégraphe - seul le résultat gameplay (stalactites, cône de givre) est nouveau.
-public partial class BossCerf : Boss
+public partial class BossCerf : Boss, BossBorne
 {
 	private enum Etat { Intro, Idle, Telegraphe, Charge, Etourdi, Pietinement, SouffleGivre, Vaincu }
 	private enum Pattern { Charge, Pietinement, SouffleGivre }
@@ -15,8 +15,8 @@ public partial class BossCerf : Boss
 	[Export] public float DelaiTelegraphe = 0.8f;
 	[Export] public float DureeEtourdi = 2f;
 	[Export] public int MultiplicateurDegatsEtourdi = 3;
-	[Export] public float LimiteGauche = 80f;
-	[Export] public float LimiteDroite = 2800f;
+	[Export] public float LimiteGauche { get; set; } = 80f;
+	[Export] public float LimiteDroite { get; set; } = 2800f;
 
 	// Hauteur d'obstacle que Rodolphe accepte d'enjamber en pleine charge (marche du
 	// sol, bloc, plateforme). Au-delà, c'est un mur : la charge s'y écrase. Le défaut

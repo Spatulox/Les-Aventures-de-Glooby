@@ -143,8 +143,20 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		return boss;
 	}
 
-	// Hook d'héritage : réglages du boss avant son ajout à l'arbre (limites, tuning...).
-	protected virtual void ConfigurerBoss(Boss boss) { }
+	// Réglages du boss avant son ajout à l'arbre. La base couvre le seul réglage commun
+	// à tous : les bornes de déplacement, dérivées du rectangle dessiné dans l'éditeur
+	// exactement comme les limites caméra. Elles passent par le contrat BossBorne et non
+	// par un cast vers un boss précis — c'est ce qui permet à une arène d'héberger DEUX
+	// boss de classes différentes (fin normale / fin cachée) et de les borner tous les
+	// deux. Une sous-classe qui surcharge doit appeler base.ConfigurerBoss(boss).
+	protected virtual void ConfigurerBoss(Boss boss)
+	{
+		if (boss is BossBorne borne && CalculerLimitesDepuisForme(out int g, out int d, out int _, out int _))
+		{
+			borne.LimiteGauche = g;
+			borne.LimiteDroite = d;
+		}
+	}
 
 	// Hook d'héritage : appelé une fois le boss apparu et le combat lancé
 	// (ex. connecter Vaincu à la fin de partie).

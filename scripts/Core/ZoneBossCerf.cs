@@ -14,17 +14,8 @@ public partial class ZoneBossCerf : ZoneBoss
 	// Battement avant la bascule, le temps de voir l'animation de mort.
 	[Export] public float DelaiVictoire = 2.5f;
 
-	protected override void ConfigurerBoss(Boss boss)
-	{
-		// Bornes de charge du Cerf = rectangle de l'arène (plus de LimiteGauche/Droite
-		// à saisir) : le boss ne peut pas sortir de sa zone. Elles suivent la taille
-		// du rectangle dessiné dans l'éditeur, comme les limites caméra.
-		if (boss is BossCerf cerf && CalculerLimitesDepuisForme(out int g, out int d, out int _, out int _))
-		{
-			cerf.LimiteGauche = g;
-			cerf.LimiteDroite = d;
-		}
-	}
+	// Plus de ConfigurerBoss ici : les bornes de charge sont posées génériquement par
+	// ZoneBoss via le contrat BossBorne, que BossCerf implémente.
 
 	protected override void DemarrerCombat(Player joueur)
 	{

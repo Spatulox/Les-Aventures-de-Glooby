@@ -13,7 +13,7 @@ using Godot;
 //
 // Le lutin pilote est le point faible narratif : il reste visible dans le cockpit ouvert
 // sur toutes les poses, et s'extrait du tas de planches à la défaite (animation « vaincu »).
-public partial class BossLutinMecha : Boss
+public partial class BossLutinMecha : Boss, BossBorne
 {
 	private enum Etat { Intro, Idle, Deplacement, SautAccroupi, SautVol, SautImpact, TirArmement, TirFeu, Trappe, TransitionPhase, Vaincu }
 	private enum Pattern { SautEcrasant, TirGlace, DropJouets }
@@ -43,8 +43,10 @@ public partial class BossLutinMecha : Boss
 
 	// ---- Drop de jouets ----
 	[Export] public float DureeOuvertureTrappe = 0.5f;
-	[Export] public int JouetsPhase1 = 2;
-	[Export] public int JouetsPhase2 = 4;
+	// Un seul jouet en phase 1 : le pattern doit rester lisible et gérable. La phase 2
+	// triple la mise.
+	[Export] public int JouetsPhase1 = 1;
+	[Export] public int JouetsPhase2 = 3;
 	[Export] public float HauteurLargage = 90f;      // au-dessus du boss : les jouets descendent en parachute
 	[Export] public float EcartLargage = 40f;
 	[Export] public PackedScene SceneMiniJouet;
@@ -54,8 +56,8 @@ public partial class BossLutinMecha : Boss
 	[Export] public float DureeTransitionPhase = 0.8f;
 
 	// Bornes de l'arène (posées par ZoneBossLutinMecha depuis son rectangle).
-	[Export] public float LimiteGauche = 80f;
-	[Export] public float LimiteDroite = 2800f;
+	[Export] public float LimiteGauche { get; set; } = 80f;
+	[Export] public float LimiteDroite { get; set; } = 2800f;
 
 	public int Phase { get; private set; } = 1;
 
@@ -220,21 +222,28 @@ public partial class BossLutinMecha : Boss
 	{
 		ViserLeJoueur();
 
-		float tirage = _rng.Randf();
-		if (Phase == 1 && tirage < 0.35f)
+		if (Phase == 1 && _rng.Randf() < 0.35f)
 		{
 			DemarrerDeplacement();
 			return;
 		}
 
+		// Tirage PROPRE au choix d'attaque. Il partageait celui du déplacement ci-dessus,
+		// ce qui faussait toute la répartition : en phase 1 le tirage retenu ne couvrait
+		// plus [0,1) mais [0.35,1), et le drop de jouets — calé tout en haut de
+		// l'intervalle — ne sortait qu'une fois sur sept environ au lieu de sa part.
+		// Les trois attaques à parts égales : le drop de jouets est un pattern de plein
+		// droit, pas une rareté. Avec l'ancien découpage (60/25/15) ET le tirage partagé,
+		// il ne sortait qu'une fois par minute environ — jamais vu en combat réel.
+		float tirage = _rng.Randf();
 		_patternChoisi = tirage switch
 		{
-			< 0.6f => Pattern.SautEcrasant,
-			< 0.85f => Pattern.TirGlace,
+			< 0.34f => Pattern.SautEcrasant,
+			< 0.67f => Pattern.TirGlace,
 			_ => Pattern.DropJouets,
 		};
 
-		switch (_patternChoisi)
+			switch (_patternChoisi)
 		{
 			case Pattern.SautEcrasant: DemarrerAccroupi(); break;
 			case Pattern.TirGlace: DemarrerArmementTir(); break;

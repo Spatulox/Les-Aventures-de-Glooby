@@ -228,9 +228,8 @@ public partial class MenuPrincipal : Control
 		if (dossier == null)
 			return null;
 
-		// Le fond de l'arène du Boss Cerf est réservé au combat (voir la région
-		// "boss_cerf" de monde1.tscn) : on l'exclut du tirage du menu pour ne pas
-		// déflorer le boss sur l'écran-titre.
+		// Les fonds d'arène de boss sont réservés au combat : on les exclut du
+		// tirage du menu pour ne pas déflorer un boss sur l'écran-titre.
 		var fichiers = new List<string>();
 		foreach (var nom in dossier.GetFiles())
 			if (nom.EndsWith(".png") && !nom.Contains("boss"))

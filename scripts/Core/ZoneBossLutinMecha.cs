@@ -6,16 +6,8 @@ using Godot;
 // partie continue après sa chute.
 public partial class ZoneBossLutinMecha : ZoneBoss
 {
-	protected override void ConfigurerBoss(Boss boss)
-	{
-		// Bornes de déplacement = rectangle de l'arène dessiné dans l'éditeur, comme
-		// les limites caméra : le boss ne peut pas sortir de sa zone.
-		if (boss is BossLutinMecha mecha && CalculerLimitesDepuisForme(out int g, out int d, out int _, out int _))
-		{
-			mecha.LimiteGauche = g;
-			mecha.LimiteDroite = d;
-		}
-	}
+	// Plus de ConfigurerBoss ici : les bornes de déplacement sont posées génériquement
+	// par ZoneBoss via le contrat BossBorne, que BossLutinMecha implémente.
 
 	protected override void DemarrerCombat(Player joueur)
 	{
@@ -25,7 +17,9 @@ public partial class ZoneBossLutinMecha : ZoneBoss
 	private void SurVictoire()
 	{
 		// Persiste la défaite : la zone ne fera plus réapparaître ce boss après chargement.
-		GameState.Instance.MarquerBossVaincu(NomBoss);
+		// NomChoisi et non NomBoss : dans une arène à deux boss, seul celui réellement
+		// combattu est marqué vaincu.
+		GameState.Instance.MarquerBossVaincu(NomChoisi);
 		GameState.Instance.Sauvegarder();
 	}
 }
