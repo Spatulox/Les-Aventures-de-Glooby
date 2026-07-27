@@ -1084,18 +1084,6 @@ position = Vector2(3770, 1137)
 scale = Vector2(3.0625, 4.9583335)
 texture = ExtResource("g_veine")
 
-[node name="RacineArbreGele" type="Sprite2D" parent="Grotte/Decor" unique_id=397442395]
-z_index = -3
-position = Vector2(3863, 1249)
-scale = Vector2(12.5999975, 10.714283)
-texture = ExtResource("19_uoa0f")
-
-[node name="RacineArbreGele2" type="Sprite2D" parent="Grotte/Decor" unique_id=1047178536]
-z_index = 2
-position = Vector2(4257.0005, 1174.0001)
-scale = Vector2(16.15, 14.767858)
-texture = ExtResource("19_uoa0f")
-
 [node name="RacineGelee6" type="Sprite2D" parent="Grotte/Decor" unique_id=1563209107]
 z_index = -2
 position = Vector2(4718, 904)
@@ -1204,10 +1192,6 @@ texture = ExtResource("20_hau0f")
 [node name="Congere" type="Sprite2D" parent="Grotte/Decor" unique_id=917963467]
 position = Vector2(2794, 853)
 texture = ExtResource("g_congere")
-
-[node name="Glace1" parent="Grotte/Decor" unique_id=1402786529 instance=ExtResource("g_glace")]
-z_index = -1
-position = Vector2(3428, 608)
 
 [node name="Interactifs" type="Node2D" parent="Grotte" unique_id=925847537]
 
