@@ -19,9 +19,28 @@ public partial class PantalonPickup : ElementRamassable
 	// Durée d'un demi-fondu au noir avant la bascule.
 	[Export] public float DureeFondu = 0.6f;
 
+	// Halo : un tour complet en 6 s, et une respiration ample mais lente.
+	[Export] public float DureeTourAura = 6f;
+	[Export] public float AmpleurPulseAura = 0.1f;
+	[Export] public float DureePulseAura = 1.2f;
+
 	protected override bool EstDejaConsomme() => GameState.Instance.EstConsomme(IdPantalon);
 
-	protected override void PreparerVisuel() => Effets.Flottaison(this, 6f, 0.8f);
+	// Le pantalon lui-même n'a qu'une seule frame : c'est le halo qui bouge. Il tourne
+	// lentement et respire, ce qui signale l'objet final au bout d'une arène sans avoir
+	// à animer le vêtement. Un nœud « Aura » absent n'est pas une erreur (l'objet reste
+	// simplement statique, comme les autres ramassables).
+	protected override void PreparerVisuel()
+	{
+		Effets.Flottaison(this, 6f, 0.8f);
+
+		var aura = GetNodeOrNull<Node2D>("Aura");
+		if (aura == null)
+			return;
+
+		Effets.RotationContinue(aura, DureeTourAura);
+		Effets.Pulsation(aura, AmpleurPulseAura, DureePulseAura);
+	}
 
 	protected override void Ramasser()
 	{
