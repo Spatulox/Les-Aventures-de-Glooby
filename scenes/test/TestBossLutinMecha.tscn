@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="2_fond"]
 [ext_resource type="PackedScene" path="res://scenes/sol/usine/SolUsineBois.tscn" id="3_sol"]
-[ext_resource type="PackedScene" path="res://scenes/entites/boss/BossLutinMecha.tscn" id="4_boss"]
+[ext_resource type="PackedScene" path="res://scenes/boss/BossLutinMecha.tscn" id="4_boss"]
 [ext_resource type="PackedScene" path="res://scenes/ui/boss_hud_barre.tscn" id="5_barre"]
 [ext_resource type="Script" path="res://scripts/Core/ZoneBossLutinMecha.cs" id="6_zone"]
 

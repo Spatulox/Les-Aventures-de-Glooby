@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="5_hn7gu"]
 [ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="barreboss"]
-[ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/entites/boss/boss_cerf.tscn" id="bosscerf"]
+[ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/boss/BossCerf.tscn" id="bosscerf"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]

@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/entites/player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="2_fond"]
+[ext_resource type="PackedScene" path="res://scenes/sol/usine/SolUsineBois.tscn" id="3_sol"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/usine/LocomotiveJouet.tscn" id="4_loco"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MechaJouetLanceur.tscn" id="5_mecha"]
+
+[sub_resource type="RectangleShape2D" id="RectMur"]
+size = Vector2(40, 64)
+
+[node name="TestEnnemisUsine" type="Node2D"]
+
+[node name="FondUsine" parent="." instance=ExtResource("2_fond")]
+
+[node name="Sol" parent="." instance=ExtResource("3_sol")]
+position = Vector2(-344, 420)
+NombreSegments = 6
+
+[node name="Joueur" parent="." instance=ExtResource("1_player")]
+position = Vector2(200, 340)
+
+[node name="MurGauche" type="StaticBody2D" parent="."]
+position = Vector2(440, 428)
+
+[node name="Visuel" type="ColorRect" parent="MurGauche"]
+offset_left = -20.0
+offset_top = -64.0
+offset_right = 20.0
+offset_bottom = 0.0
+color = Color(0.45, 0.29, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MurGauche"]
+position = Vector2(0, -32)
+shape = SubResource("RectMur")
+
+[node name="MurDroit" type="StaticBody2D" parent="."]
+position = Vector2(980, 428)
+
+[node name="Visuel" type="ColorRect" parent="MurDroit"]
+offset_left = -20.0
+offset_top = -64.0
+offset_right = 20.0
+offset_bottom = 0.0
+color = Color(0.45, 0.29, 0.15, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MurDroit"]
+position = Vector2(0, -32)
+shape = SubResource("RectMur")
+
+[node name="LocomotiveJouet" parent="." instance=ExtResource("4_loco")]
+position = Vector2(700, 428)
+
+[node name="MechaJouetLanceur" parent="." instance=ExtResource("5_mecha")]
+position = Vector2(1400, 428)

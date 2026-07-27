@@ -2,8 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="barreboss"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
-[ext_resource type="PackedScene" path="res://scenes/entites/boss/BossLutinMecha.tscn" id="boss_lutin_mecha"]
-[ext_resource type="PackedScene" path="res://scenes/entites/boss/BossPereNoel.tscn" id="boss_pere_noel"]
+[ext_resource type="PackedScene" path="res://scenes/boss/BossLutinMecha.tscn" id="boss_lutin_mecha"]
+[ext_resource type="PackedScene" path="res://scenes/boss/BossPereNoel.tscn" id="boss_pere_noel"]
 [ext_resource type="PackedScene" uid="uid://c8pte0nqyeb1x" path="res://scenes/core/point_entree.tscn" id="entree"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
 [ext_resource type="Script" uid="uid://3r3s1bqv1xvo" path="res://scripts/UI/MenuPause.cs" id="mpause"]
