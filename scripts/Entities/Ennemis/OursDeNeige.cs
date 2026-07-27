@@ -95,7 +95,7 @@ public partial class OursDeNeige : PnjMechant, Etourdissable
 
 	// L'ours n'encaisse que la boule de neige, et jamais en PV (jamais tué) : elle l'étourdit.
 	// Insensible à toute autre source. On ne délègue pas à base.TakeDamage (qui retirerait des PV
-	// et, en ModeDebug, one-shot toute source du joueur).
+	// et, avec l'option de test « ennemis tués en un coup », one-shot toute source du joueur).
 	public override bool IsInvincibleToDamage(DamageSource source) => source is not DamageSource.Snowball;
 
 	public override void TakeDamage(DamageSource source)

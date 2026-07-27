@@ -165,8 +165,8 @@ public partial class BonhommeDeNeige : LivingEntity, Etourdissable
 
 	// Le bonhomme n'encaisse que les deux attaques du joueur, et jamais en PV : la
 	// boule de neige l'étourdit, le pouvoir de chaleur le fait fondre. On ne délègue
-	// donc pas à base.TakeDamage (qui retirerait des PV, et qui en ModeDebug
-	// one-shot toute source venant du joueur).
+	// donc pas à base.TakeDamage (qui retirerait des PV, et qui avec l'option de test
+	// « ennemis tués en un coup » one-shot toute source venant du joueur).
 	public override void TakeDamage(DamageSource source)
 	{
 		switch (source)

@@ -220,6 +220,46 @@ Les deux fins rejouées entièrement après le recalage (les zones de dialogue a
 prologue → combat → butin/cage → ramassage, `PANTALON en (1450, 279)` côté fin normale et
 `(1550, 266)` côté fin cachée.
 
+## 9. Art final du pantalon (fin du placeholder)
+
+`assets/items/pantalon_final_pickup.png` + `pantalon_final_aura.png` remplacent le
+32×32 procédural, supprimé (`assets/props/pantalon.png`).
+
+**Mise à l'échelle nécessaire** : les deux PNG font 160×160, le pantalon y occupe
+54×107 px — soit **2,4× la hauteur du joueur** (44 px dessinés). Réglages posés dans
+`PantalonPickup.tscn` : pantalon à `scale 0.3` (**16×32 px dessinés**), halo à
+`scale 0.45` (**60 px de diamètre**), le halo en `z_index = -1` derrière l'objet.
+
+**Ancrage** : sprites et collision décalés de (0, −24), donc **l'origine du ramassable
+est son point de contact au sol** — même convention que les boss. `Boss.LacherButin` le
+dépose à la position (aux pieds) du boss tombé, ça tombe donc juste sans calcul ; côté
+cage, `DecalageContenu` passe de (−50, 78) à **(−50, 91)** pour viser le sol (279)
+depuis l'origine de la cage (188).
+
+**Deux primitives réutilisables ajoutées à `Effets`**, dans le style de
+`Balancement`/`Flottaison` :
+
+- `RotationContinue(cible, dureeTour)` — boucle sur un tour complet (≠ `Balancement`,
+  qui fait un aller-retour) ;
+- `Pulsation(cible, ampleur, duree)` — respiration d'échelle, `ampleur` exprimée en
+  **fraction** de l'échelle courante, pour que l'effet soit identique quelle que soit la
+  taille réglée dans la scène.
+
+`PantalonPickup.PreparerVisuel` garde sa `Flottaison` et anime le halo s'il existe
+(nœud `Aura` absent = objet simplement statique, pas une erreur) : le vêtement n'a
+qu'une frame, c'est le halo qui attire l'œil au bout de l'arène.
+
+**Vérifié à la sonde** (jetable, supprimée), fin cachée jouée jusqu'au ramassage :
+
+```
+[pantalon] origine y=278,1  dessine 16x32 px  tete=238  pieds=270  sol=279
+[aura]     rotation=12,4deg  echelle=0,447  diametre=60 px
+```
+
+Les deux tweens tournent, l'objet flotte ~9 px au-dessus du sol (halo compris) et se
+ramasse dans les deux fins. Aucune référence restante au placeholder ; boots de
+`BossEnd` et `monde1` sans erreur nouvelle.
+
 ### Reste à faire : un vrai F5
 
 Le headless ne juge ni la lisibilité de la liste de réponses, ni le rythme du fondu, ni
@@ -245,6 +285,8 @@ suivants ont été encadrés d'une copie/restauration.
   scriptée pour le provoquer. Comportement pré-existant de `UneSeuleFois`.
 - **Musique** : `NomAmbiance = "boss_cerf"` s'applique dès l'entrée dans l'arène, donc le
   thème de combat tourne pendant la conversation. Il faudrait un `NomAmbiancePrologue`.
-- **Art du pantalon** : placeholder procédural.
+- **Halo tournant** : `RotationContinue` boucle sur un tour complet, donc la reprise
+  n'est invisible que parce que le halo est à peu près symétrique. À garder en tête
+  avant de l'appliquer à un art qui ne l'est pas.
 - `scenes/ui/ecran_fin.tscn` parle encore de Rodolphe alors que les deux fins de
   `BossEnd` y mènent. Pré-existant, non traité.

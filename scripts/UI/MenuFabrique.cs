@@ -74,6 +74,18 @@ public static class MenuFabrique
 		return bouton;
 	}
 
+	// Ajoute une case à cocher reliée à surBascule (appelée avec le nouvel état). Le
+	// parent est un Control quelconque, et non un VBoxContainer comme pour les boutons :
+	// les cases se rangent aussi bien en colonne qu'en flot (HFlowContainer).
+	public static CheckBox AjouterCase(Control parent, string texte, bool actif, Action<bool> surBascule)
+	{
+		var coche = new CheckBox { Text = texte, ButtonPressed = actif };
+		if (surBascule != null)
+			coche.Toggled += etat => surBascule(etat);
+		parent.AddChild(coche);
+		return coche;
+	}
+
 	// Plaque sombre semi-opaque derrière une colonne de menu : fond noir ~70 %,
 	// marges internes confortables et coins arrondis pour détacher le texte du
 	// décor visible en transparence.

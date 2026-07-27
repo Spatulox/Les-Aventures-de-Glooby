@@ -8,7 +8,8 @@ using Godot;
 //
 // Il n'a pas d'animation de mort et ne perd jamais de PV : l'explosion EST sa mort. La boule
 // de neige ne fait donc que l'amorcer plus tôt — d'où la surcharge de TakeDamage, qui ne
-// délègue pas à la base (laquelle retirerait des PV, et en ModeDebug le tuerait d'un coup).
+// délègue pas à la base (laquelle retirerait des PV, et avec l'option de test « ennemis tués
+// en un coup » le tuerait d'un coup).
 //
 // Frames : res://assets/ennemis/grotte_florale/bulbe_explosif/{idle,gonflement,explosion}.
 public partial class BulbeExplosif : PnjMechant
