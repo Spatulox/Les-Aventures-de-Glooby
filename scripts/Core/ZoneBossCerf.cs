@@ -34,8 +34,9 @@ public partial class ZoneBossCerf : ZoneBoss
 	private void SurVictoire()
 	{
 		// Persiste la défaite : la zone ne respawnera plus ce boss après chargement,
-		// et toute PorteInterne dont le BossRequis vaut NomBoss s'ouvre.
-		GameState.Instance.MarquerBossVaincu(NomBoss);
+		// et toute PorteInterne dont le BossRequis vaut ce nom s'ouvre. NomChoisi et non
+		// NomBoss : dans une arène à deux boss, seul celui réellement apparu est marqué.
+		GameState.Instance.MarquerBossVaincu(NomChoisi);
 		GameState.Instance.Sauvegarder();
 
 		if (string.IsNullOrEmpty(CheminSceneVictoire))

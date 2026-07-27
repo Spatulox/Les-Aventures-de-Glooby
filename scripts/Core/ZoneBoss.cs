@@ -7,12 +7,27 @@ using Godot;
 // au boss (il ne peut pas en sortir) - plus aucune taille à saisir à la main.
 // Base RÉUTILISABLE ET HÉRITABLE : une sous-classe par boss (ZoneBossCerf) fournit
 // le contenu spécifique via ConfigurerBoss/DemarrerCombat.
+// Une même arène peut porter DEUX boss et choisir lequel apparaît selon la progression
+// (MemoireRequise/SceneBossAlternative) : c'est ainsi que BossEnd sert de fin normale
+// ou de fin cachée sans dupliquer la scène.
 public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 {
 	// Le boss : scène à instancier + nom lisible.
 	[Export] public PackedScene SceneBoss;
 	[Export] public string NomBoss = "";
 	[Export] public Vector2 PositionApparition;
+
+	// Boss CACHÉ : si MemoireRequise est renseignée ET déjà consommée (GameState),
+	// c'est SceneBossAlternative qui apparaît à la place de SceneBoss, avec son propre
+	// nom et ses propres PV. C'est ainsi qu'une même arène sert de fin normale ou de fin
+	// secrète — ex. donner ses 50 poissons au lutin CGT (LutinCgt.IdDonPoissons) fait
+	// spawner l'autre boss. Tout se règle par instance dans l'inspecteur.
+	// Vide (ou alternative non assignée) = arène à un seul boss, comportement d'origine.
+	[Export] public string MemoireRequise = "";
+	[Export] public PackedScene SceneBossAlternative;
+	// Vides/zéro = on garde ceux du boss normal (NomBoss / PvBoss).
+	[Export] public string NomBossAlternatif = "";
+	[Export] public int PvBossAlternatif;
 
 	// Salle caméra : fond de région à afficher dans l'arène (ex. "grotte", "banquise")
 	// et marge sous le sol pour le filet anti-chute - exactement comme une CameraZone.
@@ -37,6 +52,25 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	protected Boss Boss;
 	protected BossHudBarre Barre;
 
+	// Vrai quand la variante cachée est débloquée. Les deux conditions sont exigées
+	// ensemble : une mémoire sans scène alternative (ou l'inverse) est un câblage
+	// incomplet et doit rester sans effet plutôt que faire apparaître un boss nul.
+	protected bool VariantePrise =>
+		!string.IsNullOrEmpty(MemoireRequise)
+		&& SceneBossAlternative != null
+		&& GameState.Instance?.EstConsomme(MemoireRequise) == true;
+
+	// Boss effectivement en jeu, une fois l'embranchement résolu. Tout le reste de la
+	// classe (et les sous-classes) passe par ces trois-là, jamais par les exports bruts.
+	protected PackedScene SceneChoisie => VariantePrise ? SceneBossAlternative : SceneBoss;
+
+	// Public : c'est ce nom que la sous-classe passe à GameState.MarquerBossVaincu, et
+	// donc celui qu'une PorteInterne doit citer dans son BossRequis.
+	public string NomChoisi =>
+		VariantePrise && !string.IsNullOrEmpty(NomBossAlternatif) ? NomBossAlternatif : NomBoss;
+
+	protected int PvChoisis => VariantePrise && PvBossAlternatif > 0 ? PvBossAlternatif : PvBoss;
+
 	protected override bool PreparerDeclencheur()
 	{
 		Barre = GetNodeOrNull<BossHudBarre>(CheminBarre);
@@ -59,7 +93,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	protected override void SurEntreeJoueur(Player joueur)
 	{
 		// Boss déjà vaincu (partie chargée) : ne pas le faire réapparaître, barre masquée.
-		if (GameState.Instance.EstBossVaincu(NomBoss))
+		if (GameState.Instance.EstBossVaincu(NomChoisi))
 			return;
 
 		// Ceinture et bretelles avec UneSeuleFois : un boss encore en vie dans l'arène
@@ -70,8 +104,12 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		Boss = FaireApparaitreBoss();
 		if (Boss != null)
 		{
-			if (PvBoss > 0)
-				Boss.DefinirPvMax(PvBoss);
+			if (PvChoisis > 0)
+				Boss.DefinirPvMax(PvChoisis);
+			// Le nom vient de la zone et non de la barre : une arène à deux boss doit
+			// afficher celui qui est réellement apparu.
+			if (!string.IsNullOrEmpty(NomChoisi))
+				Barre?.DefinirNom(NomChoisi);
 			Barre?.Lier(Boss);
 		}
 
@@ -85,13 +123,18 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// l'arbre (règle Outils : _Ready lit ses valeurs dès l'ajout).
 	protected virtual Boss FaireApparaitreBoss()
 	{
-		if (SceneBoss == null)
+		if (SceneChoisie == null)
 			return null;
 
-		var boss = SceneBoss.Instantiate<Boss>();
+		var boss = SceneChoisie.Instantiate<Boss>();
 		boss.Position = PositionApparition;
 		ConfigurerBoss(boss);
-		GetParent().AddChild(boss);
+		// Ajout DIFFÉRÉ : on est appelé depuis BodyEntered, donc en plein flush des
+		// requêtes physiques, où Godot refuse toute modification de forme de collision
+		// (« Can't change this state while flushing queries »). Les _Ready du boss qui
+		// activent/désactivent une CollisionShape2D ou sa ZoneDetection échouaient
+		// silencieusement, laissant des formes dans le mauvais état.
+		GetParent().CallDeferred(Node.MethodName.AddChild, boss);
 		return boss;
 	}
 

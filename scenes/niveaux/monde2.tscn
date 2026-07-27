@@ -87,6 +87,11 @@ Type = 1
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
+[node name="ZoneSortieUsine" parent="UsinePereNoel/Interactifs" unique_id=1710568238 instance=ExtResource("4_544ey")]
+position = Vector2(4700, 200)
+CheminSceneSuivante = "uid://d3ixspn6np4ud"
+PointEntreeCible = "bossEnd"
+
 [node name="Frontiere" type="Node2D" parent="UsinePereNoel" unique_id=82496359]
 
 [node name="Joueur" parent="." unique_id=1975658095 instance=ExtResource("player")]
