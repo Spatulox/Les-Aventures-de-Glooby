@@ -77,7 +77,8 @@ position = Vector2(1445.365, 280.03)
 [node name="Camera" type="Node2D" parent="UsinePereNoel" unique_id=1063593249]
 
 [node name="ZoneUsine" parent="UsinePereNoel/Camera" unique_id=21096232 instance=ExtResource("camzone")]
-position = Vector2(3175.365, 66.705)
+position = Vector2(3175.365, 52.82)
+rotation = 0.00030183748
 scale = Vector2(12.1875, 1.6637502)
 NomRegion = "usine"
 Type = 1

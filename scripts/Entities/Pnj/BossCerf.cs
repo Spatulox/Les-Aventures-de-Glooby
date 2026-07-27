@@ -2,7 +2,12 @@ using Godot;
 using System.Collections.Generic;
 
 // Rodolphe, le Cerf-boss : sous-classe de Boss qui fournit l'IA spécifique —
-// machine à états complète (intro, patterns, 2 phases, sonné, défaite). Économie
+// machine à états complète (intro, patterns, 2 phases, sonné, défaite). Sa charge est
+// BORNÉE (PorteeChargeEnLongueurs) : elle ne balaie plus l'arène d'un bout à l'autre
+// mais s'arrête au bout de quelques longueurs de boss. Elle se solde TOUJOURS par un
+// étourdissement — écrasé sur un mur, ou simplement essoufflé au bout de sa portée —
+// si bien que la fenêtre de vulnérabilité (dégâts ×3) reste la boucle du combat même
+// dans une arène large où aucun mur n'est à portée de ruée. Économie
 // de génération assumée (voir DECISIONS.md) : le piétinement réutilise "idle"
 // (pas de pose de cabrage dédiée) et le souffle de givre réutilise "charge" comme
 // télégraphe - seul le résultat gameplay (stalactites, cône de givre) est nouveau.
@@ -12,6 +17,14 @@ public partial class BossCerf : Boss, BossBorne
 	private enum Pattern { Charge, Pietinement, SouffleGivre }
 
 	[Export] public float VitesseCharge = 260f;
+
+	// Portée maximale de la charge, exprimée en LONGUEURS de Rodolphe (sa boîte de collision
+	// est relevée sur la scène par MesurerGabarit) : un multiple plutôt qu'une distance en dur,
+	// pour que la charge reste proportionnée si son gabarit change. Passé cette distance il
+	// s'arrête de lui-même : la charge ne traverse plus l'arène entière, il faut donc qu'il soit
+	// près du joueur pour l'atteindre.
+	[Export] public float PorteeChargeEnLongueurs = 3f;
+
 	[Export] public float DelaiTelegraphe = 0.8f;
 	[Export] public float DureeEtourdi = 2f;
 	[Export] public int MultiplicateurDegatsEtourdi = 3;
@@ -30,9 +43,13 @@ public partial class BossCerf : Boss, BossBorne
 	// d'un JumpVelocity à retoucher en parallèle et à garder cohérent.
 	[Export] public float MargeFranchissement = 16f;
 
-	// Bas de sa boîte de collision, relevé sur la scène (aucun nombre en dur : un
-	// autre gabarit de boss reste correct).
+	// Bas et largeur de sa boîte de collision, relevés sur la scène (aucun nombre en
+	// dur : un autre gabarit de boss reste correct). _longueur sert d'unité à la portée
+	// de charge ; laissée à 0 si la scène ne fournit pas de rectangle, auquel cas la
+	// charge retombe sur son ancien comportement (portée illimitée) plutôt que de
+	// s'arrêter aussitôt.
 	private float _bordPieds;
+	private float _longueur;
 
 
 	// Phase et seuil viennent de Boss (schéma commun aux trois boss).
@@ -41,6 +58,7 @@ public partial class BossCerf : Boss, BossBorne
 	private Etat _etat = Etat.Intro;
 	private float _timerEtat = 1.6f;
 	private int _direction = 1;
+	private float _xDebutCharge;
 	private bool _dejaToucheCetteCharge;
 	private bool _dejaToucheCeSouffle;
 	private int _chargesRestantesEnchainement;
@@ -188,6 +206,7 @@ public partial class BossCerf : Boss, BossBorne
 	{
 		_etat = Etat.Charge;
 		_dejaToucheCetteCharge = false;
+		_xDebutCharge = GlobalPosition.X;
 		Sprite.Play("charge");
 		Sprite.FlipH = _direction < 0;
 		Velocity = new Vector2(_direction * VitesseCharge, Velocity.Y);
@@ -198,6 +217,16 @@ public partial class BossCerf : Boss, BossBorne
 		Velocity = new Vector2(_direction * VitesseCharge, Velocity.Y);
 
 		if ((_direction > 0 && GlobalPosition.X >= LimiteDroite) || (_direction < 0 && GlobalPosition.X <= LimiteGauche))
+		{
+			PasserEnEtourdi();
+			return;
+		}
+
+		// Portée épuisée : Rodolphe s'essouffle et se sonne tout seul, exactement comme s'il
+		// s'était écrasé sur un mur — la fenêtre de vulnérabilité reste donc au rendez-vous à
+		// la fin de CHAQUE charge, sans dépendre de la présence d'un mur à portée. Testé AVANT
+		// le garde « en l'air », sinon un saut de franchissement prolongerait la charge.
+		if (PorteeChargeEpuisee())
 		{
 			PasserEnEtourdi();
 			return;
@@ -228,6 +257,11 @@ public partial class BossCerf : Boss, BossBorne
 		PasserEnEtourdi();
 	}
 
+	// Rodolphe a-t-il parcouru sa portée de charge ? Sans gabarit mesurable (_longueur à 0),
+	// on ne borne rien : mieux vaut l'ancien comportement qu'une charge qui s'arrête au départ.
+	private bool PorteeChargeEpuisee()
+		=> _longueur > 0f && Mathf.Abs(GlobalPosition.X - _xDebutCharge) >= PorteeChargeEnLongueurs * _longueur;
+
 	// Relève une fois pour toutes les bords de la boîte de collision : c'est de là que
 	// partent les rayons de détection d'obstacle.
 	private void MesurerGabarit()
@@ -237,6 +271,7 @@ public partial class BossCerf : Boss, BossBorne
 			return;
 
 		_bordPieds = forme.Position.Y + rect.Size.Y / 2f;
+		_longueur = rect.Size.X;
 	}
 
 	// L'obstacle heurté est-il assez bas pour être enjambé ? On repart du point de
@@ -282,7 +317,9 @@ public partial class BossCerf : Boss, BossBorne
 		_etat = Etat.Etourdi;
 		_vulnerableEtourdi = true;
 		_timerEtat = DureeEtourdi;
-		Velocity = Vector2.Zero;
+		// Seule l'horizontale est coupée : si la charge s'achève en plein saut de
+		// franchissement, Rodolphe doit retomber normalement et non se figer en l'air.
+		Velocity = new Vector2(0f, Velocity.Y);
 		Sprite.Play("etourdi");
 
 		if (Phase == 2 && _chargesRestantesEnchainement > 0)

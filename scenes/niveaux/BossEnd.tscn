@@ -23,8 +23,8 @@ script = ExtResource("bgmgr")
 [node name="Arene" type="Node2D" parent="." unique_id=889985766]
 
 [node name="ZoneBossFinale" parent="Arene" unique_id=889985767 instance=ExtResource("zoneboss")]
-position = Vector2(860, 240)
-scale = Vector2(6.71875, 2.5)
+position = Vector2(860, -15.785)
+scale = Vector2(6.589, 2.5)
 CheminSceneVictoire = "res://scenes/ui/ecran_fin.tscn"
 SceneBoss = ExtResource("boss_pere_noel")
 NomBoss = "Pere Noel"
@@ -39,23 +39,23 @@ CheminBarre = NodePath("../../BossHudBarre")
 PvBoss = 45
 
 [node name="ApparitionBoss" type="Marker2D" parent="Arene" unique_id=889985776]
-position = Vector2(1450, 408)
+position = Vector2(1450, 240.07)
 
 [node name="Sol" type="Node2D" parent="Arene" unique_id=889985768]
 
 [node name="SolUsineBois" parent="Arene/Sol" unique_id=889985769 instance=ExtResource("sol_usine")]
-position = Vector2(0, 400)
+position = Vector2(0, 240.07)
 
 [node name="Decor" type="Node2D" parent="Arene" unique_id=889985770]
 
 [node name="Interactifs" type="Node2D" parent="Arene" unique_id=889985771]
 
 [node name="Entree" parent="Arene/Interactifs" unique_id=889985772 instance=ExtResource("entree")]
-position = Vector2(200, 380)
+position = Vector2(200, 240.07)
 Id = "bossEnd"
 
 [node name="Joueur" parent="." unique_id=889985773 instance=ExtResource("player")]
-position = Vector2(200, 380)
+position = Vector2(200, 240.07)
 
 [node name="BossHudBarre" parent="." unique_id=889985774 instance=ExtResource("barreboss")]
 

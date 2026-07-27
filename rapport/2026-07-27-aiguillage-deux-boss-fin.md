@@ -101,6 +101,31 @@ Il courait **à reculons** : `_sprite.FlipH = direction < 0` applique la convent
 
 Les deux nouveaux ennemis d'usine (`LocomotiveJouet`, `MechaJouetLanceur`) ont été contrôlés au passage : leur art regarde bien à droite, la convention tient pour eux.
 
+## 10. Mort pendant un combat de boss : retour au checkpoint, combat remis à zéro
+
+**Attendu** : mourir renvoie au dernier campement activé — en changeant de scène si ce campement est resté dans le niveau précédent — et le boss repart à PV pleins.
+
+### Le checkpoint porte sa scène
+
+`CheminScene` désignait déjà la scène du checkpoint, mais deux choses l'empêchaient de servir :
+- `ActiverCheckpoint` ne l'écrivait pas (on comptait sur `Sauvegarder`) → il l'écrit désormais, pour que position et scène ne puissent jamais diverger ;
+- `Sauvegarder` l'écrasait avec la scène courante — or il est aussi appelé hors campement (défaite d'un boss, dans une arène sans feu de camp), ce qui aurait fait pointer une scène d'arène avec la position d'un campement d'ailleurs. Retiré ;
+- `DefinirPointEntree` écrasait le campement à chaque transition. Il ne sert plus que de filet quand **aucun** campement n'a encore été activé.
+
+`Player.Reapparaitre` (mort ou chute dans le vide) compare la scène du checkpoint à la scène courante : identique → téléportation comme avant ; différente → fondu au noir + `ChangeSceneToFile`, et c'est `_Ready` qui replace le joueur, puisqu'il sait déjà reconnaître un checkpoint appartenant à la scène courante.
+
+### Le combat repart de zéro
+
+`ZoneBoss` s'abonne à `JoueurMort` : le boss est libéré, la barre masquée, le déclencheur réarmé (`DeclencheurZone.RearmerDeclencheur`). Si le joueur réapparaît hors de l'arène, son retour refera surgir le boss ; s'il réapparaît **dedans** (campement dans l'arène), aucun `BodyEntered` ne se produit — la zone relance donc elle-même, en différé, le temps que la téléportation ait eu lieu.
+
+### Trois bugs de fond découverts en chemin
+
+Tous de la même famille — **un état statique ou un délégué qui survit à la scène qui l'a créé** — et tous invisibles tant que le jeu tenait dans une seule scène :
+
+1. **`Player` restait abonné à `GameState.JoueurMort` après sa libération.** Un délégué C# ne se défait pas seul quand le nœud est libéré, et `GameState` est un autoload. À la mort suivante, le handler du joueur mort levait `ObjectDisposedException`, ce qui **avortait la diffusion du signal** : le joueur vivant, abonné après lui, ne le recevait jamais et ne réapparaissait plus du tout. Corrigé par `_ExitTree` (même précaution ajoutée à `ZoneBoss`).
+2. **`BackgroundManager.Instance` et `GestionnaireMeteo.Instance`** pointaient encore sur ceux de la scène quittée (chaque niveau a les siens) → `ObjectDisposedException` intermittente au premier affichage de région/blizzard. Les deux relâchent maintenant leur pointeur en `_ExitTree`.
+3. **`Player.MettreAJourZoneCamera`** interrogeait des zones caméra déjà libérées, encore listées dans le groupe juste après un changement de scène → `IsInstanceValid` ajouté. Et comme le `BackgroundManager` de la nouvelle scène peut ne pas être prêt quand le joueur l'est, la zone caméra est réévaluée une fois en différé (`ForcerZoneCamera`) — sans quoi le fond restait celui d'avant, définitivement.
+
 ## Vérification
 
 - `godot --headless --build-solutions --quit` → 0 erreur C#.
@@ -118,7 +143,11 @@ Les deux nouveaux ennemis d'usine (`LocomotiveJouet`, `MechaJouetLanceur`) ont �
   - `BossEnd` → `marqueur=ok pos_locale=(1450, 408) parent=Arene` ;
   - `ReindeerBoss` → `marqueur=ok pos_locale=(1600, 440) parent=ArenBoss`, identique à l'ancienne valeur en dur. Testé en déplaçant temporairement le `Joueur` dans l'arène (le fichier a été restauré ensuite), puisqu'au boot il démarre au Sanctuaire et n'atteint jamais l'arène tout seul.
   - `TestBossPereNoel` garde `PositionApparition` : le repli reste exercé.
-- `BossEnd`, `TestBossPereNoel`, `TestBossLutinMecha`, `TestMiniJouetExplosif` et `ReindeerBoss` (non-régression du refactor des bornes) bootent 900 frames sans erreur.
+- **Mort en combat de boss testée au banc** (deux sondes jetables, supprimées depuis) :
+  - campement posé dans `monde1`, transition vers `BossEnd`, mort → **retour dans `monde1` sur le campement** (`joueur=(1234, 272)`, PV pleins). Le campement survit bien à la transition, ce qui n'était pas le cas avant ;
+  - campement posé **dans l'arène**, boss entamé (45 → 41 PV), mort → boss réapparu à **45/45**, combat repris du début ;
+  - 6 exécutions consécutives sans aucune `ObjectDisposedException` (elle sortait environ une fois sur deux avant les correctifs de `_ExitTree`).
+- `monde1`, `monde2`, `BossEnd`, `ReindeerBoss`, `TestBossPereNoel`, `TestBossLutinMecha`, `TestMiniJouetExplosif` bootent 600 à 900 frames sans erreur.
 - **Non testé en jeu** : `UsinePereNoel/Sol` n'a aucun sol, le joueur ne peut pas atteindre `x = 4700`. La transition `monde2 → BossEnd` ne sera jouable qu'une fois le plancher de l'usine posé.
 
 ## Reste à faire (éditeur)

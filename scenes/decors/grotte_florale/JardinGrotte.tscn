@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://beg75xoad1vmg"]
 
+[ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="7_q8a5l"]
 [ext_resource type="PackedScene" uid="uid://kjhdxmbys0gl" path="res://scenes/core/zone_chargement_scene.tscn" id="16_v1wsm"]
 [ext_resource type="Script" uid="uid://cdh5vr2c7nvsf" path="res://scripts/Core/PointEntree.cs" id="17_h1ran"]
 [ext_resource type="Texture2D" uid="uid://cmaxoj3msaif1" path="res://assets/decors/grotte_florale/jardin/fond.png" id="t1"]
@@ -346,6 +347,11 @@ shape = SubResource("s52")
 [node name="C52" type="CollisionShape2D" parent="Sol" unique_id=33620338]
 position = Vector2(896, 688)
 shape = SubResource("s53")
+
+[node name="PanneauBois" parent="Sol" unique_id=197425152 instance=ExtResource("7_q8a5l")]
+position = Vector2(1600, 510.00003)
+scale = Vector2(0.46, 0.46)
+Type = 3
 
 [node name="DecorBord" type="Node2D" parent="." unique_id=1837450782]
 

@@ -160,18 +160,31 @@ public partial class GameState : Node
 	{
 		CheckpointIdActif = idCheckpoint;
 		CheckpointPosition = position;
+		// La SCÈNE fait partie du checkpoint : une position seule ne veut rien dire
+		// depuis qu'un niveau peut en appeler un autre (arènes de boss). C'est elle que
+		// le respawn rechargera si le joueur meurt ailleurs. Écrite ici et non dans
+		// Sauvegarder(), pour que position et scène ne puissent jamais diverger.
+		var scene = GetTree()?.CurrentScene?.SceneFilePath;
+		if (!string.IsNullOrEmpty(scene))
+			CheminScene = scene;
 		Soigner(PvMax);
 		EmitSignal(SignalName.CheckpointActif, idCheckpoint);
 	}
 
-	// Point d'apparition d'un niveau atteint par TRANSITION (ZoneChargementScene), et non
-	// par « Continuer » : le checkpoint gardé en mémoire appartient au niveau précédent
-	// (GameState est un autoload persistant) et n'a aucun sens dans le nouveau niveau. On
-	// fixe donc l'entrée authorée du niveau comme point de respawn, SANS soigner (les PV
-	// traversent la transition) ni écrire sur disque (une transition n'est pas une
-	// sauvegarde). Le premier vrai campement du niveau écrasera ce point.
+	// Point d'apparition de secours, posé à l'arrivée dans un niveau quand le joueur n'a
+	// ENCORE ACTIVÉ AUCUN campement (tout début de partie) : sans lui il n'y aurait aucun
+	// point de respawn. Ni soin (les PV traversent la transition) ni écriture disque (une
+	// transition n'est pas une sauvegarde).
+	//
+	// Il ne remplace JAMAIS un vrai campement : depuis que le respawn sait changer de
+	// scène, un campement resté dans le niveau précédent est toujours atteignable et doit
+	// primer — c'est ce qui renvoie le joueur au dernier feu de camp quand il tombe face
+	// à un boss, au lieu de le relancer à l'entrée de l'arène.
 	public void DefinirPointEntree(string chemin, Vector2 position)
 	{
+		if (!string.IsNullOrEmpty(CheckpointIdActif))
+			return;
+
 		CheckpointIdActif = "entree";
 		CheckpointPosition = position;
 		CheminScene = chemin;
@@ -263,13 +276,11 @@ public partial class GameState : Node
 		if (ModeDebug)
 			return;
 
-		// Mémorise la scène active au moment de sauvegarder (checkpoint, boss vaincu) :
-		// c'est elle que « Continuer » rouvrira. La position du checkpoint étant un
-		// point de cette scène, les deux restent cohérents.
-		var scene = GetTree()?.CurrentScene?.SceneFilePath;
-		if (!string.IsNullOrEmpty(scene))
-			CheminScene = scene;
-
+		// CheminScene n'est PAS remis à la scène courante ici : il désigne la scène du
+		// checkpoint, et c'est ActiverCheckpoint qui l'écrit. Sauvegarder est aussi appelé
+		// hors campement (défaite d'un boss, dans une arène sans feu de camp) — l'écraser
+		// ferait pointer la scène d'arène avec la position d'un campement d'ailleurs, et
+		// « Continuer » comme le respawn téléporteraient dans le vide.
 		Sauvegarde.Ecrire(_donnees.VersDictionnaire());
 	}
 

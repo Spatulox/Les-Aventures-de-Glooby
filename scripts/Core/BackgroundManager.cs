@@ -14,6 +14,15 @@ public partial class BackgroundManager : Node2D
 	private readonly Dictionary<string, Node2D> _fonds = new();
 	private string _regionActive = "";
 
+	// Le pointeur statique doit lâcher prise quand la scène est quittée : sans ça il
+	// désigne encore le gestionnaire de l'ancienne scène, déjà libéré, et le premier
+	// AfficherRegion de la nouvelle scène levait ObjectDisposedException.
+	public override void _ExitTree()
+	{
+		if (Instance == this)
+			Instance = null;
+	}
+
 	public override void _Ready()
 	{
 		Instance = this;
