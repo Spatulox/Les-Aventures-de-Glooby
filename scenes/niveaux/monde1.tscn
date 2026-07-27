@@ -31,6 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://byq405ppxbg6m" path="res://assets/decors/grotte_florale/kit/cristaux_b.png" id="77_7hv05"]
 [ext_resource type="Texture2D" uid="uid://bkgrbs5jxbhrq" path="res://assets/decors/grotte_florale/kit/buisson_gele_b.png" id="78_jxva4"]
 [ext_resource type="Texture2D" uid="uid://bfui0shstcwob" path="res://assets/decors/grotte_florale/kit/arbre_givre_c.png" id="79_h5wnt"]
+[ext_resource type="Texture2D" uid="uid://sh772flofnin" path="res://assets/props/rocher_enneige/rocher_b.png" id="80_nvqnp"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" uid="uid://bdtwkujmg3bxy" path="res://scenes/interactifs/checkpoint_peche.tscn" id="checkpoint"]
@@ -1523,5 +1524,34 @@ z_index = -11
 position = Vector2(1877, 1348)
 scale = Vector2(1.6013514, 1.6477273)
 texture = ExtResource("73_3y76o")
+
+[node name="RocherB" type="Sprite2D" parent="." unique_id=1241779103]
+z_index = -2
+position = Vector2(46, 232)
+scale = Vector2(1.5480769, 1.5416666)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB2" type="Sprite2D" parent="." unique_id=1075584865]
+z_index = -3
+position = Vector2(134, 201)
+scale = Vector2(1.9903846, 2.1979167)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB3" type="Sprite2D" parent="." unique_id=1613713036]
+position = Vector2(-33, 264)
+scale = Vector2(1.6009616, 1.5364585)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB4" type="Sprite2D" parent="." unique_id=1866930033]
+z_index = -1
+position = Vector2(638, 241.00002)
+scale = Vector2(1.4519231, 1.4583334)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB5" type="Sprite2D" parent="." unique_id=82540258]
+z_index = -3
+position = Vector2(569, 215)
+scale = Vector2(1.9038461, 2.2083333)
+texture = ExtResource("80_nvqnp")
 
 [editable path="Joueur"]
