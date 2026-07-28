@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 // Base commune à toutes les entités vivantes du jeu (joueur, boss, futurs PNJ).
@@ -39,34 +40,50 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 	// Chaque scène d'entité porte un Sprite2D « Apercu » figé sur la 1re frame de son idle,
 	// uniquement pour que l'entité soit visible/positionnable dans l'éditeur Godot. En jeu,
 	// c'est l'AnimatedSprite2D qui rend : on masque donc l'aperçu au démarrage (facultatif,
-	// une scène sans nœud « Apercu » est simplement ignorée).
-	protected void MasquerApercuEditeur()
-	{
-		var apercu = GetNodeOrNull<Sprite2D>("Apercu");
-		if (apercu != null)
-			apercu.Visible = false;
-	}
+	// une scène sans nœud « Apercu » est simplement ignorée). La règle est partagée avec les
+	// projectiles, d'où le helper commun ApercuEditeur.
+	protected void MasquerApercuEditeur() => ApercuEditeur.Masquer(this);
 
-	// ---- Détection du joueur (portée) ----
-	// Joueur actuellement présent dans la ZoneDetection (Area2D enfant facultative), ou null.
-	private Player _joueurDansZone;
+	// ---- Détection du joueur (zones de présence) ----
+	// Une entité peut porter autant d'Area2D enfants « de présence » qu'elle veut — ZoneDetection
+	// pour une portée unique, ZoneCorpsACorps/ZoneDistance pour les boss qui pondèrent leurs
+	// attaques par l'éloignement. Chacune se câble par son nom et retient le joueur qui la
+	// chevauche : le rayon d'action se règle À LA FORME, par instance dans l'éditeur, plutôt
+	// qu'en dur dans le code.
+	private readonly Dictionary<string, Player> _joueursParZone = new();
+
+	// Nom de la zone servant de portée générale, ou null si la scène n'en porte pas.
+	private string _nomZoneDetection;
 
 	// Vrai si la scène porte une Area2D « ZoneDetection » câblée : la portée est alors pilotée
 	// par la taille de sa CollisionShape2D (réglable par instance) et non par une distance codée.
-	protected bool ZoneDetectionPresente { get; private set; }
+	protected bool ZoneDetectionPresente => _nomZoneDetection != null;
 
-	// Câble la zone de détection facultative « ZoneDetection » : au chevauchement du joueur, il
-	// devient la cible « à portée » ; à sa sortie, la portée redevient vide. Sans nœud
-	// « ZoneDetection », ne fait rien : la sous-classe retombe sur la distance flottante (repli).
-	protected void CablerZoneDetection(string nom = "ZoneDetection")
+	// Câble une zone de présence nommée : au chevauchement du joueur, il devient l'occupant de la
+	// zone ; à sa sortie, elle redevient vide. Renvoie faux quand la scène ne porte pas ce nœud —
+	// à l'appelant, alors, de retomber sur une distance codée.
+	protected bool CablerZonePresence(string nom)
 	{
 		var zone = GetNodeOrNull<Area2D>(nom);
 		if (zone == null)
-			return;
+			return false;
 
-		ZoneDetectionPresente = true;
-		zone.BodyEntered += corps => { if (corps is Player j) _joueurDansZone = j; };
-		zone.BodyExited += corps => { if (corps == _joueurDansZone) _joueurDansZone = null; };
+		_joueursParZone[nom] = null;
+		zone.BodyEntered += corps => { if (corps is Player j) _joueursParZone[nom] = j; };
+		zone.BodyExited += corps => { if (corps == _joueursParZone[nom]) _joueursParZone[nom] = null; };
+		return true;
+	}
+
+	// Le joueur présent dans la zone nommée, ou null (zone vide, ou absente de la scène).
+	protected Player JoueurDansZone(string nom)
+		=> _joueursParZone.TryGetValue(nom, out var joueur) ? joueur : null;
+
+	// Câble la zone de détection facultative « ZoneDetection ». Sans ce nœud, ne fait rien : la
+	// sous-classe retombe sur la distance flottante (repli).
+	protected void CablerZoneDetection(string nom = "ZoneDetection")
+	{
+		if (CablerZonePresence(nom))
+			_nomZoneDetection = nom;
 	}
 
 	// Joueur « à portée » : si la scène fournit une ZoneDetection, c'est le joueur présent dans la
@@ -75,12 +92,12 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 	// IA gardent ainsi leur test « joueur == null || distance > Portee » sans le moindre changement.
 	protected Player JoueurAPortee(out float distance)
 	{
-		if (ZoneDetectionPresente)
-		{
-			distance = _joueurDansZone != null ? 0f : float.MaxValue;
-			return _joueurDansZone;
-		}
-		return JoueurLePlusProche(out distance);
+		if (!ZoneDetectionPresente)
+			return JoueurLePlusProche(out distance);
+
+		var joueur = JoueurDansZone(_nomZoneDetection);
+		distance = joueur != null ? 0f : float.MaxValue;
+		return joueur;
 	}
 
 	// Renvoie le joueur le plus proche (groupe « joueur ») et sa distance, ou null s'il n'y en a pas.

@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/Entities/Pnj/BossLutinMecha.cs" id="1"]
 [ext_resource type="Texture2D" path="res://assets/pnj/boss_lutin_mecha/idle/00.png" id="2"]
@@ -7,6 +7,12 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(64, 104)
+
+[sub_resource type="RectangleShape2D" id="RectCorpsACorps"]
+size = Vector2(300, 130)
+
+[sub_resource type="RectangleShape2D" id="RectDistance"]
+size = Vector2(760, 320)
 
 [node name="BossLutinMecha" type="CharacterBody2D"]
 collision_layer = 4
@@ -26,3 +32,19 @@ texture = ExtResource("2")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -52)
 shape = SubResource("RectangleShape2D_1")
+
+[node name="ZoneCorpsACorps" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneCorpsACorps"]
+position = Vector2(0, -54)
+shape = SubResource("RectCorpsACorps")
+
+[node name="ZoneDistance" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDistance"]
+position = Vector2(0, -80)
+shape = SubResource("RectDistance")

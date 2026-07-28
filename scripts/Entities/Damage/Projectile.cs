@@ -49,11 +49,21 @@ public abstract partial class Projectile : Area2D
 
 	public override void _Ready()
 	{
-		// Un projectile ne se déclare sur aucun layer (rien ne doit le heurter) et
-		// masque le terrain (pour éclater) plus le joueur et les PNJ (pour blesser).
-		// Posé en code pour que toute scène de projectile soit correcte d'office.
+		// Un projectile ne se déclare sur aucun layer (rien ne doit le heurter) et masque
+		// tout ce sur quoi on marche — terrain ET plateformes traversables, pour être
+		// arrêté par le décor solide au lieu de le traverser — plus le joueur et les PNJ
+		// (pour blesser). Posé en code pour que toute scène de projectile soit correcte
+		// d'office, quels que soient les réglages du .tscn.
 		CollisionLayer = 0;
 		CollisionMask = Constantes.MasqueProjectile;
+
+		// Un tir vit dans le même plan de rendu que celui qui l'a lancé : sinon il passe
+		// derrière le joueur et les plateformes qu'il est censé heurter, et l'impact ne se
+		// lit plus. Comme les projectiles sont instanciés en cours de partie (donc en fin
+		// d'arbre), ils se dessinent après le joueur à z égal, ce qui est le bon ordre.
+		ZIndex = Constantes.ZJoueur;
+
+		ApercuEditeur.Masquer(this);
 
 		_tempsRestant = DureeVie;
 		_sprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");

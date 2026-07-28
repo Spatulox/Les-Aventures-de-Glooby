@@ -2,16 +2,16 @@
 
 [ext_resource type="Script" path="res://scripts/Entities/Interactable/CagePereNoel.cs" id="1"]
 [ext_resource type="Texture2D" uid="uid://dtypp8joffs5p" path="res://assets/props/noel/perenoel_cage_fermee.png" id="2_fermee"]
-[ext_resource type="Texture2D" uid="uid://dl7lxjsuwk677" path="res://assets/props/noel/perenoel_cage_ouverte.png" id="3_ouverte"]
 [ext_resource type="Script" uid="uid://bnskcw6i56nex" path="res://scripts/Core/DeclencheurDialogue.cs" id="4_dialogue"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/PantalonPickup.tscn" id="5_pantalon"]
+[ext_resource type="PackedScene" uid="uid://bqlwks44b6g3q" path="res://scenes/entites/PereNoel.tscn" id="6_perenoel"]
 
 [sub_resource type="RectangleShape2D" id="RectProximite"]
 size = Vector2(176, 208)
 
 [node name="CagePereNoel" type="Node2D"]
 script = ExtResource("1")
-TextureOuverte = ExtResource("3_ouverte")
+PnjLibere = ExtResource("6_perenoel")
 Contenu = ExtResource("5_pantalon")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

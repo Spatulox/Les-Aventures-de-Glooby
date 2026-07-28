@@ -44,6 +44,55 @@ public abstract partial class Boss : LivingEntity
 		return true;
 	}
 
+	// ---- Portée du joueur (zones d'engagement) ----
+	// Un boss ne tire pas ses attaques au hasard : il joue ce qui PORTE. Deux Area2D enfants
+	// FACULTATIVES, redimensionnables par instance dans l'éditeur, découpent l'espace autour
+	// de lui et pilotent la pondération de ses patterns :
+	//   ZoneCorpsACorps — le joueur est collé : les attaques de contact priment ;
+	//   ZoneDistance    — l'anneau utile de ses attaques à distance ;
+	//   hors des deux   — plus rien ne porte, le boss se rapproche au lieu d'attaquer.
+	// Mutualisé ici parce que le Lutin Mecha et le Père Noël en font le même usage ; ce qui
+	// reste propre à chacun, c'est la table de poids et la façon de se rapprocher (marche,
+	// bond, cheminée). Opt-in : un boss qui frappe à portée unique (le Cerf) n'appelle rien.
+	protected const string NomZoneCorpsACorps = "ZoneCorpsACorps";
+	protected const string NomZoneDistance = "ZoneDistance";
+
+	// Rayons de REPLI, utilisés seulement quand la scène ne porte pas les deux zones : un boss
+	// dont le .tscn n'a pas encore été outillé garde un comportement correct, simplement moins
+	// finement réglable qu'avec des formes dessinées.
+	[Export] public float RayonCorpsACorps = 110f;
+	[Export] public float RayonDistance = 340f;
+
+	// Vrai quand les DEUX zones ont été trouvées : il en manque une et le découpage n'a plus
+	// de sens, on retombe alors entièrement sur les rayons.
+	private bool _zonesEngagementCablees;
+
+	// À appeler depuis Initialiser() par un boss qui pondère ses attaques selon l'éloignement.
+	protected void CablerZonesEngagement()
+	{
+		bool corpsACorps = CablerZonePresence(NomZoneCorpsACorps);
+		bool distance = CablerZonePresence(NomZoneDistance);
+		_zonesEngagementCablees = corpsACorps && distance;
+	}
+
+	// La lecture du terrain : les zones font foi, les rayons ne servent que de repli.
+	protected PorteeJoueur EvaluerPortee()
+	{
+		if (_zonesEngagementCablees)
+		{
+			if (JoueurDansZone(NomZoneCorpsACorps) != null)
+				return PorteeJoueur.CorpsACorps;
+			return JoueurDansZone(NomZoneDistance) != null ? PorteeJoueur.Distance : PorteeJoueur.HorsPortee;
+		}
+
+		var joueur = JoueurLePlusProche(out float ecart);
+		if (joueur == null)
+			return PorteeJoueur.HorsPortee;
+		if (ecart <= RayonCorpsACorps)
+			return PorteeJoueur.CorpsACorps;
+		return ecart <= RayonDistance ? PorteeJoueur.Distance : PorteeJoueur.HorsPortee;
+	}
+
 	// ---- Salve de projectiles visée ----
 	// Les deux boss de l'usine (Lutin Mecha, Père Noël) tirent le MÊME EclatGlace de la même
 	// façon ; leur tir est donc mutualisé ici. Rien n'y est propre à un boss : c'est « lâche

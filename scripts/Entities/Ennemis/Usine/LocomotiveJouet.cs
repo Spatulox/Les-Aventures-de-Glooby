@@ -1,132 +1,61 @@
 using Godot;
 
-// Ennemi « Locomotive jouet » (usine du Père Noël) : la déclinaison usine du FONCEUR de la
-// banquise (OursDeNeige). Même structure d'états — elle roule tranquillement en va-et-vient,
-// repère le joueur, TÉLÉGRAPHIE sa charge (coup de sifflet, la cheminée crache plus fort),
-// puis fonce en ligne droite, direction verrouillée au départ : esquivable d'un pas de côté.
+// Ennemi « Locomotive jouet » (usine du Père Noël) : la déclinaison usine du FONCEUR de la grotte
+// florale (GardienRonces). Même machine à états, héritée de MechantFonceur — elle roule
+// tranquillement en va-et-vient, repère le joueur (petit soubresaut sur ses rails), TÉLÉGRAPHIE
+// sa charge (coup de sifflet, la cheminée crache plus fort), puis fonce en ligne droite,
+// direction verrouillée au repérage : esquivable d'un pas de côté. Passé la charge, elle
+// poursuit le joueur au ralenti tant qu'il reste à portée.
 //
-// Deux differences assumées avec l'ours, qui justifient une classe à part plutôt qu'une
-// sous-classe de OursDeNeige :
-//   - elle a un vrai TÉLÉGRAPHE (Etat.Detection) avant de charger, là où l'ours part sec ;
-//   - elle MEURT normalement en PV (l'ours est un obstacle qu'on ne fait qu'étourdir).
-// Le code réellement partagé vit dans PnjMechant : patrouille, contact, orientation et
-// séquence de mort animée (dossier mort/ rempli => rien à écrire ici).
+// Deux differences assumées avec le gardien, réglées par ses points d'extension :
+//   - sa charge N'EST PAS bornée à hauteur du joueur (RueeBorneeParJoueur = false) : elle le
+//     dépasse et va percuter le décor, d'où la boucle de jeu charge -> mur -> déraillement ;
+//   - le déraillement (InterrompreRuee + Immobiliser) est sa fenêtre de punition, pendant
+//     laquelle les coups comptent double.
+// Elle MEURT normalement en PV (contrairement à l'ours de neige, simple obstacle étourdissable).
 //
-// Boucle de jeu : charge -> mur -> déraillement. Le déraillement est la fenêtre de punition,
-// pendant laquelle les coups comptent double.
-public partial class LocomotiveJouet : PnjMechant
+// Les animations sont pilotées par l'état dans MechantFonceur (detection / charge / etourdi),
+// il n'y a donc rien à câbler ici. La mort réutilise le dossier mort/ de PnjMechant.
+public partial class LocomotiveJouet : MechantFonceur
 {
-	private enum EtatLoco { Roulement, Detection, Charge, Deraille }
-
-	// Vitesse de la ruée : supérieure au Speed du joueur (220) pour qu'elle le dépasse.
-	[Export] public float VitesseCharge = 250f;
-	// Durée du télégraphe (sifflet + fumée) : la fenêtre d'esquive.
-	[Export] public float DureeDetection = 0.7f;
-	// Sécurité : si elle ne rencontre aucun mur, la charge s'arrête d'elle-même.
-	[Export] public float DureeChargeMax = 2.5f;
 	// Durée du déraillement après impact contre un mur.
 	[Export] public float DureeDeraillement = 2f;
 	// Les coups portés pendant le déraillement comptent double (récompense de l'esquive).
 	[Export] public int MultiplicateurVulnerable = 2;
 
-	private EtatLoco _etat = EtatLoco.Roulement;
-	private float _minuteur;
-	private int _dirCharge = 1;
-
-	// Machine à états pilotée frame par frame : la base applique gravité, MoveAndSlide,
-	// orientation et mort, on ne fixe donc ici que velocite.X.
-	protected override void DeciderMouvement(float dt, ref Vector2 velocite, Player joueur, float distance)
+	// Réglages de la locomotive : une charge plus longue et plus rapide que le bond du gardien
+	// (il lui faut atteindre un mur), après un télégraphe plus lisible. Ce sont les défauts des
+	// exports de MechantFonceur — chaque instance reste réglable dans l'inspecteur.
+	public LocomotiveJouet()
 	{
-		switch (_etat)
-		{
-			case EtatLoco.Roulement:
-				Patrouiller(dt, ref velocite);
-				if (joueur != null && distance <= PorteeDetection)
-					EntrerDetection(joueur);
-				break;
-
-			// Télégraphe : elle s'arrête, siffle et crache — le joueur a le temps de s'écarter.
-			case EtatLoco.Detection:
-				velocite.X = 0f;
-				if (Decompter(dt))
-					EntrerCharge();
-				break;
-
-			case EtatLoco.Charge:
-				velocite.X = _dirCharge * VitesseCharge;
-				// IsOnWall() reflète le MoveAndSlide de la frame précédente : l'impact est
-				// donc détecté une frame après le contact, ce qui est invisible en jeu.
-				if (IsOnWall())
-					EntrerDeraillement();
-				else if (Decompter(dt))
-					EntrerRoulement();
-				break;
-
-			// Déraillée contre le mur : immobile et vulnérable le temps du décompte.
-			case EtatLoco.Deraille:
-				velocite.X = 0f;
-				if (Decompter(dt))
-					EntrerRoulement();
-				break;
-		}
+		VitesseRuee = 250f;        // > Speed du joueur (220) : la charge le dépasse
+		DistanceRuee = 320f;       // assez long pour aller chercher un mur
+		DelaiRuee = 0.7f;          // sifflet + fumée avant de s'élancer
+		DureeDetection = 1.4f;
+		ImpulsionSursaut = -150f;  // soubresaut discret : elle reste sur ses rails
+		VitessePoursuite = 45f;    // lourde : elle se sème facilement en courant
 	}
 
-	// L'animation suit l'état, pas la vitesse : on court-circuite le choix idle/marche de la base.
-	protected override void MettreAJourAnimation(Vector2 velocite)
+	// La charge file sur toute DistanceRuee au lieu de s'arrêter à hauteur du joueur : c'est ce
+	// dépassement qui l'amène jusqu'au mur, et donc au déraillement.
+	protected override bool RueeBorneeParJoueur => false;
+
+	// Impact : la locomotive déraille et reste immobile, vulnérable, le temps du décompte.
+	// IsOnWall() reflète le MoveAndSlide de la frame précédente : l'impact est donc détecté une
+	// frame après le contact, ce qui est invisible en jeu.
+	protected override bool InterrompreRuee()
 	{
-		switch (_etat)
-		{
-			case EtatLoco.Detection: JouerSiPresente("detection"); break;
-			case EtatLoco.Charge: JouerSiPresente("charge"); break;
-			case EtatLoco.Deraille: JouerSiPresente("etourdi"); break;
-			default: JouerSiPresente("idle"); break;
-		}
+		if (!IsOnWall())
+			return false;
+
+		Immobiliser(DureeDeraillement);
+		Effets.FlashCouleur(Sprite, new Color(1.5f, 1.3f, 1f), 0.05f, 0.25f);
+		return true;
 	}
 
 	// Coup double pendant le déraillement.
 	protected override int AjusterDegats(int brut)
-		=> _etat == EtatLoco.Deraille ? brut * MultiplicateurVulnerable : brut;
-
-	// Verrouille la direction vers le joueur DÈS le télégraphe : la charge part ensuite en
-	// ligne droite sans suivi, ce qui la rend esquivable d'un pas de côté.
-	private void EntrerDetection(Player joueur)
-	{
-		_dirCharge = Mathf.Sign(joueur.GlobalPosition.X - GlobalPosition.X);
-		if (_dirCharge == 0)
-			_dirCharge = 1;
-
-		_etat = EtatLoco.Detection;
-		_minuteur = DureeDetection;
-		DefinirOrientation(_dirCharge < 0);
-	}
-
-	private void EntrerCharge()
-	{
-		_etat = EtatLoco.Charge;
-		_minuteur = DureeChargeMax;
-	}
-
-	private void EntrerDeraillement()
-	{
-		_etat = EtatLoco.Deraille;
-		_minuteur = DureeDeraillement;
-		Effets.FlashCouleur(Sprite, new Color(1.5f, 1.3f, 1f), 0.05f, 0.25f);
-	}
-
-	private void EntrerRoulement()
-	{
-		_etat = EtatLoco.Roulement;
-	}
-
-	// Rien à écrire pour la mort : la base joue le dossier « mort » (démantèlement en
-	// pièces de bois, frames dessinées en procédural) puis efface la locomotive en fondu.
-
-	// Décompte le minuteur courant ; renvoie vrai quand il atteint 0 (transition d'état).
-	private bool Decompter(float dt)
-	{
-		_minuteur -= dt;
-		return _minuteur <= 0f;
-	}
+		=> Etat == EtatFonceur.Immobilise ? brut * MultiplicateurVulnerable : brut;
 
 	protected override SpriteFrames ConstruireAnimations()
 	{

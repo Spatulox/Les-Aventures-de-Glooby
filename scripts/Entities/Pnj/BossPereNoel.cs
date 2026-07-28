@@ -17,13 +17,18 @@ using Godot;
 //                      CadeauExplosif éclate au premier contact (joueur ou sol) et souffle
 //                      autour de lui. Deux cadeaux à la suite en phase 2 ;
 //   Punch au sol     — il frappe le plancher : une OndeDeChoc s'étale de part et d'autre,
-//                      AU RAS DU SOL, donc esquivable en sautant. N'est tiré que si le
-//                      joueur est à portée — une onde qui n'atteint personne serait un
-//                      tour perdu, et le boss tient une bande de distance de 120 à 220 px ;
+//                      AU RAS DU SOL, donc esquivable en sautant. C'est SON attaque de
+//                      corps à corps, et la seule : elle domine le tirage quand le joueur
+//                      est dans la ZoneCorpsACorps, et disparaît complètement au-delà —
+//                      une onde qui n'atteint personne serait un tour perdu ;
 //   Cheminée         — il s'évapore et se rematérialise de l'autre côté du joueur,
 //                      intouchable le temps du passage, et ENCHAÎNE aussitôt sur une
-//                      attaque. Repositionnement ponctuel, à ne pas confondre avec le
-//                      va-et-vient : c'est une prise à revers, pas un trajet.
+//                      attaque. Prise à revers à portée utile, et sa façon à lui de
+//                      refermer l'écart quand le joueur file hors de la ZoneDistance (le
+//                      Lutin Mecha, pour la même chose, bondit).
+// Le choix du pattern est PONDÉRÉ PAR LA DISTANCE, lue sur les deux zones d'engagement de
+// Boss (ZoneCorpsACorps / ZoneDistance, redimensionnables par instance dans l'éditeur) :
+// voir ChoisirPattern. Hors des deux, il ne tente plus rien et se rapproche.
 // Un seul DamageSource lui est propre : OndeDeChoc (porté par la scène d'onde). Les deux
 // projectiles portent déjà le leur.
 public partial class BossPereNoel : Boss, BossBorne
@@ -31,20 +36,26 @@ public partial class BossPereNoel : Boss, BossBorne
 	// Jet = la frame où le cadeau quitte la main ; Punch = celle où l'onde part. Les deux
 	// s'appellent ainsi plutôt que « Lancer » parce que Lancer(Pattern) est déjà la méthode
 	// de dispatch des patterns.
-	private enum Etat { Intro, Idle, ArmementCadeaux, Largage, ArmementLancer, Jet, ArmementPunch, Punch, Disparition, Reapparition, TransitionPhase, Vaincu }
-	private enum Pattern { SalveCadeaux, LancerCadeau, PunchSol, Cheminee }
+	private enum Etat { Intro, Idle, Approche, ArmementCadeaux, Largage, ArmementLancer, Jet, ArmementPunch, Punch, Disparition, Reapparition, TransitionPhase, Vaincu }
+	private enum Pattern { SalveCadeaux, LancerCadeau, PunchSol, Cheminee, Approche }
 
 	// ---- Va-et-vient ----
-	// Le boss tient une BANDE de distance [DistanceConfort, DistanceEngagement] plutôt qu'un
-	// seuil unique : au-delà il avance (ses deux attaques — largage au-dessus de lui, éclat à
-	// l'horizontale — ne couvrent pas toute l'arène), en deçà il recule pour se redonner de
-	// l'air, et dans la bande il piétine d'avant en arrière. Il n'est donc jamais planté.
+	// Le boss tient une BANDE de distance, celle que dessine sa ZoneDistance moins sa
+	// ZoneCorpsACorps (voir Boss.EvaluerPortee) : hors de la grande zone il avance — ses deux
+	// attaques, largage au-dessus de lui et cadeau en cloche, ne couvrent pas toute l'arène ;
+	// dans la petite il recule pour se redonner de l'air ; entre les deux il piétine d'avant
+	// en arrière. Il n'est donc jamais planté.
 	[Export] public float VitesseMarche = 95f;
 	[Export] public float VitesseRecul = 70f;
-	[Export] public float DistanceConfort = 120f;
-	[Export] public float DistanceEngagement = 220f;
 	// Période du piétinement dans la bande : au-delà, le pas s'inverse.
 	[Export] public float DureeOscillation = 0.4f;
+
+	// ---- Approche ----
+	// Hors de portée, aucune attaque ne sert : plutôt que de gâcher un tour, il marche
+	// franchement sur le joueur. L'état s'arrête dès que celui-ci rentre dans la ZoneDistance ;
+	// DureeApproche n'est qu'un garde-fou contre une poursuite sans fin (joueur perché,
+	// inatteignable, ou boss coincé contre une borne de l'arène).
+	[Export] public float DureeApproche = 1.2f;
 
 	// ---- Salve de cadeaux ----
 	// Fenêtre d'esquive : le boss fouille sa hotte tout ce temps avant de larguer.
@@ -113,6 +124,7 @@ public partial class BossPereNoel : Boss, BossBorne
 	protected override void Initialiser()
 	{
 		_rng.Randomize();
+		CablerZonesEngagement();
 		Sprite.Play("idle");
 	}
 
@@ -146,10 +158,11 @@ public partial class BossPereNoel : Boss, BossBorne
 
 		var velocite = Velocity;
 		AppliquerGravite(ref velocite, dt);
-		// L'idle est le SEUL état qui pousse le boss horizontalement : c'est là que vit le
-		// va-et-vient. Tous les autres restent strictement plantés — un télégraphe qui
-		// glisse ne se lit plus, et une pose de combat mobile brouillerait l'esquive.
-		if (_etat != Etat.Idle)
+		// L'idle et l'approche sont les SEULS états qui poussent le boss horizontalement :
+		// c'est là que vivent le va-et-vient et le rapprochement. Tous les autres restent
+		// strictement plantés — un télégraphe qui glisse ne se lit plus, et une pose de
+		// combat mobile brouillerait l'esquive.
+		if (_etat is not (Etat.Idle or Etat.Approche))
 			AppliquerFriction(ref velocite, dt);
 
 		switch (_etat)
@@ -164,6 +177,14 @@ public partial class BossPereNoel : Boss, BossBorne
 				PatinerAutourDuJoueur(ref velocite, dt);
 				if (_timerEtat <= 0f)
 					ChoisirPattern();
+				break;
+
+			// Marche d'approche : elle s'interrompt dès que le joueur redevient atteignable,
+			// pour que le boss reparte attaquer sans attendre la fin de son chrono.
+			case Etat.Approche:
+				AvancerVersLeJoueur(ref velocite);
+				if (_timerEtat <= 0f || EvaluerPortee() != PorteeJoueur.HorsPortee)
+					PasserEnIdle();
 				break;
 
 			// Télégraphe de la salve : il fouille sa hotte, immobile — fenêtre d'esquive.
@@ -283,33 +304,34 @@ public partial class BossPereNoel : Boss, BossBorne
 	{
 		ViserLeJoueur();
 
-		var joueur = JoueurLePlusProche(out float distance);
-		if (joueur == null)
+		if (JoueurLePlusProche(out float _) == null)
 			return;
 
 		float vitesse;
-		if (distance > DistanceEngagement)
+		switch (EvaluerPortee())
 		{
-			// Assez loin pour qu'aucune attaque ne porte : il fond sur le joueur.
-			_sensVaEtVient = 1;
-			vitesse = VitesseMarche;
-		}
-		else if (distance < DistanceConfort)
-		{
-			// Collé : il se redonne de l'air plutôt que de tirer à bout portant.
-			_sensVaEtVient = -1;
-			vitesse = VitesseRecul;
-		}
-		else
-		{
-			// Dans la bande : simple balancement, le pas s'inverse à chaque période.
-			_timerOscillation -= dt;
-			if (_timerOscillation <= 0f)
-			{
-				_sensVaEtVient = -_sensVaEtVient;
-				_timerOscillation = DureeOscillation;
-			}
-			vitesse = VitesseRecul;
+			case PorteeJoueur.HorsPortee:
+				// Assez loin pour qu'aucune attaque ne porte : il fond sur le joueur.
+				_sensVaEtVient = 1;
+				vitesse = VitesseMarche;
+				break;
+
+			case PorteeJoueur.CorpsACorps:
+				// Collé : il se redonne de l'air plutôt que de tirer à bout portant.
+				_sensVaEtVient = -1;
+				vitesse = VitesseRecul;
+				break;
+
+			default:
+				// Dans la bande : simple balancement, le pas s'inverse à chaque période.
+				_timerOscillation -= dt;
+				if (_timerOscillation <= 0f)
+				{
+					_sensVaEtVient = -_sensVaEtVient;
+					_timerOscillation = DureeOscillation;
+				}
+				vitesse = VitesseRecul;
+				break;
 		}
 
 		// _direction pointe le joueur : un sens à -1 recule donc sans changer le FlipH.
@@ -317,8 +339,7 @@ public partial class BossPereNoel : Boss, BossBorne
 
 		// Contre une borne de l'arène, le pas est simplement annulé : inutile de pousser
 		// le mur, et l'anim repasse en idle pour ne pas patiner sur place.
-		if ((pas < 0 && GlobalPosition.X <= LimiteGauche + MargeBords)
-			|| (pas > 0 && GlobalPosition.X >= LimiteDroite - MargeBords))
+		if (BorneAtteinte(pas))
 		{
 			_sensVaEtVient = -_sensVaEtVient;
 			Sprite.Play("idle");
@@ -329,40 +350,64 @@ public partial class BossPereNoel : Boss, BossBorne
 		Sprite.Play("marche");
 	}
 
-	// Choisit la prochaine action, toujours tourné vers le joueur. Plus de détour par une
-	// marche d'approche : le repositionnement se fait en continu pendant l'idle, donc CHAQUE
-	// fin d'idle débouche sur une attaque, quelle que soit la distance.
+	// Marche franche vers le joueur, sans oscillation : c'est le rapprochement, pas le
+	// va-et-vient. Bloqué contre une borne, il repasse en idle plutôt que de pousser le mur —
+	// le chrono de l'état finira par le rendre à ChoisirPattern, qui tentera la cheminée.
+	private void AvancerVersLeJoueur(ref Vector2 velocite)
+	{
+		ViserLeJoueur();
+
+		if (BorneAtteinte(_direction))
+		{
+			Sprite.Play("idle");
+			return;
+		}
+
+		velocite.X = _direction * VitesseMarche;
+		Sprite.Play("marche");
+	}
+
+	// Le pas donné (+1 = vers la droite) sortirait-il de l'arène ?
+	private bool BorneAtteinte(int pas)
+		=> (pas < 0 && GlobalPosition.X <= LimiteGauche + MargeBords)
+		|| (pas > 0 && GlobalPosition.X >= LimiteDroite - MargeBords);
+
+	// Choisit la prochaine action, toujours tourné vers le joueur. Le tirage est PONDÉRÉ PAR LA
+	// DISTANCE (zones d'engagement) : chaque attaque n'est vraiment bonne que dans sa tranche,
+	// et la jouer ailleurs revient à offrir un tour au joueur.
+	//   collé      — le punch au sol est SA seule attaque de contact, il domine ;
+	//   à distance — le cadeau lancé et la salve, qui portent loin ; le punch, lui, ne
+	//                balaierait que du vide ;
+	//   hors de portée — plus rien ne sert : il vient chercher le joueur, à pied ou par la
+	//                cheminée (la téléportation est SA façon de refermer l'écart, le Lutin
+	//                Mecha, lui, bondit).
 	private void ChoisirPattern()
 	{
 		ViserLeJoueur();
 
-		var pattern = _rng.Randf() switch
+		var pattern = EvaluerPortee() switch
 		{
-			< 0.30f => Pattern.SalveCadeaux,
-			< 0.60f => Pattern.LancerCadeau,
-			< 0.85f => Pattern.PunchSol,
-			_ => Pattern.Cheminee,
+			PorteeJoueur.CorpsACorps => _rng.Randf() switch
+			{
+				< 0.60f => Pattern.PunchSol,
+				< 0.80f => Pattern.SalveCadeaux,
+				_ => Pattern.LancerCadeau,
+			},
+			PorteeJoueur.Distance => _rng.Randf() switch
+			{
+				< 0.45f => Pattern.LancerCadeau,
+				< 0.80f => Pattern.SalveCadeaux,
+				_ => Pattern.Cheminee,
+			},
+			_ => _rng.Randf() < 0.5f ? Pattern.Cheminee : Pattern.Approche,
 		};
 
 		// Deux cheminées d'affilée le feraient clignoter d'un bout à l'autre de l'arène
-		// sans jamais frapper : le second passage est converti en lancer.
+		// sans jamais frapper : le second passage se fait à pied.
 		if (pattern == Pattern.Cheminee && _dernierPattern == Pattern.Cheminee)
-			pattern = Pattern.LancerCadeau;
-
-		// Le punch ne porte qu'au sol et autour de lui : hors de portée il ne serait qu'un
-		// temps mort. On lui substitue le lancer, la seule attaque à allonge franche.
-		if (pattern == Pattern.PunchSol && !JoueurAPorteeDuPunch())
-			pattern = Pattern.LancerCadeau;
+			pattern = EvaluerPortee() == PorteeJoueur.HorsPortee ? Pattern.Approche : Pattern.LancerCadeau;
 
 		Lancer(pattern);
-	}
-
-	// Le joueur est-il dans le rayon que l'onde balaiera ? Testé sur le seul axe X : l'onde
-	// court au sol, sa hauteur ne rentre pas en compte (c'est le saut qui l'esquive).
-	private bool JoueurAPorteeDuPunch()
-	{
-		var joueur = JoueurLePlusProche(out _);
-		return joueur != null && Mathf.Abs(joueur.GlobalPosition.X - GlobalPosition.X) <= PorteeOnde;
 	}
 
 	// Sortie de cheminée : il attaque sans respirer. La cheminée est exclue du tirage —
@@ -387,7 +432,17 @@ public partial class BossPereNoel : Boss, BossBorne
 			case Pattern.LancerCadeau: ArmerLancer(); break;
 			case Pattern.PunchSol: ArmerPunch(); break;
 			case Pattern.Cheminee: DisparaitreParLaCheminee(); break;
+			case Pattern.Approche: DemarrerApproche(); break;
 		}
+	}
+
+	// Rapprochement à pied : le seul « pattern » qui ne frappe pas. Il ne se joue que hors de
+	// portée, et rend la main dès que le joueur repasse dans la ZoneDistance.
+	private void DemarrerApproche()
+	{
+		_etat = Etat.Approche;
+		_timerEtat = DureeApproche;
+		Sprite.Play("marche");
 	}
 
 	// Télégraphe de la salve : il se ramasse sur sa hotte et rougit, assez longtemps

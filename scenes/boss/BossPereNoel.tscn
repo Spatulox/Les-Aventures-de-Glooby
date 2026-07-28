@@ -1,33 +1,56 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene format=3 uid="uid://3hqlwelpedyn"]
 
-[ext_resource type="Script" path="res://scripts/Entities/Pnj/BossPereNoel.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/pnj/boss_pere_noel/idle/00.png" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/projectiles/CadeauExplosif.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MiniJouetExplosif.tscn" id="4"]
+[ext_resource type="Script" uid="uid://cwa6a4ycsevo7" path="res://scripts/Entities/Pnj/BossPereNoel.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://b3vsdpqs73730" path="res://assets/pnj/boss_pere_noel/idle/00.png" id="2"]
+[ext_resource type="PackedScene" uid="uid://ce3se1uk5x6qq" path="res://scenes/projectiles/CadeauExplosif.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://gkwjiv57ow54" path="res://scenes/ennemis/usine/MiniJouetExplosif.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/PantalonPickup.tscn" id="5_butin"]
 [ext_resource type="PackedScene" path="res://scenes/projectiles/OndeDeChoc.tscn" id="6_onde"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(62, 104)
 
-[node name="BossPereNoel" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectCorpsACorps"]
+size = Vector2(320, 130)
+
+[sub_resource type="RectangleShape2D" id="RectDistance"]
+size = Vector2(760, 320)
+
+[node name="BossPereNoel" type="CharacterBody2D" unique_id=370185210]
 collision_layer = 4
 collision_mask = 17
 script = ExtResource("1")
-PvMax = 135
-DelaiEffacement = 1.2
-Butin = ExtResource("5_butin")
-SceneCadeauExplosif = ExtResource("3")
 SceneCadeau = ExtResource("4")
+SceneCadeauExplosif = ExtResource("3")
 ScenePunchOnde = ExtResource("6_onde")
+Butin = ExtResource("5_butin")
+DelaiEffacement = 1.2
+PvMax = 135
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=773655808]
 position = Vector2(0, -63)
 
-[node name="Apercu" type="Sprite2D" parent="."]
+[node name="Apercu" type="Sprite2D" parent="." unique_id=1083112483]
 position = Vector2(0, -63)
 texture = ExtResource("2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1773793389]
 position = Vector2(0, -53)
 shape = SubResource("RectangleShape2D_1")
+
+[node name="ZoneCorpsACorps" type="Area2D" parent="." unique_id=1124930824]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneCorpsACorps" unique_id=44579926]
+position = Vector2(0, -55)
+scale = Vector2(0.71999985, 1)
+shape = SubResource("RectCorpsACorps")
+
+[node name="ZoneDistance" type="Area2D" parent="." unique_id=1346251757]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDistance" unique_id=1517545458]
+position = Vector2(0, -80)
+shape = SubResource("RectDistance")

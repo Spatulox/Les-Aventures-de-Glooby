@@ -25,10 +25,16 @@ public static class Constantes
 	// n'est possible — l'invariant tient par construction, pas par réglage.
 	public const uint MasqueMarcheur = LayerTerrain | LayerPlateformesTraversables; // 17
 
-	// Ce que masque un projectile : le terrain (pour éclater) plus le joueur et
-	// les PNJ (pour blesser) — la même scène est tirée par le joueur et par les
-	// ennemis, le tireur étant filtré par Projectile.Initialiser.
-	public const uint MasqueProjectile = LayerTerrain | LayerJoueur | LayerPnj; // 7
+	// Ce que masque un projectile : tout ce sur quoi on marche (terrain ET
+	// plateformes traversables — le sol de monde1 est entièrement bâti en
+	// PlateformeUnidirectionnelle, sans le layer 5 les tirs traverseraient donc le
+	// plancher) plus le joueur et les PNJ (pour blesser) — la même scène est tirée
+	// par le joueur et par les ennemis, le tireur étant filtré par
+	// Projectile.Initialiser. Le « one-way » ne s'applique qu'aux corps physiques :
+	// une Area2D détecte la plateforme quel que soit le sens d'arrivée, un projectile
+	// éclate donc dessus aussi bien par-dessous que par-dessus — voulu, un tir est
+	// arrêté par le décor solide.
+	public const uint MasqueProjectile = MasqueMarcheur | LayerJoueur | LayerPnj; // 23
 
 	// Strates de rendu (z_index), de l'arrière vers l'avant. Les valeurs
 	// négatives décrivent l'existant déjà posé dans les .tscn ; elles sont

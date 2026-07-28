@@ -5,12 +5,18 @@ using Godot;
 // complète, deux phases, trois attaques TÉLÉGRAPHIÉES par une pose d'armement distincte,
 // pour que le joueur apprenne à les lire :
 //   Saut écrasant  — s'accroupit (pose « saut_accroupi », la plus longue) puis bondit et
-//                    retombe en propageant une onde de choc au sol ;
+//                    retombe en propageant une onde de choc au sol. Sa trajectoire VISE le
+//                    point où se tenait le joueur à l'instant où il s'est accroupi : c'est
+//                    à la fois son attaque de corps à corps et sa façon de refermer l'écart
+//                    (il ne se téléporte pas — ça, c'est le Père Noël) ;
 //   Tir de glace   — arme son canon (« tir_armement », givre qui se charge) puis tire un
 //                    EclatGlace depuis son milieu, visé sur le joueur — deux à la suite en
 //                    phase 2 (salve mutualisée dans Boss avec le Père Noël) ;
 //   Drop de jouets — ouvre sa trappe (« trappe ») et largue des MiniJouetExplosif ; la
 //                    fermeture rejoue la même animation À L'ENVERS (aucun asset dédié).
+// Le choix du pattern est PONDÉRÉ PAR LA DISTANCE, lue sur les deux zones d'engagement de
+// Boss (ZoneCorpsACorps / ZoneDistance, redimensionnables par instance dans l'éditeur) :
+// voir ChoisirPattern. Hors des deux, il ne tente plus rien et vient chercher le joueur.
 //
 // Le lutin pilote est le point faible narratif : il reste visible dans le cockpit ouvert
 // sur toutes les poses, et s'extrait du tas de planches à la défaite (animation « vaincu »).
@@ -27,7 +33,11 @@ public partial class BossLutinMecha : Boss, BossBorne
 	// Fenêtre d'esquive : le boss reste accroupi tout ce temps avant de bondir.
 	[Export] public float DelaiAccroupi = 0.9f;
 	[Export] public float ImpulsionSaut = -560f;
-	[Export] public float VitesseSautHorizontale = 130f;
+	// PLAFOND de la vitesse horizontale du bond, pas sa valeur : celle-ci est recalculée à
+	// chaque saut pour retomber sur le point visé (voir Bondir). Le plafond borne l'allonge —
+	// au-delà, le mecha planerait au lieu de bondir, et un joueur qui s'enfuit très loin doit
+	// pouvoir lui coûter deux sauts.
+	[Export] public float VitesseSautMax = 280f;
 	[Export] public float DureeImpact = 0.5f;
 	// Portée horizontale de l'onde de choc au sol, de part et d'autre du boss.
 	[Export] public float PorteeOndeChoc = 110f;
@@ -65,11 +75,20 @@ public partial class BossLutinMecha : Boss, BossBorne
 	private int _direction = 1;
 	private Pattern _patternChoisi;
 	private bool _vulnerable;
+
+	// Point de chute visé par le bond en cours, figé À L'INSTANT où le mecha s'accroupit. C'est
+	// tout l'enjeu de l'attaque : il tombe là où le joueur ÉTAIT au début du télégraphe, pas là
+	// où il est — la pose accroupie devient le signal qu'il faut bouger, et bouger suffit.
+	private float _cibleSautX;
+	// Vitesse horizontale calculée au décollage, tenue pendant tout le vol.
+	private float _vitesseSautX;
+
 	private readonly RandomNumberGenerator _rng = new();
 
 	protected override void Initialiser()
 	{
 		_rng.Randomize();
+		CablerZonesEngagement();
 		Sprite.Play("idle");
 	}
 
@@ -120,9 +139,12 @@ public partial class BossLutinMecha : Boss, BossBorne
 					ChoisirPattern();
 				break;
 
+			// Marche : repositionnement en phase 1, rapprochement quand le joueur est hors de
+			// portée. Elle s'interrompt dès qu'il est au contact, pour ne pas lui rentrer
+			// dedans et pour repartir attaquer sans attendre la fin du chrono.
 			case Etat.Deplacement:
 				velocite.X = _direction * VitesseDeplacement;
-				if (_timerEtat <= 0f || AtteintUneBorne())
+				if (_timerEtat <= 0f || AtteintUneBorne() || EvaluerPortee() == PorteeJoueur.CorpsACorps)
 					PasserEnIdle();
 				break;
 
@@ -134,7 +156,9 @@ public partial class BossLutinMecha : Boss, BossBorne
 				break;
 
 			case Etat.SautVol:
-				velocite.X = _direction * VitesseSautHorizontale;
+				// Vitesse figée au décollage : la retoucher en vol ferait du bond un missile
+				// à tête chercheuse, et l'esquive ne vaudrait plus rien.
+				velocite.X = _vitesseSautX;
 				// Le contact avec le sol termine le bond — pas un minuteur, pour que
 				// l'impact tombe toujours pile à l'atterrissage quelle que soit la hauteur.
 				if (velocite.Y >= 0f && IsOnFloor())
@@ -215,13 +239,32 @@ public partial class BossLutinMecha : Boss, BossBorne
 		Sprite.Play("idle");
 	}
 
-	// Choisit la prochaine action puis se tourne vers le joueur. En phase 1 le boss se
-	// déplace souvent (lisible, peu agressif) ; en phase 2 il attaque bien plus.
+	// Choisit la prochaine action puis se tourne vers le joueur. Le tirage est PONDÉRÉ PAR LA
+	// DISTANCE (zones d'engagement) : chaque attaque n'est vraiment bonne que dans sa tranche.
+	//   collé      — le saut écrasant est SON attaque de contact, il domine ; la trappe
+	//                largue juste au-dessus de lui, elle vaut aussi de près ;
+	//   à distance — le canon prime, le seul à couvrir vraiment l'écart ;
+	//   hors de portée — plus rien ne sert : il vient chercher le joueur en marchant, ou d'un
+	//                bond, son saut faisant à la fois trajet et attaque (le mecha ne se
+	//                téléporte pas, c'est la marque du Père Noël).
 	private void ChoisirPattern()
 	{
 		ViserLeJoueur();
 
-		if (Phase == 1 && _rng.Randf() < 0.35f)
+		var portee = EvaluerPortee();
+
+		if (portee == PorteeJoueur.HorsPortee)
+		{
+			if (_rng.Randf() < 0.5f)
+				DemarrerAccroupi();
+			else
+				DemarrerDeplacement();
+			return;
+		}
+
+		// En phase 1 il prend encore le temps de se repositionner sans frapper (lisible, peu
+		// agressif) ; en phase 2 chaque fin d'idle débouche sur une attaque.
+		if (Phase == 1 && _rng.Randf() < 0.25f)
 		{
 			DemarrerDeplacement();
 			return;
@@ -231,18 +274,22 @@ public partial class BossLutinMecha : Boss, BossBorne
 		// ce qui faussait toute la répartition : en phase 1 le tirage retenu ne couvrait
 		// plus [0,1) mais [0.35,1), et le drop de jouets — calé tout en haut de
 		// l'intervalle — ne sortait qu'une fois sur sept environ au lieu de sa part.
-		// Les trois attaques à parts égales : le drop de jouets est un pattern de plein
-		// droit, pas une rareté. Avec l'ancien découpage (60/25/15) ET le tirage partagé,
-		// il ne sortait qu'une fois par minute environ — jamais vu en combat réel.
 		float tirage = _rng.Randf();
-		_patternChoisi = tirage switch
-		{
-			< 0.34f => Pattern.SautEcrasant,
-			< 0.67f => Pattern.TirGlace,
-			_ => Pattern.DropJouets,
-		};
+		_patternChoisi = portee == PorteeJoueur.CorpsACorps
+			? tirage switch
+			{
+				< 0.55f => Pattern.SautEcrasant,
+				< 0.85f => Pattern.DropJouets,
+				_ => Pattern.TirGlace,
+			}
+			: tirage switch
+			{
+				< 0.55f => Pattern.TirGlace,
+				< 0.80f => Pattern.SautEcrasant,
+				_ => Pattern.DropJouets,
+			};
 
-			switch (_patternChoisi)
+		switch (_patternChoisi)
 		{
 			case Pattern.SautEcrasant: DemarrerAccroupi(); break;
 			case Pattern.TirGlace: DemarrerArmementTir(); break;
@@ -258,19 +305,45 @@ public partial class BossLutinMecha : Boss, BossBorne
 	}
 
 	// Télégraphe du saut : pose accroupie tenue assez longtemps pour être lue et esquivée.
+	// C'est ICI que le point de chute est figé — donc au tout début du télégraphe, laissant
+	// au joueur l'intégralité de DelaiAccroupi pour s'en écarter. Le viser au décollage
+	// rendrait l'attaque imparable ; le viser ici en fait un piège de position.
 	private void DemarrerAccroupi()
 	{
 		_etat = Etat.SautAccroupi;
 		_timerEtat = DelaiAccroupi;
 		Sprite.Play("saut_accroupi");
+		ViserLeJoueur();
+
+		var joueur = JoueurLePlusProche(out float _);
+		// Sans joueur en scène il saute sur place plutôt que dans une direction arbitraire.
+		_cibleSautX = joueur != null ? joueur.GlobalPosition.X : GlobalPosition.X;
+		_cibleSautX = Mathf.Clamp(_cibleSautX, LimiteGauche, LimiteDroite);
 	}
 
+	// Décollage : la trajectoire est calée sur le point de chute mémorisé. Le vol dure le temps
+	// que la gravité ramène le mecha à sa hauteur de départ (2·|v0|/g) ; la vitesse horizontale
+	// n'est donc que l'écart à couvrir divisé par ce temps. Plafonnée à VitesseSautMax : un
+	// joueur assez loin le fait retomber court, et lui coûte un second saut.
 	private void Bondir(ref Vector2 velocite)
 	{
 		_etat = Etat.SautVol;
+
+		float dureeVol = 2f * Mathf.Abs(ImpulsionSaut) / Gravity;
+		float ecart = _cibleSautX - GlobalPosition.X;
+		_vitesseSautX = Mathf.Clamp(ecart / dureeVol, -VitesseSautMax, VitesseSautMax);
+
 		velocite.Y = ImpulsionSaut;
-		velocite.X = _direction * VitesseSautHorizontale;
+		velocite.X = _vitesseSautX;
 		Sprite.Play("saut_vol");
+
+		// Il regarde là où il atterrit, et non plus le joueur : celui-ci a pu le contourner
+		// pendant le télégraphe, et un mecha qui bondit à reculons ne se lirait pas.
+		if (!Mathf.IsZeroApprox(ecart))
+		{
+			_direction = ecart > 0f ? 1 : -1;
+			Sprite.FlipH = _direction < 0;
+		}
 	}
 
 	// Atterrissage : pose d'impact + onde de choc qui court au sol des deux côtés.

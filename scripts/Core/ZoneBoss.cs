@@ -354,6 +354,12 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 
 		_epilogueLance = true;
 
+		// Récompense de fin de combat : le joueur repart d'une arène avec toute sa vie,
+		// quel que soit le boss. Posé ICI, dans le tronc commun, plutôt que dans chaque
+		// ZoneBossXxx.SurVictoire — la règle vaut pour toutes les arènes, présentes et à
+		// venir, et ne consomme aucun poisson (ce n'est pas un soin acheté).
+		GameState.Instance?.Soigner(GameState.Instance.PvMax);
+
 		// Le thème de combat s'arrête AVEC le boss, pas au bout du battement : on
 		// retrouve la musique du lieu (celle de l'avant-combat) dès qu'il s'affaisse,
 		// pour que l'épilogue se joue au calme. Sans avant-combat renseigné, rien ne
