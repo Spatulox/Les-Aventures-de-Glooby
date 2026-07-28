@@ -22,6 +22,11 @@
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_cadeau.tscn" id="30_ogcic"]
 [ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="31_r5l3y"]
 [ext_resource type="PackedScene" uid="uid://busolboisemd" path="res://scenes/sol/usine/SolUsineBoisEmboutDroit.tscn" id="32_dimcd"]
+[ext_resource type="PackedScene" uid="uid://oxjctsret87c" path="res://scenes/plateformes/usine/PlateformeMobileBois.tscn" id="33_vgqpv"]
+[ext_resource type="PackedScene" uid="uid://jj522styq8rs" path="res://scenes/entites/pingouin.tscn" id="34_ftbij"]
+[ext_resource type="Texture2D" uid="uid://dj5fy2uhjmbmo" path="res://assets/props/noel/tapis_segment_0.png" id="35_lbqkb"]
+[ext_resource type="Texture2D" uid="uid://cubi3vqy308qw" path="res://assets/props/noel/sapin_petit.png" id="36_pcgnn"]
+[ext_resource type="PackedScene" uid="uid://civtsuvy2xvd8" path="res://scenes/entites/lutin_cgt.tscn" id="37_8vt6c"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -94,7 +99,7 @@ position = Vector2(1444, 280)
 [node name="Camera" type="Node2D" parent="UsinePereNoel" unique_id=1063593249]
 
 [node name="ZoneUsine" parent="UsinePereNoel/Camera" unique_id=21096232 instance=ExtResource("camzone")]
-z_index = -4
+z_index = -5
 position = Vector2(3176.0002, -516)
 rotation = 0.00030183748
 scale = Vector2(12.1875, 6.103882)
@@ -107,7 +112,6 @@ Type = 1
 position = Vector2(1652, -889)
 
 [node name="SolUsineBoisCentreA2" parent="UsinePereNoel/Sol" unique_id=1992762850 instance=ExtResource("10_bw6ma")]
-z_index = 1
 position = Vector2(2242, -887)
 
 [node name="PenteUsineDouceMontante" parent="UsinePereNoel/Sol" unique_id=1659657029 instance=ExtResource("17_e0ldw")]
@@ -219,6 +223,7 @@ position = Vector2(1667.065, 245.575)
 scale = Vector2(1.615, 1.615)
 
 [node name="SolUsineBois" parent="UsinePereNoel/Sol" unique_id=555896231 instance=ExtResource("31_r5l3y")]
+z_index = -1
 position = Vector2(2571, -887)
 
 [node name="SolUsineBoisEmboutDroit" parent="UsinePereNoel/Sol" unique_id=1934098250 instance=ExtResource("32_dimcd")]
@@ -277,6 +282,8 @@ Texte = "Antre du Père Noël"
 
 [node name="LutinNoel2" parent="UsinePereNoel/Pnj" unique_id=1850405562 instance=ExtResource("28_ce8ch")]
 position = Vector2(2365, -131)
+DialogueDynamique = true
+Contexte = "Tu es un lutin de noel qui est soulagé d'avoir fini le rush de noel"
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
@@ -319,7 +326,7 @@ Type = 1
 [node name="SuspensionBois" parent="UsinePereNoelUnderGround/Sol" unique_id=881538028 instance=ExtResource("16_ro3l8")]
 position = Vector2(2815, -1609.4598)
 scale = Vector2(1.53, 1.53)
-Distance = 690.0
+Distance = 730.0
 Vitesse = 100.0
 
 [node name="SolUsineBoisEmboutGauche" parent="UsinePereNoelUnderGround/Sol" unique_id=74424618 instance=ExtResource("10_544ey")]
@@ -399,6 +406,12 @@ position = Vector2(2890, -845.45996)
 z_index = -1
 position = Vector2(2324, -1004.45996)
 
+[node name="LutinNoel" parent="UsinePereNoelUnderGround/Sol" unique_id=536814881 instance=ExtResource("28_ce8ch")]
+position = Vector2(4573, 172.54004)
+DialogueDynamique = true
+Contexte = "Tu es un lutin qui est tombé dans le néant avec des jouets, et tu ne sais pas comment faire pour remonter... Tu es désormais bloqué ici à vie, sauf si tu \"recharge la partie une fois dans le néant\", mais tu ne sais pas ce que ca veut dire, une voix dans ta tête te l'a soufflé..."
+Invite = "Dis une courte réplique dans ton caractère, en parlant de la voix dans ta tête et de qu'elle ta dit."
+
 [node name="Decor" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1502865475]
 
 [node name="Pnj" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1292346637]
@@ -454,6 +467,15 @@ position = Vector2(3964, 234.54004)
 [node name="MiniJouetExplosif9" parent="UsinePereNoelUnderGround/Pnj" unique_id=115522122 instance=ExtResource("21_0gqfy")]
 position = Vector2(4655, 222.54004)
 
+[node name="MechaJouetLanceur5" parent="UsinePereNoelUnderGround/Pnj" unique_id=681059766 instance=ExtResource("26_j4gj1")]
+position = Vector2(1857, -1807.46)
+
+[node name="Pingouin" parent="UsinePereNoelUnderGround/Pnj" unique_id=1788672048 instance=ExtResource("34_ftbij")]
+position = Vector2(2254, 200.54004)
+Lignes = PackedStringArray("Hmmm, Comment je vais remonter moi ?")
+DialogueDynamique = true
+Contexte = "Tu es coincé ici depuis plusieurs mois, tu ne comprends pas pourquoi tu n'es pas mort. Fait toi un dialogue tout seul où tu te demande comment tu va remonter..."
+
 [node name="Interactifs" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=954797307]
 
 [node name="Frontiere" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=411982176]
@@ -465,3 +487,90 @@ position = Vector2(87, 209)
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784830]
 script = ExtResource("mpause")
+
+[node name="PenteUsineDouceMontante" parent="." unique_id=1726084505 instance=ExtResource("17_e0ldw")]
+position = Vector2(2989, -137)
+
+[node name="SolUsineBoisCentreA" parent="." unique_id=702253145 instance=ExtResource("10_bw6ma")]
+z_index = -1
+position = Vector2(1613, -268)
+
+[node name="PlateformeMobileBois" parent="." unique_id=1447328878 instance=ExtResource("33_vgqpv")]
+z_index = -2
+position = Vector2(1988, -231)
+AngleDegres = 284.0
+Distance = 597.24
+
+[node name="BancTravailB" type="Sprite2D" parent="PlateformeMobileBois" unique_id=639250344]
+position = Vector2(-50, -52)
+texture = ExtResource("23_c3de4")
+
+[node name="Pingouin" parent="." unique_id=869663474 instance=ExtResource("34_ftbij")]
+position = Vector2(1425, 203)
+DialogueDynamique = true
+Contexte = "Tu es un pinguoin qui veut échanger son cadeau de noel, et qui n'ose pas rentrer dans la fabrique du père noël car apparement il y aurait une grève avec des jouets très dangeureux..."
+
+[node name="PanneauBois" parent="." unique_id=1764568243 instance=ExtResource("27_wgvji")]
+position = Vector2(142, 215.99998)
+scale = Vector2(0.56, 0.56)
+Type = 3
+Texte = "Usine de jouets"
+Lignes = PackedStringArray("Usine de jouets")
+
+[node name="TapisSegment0" type="Sprite2D" parent="." unique_id=436288828]
+z_index = -1
+position = Vector2(1782, -170)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment1" type="Sprite2D" parent="." unique_id=571186574]
+position = Vector2(1856, -170)
+texture = ExtResource("35_lbqkb")
+
+[node name="BancTravailA" type="Sprite2D" parent="." unique_id=848640379]
+position = Vector2(1920, -177)
+texture = ExtResource("22_g86s4")
+
+[node name="GuirlandeSegmentRouge" type="Sprite2D" parent="." unique_id=1256341600]
+z_index = -1
+position = Vector2(1855, -115)
+scale = Vector2(1.35, 1)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinGrand" type="Sprite2D" parent="." unique_id=1194551940]
+z_index = -1
+position = Vector2(2387, -155)
+scale = Vector2(5.4479165, 6.18125)
+texture = ExtResource("24_g86s4")
+
+[node name="SapinPetit" type="Sprite2D" parent="." unique_id=12448409]
+z_index = -1
+position = Vector2(1469.0002, 95.00003)
+scale = Vector2(5.6458335, 5.734375)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge2" type="Sprite2D" parent="." unique_id=1663590018]
+z_index = -2
+position = Vector2(1543, -4)
+texture = ExtResource("25_c3de4")
+
+[node name="LutinCgt" parent="." unique_id=1187403218 instance=ExtResource("37_8vt6c")]
+z_index = 1
+position = Vector2(2295, -885)
+Pose = 0
+Lignes = PackedStringArray("HAHA ! J\'ai laché plein de jouet piégé dans l\'usine !")
+DialogueDynamique = true
+Contexte = "Tu es un pinguoin gréviste renfrogné de la CGT, et tu es content d'avoir contruit des jouets dangeureux et de les avoir lâchés un peu partout dans la Fabrique du père noel pour faire une farce au père noel et a tes collègues"
+
+[node name="LutinCgt2" parent="." unique_id=148054182 instance=ExtResource("37_8vt6c")]
+position = Vector2(2441, -881)
+Pose = 2
+ArtRegardeADroite = true
+Lignes = PackedStringArray("Hhhmf, je ne travaillerais pas !")
+DialogueDynamique = true
+Contexte = "Tu es un pinguoin gréviste renfrogné de la CGT, et tu ne veux absolument pas travailler ! Surtout pas !"
+
+[node name="LutinNoel" parent="." unique_id=1597419713 instance=ExtResource("28_ce8ch")]
+position = Vector2(2959, 715)
+Lignes = PackedStringArray("Si tu tombe, c\'est fini, le néant va t\'aspirer, comme tous les jouets qui y sont tombé !")
+DialogueDynamique = true
+Contexte = "Tu es un lutin très engagé dans la production de jouet, et tu es très triste car de temps en temps, des jouets tombent dans le néant et on ne les revoit jamais..."
