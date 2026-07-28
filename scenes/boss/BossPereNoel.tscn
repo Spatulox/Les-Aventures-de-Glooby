@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/Entities/Pnj/BossPereNoel.cs" id="1"]
 [ext_resource type="Texture2D" path="res://assets/pnj/boss_pere_noel/idle/00.png" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/projectiles/EclatGlace.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/CadeauExplosif.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MiniJouetExplosif.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/PantalonPickup.tscn" id="5_butin"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/OndeDeChoc.tscn" id="6_onde"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(62, 104)
@@ -16,8 +17,9 @@ script = ExtResource("1")
 PvMax = 135
 DelaiEffacement = 1.2
 Butin = ExtResource("5_butin")
-SceneEclatGlace = ExtResource("3")
+SceneCadeauExplosif = ExtResource("3")
 SceneCadeau = ExtResource("4")
+ScenePunchOnde = ExtResource("6_onde")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -63)

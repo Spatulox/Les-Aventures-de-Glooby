@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/Entities/Ennemis/Usine/MechaJouetLanceur.cs" id="1"]
 [ext_resource type="Texture2D" path="res://assets/ennemis/usine/mecha_lanceur/idle/00.png" id="2"]
-[ext_resource type="PackedScene" path="res://scenes/ennemis/BouleDeNeige.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/projectiles/CadeauExplosif.tscn" id="3"]
 
 [sub_resource type="RectangleShape2D" id="RectCorps"]
 size = Vector2(26, 46)
@@ -18,7 +18,7 @@ collision_layer = 4
 collision_mask = 17
 script = ExtResource("1")
 PvMax = 6
-SceneBoule = ExtResource("3")
+SceneProjectile = ExtResource("3")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -28)

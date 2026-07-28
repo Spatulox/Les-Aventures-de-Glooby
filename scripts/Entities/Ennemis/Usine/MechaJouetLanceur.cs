@@ -2,8 +2,12 @@ using Godot;
 
 // Ennemi « Mécha jouet lanceur » (usine du Père Noël) : la déclinaison usine du LANCEUR de la
 // banquise (BonhommeDeNeige). Même structure d'états — statique, il attend que le joueur entre
-// dans sa portée, ARME son bras (télégraphe visible), lance une boule de neige en cloche, puis
-// recharge. Il réutilise TEL QUEL le projectile existant (scenes/ennemis/BouleDeNeige.tscn).
+// dans sa portée, ARME son bras (télégraphe visible), lance un projectile en cloche, puis
+// recharge. Il sort de la même chaîne de montage que son patron : sa scène lui met un
+// CadeauExplosif dans le bras, le même que celui du Père Noël.
+//
+// La scène du projectile est un simple PackedScene typé Projectile : n'importe quel projectile
+// du jeu s'y branche sans toucher au code (il tirait une BouleDeNeige jusqu'ici).
 //
 // Différence assumée avec le bonhomme, qui justifie une classe à part plutôt qu'une sous-classe :
 // le bonhomme est un obstacle de neige (il ne perd jamais de PV, il fond au pouvoir de chaleur et
@@ -13,8 +17,8 @@ public partial class MechaJouetLanceur : PnjMechant
 {
 	private enum EtatMecha { Idle, Armer, Lancer }
 
-	// Scène du projectile en cloche — réutilise scenes/ennemis/BouleDeNeige.tscn.
-	[Export] public PackedScene SceneBoule;
+	// Scène du projectile en cloche — scenes/projectiles/CadeauExplosif.tscn.
+	[Export] public PackedScene SceneProjectile;
 	// Durée du télégraphe « le bras se charge » avant le lancer : la fenêtre d'esquive.
 	[Export] public float DureeArmer = 0.6f;
 	// Durée de la pose de lancer (la boule part au tout début, quand le bras fouette).
@@ -110,15 +114,17 @@ public partial class MechaJouetLanceur : PnjMechant
 
 	private void Tirer()
 	{
-		if (SceneBoule == null)
+		if (SceneProjectile == null)
 			return;
 
-		var boule = SceneBoule.Instantiate<BouleDeNeige>();
+		// Typé sur la BASE Projectile, pas sur une scène en particulier : c'est ce qui permet
+		// d'échanger le projectile depuis la scène sans retoucher ce code.
+		var projectile = SceneProjectile.Instantiate<Projectile>();
 		// Cloche : vitesse horizontale vers le joueur + poussée vers le haut. Le mécha
 		// s'enregistre comme tireur pour ne pas se blesser avec son propre projectile.
-		boule.Initialiser(this, new Vector2(_dirTir * VitesseProjectile, -ArcProjectile));
-		GetParent().AddChild(boule);
-		boule.GlobalPosition = GlobalPosition + new Vector2(_dirTir * 14f, -20f);
+		projectile.Initialiser(this, new Vector2(_dirTir * VitesseProjectile, -ArcProjectile));
+		GetParent().AddChild(projectile);
+		projectile.GlobalPosition = GlobalPosition + new Vector2(_dirTir * 14f, -20f);
 	}
 
 	// Décompte le minuteur courant ; renvoie vrai quand il atteint 0 (transition d'état).
