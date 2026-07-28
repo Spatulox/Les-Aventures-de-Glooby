@@ -276,6 +276,34 @@ position = Vector2(961, 172.00002)
 scale = Vector2(5.625, 4.982143)
 texture = ExtResource("53_yktmh")
 
+[node name="RocherGlace4" type="Sprite2D" parent="Banquise/Decor" unique_id=1943640515]
+z_index = -1
+position = Vector2(333, 225)
+texture = ExtResource("29_rswis")
+
+[node name="00" type="Sprite2D" parent="Banquise/Decor" unique_id=1754894643]
+z_index = -1
+position = Vector2(412, 194)
+scale = Vector2(1.5384616, 1.6041666)
+texture = ExtResource("30_4xtru")
+
+[node name="RocherB8" type="Sprite2D" parent="Banquise/Decor" unique_id=810310092]
+z_index = 2
+position = Vector2(355, 280.25)
+scale = Vector2(1.6730775, 1.5572916)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherA5" type="Sprite2D" parent="Banquise/Decor" unique_id=2003830964]
+z_index = 2
+position = Vector2(453.00003, 287)
+scale = Vector2(2.578125, 2.0852273)
+texture = ExtResource("32_s4oyp")
+
+[node name="CristalGros3" type="Sprite2D" parent="Banquise/Decor" unique_id=199047421]
+z_index = 2
+position = Vector2(456, 236)
+texture = ExtResource("33_uwxrn")
+
 [node name="Pnj" type="Node2D" parent="Banquise" unique_id=1652138612]
 
 [node name="Pingouin" parent="Banquise/Pnj" unique_id=1788672048 instance=ExtResource("34_ftbij")]
@@ -477,6 +505,456 @@ position = Vector2(3792, -132)
 
 [node name="Decor" type="Node2D" parent="UsinePereNoel" unique_id=1280656102]
 
+[node name="Haut" type="Node2D" parent="UsinePereNoel/Decor" unique_id=984946334]
+
+[node name="Sapin" type="Node2D" parent="UsinePereNoel/Decor/Haut" unique_id=1194615857]
+
+[node name="SapinPetit" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=1718782008]
+z_index = -2
+position = Vector2(2547.0002, -957)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=1210152747]
+z_index = -3
+position = Vector2(2657.0002, -992.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit2" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=907647813]
+z_index = -2
+position = Vector2(2323.5, -957)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge2" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=498445447]
+z_index = -3
+position = Vector2(2433.5, -992.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit3" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=355338767]
+z_index = -2
+position = Vector2(2992.0002, -957)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge3" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=766371916]
+z_index = -3
+position = Vector2(3102.0002, -992.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit4" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=266472386]
+z_index = -2
+position = Vector2(2768.5, -957)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge4" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=1095341362]
+z_index = -3
+position = Vector2(2878.5, -992.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit5" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=814203]
+z_index = -2
+position = Vector2(3409.0002, -958)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge5" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=788864310]
+z_index = -3
+position = Vector2(3519.0002, -993.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit6" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=656053278]
+z_index = -2
+position = Vector2(3185.5, -958)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge6" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=1158170088]
+z_index = -3
+position = Vector2(3295.5, -993.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit7" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=53410108]
+z_index = -2
+position = Vector2(3854.0002, -958)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge7" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=25479100]
+z_index = -3
+position = Vector2(3964.0002, -993.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit8" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=1416527836]
+z_index = -2
+position = Vector2(3630.5, -958)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge8" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=696927464]
+z_index = -3
+position = Vector2(3740.5, -993.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit9" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=650617703]
+z_index = -2
+position = Vector2(4299, -958)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge9" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=329948420]
+z_index = -3
+position = Vector2(4409, -993.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit10" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=346567363]
+z_index = -2
+position = Vector2(4075.5, -958)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge10" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=1445774877]
+z_index = -3
+position = Vector2(4185.5, -993.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinPetit12" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=2133910242]
+z_index = -2
+position = Vector2(4520.5, -958)
+scale = Vector2(2.4791667, 2.75)
+texture = ExtResource("36_pcgnn")
+
+[node name="GuirlandeSegmentRouge12" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=922918962]
+z_index = -3
+position = Vector2(4630.5, -993.00006)
+scale = Vector2(1.385, 1.385)
+texture = ExtResource("25_c3de4")
+
+[node name="SapinGrand" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=1032444961]
+z_index = -1
+position = Vector2(1961, -945)
+texture = ExtResource("24_g86s4")
+
+[node name="GuirlandeSegmentRouge11" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Sapin" unique_id=36609937]
+z_index = -2
+position = Vector2(1854.5, -983.75)
+scale = Vector2(1.33125, 1.3148148)
+texture = ExtResource("25_c3de4")
+
+[node name="Guirlandes" type="Node2D" parent="UsinePereNoel/Decor/Haut" unique_id=1291419184]
+position = Vector2(0, 1565.46)
+
+[node name="GuirlandeEmboutGaucheRouge" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=1855531582]
+position = Vector2(2274, -2304.46)
+texture = ExtResource("39_o3phl")
+
+[node name="GuirlandeEmboutGaucheRouge2" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=2029951391]
+position = Vector2(2385, -2303.46)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge3" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=1410879386]
+position = Vector2(2545, -2303.46)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge4" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=617908057]
+position = Vector2(2705, -2303.46)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge5" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=2141472228]
+position = Vector2(2865, -2303.46)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge6" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=819460584]
+position = Vector2(3025, -2302.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge7" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=120900629]
+position = Vector2(3185, -2302.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge8" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=1357992539]
+position = Vector2(3345, -2302.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge9" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=388594124]
+position = Vector2(3505, -2302.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge10" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=170726941]
+position = Vector2(3665, -2301.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge11" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=1739840989]
+position = Vector2(3825, -2301.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge12" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=1145914313]
+position = Vector2(3985, -2301.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge13" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=121217427]
+position = Vector2(4145, -2300.46)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge14" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=456448310]
+position = Vector2(4305, -2299.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge15" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=844876449]
+position = Vector2(4465, -2299.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge16" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=398793385]
+position = Vector2(4625, -2299.96)
+texture = ExtResource("25_c3de4")
+
+[node name="GuirlandeEmboutGaucheRouge17" type="Sprite2D" parent="UsinePereNoel/Decor/Haut/Guirlandes" unique_id=1063462969]
+position = Vector2(4785, -2298.46)
+texture = ExtResource("25_c3de4")
+
+[node name="TapisSegment2" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=915532200]
+position = Vector2(2282, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment3" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1836350508]
+z_index = 1
+position = Vector2(2362, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment4" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=281957802]
+z_index = 1
+position = Vector2(2442, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment5" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=800920290]
+position = Vector2(2522, -805)
+texture = ExtResource("57_8asjt")
+
+[node name="TapisSegment6" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=170915892]
+z_index = 1
+position = Vector2(2602, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment7" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1512216555]
+position = Vector2(2682, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment8" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=48738329]
+position = Vector2(2762, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment9" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=156892264]
+z_index = 1
+position = Vector2(2842, -805)
+texture = ExtResource("57_8asjt")
+
+[node name="TapisSegment10" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1723067687]
+z_index = 1
+position = Vector2(2922, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment11" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1255589058]
+position = Vector2(3002, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment12" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1725774422]
+z_index = 1
+position = Vector2(3082, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment13" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1041756868]
+z_index = 1
+position = Vector2(3162, -805)
+texture = ExtResource("57_8asjt")
+
+[node name="TapisSegment14" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=689196471]
+position = Vector2(3242, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment15" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=305535003]
+position = Vector2(3322, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment16" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=374866446]
+position = Vector2(3402, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment17" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1789498496]
+position = Vector2(3482, -805)
+texture = ExtResource("57_8asjt")
+
+[node name="TapisSegment18" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=2072303365]
+z_index = 1
+position = Vector2(3562, -805)
+texture = ExtResource("57_8asjt")
+
+[node name="TapisSegment19" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1393924961]
+z_index = 1
+position = Vector2(3642, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment20" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=955000513]
+z_index = 1
+position = Vector2(3722, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment21" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=573563364]
+position = Vector2(3802, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment22" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=76674989]
+position = Vector2(3882, -805)
+texture = ExtResource("57_8asjt")
+
+[node name="TapisSegment23" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=778175237]
+z_index = 1
+position = Vector2(3962, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment24" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1351848893]
+position = Vector2(4042, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment25" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1431637037]
+position = Vector2(4122, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment26" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=864889340]
+z_index = 1
+position = Vector2(4202, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment27" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1743479844]
+z_index = 1
+position = Vector2(4282, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment28" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1000061898]
+z_index = 1
+position = Vector2(4362, -805)
+texture = ExtResource("57_8asjt")
+
+[node name="TapisSegment29" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=766321766]
+position = Vector2(4442, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment30" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1795034677]
+z_index = 1
+position = Vector2(4522, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment31" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=774746256]
+position = Vector2(4602, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="TapisSegment32" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1576161313]
+position = Vector2(4682, -805)
+texture = ExtResource("35_lbqkb")
+
+[node name="TapisSegment33" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=59680850]
+position = Vector2(4762, -805)
+texture = ExtResource("56_6ks8h")
+
+[node name="BancTravailA11" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1335928801]
+z_index = 1
+position = Vector2(2311, -794)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA12" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1435140729]
+position = Vector2(2413, -823)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailB3" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=2067491952]
+z_index = 1
+position = Vector2(2498, -794)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailB4" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1466582820]
+position = Vector2(2727, -801)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailB5" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=135495004]
+z_index = 1
+position = Vector2(2974, -790)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailB6" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=648925415]
+position = Vector2(3249, -805)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailB7" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=865143606]
+position = Vector2(3560, -828)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailB8" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1458277914]
+position = Vector2(3799, -798)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailB9" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=321926247]
+position = Vector2(4108, -801)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailB2" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1767045412]
+z_index = 1
+position = Vector2(4384, -800)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailA3" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=574750470]
+position = Vector2(4205, -838)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA4" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1573163111]
+position = Vector2(4317, -833)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA5" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=485923406]
+position = Vector2(4519, -830)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailB10" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=123759037]
+position = Vector2(4639, -797)
+texture = ExtResource("23_c3de4")
+
+[node name="BancTravailA6" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=120873767]
+position = Vector2(3963, -819)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA7" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1124074772]
+position = Vector2(3679, -826)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA8" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=410355457]
+position = Vector2(3404, -799)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA9" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=1642002971]
+position = Vector2(3123, -826)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA10" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=326736788]
+z_index = 1
+position = Vector2(2836, -794)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA13" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=242115359]
+position = Vector2(2896, -830)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailA14" type="Sprite2D" parent="UsinePereNoel/Decor/Haut" unique_id=878248431]
+position = Vector2(2600, -820)
+texture = ExtResource("22_g86s4")
+
 [node name="BancTravailA" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=927058952]
 position = Vector2(1796, -812)
 texture = ExtResource("22_g86s4")
@@ -484,17 +962,6 @@ texture = ExtResource("22_g86s4")
 [node name="BancTravailB" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=977464062]
 position = Vector2(1926, -891)
 texture = ExtResource("23_c3de4")
-
-[node name="SapinGrand" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1032444961]
-z_index = -1
-position = Vector2(1961, -945)
-texture = ExtResource("24_g86s4")
-
-[node name="GuirlandeSegmentRouge" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=36609937]
-z_index = -2
-position = Vector2(1854.5, -983.75)
-scale = Vector2(1.33125, 1.3148148)
-texture = ExtResource("25_c3de4")
 
 [node name="BancTravailA2" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1340971272]
 position = Vector2(2357, -55)
@@ -505,135 +972,41 @@ position = Vector2(2472, 21)
 scale = Vector2(2.135, 2.135)
 texture = ExtResource("25_c3de4")
 
-[node name="TapisSegment2" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=915532200]
-position = Vector2(2282, -805)
+[node name="TapisSegment0" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=436288828]
+z_index = -1
+position = Vector2(1782, -170)
 texture = ExtResource("35_lbqkb")
 
-[node name="TapisSegment3" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1836350508]
-position = Vector2(2362, -805)
+[node name="TapisSegment1" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=571186574]
+position = Vector2(1856, -170)
 texture = ExtResource("35_lbqkb")
 
-[node name="TapisSegment4" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=281957802]
-position = Vector2(2442, -805)
-texture = ExtResource("56_6ks8h")
+[node name="BancTravailA3" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=848640379]
+position = Vector2(1920, -177)
+texture = ExtResource("22_g86s4")
 
-[node name="TapisSegment5" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=800920290]
-position = Vector2(2522, -805)
-texture = ExtResource("57_8asjt")
+[node name="GuirlandeSegmentRouge17" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1256341600]
+z_index = -1
+position = Vector2(1855, -115)
+scale = Vector2(1.35, 1)
+texture = ExtResource("25_c3de4")
 
-[node name="TapisSegment6" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=170915892]
-position = Vector2(2602, -805)
-texture = ExtResource("35_lbqkb")
+[node name="SapinGrand" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1194551940]
+z_index = -1
+position = Vector2(2387, -155)
+scale = Vector2(5.4479165, 6.18125)
+texture = ExtResource("24_g86s4")
 
-[node name="TapisSegment7" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1512216555]
-position = Vector2(2682, -805)
-texture = ExtResource("35_lbqkb")
+[node name="SapinPetit" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=12448409]
+z_index = -1
+position = Vector2(1469.0002, 95)
+scale = Vector2(5.6458335, 5.734375)
+texture = ExtResource("36_pcgnn")
 
-[node name="TapisSegment8" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=48738329]
-position = Vector2(2762, -805)
-texture = ExtResource("56_6ks8h")
-
-[node name="TapisSegment9" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=156892264]
-position = Vector2(2842, -805)
-texture = ExtResource("57_8asjt")
-
-[node name="TapisSegment10" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1723067687]
-position = Vector2(2922, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment11" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1255589058]
-position = Vector2(3002, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment12" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1725774422]
-position = Vector2(3082, -805)
-texture = ExtResource("56_6ks8h")
-
-[node name="TapisSegment13" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1041756868]
-position = Vector2(3162, -805)
-texture = ExtResource("57_8asjt")
-
-[node name="TapisSegment14" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=689196471]
-position = Vector2(3242, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment15" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=305535003]
-position = Vector2(3322, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment16" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=374866446]
-position = Vector2(3402, -805)
-texture = ExtResource("56_6ks8h")
-
-[node name="TapisSegment17" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1789498496]
-position = Vector2(3482, -805)
-texture = ExtResource("57_8asjt")
-
-[node name="TapisSegment18" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=2072303365]
-position = Vector2(3562, -805)
-texture = ExtResource("57_8asjt")
-
-[node name="TapisSegment19" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1393924961]
-position = Vector2(3642, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment20" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=955000513]
-position = Vector2(3722, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment21" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=573563364]
-position = Vector2(3802, -805)
-texture = ExtResource("56_6ks8h")
-
-[node name="TapisSegment22" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=76674989]
-position = Vector2(3882, -805)
-texture = ExtResource("57_8asjt")
-
-[node name="TapisSegment23" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=778175237]
-position = Vector2(3962, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment24" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1351848893]
-position = Vector2(4042, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment25" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1431637037]
-position = Vector2(4122, -805)
-texture = ExtResource("56_6ks8h")
-
-[node name="TapisSegment26" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=864889340]
-position = Vector2(4202, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment27" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1743479844]
-position = Vector2(4282, -805)
-texture = ExtResource("56_6ks8h")
-
-[node name="TapisSegment28" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1000061898]
-position = Vector2(4362, -805)
-texture = ExtResource("57_8asjt")
-
-[node name="TapisSegment29" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=766321766]
-position = Vector2(4442, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment30" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1795034677]
-position = Vector2(4522, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment31" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=774746256]
-position = Vector2(4602, -805)
-texture = ExtResource("56_6ks8h")
-
-[node name="TapisSegment32" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1576161313]
-z_index = 2
-position = Vector2(4682, -805)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment33" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=59680850]
-z_index = 2
-position = Vector2(4762, -805)
-texture = ExtResource("56_6ks8h")
+[node name="GuirlandeSegmentRouge18" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1663590018]
+z_index = -2
+position = Vector2(1543, -4)
+texture = ExtResource("25_c3de4")
 
 [node name="Pnj" type="Node2D" parent="UsinePereNoel" unique_id=2000834972]
 
@@ -643,7 +1016,7 @@ position = Vector2(1974, 228)
 [node name="MechaJouetLanceur" parent="UsinePereNoel/Pnj" unique_id=2052075158 instance=ExtResource("26_j4gj1")]
 position = Vector2(3016, 207)
 
-[node name="LutinNoel" parent="UsinePereNoel/Pnj" unique_id=276249539 instance=ExtResource("28_ce8ch")]
+[node name="LutinNoel" parent="UsinePereNoel/Pnj" unique_id=114923281 instance=ExtResource("28_ce8ch")]
 position = Vector2(4613, 208)
 Lignes = PackedStringArray("Ollama est cassé T_T, je ne peux pas parler normalement")
 DialogueDynamique = true
@@ -664,40 +1037,89 @@ position = Vector2(2365, -131)
 DialogueDynamique = true
 Contexte = "Tu es un lutin de noel qui est soulagé d'avoir fini le rush de noel"
 
-[node name="RocherGlace" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=1943640515]
-z_index = -1
-position = Vector2(333, 225)
-texture = ExtResource("29_rswis")
-
-[node name="00" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=1754894643]
-z_index = -1
-position = Vector2(412, 194)
-scale = Vector2(1.5384616, 1.6041666)
-texture = ExtResource("30_4xtru")
-
-[node name="RocherB" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=810310092]
-z_index = 2
-position = Vector2(355, 280.25)
-scale = Vector2(1.6730775, 1.5572916)
-texture = ExtResource("31_uwxrn")
-
-[node name="RocherA" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=2003830964]
-z_index = 2
-position = Vector2(453.00003, 287)
-scale = Vector2(2.578125, 2.0852273)
-texture = ExtResource("32_s4oyp")
-
-[node name="CristalGros" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=199047421]
-z_index = 2
-position = Vector2(456, 236)
-texture = ExtResource("33_uwxrn")
-
 [node name="PereNoel" parent="UsinePereNoel/Pnj" unique_id=45457349 instance=ExtResource("8_ashjp")]
-position = Vector2(4186, -855)
+position = Vector2(4648, -860)
 ArtRegardeADroite = true
 DialogueDynamique = true
 Contexte = "Tu es le Grand-Père Noël, et tu as été mis au rebut par le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT.
 Tu dois forcément parler du fait que tu es le Grand-Père Noel. Ne dis pas que tu es le Père Noel, tu es le Grand-Père Noel, le prédécesseur du Père Noel actuel"
+
+[node name="LutinHautTriste" type="Node2D" parent="UsinePereNoel/Pnj" unique_id=888933144]
+
+[node name="LutinNoel3" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=276249539 instance=ExtResource("28_ce8ch")]
+position = Vector2(2653, -886)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel4" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=1588583516 instance=ExtResource("28_ce8ch")]
+position = Vector2(2758, -885)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel16" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=11409057 instance=ExtResource("28_ce8ch")]
+position = Vector2(1810, -896)
+DialogueDynamique = true
+Contexte = "Tu trouve ca bizarre, que tu n'ai pas le même sapin en décoration que tes collègues de travail..."
+
+[node name="LutinNoel17" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=517626593 instance=ExtResource("28_ce8ch")]
+position = Vector2(1915, -895)
+DialogueDynamique = true
+Contexte = "Tu trouve ca bizarre, que tu n'ai pas le même sapin en décoration que tes collègues de travail..."
+
+[node name="LutinNoel5" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=294852464 instance=ExtResource("28_ce8ch")]
+position = Vector2(2943, -885)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel6" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=322914542 instance=ExtResource("28_ce8ch")]
+position = Vector2(3091, -891)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel7" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=1433400417 instance=ExtResource("28_ce8ch")]
+position = Vector2(3260, -891)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel8" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=1351591766 instance=ExtResource("28_ce8ch")]
+position = Vector2(3422, -890)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel9" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=1666188741 instance=ExtResource("28_ce8ch")]
+position = Vector2(3527, -889)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel10" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=770622364 instance=ExtResource("28_ce8ch")]
+position = Vector2(3712, -889)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel11" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=1085951819 instance=ExtResource("28_ce8ch")]
+position = Vector2(3860, -895)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel12" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=835199315 instance=ExtResource("28_ce8ch")]
+position = Vector2(4029, -895)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel13" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=1557738517 instance=ExtResource("28_ce8ch")]
+position = Vector2(4185, -889)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel14" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=1394134939 instance=ExtResource("28_ce8ch")]
+position = Vector2(4333, -895)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LutinNoel15" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=636950600 instance=ExtResource("28_ce8ch")]
+position = Vector2(4502, -895)
+DialogueDynamique = true
+Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
@@ -827,110 +1249,6 @@ Contexte = "Tu es un lutin qui est tombé dans le néant avec des jouets, et tu 
 Invite = "Dis une courte réplique dans ton caractère, en parlant de la voix dans ta tête et de qu'elle ta dit."
 
 [node name="Decor" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1502865475]
-
-[node name="GuirlandeEmboutGaucheRouge" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1855531582]
-position = Vector2(2274, -2304.46)
-texture = ExtResource("39_o3phl")
-
-[node name="GuirlandeSegmentRouge" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=2029951391]
-position = Vector2(2385, -2303.46)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge2" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1410879386]
-position = Vector2(2545, -2303.46)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge3" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=617908057]
-position = Vector2(2705, -2303.46)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge4" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=2141472228]
-position = Vector2(2865, -2303.46)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge5" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=819460584]
-position = Vector2(3025, -2302.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge6" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=120900629]
-position = Vector2(3185, -2302.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge7" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1357992539]
-position = Vector2(3345, -2302.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge8" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=388594124]
-position = Vector2(3505, -2302.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge9" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=170726941]
-position = Vector2(3665, -2301.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge10" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1739840989]
-position = Vector2(3825, -2301.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge11" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1145914313]
-position = Vector2(3985, -2301.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge12" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=121217427]
-position = Vector2(4145, -2300.46)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge13" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=456448310]
-position = Vector2(4305, -2299.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge14" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=844876449]
-position = Vector2(4465, -2299.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge15" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=398793385]
-position = Vector2(4625, -2299.96)
-texture = ExtResource("25_c3de4")
-
-[node name="GuirlandeSegmentRouge16" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1063462969]
-position = Vector2(4785, -2298.46)
-texture = ExtResource("25_c3de4")
-
-[node name="TapisSegment0" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=436288828]
-z_index = -1
-position = Vector2(1782, -1735.46)
-texture = ExtResource("35_lbqkb")
-
-[node name="TapisSegment1" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=571186574]
-position = Vector2(1856, -1735.46)
-texture = ExtResource("35_lbqkb")
-
-[node name="BancTravailA" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=848640379]
-position = Vector2(1920, -1742.46)
-texture = ExtResource("22_g86s4")
-
-[node name="GuirlandeSegmentRouge17" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1256341600]
-z_index = -1
-position = Vector2(1855, -1680.46)
-scale = Vector2(1.35, 1)
-texture = ExtResource("25_c3de4")
-
-[node name="SapinGrand" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1194551940]
-z_index = -1
-position = Vector2(2387, -1720.46)
-scale = Vector2(5.4479165, 6.18125)
-texture = ExtResource("24_g86s4")
-
-[node name="SapinPetit" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=12448409]
-z_index = -1
-position = Vector2(1469.0002, -1470.46)
-scale = Vector2(5.6458335, 5.734375)
-texture = ExtResource("36_pcgnn")
-
-[node name="GuirlandeSegmentRouge18" type="Sprite2D" parent="UsinePereNoelUnderGround/Decor" unique_id=1663590018]
-z_index = -2
-position = Vector2(1543, -1569.46)
-texture = ExtResource("25_c3de4")
 
 [node name="Pnj" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1292346637]
 
