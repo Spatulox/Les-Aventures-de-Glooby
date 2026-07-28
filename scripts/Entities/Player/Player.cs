@@ -123,6 +123,9 @@ public partial class Player : LivingEntity
 	private bool _surPenteDescendante;
 	private float _xAvantMarche;
 	private int _framesSansProgres;
+	// Réutilisé à chaque sonde de GererMarcheAutomatique : TestMove veut un objet à
+	// remplir, en allouer un par frame ne servirait qu'à nourrir le ramasse-miettes.
+	private readonly KinematicCollision2D _contactMarche = new();
 	private float _timerPenteRaide;
 	private bool _enLancer;
 	private bool _enDegats;
@@ -786,8 +789,14 @@ public partial class Player : LivingEntity
 			for (var hauteur = PasMarche; hauteur <= decollementMax; hauteur += PasMarche)
 			{
 				var montee = new Vector2(0f, -hauteur);
-				// Plafond juste au-dessus : inutile de chercher plus haut.
-				if (TestMove(depart, montee))
+				// Plafond juste au-dessus : inutile de chercher plus haut. On exige une
+				// vraie normale de plafond (tournée vers le bas, Y > 0) et pas n'importe
+				// quel contact : quand le joueur est À RAS de la face du ressaut — le cas
+				// même où l'on veut le franchir — TestMove signale cette face pour un
+				// mouvement pourtant purement vertical. Sans ce filtre la recherche
+				// s'arrêtait dès la première hauteur et le franchissement ne marchait que
+				// par chance, selon que la capsule était encore à un cheveu de la face.
+				if (TestMove(depart, montee, _contactMarche) && _contactMarche.GetNormal().Y > 0.5f)
 					break;
 				if (TestMove(depart.Translated(montee), deplacement))
 					continue;

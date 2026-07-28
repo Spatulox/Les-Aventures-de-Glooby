@@ -115,6 +115,15 @@ sur tout le dépôt ne trouvait aucune occurrence de `FloorSnapLength` — la va
 `Player._Ready()`. Note : le problème ne se limite pas au 45°, une pente *douce*
 (21,6°) fait déjà chuter de 1,45px par frame, soit au-delà du snap par défaut.
 
+**Révision 2026-07-28 : 8 → 12.** Deux raisons. (1) `HauteurMarcheMax` vaut
+désormais 20 : *descendre* une marche encaissée par `GererMarcheAutomatique`
+décollait le joueur d'une frame avec un snap de 8, et l'escalier sautillait.
+(2) En glissade sur pente forte (44,8°) le joueur chute de 6,95px/frame à
+420px/s et **9,73px/frame sur glace** (588px/s) : 8px était donc trop court
+là aussi, il perdait le contact — donc `GetFloorNormal()`, donc
+`EstPenteDescendante()` et le gel de l'élan de pente. Le saut reste intact
+(le snap ne s'applique jamais quand `velocity.Y < 0`).
+
 ## CameraZone : hauteur minimale = hauteur du viewport (360)
 
 Les zones caméra faisaient 243-256px de haut pour un viewport de 360. Quand la
