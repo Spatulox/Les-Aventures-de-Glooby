@@ -12,6 +12,12 @@ using Godot;
 // transformation cisaillée, donc le skew se pose sur le nœud "Visuel" (purement graphique)
 // et JAMAIS sur la racine — les collisions, elles, restent d'aplomb.
 //
+// PROFONDEUR : le cadre est coupé en deux dans la scène — pas en deux PNG, mais deux Sprite2D
+// affichant chacun une moitié du MÊME fichier via region_rect. Le joueur (z_index = 1) passe
+// DEVANT le montant gauche (z −1, avec le battant) et DERRIÈRE le montant droit (z 3), ce qui
+// donne la profondeur d'une porte franchie en biais. Déplacer la ligne de coupe = bouger les
+// deux region_rect (et l'offset de la moitié, qui vaut ± largeur_region / 2).
+//
 // Anti-piège : la porte refuse de se refermer tant que le joueur est dans l'embrasure
 // (ZoneBattant), et si jamais il s'y glisse pendant la fermeture, elle se rouvre au lieu
 // de l'emmurer dans un StaticBody2D.
