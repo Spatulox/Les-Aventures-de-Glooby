@@ -1,24 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://busnplmobbois1"]
+[gd_scene format=3 uid="uid://oxjctsret87c"]
 
 [ext_resource type="Script" uid="uid://c4fppyruucspm" path="res://scripts/Plateformes/PlateformeMobile.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/plateformes/mobile_bois.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://dxxqq8u1yvhn7" path="res://assets/plateformes/mobile_bois.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="RectDeck"]
-size = Vector2(200, 40)
+size = Vector2(200, 76)
 
-[node name="PlateformeMobileBois" type="AnimatableBody2D"]
+[node name="PlateformeMobileBois" type="AnimatableBody2D" unique_id=359796163]
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("1")
-AngleDegres = 0.0
-Distance = 260.0
-Vitesse = 60.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1665943824]
 scale = Vector2(2, 2)
 texture = ExtResource("2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -34)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1984066480]
+position = Vector2(0, 7)
+scale = Vector2(1.0799996, 1)
 shape = SubResource("RectDeck")
 one_way_collision = true

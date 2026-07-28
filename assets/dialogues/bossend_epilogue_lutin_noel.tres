@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="NoeudDialogue" format=3]
+[gd_resource type="Resource" script_class="NoeudDialogue" format=3 uid="uid://b5xu1gl4gppdq"]
 
+[ext_resource type="Script" uid="uid://b0k7gjkfw4ix" path="res://scripts/Core/ChoixDialogue.cs" id="1_bp56j"]
 [ext_resource type="Script" uid="uid://dmuxq1b11lf7k" path="res://scripts/Core/NoeudDialogue.cs" id="1_noeud"]
 
 [resource]
 script = ExtResource("1_noeud")
-Repliques = PackedStringArray("Moi, je n'ai jamais suivi leur piquet ! Un lutin, ça termine sa tournée.", "Vite, allons libérer le père noel !")
+Repliques = PackedStringArray("Wow ! Belle performance pour un jeune pinguoin !", "Moi, je n\'ai jamais suivi leur piquet ! Un lutin, ça termine sa tournée.", "Vite, allons libérer le père noel !")

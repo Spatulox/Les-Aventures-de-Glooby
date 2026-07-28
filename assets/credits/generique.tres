@@ -27,7 +27,7 @@ Noms = PackedStringArray("PixelLab", "Claude Code", "AlexandreDjazz")
 [sub_resource type="Resource" id="EntreeMusique"]
 script = ExtResource("2_entree")
 Categorie = "Musiques & ambiances"
-Noms = PackedStringArray("Un IA perdue dans les méandre du projet", "AlexandreDjazz")
+Noms = PackedStringArray("Un IA perdue dans les méandre du projet", "AlexandreDjazz", "Toys (Scandinavianz)")
 
 [sub_resource type="Resource" id="EntreeAssistanceIa"]
 script = ExtResource("2_entree")
