@@ -132,7 +132,7 @@ NomBoss = "Rodolphe"
 MarqueurApparition = NodePath("../ApparitionBoss")
 NomAmbiance = "boss_cerf"
 CheminBarre = NodePath("../../BossHudBarre")
-PvBoss = 40
+PvBoss = 120
 
 [node name="Salle" parent="ArenBoss" unique_id=412134817 instance=ExtResource("salle_grandesalle")]
 

@@ -26,6 +26,15 @@ souffle de givre=2. Joueur PvMax=5. Non testé en conditions réelles
 (impossible de playtester à la manette en headless) - chiffres posés par
 défaut raisonnable, à réajuster après un premier essai humain.
 
+**Mise à jour (28/07/2026) : les PV d'ennemi sont passés au tiers de point.**
+Affaiblir la boule de neige d'un tiers était impossible sur des entiers (2 -> 1
+est une division par deux, qui doublait tous les combats de boss). Toute
+l'échelle a donc été multipliée par 3 : boule=4, feu=3, et tous les PvMax x3
+(Cerf et Lutin 120, Père Noël 135, ennemi de référence 3). Les rapports sont
+strictement conservés, sauf celui voulu : la boule fait bien 2/3 de son ancien
+montant. **Les dégâts SUBIS par le joueur ne sont pas concernés** - ils se
+comptent en cœurs sur GameState, une autre échelle.
+
 ## Chemin 3 (Carrefour) : impasse propre
 
 Sur consigne explicite de cette mission ("chemin optionnel en impasse propre

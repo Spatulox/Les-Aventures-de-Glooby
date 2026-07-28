@@ -107,7 +107,7 @@ position = Vector2(2242, -887)
 
 [node name="PenteUsineDouceMontante" parent="UsinePereNoel/Sol" unique_id=1659657029 instance=ExtResource("17_e0ldw")]
 z_index = -3
-position = Vector2(3047, 212)
+position = Vector2(3047, 117)
 rotation = -1.1955506
 
 [node name="SolUsineBoisEmboutGauche" parent="UsinePereNoel/Sol" unique_id=940213876 instance=ExtResource("10_544ey")]
@@ -423,3 +423,6 @@ position = Vector2(4655, 1788)
 [node name="LutinNoel" parent="." unique_id=276249539 instance=ExtResource("28_ce8ch")]
 position = Vector2(4613, 208)
 DialogueDynamique = true
+Contexte = "Tu es un lutin de la fabrique du Père Noël, posté devant la sortie de l'atelier. À deux jours de Noël tu croules sous les commandes, tu es débordé mais fier de ton travail. Tu ne connais pas ce petit pingouin en pantalon trop grand ; tu le presses d'aller voir le Père Noël au fond de l'atelier au lieu de traîner entre les machines."
+MemoireRequise = "lutin_cgt_don_poissons"
+ContexteAlternatif = "Tu es un lutin de la fabrique du Père Noël, posté devant la sortie de l'atelier, le jour où la grève a tout arrêté. La chaîne est immobile, le piquet bloque l'atelier et un Lutin Mecha s'est emparé des machines. Tu es paniqué et un peu rancunier : tu as reconnu ce petit pingouin en pantalon trop grand, c'est lui qui a rempli la caisse de grève avec ses poissons, et tu ne sais pas si tu dois le remercier ou l'engueuler."

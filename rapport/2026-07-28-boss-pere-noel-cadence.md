@@ -1,4 +1,8 @@
-# Boss Père Noël — cadence relevée et va-et-vient
+# Boss Père Noël — cadence relevée, va-et-vient, et nerf de la boule de neige
+
+Deux sujets dans cette conversation : le combat du Père Noël (§1), puis l'affaiblissement de la boule de neige (§2).
+
+# 1. Boss Père Noël — cadence et va-et-vient
 
 Un seul fichier touché : `scripts/Entities/Pnj/BossPereNoel.cs`. Aucun `.tscn`, aucun asset (le budget PixelLab est clos : seules `idle` et `marche` existent, et `marche` devient enfin visible).
 
@@ -43,3 +47,49 @@ PV (45), `SeuilPhase2`, `MultiplicateurVulnerable` (×2) et le nombre de cadeaux
 - `04-BossEnd.tscn` en headless ne peut pas être testé jusqu'au combat : le boss est derrière le dialogue de prologue, infranchissable sans input.
 
 **Reste à faire : un play-test manuel** (`godot`, niveau BossEnd). Le headless ne juge pas le game feel. À surveiller : lisibilité des télégraphes (rouge = cadeaux, bleu = givre) à la nouvelle cadence — si c'est trop serré, remonter `DelaiArmementGivre` / `DelaiArmementCadeaux` de 0,1 s.
+
+---
+
+# 2. Boule de neige — dégâts ramenés aux 2/3
+
+## Le problème d'échelle
+
+Les dégâts sont des entiers centralisés dans `DamageSource.MontantDegats` : la boule valait **2**, et 2 × 2/3 = 1,33 n'est pas représentable. Passer à 1 aurait été une division par deux, qui **doublait tous les combats de boss** (45 boules sur le Père Noël).
+
+Solution retenue : **multiplier toute l'échelle des PV d'ennemi par 3**, ce qui donne le tiers de point comme granularité. La boule passe à **4** (= 1⅓ ancien point, exactement les 2/3 de 2) et le feu à **3**.
+
+**Les dégâts SUBIS par le joueur ne bougent pas** — ils se comptent en cœurs sur `GameState`, c'est une autre échelle. Seules `Snowball` et `Fire` (les deux sources `EstDuJoueur`) sont concernées. Vérifié au passage : l'explosion des `MiniJouetExplosif` ne touche que le joueur, il n'y a donc pas de tir ami à rééquilibrer.
+
+## Fichiers touchés
+
+- `scripts/Common/DamageSource.cs` — `Snowball` 2 → **4**, `Fire` 1 → **3**, + commentaire expliquant la coexistence des deux échelles.
+- `scripts/Entities/LivingEntity.cs` — défaut `PvMax` 1 → **3** (le « une seule vie » de référence).
+- 7 `.tscn` : `FleurCarnivore` 2→6, `GardienRonces` 3→9, `LocomotiveJouet` 3→9, `MechaJouetLanceur` 2→6, `BossCerf`/`BossLutinMecha` 40→120, `BossPereNoel` 45→135.
+- 5 `.tscn` de zones d'arène (`PvBoss` / `PvBossAlternatif`, qui écrasent le `PvMax` du boss) : `04-BossEnd`, `02-BossReindeer`, `TestBossPereNoel`, `TestBossLutinMecha`.
+- Commentaires remis à jour dans `MiniJouetExplosif.cs` et `NueePollen.cs` (ils citaient « 1 PV »), et `DECISIONS.md` (la section de tuning du Boss Cerf).
+
+## Résultat mesuré (harnais headless, 1 boule à la fois jusqu'à la mort)
+
+| Cible | PvMax | Avant | Après |
+|---|---|---|---|
+| MiniJouetExplosif | 3 | 1 boule | **1 boule** ✅ |
+| NueePollen | 3 | 1 | **1** ✅ |
+| FleurCarnivore | 6 | 1 | 2 |
+| MechaJouetLanceur | 6 | 1 | 2 |
+| GardienRonces | 9 | 2 | 3 |
+| LocomotiveJouet | 9 | 2 | 3 |
+| BossCerf / BossLutinMecha | 120 | 20 | 30 |
+| BossPereNoel | 135 | 23 | 34 |
+
+Tous les rapports sont bien à ×1,5, soit l'inverse des 2/3 demandés.
+
+**Trois ennemis ne sont pas concernés** — et ne l'étaient déjà pas : `BonhommeDeNeige` (la boule l'étourdit, le feu le fait fondre), `OursDeNeige` (étourdi) et `BulbeExplosif` (amorcé) surchargent `TakeDamage` et **ne perdent jamais de PV**. Leur `PvMax` est décoratif.
+
+Les multiplicateurs de vulnérabilité (`MultiplicateurVulnerable` ×2, `MultiplicateurDegatsEtourdi` ×3, déraillement de la Locomotive) sont des facteurs : leurs rapports sont conservés automatiquement.
+
+## Vérification
+
+- `godot --headless --build-solutions --quit` → propre.
+- Harnais headless temporaire (supprimé depuis) instanciant les 9 entités et leur appliquant des boules jusqu'à `EstVaincu` → le tableau ci-dessus.
+
+⚠️ **12 `.tscn` modifiés à la main** : si l'éditeur Godot était ouvert, recharge les scènes avant d'y toucher, sinon il réécrira les anciennes valeurs.

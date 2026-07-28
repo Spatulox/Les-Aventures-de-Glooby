@@ -10,7 +10,8 @@ using Godot;
 //
 // L'explosion est le SEUL dénouement ET la seule source de dégâts : elle survient au
 // contact du joueur, à la fin de la mèche, ou si le joueur le détruit avant l'impact
-// (PvMax = 1 => Mourir() explose). Le contact ne blesse jamais de lui-même, et la zone
+// (il garde le PvMax de référence, 3 => une boule de neige suffit, et Mourir() explose).
+// Le contact ne blesse jamais de lui-même, et la zone
 // de contact n'est même armée qu'à partir de l'état Fonce : tant qu'il descend sous son
 // parachute, le jouet est inoffensif et traversable.
 // Le boss n'a qu'à instancier la scène et l'ajouter à l'arbre : le jouet se débrouille.

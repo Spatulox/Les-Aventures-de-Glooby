@@ -34,7 +34,7 @@ NomBoss = "Lutin Mecha"
 PositionApparition = Vector2(1200, 428)
 NomRegion = "usine"
 CheminBarre = NodePath("../BossHudBarre")
-PvBoss = 40
+PvBoss = 120
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBossLutinMecha" unique_id=584469579]
 position = Vector2(189.725, 0)

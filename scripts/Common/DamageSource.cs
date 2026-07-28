@@ -25,12 +25,24 @@ public enum DamageSource
 // Helpers de DamageSource : associe à chaque source son montant de dégâts.
 // (Un enum C# ne peut pas porter de valeur associée comme en Java/Kotlin, d'où
 // cette table de correspondance centralisée.)
+//
+// DEUX ÉCHELLES COEXISTENT ICI, et il ne faut surtout pas les mélanger :
+//   - les coups PORTÉS par le joueur (Snowball, Fire) se comptent sur les PV des
+//     ennemis, qui sont tous exprimés au TIERS DE POINT (un ennemi « à 1 PV » vaut
+//     3 dans les scènes). Cette échelle fine existe pour une seule raison : pouvoir
+//     affaiblir la boule de neige d'un tiers sans casser les one-shot, ce qu'un
+//     montant entier de 2 ne permettait pas (2 → 1 aurait été une division par deux) ;
+//   - les coups SUBIS par le joueur (pièges, boss, contact) se comptent sur les PV du
+//     joueur, gérés par GameState et volontairement laissés à leur échelle d'origine.
+//     Ne les rescalez pas : ce sont des cœurs à l'écran, pas des points d'ennemi.
 public static class DamageSourceExtensions
 {
 	public static int MontantDegats(this DamageSource source) => source switch
 	{
-		DamageSource.Snowball => 2,
-		DamageSource.Fire => 1,
+		// Échelle « tiers de point » : 4 = 1⅓ ancien point, soit les 2/3 de l'ancienne
+		// boule à 2. Elle continue d'abattre d'un coup tout ennemi à 3 (les « 1 PV »).
+		DamageSource.Snowball => 4,
+		DamageSource.Fire => 3,
 		DamageSource.Stalactite => 1,
 		DamageSource.ChargeBoss => 1,
 		DamageSource.SouffleGivre => 2,
