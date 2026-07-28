@@ -27,6 +27,7 @@
 [ext_resource type="Texture2D" uid="uid://dj5fy2uhjmbmo" path="res://assets/props/noel/tapis_segment_0.png" id="35_lbqkb"]
 [ext_resource type="Texture2D" uid="uid://cubi3vqy308qw" path="res://assets/props/noel/sapin_petit.png" id="36_pcgnn"]
 [ext_resource type="PackedScene" uid="uid://civtsuvy2xvd8" path="res://scenes/entites/lutin_cgt.tscn" id="37_8vt6c"]
+[ext_resource type="Texture2D" uid="uid://168qjahpgnvf" path="res://assets/pnj/boss_cerf/vaincu/6.png" id="38_3aija"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -65,9 +66,17 @@ modulate = Color(1, 1, 1, 0)
 [node name="Camera" type="Node2D" parent="Banquise" unique_id=1362802562]
 
 [node name="ZoneBanquise" parent="Banquise/Camera" unique_id=414830882 instance=ExtResource("camzone")]
+z_index = -1
 position = Vector2(812.155, 112)
 scale = Vector2(6.268, 1.664)
 NomRegion = "banquise"
+
+[node name="Pingouin" parent="Banquise/Camera" unique_id=1788672048 instance=ExtResource("34_ftbij")]
+z_index = 1
+position = Vector2(1183, 222.99998)
+scale = Vector2(0.72, 0.72)
+DialogueDynamique = true
+Contexte = "Tu es un bébé pinguoin naif qui adore regarder les Rennes, et surtout ceux du père noël"
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
 
@@ -116,7 +125,7 @@ position = Vector2(2242, -887)
 
 [node name="PenteUsineDouceMontante" parent="UsinePereNoel/Sol" unique_id=1659657029 instance=ExtResource("17_e0ldw")]
 z_index = -3
-position = Vector2(3047, 218.41)
+position = Vector2(3047.0002, 259.41)
 rotation = -1.1955506
 
 [node name="SolUsineBoisEmboutGauche" parent="UsinePereNoel/Sol" unique_id=940213876 instance=ExtResource("10_544ey")]
@@ -470,11 +479,17 @@ position = Vector2(4655, 222.54004)
 [node name="MechaJouetLanceur5" parent="UsinePereNoelUnderGround/Pnj" unique_id=681059766 instance=ExtResource("26_j4gj1")]
 position = Vector2(1857, -1807.46)
 
-[node name="Pingouin" parent="UsinePereNoelUnderGround/Pnj" unique_id=1788672048 instance=ExtResource("34_ftbij")]
+[node name="Pingouin" parent="UsinePereNoelUnderGround/Pnj" unique_id=1252595758 instance=ExtResource("34_ftbij")]
 position = Vector2(2254, 200.54004)
 Lignes = PackedStringArray("Hmmm, Comment je vais remonter moi ?")
 DialogueDynamique = true
 Contexte = "Tu es coincé ici depuis plusieurs mois, tu ne comprends pas pourquoi tu n'es pas mort. Fait toi un dialogue tout seul où tu te demande comment tu va remonter..."
+
+[node name="PlateformeMobileBois" parent="UsinePereNoelUnderGround/Pnj" unique_id=359796163 instance=ExtResource("33_vgqpv")]
+position = Vector2(3446, -1763.46)
+
+[node name="PenteUsineDouceDescendante" parent="UsinePereNoelUnderGround/Pnj" unique_id=1921551689 instance=ExtResource("18_3ovfr")]
+position = Vector2(3792, -1697.46)
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=954797307]
 
@@ -488,7 +503,7 @@ position = Vector2(87, 209)
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784830]
 script = ExtResource("mpause")
 
-[node name="PenteUsineDouceMontante" parent="." unique_id=1726084505 instance=ExtResource("17_e0ldw")]
+[node name="PenteUsineDouceMontante" parent="." unique_id=1300050117 instance=ExtResource("17_e0ldw")]
 position = Vector2(2989, -137)
 
 [node name="SolUsineBoisCentreA" parent="." unique_id=702253145 instance=ExtResource("10_bw6ma")]
@@ -574,3 +589,16 @@ position = Vector2(2959, 715)
 Lignes = PackedStringArray("Si tu tombe, c\'est fini, le néant va t\'aspirer, comme tous les jouets qui y sont tombé !")
 DialogueDynamique = true
 Contexte = "Tu es un lutin très engagé dans la production de jouet, et tu es très triste car de temps en temps, des jouets tombent dans le néant et on ne les revoit jamais..."
+
+[node name="6" type="Sprite2D" parent="." unique_id=106078806]
+position = Vector2(1335, 221)
+texture = ExtResource("38_3aija")
+
+[node name="7" type="Sprite2D" parent="." unique_id=1478319027]
+position = Vector2(1252, 220)
+texture = ExtResource("38_3aija")
+
+[node name="8" type="Sprite2D" parent="." unique_id=394933825]
+z_index = -1
+position = Vector2(1294, 212)
+texture = ExtResource("38_3aija")

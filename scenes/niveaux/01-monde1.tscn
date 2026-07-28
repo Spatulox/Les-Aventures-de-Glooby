@@ -197,7 +197,8 @@ Lignes = PackedStringArray("Huummff")
 Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère."
 
 [node name="Pingouin3" parent="Village/Pnj" unique_id=977666246 instance=ExtResource("pingouin")]
-position = Vector2(455, 255)
+position = Vector2(455, 273.445)
+scale = Vector2(0.625, 0.625)
 Lignes = PackedStringArray("J\'adore Noël !", "Je suis triste, il n\'y a pas de guirlande au village cette année :/")
 DialogueDynamique = true
 Contexte = "Il adore Noël, et plus particulièrement les guirlandes rouge (mais y'en a pas donc il est triste)"
