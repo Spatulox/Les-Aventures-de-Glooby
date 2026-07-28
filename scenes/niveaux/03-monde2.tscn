@@ -11,6 +11,11 @@
 [ext_resource type="PackedScene" uid="uid://busnpfd01" path="res://scenes/sol/usine/PenteUsineForteDescendante.tscn" id="19_pf2hh"]
 [ext_resource type="PackedScene" uid="uid://gkwjiv57ow54" path="res://scenes/ennemis/usine/MiniJouetExplosif.tscn" id="21_0gqfy"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/usine/LocomotiveJouet.tscn" id="21_qwj7e"]
+[ext_resource type="Texture2D" uid="uid://cusrwrat23yoj" path="res://assets/props/noel/banc_travail_a.png" id="22_g86s4"]
+[ext_resource type="Texture2D" uid="uid://bq61uqbu4cec8" path="res://assets/props/noel/banc_travail_b.png" id="23_c3de4"]
+[ext_resource type="Texture2D" uid="uid://hoeyfknx78n5" path="res://assets/props/noel/sapin_grand.png" id="24_g86s4"]
+[ext_resource type="Texture2D" uid="uid://sh6owfc0k6oj" path="res://assets/props/noel/guirlande_segment_rouge.png" id="25_c3de4"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MechaJouetLanceur.tscn" id="26_j4gj1"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -83,6 +88,7 @@ position = Vector2(1444, 280)
 [node name="Camera" type="Node2D" parent="UsinePereNoel" unique_id=1063593249]
 
 [node name="ZoneUsine" parent="UsinePereNoel/Camera" unique_id=21096232 instance=ExtResource("camzone")]
+z_index = -4
 position = Vector2(3176.0002, -516)
 rotation = 0.00030183748
 scale = Vector2(12.1875, 6.103882)
@@ -327,7 +333,29 @@ z_index = -1
 position = Vector2(2324, 561)
 
 [node name="LocomotiveJouet2" parent="." unique_id=2060677146 instance=ExtResource("21_qwj7e")]
-position = Vector2(1889, 232)
+position = Vector2(1974, 228)
 
 [node name="MiniJouetExplosif" parent="." unique_id=743188203 instance=ExtResource("21_0gqfy")]
-position = Vector2(2109, 222)
+position = Vector2(2821, 242)
+
+[node name="BancTravailA" type="Sprite2D" parent="." unique_id=927058952]
+position = Vector2(1796, -812)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailB" type="Sprite2D" parent="." unique_id=977464062]
+position = Vector2(1926, -891)
+texture = ExtResource("23_c3de4")
+
+[node name="SapinGrand" type="Sprite2D" parent="." unique_id=1032444961]
+z_index = -1
+position = Vector2(1961, -945)
+texture = ExtResource("24_g86s4")
+
+[node name="GuirlandeSegmentRouge" type="Sprite2D" parent="." unique_id=36609937]
+z_index = -2
+position = Vector2(1854.5, -983.75)
+scale = Vector2(1.33125, 1.3148148)
+texture = ExtResource("25_c3de4")
+
+[node name="MechaJouetLanceur" parent="." unique_id=2052075158 instance=ExtResource("26_j4gj1")]
+position = Vector2(3016, 207)
