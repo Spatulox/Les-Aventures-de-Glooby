@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bqlwks44b6g3q" path="res://scenes/entites/PereNoel.tscn" id="8_ashjp"]
 [ext_resource type="PackedScene" uid="uid://busolboisemg" path="res://scenes/sol/usine/SolUsineBoisEmboutGauche.tscn" id="10_544ey"]
 [ext_resource type="PackedScene" uid="uid://busolboisca" path="res://scenes/sol/usine/SolUsineBoisCentreA.tscn" id="10_bw6ma"]
+[ext_resource type="Texture2D" uid="uid://cc6yrec3tv63a" path="res://assets/props/cristal_petit.png" id="10_s4oyp"]
 [ext_resource type="PackedScene" uid="uid://busolboiscb" path="res://scenes/sol/usine/SolUsineBoisCentreB.tscn" id="11_bw6ma"]
 [ext_resource type="PackedScene" uid="uid://busolboiscc" path="res://scenes/sol/usine/SolUsineBoisCentreC.tscn" id="12_pfk45"]
 [ext_resource type="PackedScene" uid="uid://ddbp8ti1rtatq" path="res://scenes/plateformes/usine/PlateformeMobileBoisSuspendue.tscn" id="16_ro3l8"]
@@ -20,9 +21,14 @@
 [ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MechaJouetLanceur.tscn" id="26_j4gj1"]
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="27_wgvji"]
 [ext_resource type="PackedScene" uid="uid://cfuc5gb01g7jn" path="res://scenes/entites/lutin_noel.tscn" id="28_ce8ch"]
+[ext_resource type="Texture2D" uid="uid://bruo6y23arcsm" path="res://assets/props/rocher_glace.png" id="29_rswis"]
+[ext_resource type="Texture2D" uid="uid://bno62mur022j" path="res://assets/props/rocher_enneige/destruction_b/00.png" id="30_4xtru"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_cadeau.tscn" id="30_ogcic"]
 [ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="31_r5l3y"]
+[ext_resource type="Texture2D" uid="uid://sh772flofnin" path="res://assets/props/rocher_enneige/rocher_b.png" id="31_uwxrn"]
 [ext_resource type="PackedScene" uid="uid://busolboisemd" path="res://scenes/sol/usine/SolUsineBoisEmboutDroit.tscn" id="32_dimcd"]
+[ext_resource type="Texture2D" uid="uid://bvnqpcvbvv23s" path="res://assets/props/rocher_enneige/rocher_a.png" id="32_s4oyp"]
+[ext_resource type="Texture2D" uid="uid://b873grf55e3xa" path="res://assets/props/cristal_gros.png" id="33_uwxrn"]
 [ext_resource type="PackedScene" uid="uid://oxjctsret87c" path="res://scenes/plateformes/usine/PlateformeMobileBois.tscn" id="33_vgqpv"]
 [ext_resource type="PackedScene" uid="uid://jj522styq8rs" path="res://scenes/entites/pingouin.tscn" id="34_ftbij"]
 [ext_resource type="Texture2D" uid="uid://dj5fy2uhjmbmo" path="res://assets/props/noel/tapis_segment_0.png" id="35_lbqkb"]
@@ -85,6 +91,31 @@ ArtRegardeADroite = true
 DialogueDynamique = true
 Contexte = "Tu es le Grand-Père Noël, et tu as été mis au rebut par le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT.
 Tu dois forcément parler du fait que tu es le Grand-Père Noel. Ne dis pas que tu es le Père Noel, tu es le Grand-Père Noel, le prédécesseur du Père Noel actuel"
+
+[node name="CristalGros" type="Sprite2D" parent="Banquise/Camera" unique_id=853420158]
+z_index = 3
+position = Vector2(65, 274)
+texture = ExtResource("33_uwxrn")
+
+[node name="CristalGros2" type="Sprite2D" parent="Banquise/Camera" unique_id=88677440]
+position = Vector2(61, 140)
+rotation = 0.72082096
+texture = ExtResource("33_uwxrn")
+
+[node name="CristalPetit" type="Sprite2D" parent="Banquise/Camera" unique_id=544445757]
+z_index = 2
+position = Vector2(299, 243)
+texture = ExtResource("10_s4oyp")
+
+[node name="CristalPetit2" type="Sprite2D" parent="Banquise/Camera" unique_id=763034459]
+position = Vector2(212, 159)
+texture = ExtResource("10_s4oyp")
+
+[node name="RocherB" type="Sprite2D" parent="Banquise/Camera" unique_id=56841914]
+z_index = -2
+position = Vector2(43.999996, 156)
+scale = Vector2(5.5384617, 5.6770835)
+texture = ExtResource("31_uwxrn")
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
 
@@ -303,6 +334,34 @@ Lignes = PackedStringArray("Antre du Père Noël")
 position = Vector2(2365, -131)
 DialogueDynamique = true
 Contexte = "Tu es un lutin de noel qui est soulagé d'avoir fini le rush de noel"
+
+[node name="RocherGlace" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=1943640515]
+z_index = -1
+position = Vector2(333, 225)
+texture = ExtResource("29_rswis")
+
+[node name="00" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=1754894643]
+z_index = -1
+position = Vector2(412, 194)
+scale = Vector2(1.5384616, 1.6041666)
+texture = ExtResource("30_4xtru")
+
+[node name="RocherB" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=810310092]
+z_index = 2
+position = Vector2(355, 280.25)
+scale = Vector2(1.6730775, 1.5572916)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherA" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=2003830964]
+z_index = 2
+position = Vector2(453.00003, 287)
+scale = Vector2(2.578125, 2.0852273)
+texture = ExtResource("32_s4oyp")
+
+[node name="CristalGros" type="Sprite2D" parent="UsinePereNoel/Pnj" unique_id=199047421]
+z_index = 2
+position = Vector2(456, 236)
+texture = ExtResource("33_uwxrn")
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
@@ -612,3 +671,79 @@ texture = ExtResource("38_3aija")
 z_index = -1
 position = Vector2(1294, 212)
 texture = ExtResource("38_3aija")
+
+[node name="RocherA3" type="Sprite2D" parent="." unique_id=930601649]
+z_index = -1
+position = Vector2(122, 125)
+scale = Vector2(2.1666667, 2.0568182)
+texture = ExtResource("32_s4oyp")
+
+[node name="RocherB" type="Sprite2D" parent="." unique_id=112432170]
+z_index = -1
+position = Vector2(43, 175)
+scale = Vector2(2.6826923, 2.8645833)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherB2" type="Sprite2D" parent="." unique_id=1931735137]
+z_index = 2
+position = Vector2(1.0000019, 199.00002)
+rotation = 0.50265485
+scale = Vector2(2.245379, 2.6128945)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherB3" type="Sprite2D" parent="." unique_id=179983810]
+z_index = -1
+position = Vector2(163.00002, 200.00002)
+scale = Vector2(2.1105773, 2.203125)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherB4" type="Sprite2D" parent="." unique_id=1952323616]
+z_index = -1
+position = Vector2(255.00003, 145)
+scale = Vector2(2.1057692, 2.375)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherA" type="Sprite2D" parent="." unique_id=1595751113]
+z_index = -1
+position = Vector2(344.00003, 205)
+scale = Vector2(1.6041666, 1.6590909)
+texture = ExtResource("32_s4oyp")
+
+[node name="RocherB5" type="Sprite2D" parent="." unique_id=902140756]
+z_index = 2
+position = Vector2(204, 282)
+scale = Vector2(2, 1.8125)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherA2" type="Sprite2D" parent="." unique_id=130356962]
+z_index = 2
+position = Vector2(271, 265)
+texture = ExtResource("32_s4oyp")
+
+[node name="RocherA4" type="Sprite2D" parent="." unique_id=39534773]
+z_index = 2
+position = Vector2(65, 253)
+texture = ExtResource("32_s4oyp")
+
+[node name="RocherB6" type="Sprite2D" parent="." unique_id=1351560398]
+z_index = 2
+position = Vector2(123.000015, 294)
+scale = Vector2(1.5480769, 1.6354166)
+texture = ExtResource("31_uwxrn")
+
+[node name="RocherGlace" type="Sprite2D" parent="." unique_id=753112194]
+z_index = 2
+position = Vector2(54, 319.00003)
+scale = Vector2(1.4895834, 1.2916666)
+texture = ExtResource("29_rswis")
+
+[node name="RocherGlace2" type="Sprite2D" parent="." unique_id=438230706]
+z_index = 2
+position = Vector2(280, 318)
+texture = ExtResource("29_rswis")
+
+[node name="RocherGlace3" type="Sprite2D" parent="." unique_id=2023725709]
+z_index = -2
+position = Vector2(354, 163)
+scale = Vector2(1.7083334, 1.6354166)
+texture = ExtResource("29_rswis")
