@@ -61,7 +61,17 @@ public static class CatalogueOptionsDebug
 		// Donner ses 50 poissons au lutin CGT ouvre la fin secrète (voir
 		// ZoneBoss.MemoireRequise) : on pose directement la mémoire du don.
 		new(RouteLutinCgt, "Route lutin CGT", false,
-			etat => etat.MarquerConsomme(LutinCgt.IdDonPoissons)),
+			etat =>
+			{
+				// On vide AUSSI la réserve, comme le ferait le CoutPoissons du choix :
+				// sans la dépense, la partie de test serait incohérente — « j'ai tout
+				// donné » avec de quoi se soigner en poche — et les choix conditionnés à
+				// la réserve (voir ChoixDialogue.SiReserveInsuffisante) se tromperaient
+				// de branche. On vide la réserve entière plutôt que de recopier un 50 qui
+				// vit dans le .tres du dialogue : le don, c'est « tous ses poissons ».
+				etat.MarquerConsomme(LutinCgt.IdDonPoissons);
+				etat.DepenserPoissons(etat.Poissons);
+			}),
 	};
 
 	// Clés cochées par défaut, utilisées quand aucun choix explicite n'est fourni

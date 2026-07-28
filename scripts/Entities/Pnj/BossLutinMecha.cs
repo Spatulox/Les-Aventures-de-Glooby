@@ -7,7 +7,8 @@ using Godot;
 //   Saut écrasant  — s'accroupit (pose « saut_accroupi », la plus longue) puis bondit et
 //                    retombe en propageant une onde de choc au sol ;
 //   Tir de glace   — arme son canon (« tir_armement », givre qui se charge) puis tire un
-//                    EclatGlace ;
+//                    EclatGlace depuis son milieu, visé sur le joueur — deux à la suite en
+//                    phase 2 (salve mutualisée dans Boss avec le Père Noël) ;
 //   Drop de jouets — ouvre sa trappe (« trappe ») et largue des MiniJouetExplosif ; la
 //                    fermeture rejoue la même animation À L'ENVERS (aucun asset dédié).
 //
@@ -290,20 +291,16 @@ public partial class BossLutinMecha : Boss, BossBorne
 		Sprite.Play("tir_armement");
 	}
 
+	// L'éclat part du MILIEU du mecha et vise le joueur : tiré à hauteur de jambes et à
+	// plat, il passait sous un joueur perché et ne menaçait jamais un joueur en l'air.
+	// Salve mutualisée dans Boss (partagée avec le Père Noël) : un éclat en phase 1, deux à
+	// la suite en phase 2.
 	private void Tirer()
 	{
 		_etat = Etat.TirFeu;
 		_timerEtat = DureeTir;
 		Sprite.Play("tir");
-
-		if (SceneEclatGlace == null)
-			return;
-
-		var eclat = SceneEclatGlace.Instantiate<Projectile>();
-		eclat.Vitesse = VitesseEclat;
-		eclat.Initialiser(this, _direction);
-		eclat.GlobalPosition = GlobalPosition + new Vector2(_direction * 34f, -26f);
-		GetParent().AddChild(eclat);
+		TirerSalveVisee(SceneEclatGlace, _direction, VitesseEclat);
 	}
 
 	// Ouverture de la trappe, largage, puis fermeture : la fermeture rejoue l'ouverture

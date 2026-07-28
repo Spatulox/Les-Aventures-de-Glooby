@@ -1,46 +1,43 @@
-[gd_scene load_steps=6 format=3 uid="uid://busnplsuspbois1"]
+[gd_scene format=3 uid="uid://ddbp8ti1rtatq"]
 
-[ext_resource type="Script" path="res://scripts/Plateformes/PlateformeMobileSuspendue.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/plateformes/mobile_bois.png" id="2"]
-[ext_resource type="Texture2D" path="res://assets/plateformes/poulie_bois.png" id="3"]
-[ext_resource type="Texture2D" path="res://assets/plateformes/chaine_maillon.png" id="4"]
+[ext_resource type="Script" uid="uid://2dcv4s00xe0p" path="res://scripts/Plateformes/PlateformeMobileSuspendue.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://dxxqq8u1yvhn7" path="res://assets/plateformes/mobile_bois.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ch0ntb1ym7foh" path="res://assets/plateformes/poulie_bois.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://n2wl8ab7i8gm" path="res://assets/plateformes/chaine_maillon.png" id="4"]
 
 [sub_resource type="RectangleShape2D" id="RectDeck"]
-size = Vector2(200, 40)
+size = Vector2(200, 78)
 
-[node name="SuspensionBois" type="Node2D"]
-
-[node name="Poulie" type="Sprite2D" parent="."]
-position = Vector2(0, -170)
-scale = Vector2(2, 2)
-texture = ExtResource("3")
-
-[node name="Chaine" type="Sprite2D" parent="."]
-texture_repeat = 2
-z_index = -1
-centered = false
-offset = Vector2(-7, 0)
-scale = Vector2(2, 2)
-region_enabled = true
-region_rect = Rect2(0, 0, 14, 48)
-texture = ExtResource("4")
-
-[node name="Plateforme" type="AnimatableBody2D" parent="."]
+[node name="PlateformeMobileBoisSuspendue" type="AnimatableBody2D" unique_id=873335412]
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("1")
 AngleDegres = 90.0
 Distance = 120.0
 Vitesse = 40.0
-AmplitudeBalancement = 6.0
-CheminPoulie = NodePath("../Poulie")
-CheminChaine = NodePath("../Chaine")
 
-[node name="Sprite2D" type="Sprite2D" parent="Plateforme"]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2068027600]
 scale = Vector2(2, 2)
 texture = ExtResource("2")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Plateforme"]
-position = Vector2(0, -34)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1629647091]
+position = Vector2(1, 7)
+scale = Vector2(1.0800003, 1)
 shape = SubResource("RectDeck")
 one_way_collision = true
+
+[node name="Poulie" type="Sprite2D" parent="." unique_id=1135382648]
+position = Vector2(0, -170)
+scale = Vector2(2, 2)
+texture = ExtResource("3")
+
+[node name="Chaine" type="Sprite2D" parent="." unique_id=1766958551]
+z_index = -1
+texture_repeat = 2
+position = Vector2(0, -170)
+scale = Vector2(2, 2)
+texture = ExtResource("4")
+centered = false
+offset = Vector2(-7, 0)
+region_enabled = true
+region_rect = Rect2(0, 0, 14, 58)

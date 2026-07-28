@@ -28,4 +28,4 @@ NomBoss = "Pere Noel"
 PositionApparition = Vector2(1200, 428)
 NomRegion = "usine"
 CheminBarre = NodePath("../BossHudBarre")
-PvBoss = 45
+PvBoss = 135

@@ -106,7 +106,9 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 	[Signal] public delegate void PvChangesEventHandler(int pv, int pvMax);
 	[Signal] public delegate void VaincuEventHandler();
 
-	[Export] public int PvMax = 1;
+	// Les PV d'entité se comptent au TIERS DE POINT (voir DamageSourceExtensions) : 3 est
+	// donc le « une seule vie » de référence, celui que la boule de neige abat d'un coup.
+	[Export] public int PvMax = 3;
 
 	public int Pv { get; protected set; }
 	public bool EstVaincu { get; protected set; }

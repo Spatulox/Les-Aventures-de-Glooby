@@ -4,7 +4,8 @@ using Godot;
 // false, il pilote lui-même sa vitesse verticale). Au repos il dérive en va-et-vient autour de
 // son point de départ en ondulant doucement ; quand le joueur entre dans sa portée il fond sur
 // lui en diagonale, lentement mais sans se soucier du relief — c'est un ennemi qui force à
-// bouger plutôt qu'un mur. Il blesse au contact (ZoneContact) et crève au moindre coup (1 PV).
+// bouger plutôt qu'un mur. Il blesse au contact (ZoneContact) et crève au moindre coup
+// (il garde le PvMax de référence, 3 : une boule de neige l'abat).
 //
 // Frames : res://assets/ennemis/grotte_florale/nuee_pollen/{vol,mort}. Il n'a pas d'idle ni de
 // marche : « vol » sert des deux, d'où la surcharge de MettreAJourAnimation.

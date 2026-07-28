@@ -5,6 +5,21 @@
 [ext_resource type="PackedScene" uid="uid://busolboisca" path="res://scenes/sol/usine/SolUsineBoisCentreA.tscn" id="10_bw6ma"]
 [ext_resource type="PackedScene" uid="uid://busolboiscb" path="res://scenes/sol/usine/SolUsineBoisCentreB.tscn" id="11_bw6ma"]
 [ext_resource type="PackedScene" uid="uid://busolboiscc" path="res://scenes/sol/usine/SolUsineBoisCentreC.tscn" id="12_pfk45"]
+[ext_resource type="PackedScene" uid="uid://ddbp8ti1rtatq" path="res://scenes/plateformes/usine/PlateformeMobileBoisSuspendue.tscn" id="16_ro3l8"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/PorteBois.tscn" id="16_rtxd3"]
+[ext_resource type="PackedScene" uid="uid://busnpdm01" path="res://scenes/sol/usine/PenteUsineDouceMontante.tscn" id="17_e0ldw"]
+[ext_resource type="PackedScene" uid="uid://busnpdd01" path="res://scenes/sol/usine/PenteUsineDouceDescendante.tscn" id="18_3ovfr"]
+[ext_resource type="PackedScene" uid="uid://busnpfd01" path="res://scenes/sol/usine/PenteUsineForteDescendante.tscn" id="19_pf2hh"]
+[ext_resource type="PackedScene" uid="uid://gkwjiv57ow54" path="res://scenes/ennemis/usine/MiniJouetExplosif.tscn" id="21_0gqfy"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/usine/LocomotiveJouet.tscn" id="21_qwj7e"]
+[ext_resource type="Texture2D" uid="uid://cusrwrat23yoj" path="res://assets/props/noel/banc_travail_a.png" id="22_g86s4"]
+[ext_resource type="Texture2D" uid="uid://bq61uqbu4cec8" path="res://assets/props/noel/banc_travail_b.png" id="23_c3de4"]
+[ext_resource type="Texture2D" uid="uid://hoeyfknx78n5" path="res://assets/props/noel/sapin_grand.png" id="24_g86s4"]
+[ext_resource type="Texture2D" uid="uid://sh6owfc0k6oj" path="res://assets/props/noel/guirlande_segment_rouge.png" id="25_c3de4"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MechaJouetLanceur.tscn" id="26_j4gj1"]
+[ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="27_wgvji"]
+[ext_resource type="PackedScene" uid="uid://cfuc5gb01g7jn" path="res://scenes/entites/lutin_noel.tscn" id="28_ce8ch"]
+[ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_cadeau.tscn" id="30_ogcic"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -62,7 +77,7 @@ position = Vector2(759, 280)
 position = Vector2(1103, 280)
 
 [node name="SolBanquise" parent="Banquise/Sol" unique_id=198024636 instance=ExtResource("sol_banquise")]
-position = Vector2(1445.365, 280.03)
+position = Vector2(1444, 280)
 
 [node name="Decor" type="Node2D" parent="Banquise" unique_id=1314169779]
 
@@ -77,17 +92,168 @@ position = Vector2(1445.365, 280.03)
 [node name="Camera" type="Node2D" parent="UsinePereNoel" unique_id=1063593249]
 
 [node name="ZoneUsine" parent="UsinePereNoel/Camera" unique_id=21096232 instance=ExtResource("camzone")]
-position = Vector2(3175.365, 52.82)
+z_index = -4
+position = Vector2(3176.0002, -516)
 rotation = 0.00030183748
-scale = Vector2(12.1875, 1.6637502)
+scale = Vector2(12.1875, 6.103882)
 NomRegion = "usine"
 Type = 1
 
 [node name="Sol" type="Node2D" parent="UsinePereNoel" unique_id=1010531163]
 
+[node name="SolUsineBoisCentreA" parent="UsinePereNoel/Sol" unique_id=302041889 instance=ExtResource("10_bw6ma")]
+position = Vector2(1652, -889)
+
+[node name="SolUsineBoisCentreA2" parent="UsinePereNoel/Sol" unique_id=1992762850 instance=ExtResource("10_bw6ma")]
+position = Vector2(2242, -887)
+
+[node name="PenteUsineDouceMontante" parent="UsinePereNoel/Sol" unique_id=1659657029 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(3047, 117)
+rotation = -1.1955506
+
+[node name="SolUsineBoisEmboutGauche" parent="UsinePereNoel/Sol" unique_id=940213876 instance=ExtResource("10_544ey")]
+z_index = -1
+position = Vector2(1611, 207)
+scale = Vector2(1, 0.98179275)
+
+[node name="SolUsineBoisCentreA3" parent="UsinePereNoel/Sol" unique_id=875444956 instance=ExtResource("10_bw6ma")]
+position = Vector2(1954.62, 207)
+
+[node name="SolUsineBoisCentreB" parent="UsinePereNoel/Sol" unique_id=2096601153 instance=ExtResource("11_bw6ma")]
+position = Vector2(2298.66, 207.015)
+
+[node name="SolUsineBoisCentreB2" parent="UsinePereNoel/Sol" unique_id=1060842312 instance=ExtResource("11_bw6ma")]
+position = Vector2(2985, 207.245)
+
+[node name="SolUsineBoisCentreA4" parent="UsinePereNoel/Sol" unique_id=991934944 instance=ExtResource("10_bw6ma")]
+position = Vector2(3326, 206.935)
+
+[node name="SolUsineBoisCentreC2" parent="UsinePereNoel/Sol" unique_id=875947607 instance=ExtResource("12_pfk45")]
+position = Vector2(3669, 206.81)
+
+[node name="SolUsineBoisCentreB3" parent="UsinePereNoel/Sol" unique_id=469558100 instance=ExtResource("11_bw6ma")]
+position = Vector2(4009, 206.8)
+
+[node name="SolUsineBoisCentreA5" parent="UsinePereNoel/Sol" unique_id=1162743877 instance=ExtResource("10_bw6ma")]
+position = Vector2(4352, 206.77)
+
+[node name="SolUsineBoisCentreC3" parent="UsinePereNoel/Sol" unique_id=1773034292 instance=ExtResource("12_pfk45")]
+position = Vector2(4695.895, 206.78)
+
+[node name="Plafond" type="Node2D" parent="UsinePereNoel/Sol" unique_id=247324681]
+
+[node name="PenteUsineForteDescendante" parent="UsinePereNoel/Sol/Plafond" unique_id=695456527 instance=ExtResource("19_pf2hh")]
+position = Vector2(1762, -1465)
+rotation = 2.3596852
+
+[node name="PenteUsineForteDescendante2" parent="UsinePereNoel/Sol/Plafond" unique_id=434063755 instance=ExtResource("19_pf2hh")]
+position = Vector2(2243.5947, -1464.9998)
+rotation = 2.3596852
+
+[node name="PenteUsineForteDescendante3" parent="UsinePereNoel/Sol/Plafond" unique_id=1161923151 instance=ExtResource("19_pf2hh")]
+position = Vector2(2725, -1465)
+rotation = 2.3596852
+
+[node name="PenteUsineForteDescendante4" parent="UsinePereNoel/Sol/Plafond" unique_id=1584074609 instance=ExtResource("19_pf2hh")]
+position = Vector2(3206.5947, -1464.9998)
+rotation = 2.3596852
+
+[node name="PenteUsineForteDescendante5" parent="UsinePereNoel/Sol/Plafond" unique_id=885551889 instance=ExtResource("19_pf2hh")]
+position = Vector2(3687.5947, -1464.9998)
+rotation = 2.3596852
+
+[node name="PenteUsineForteDescendante6" parent="UsinePereNoel/Sol/Plafond" unique_id=1741860808 instance=ExtResource("19_pf2hh")]
+position = Vector2(4169, -1465)
+rotation = 2.3596852
+
+[node name="PenteUsineForteDescendante7" parent="UsinePereNoel/Sol/Plafond" unique_id=673623058 instance=ExtResource("19_pf2hh")]
+position = Vector2(4650.5947, -1464.9998)
+rotation = 2.3596852
+
+[node name="MurDroit2" type="Node2D" parent="UsinePereNoel/Sol" unique_id=1066329795]
+
+[node name="PenteUsineDouceMontante" parent="UsinePereNoel/Sol/MurDroit2" unique_id=991375153 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4727, 212.54004)
+rotation = -1.1955506
+
+[node name="PenteUsineDouceMontante2" parent="UsinePereNoel/Sol/MurDroit2" unique_id=404625285 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4727, -153.45996)
+rotation = -1.1955506
+
+[node name="PenteUsineDouceMontante3" parent="UsinePereNoel/Sol/MurDroit2" unique_id=1181911856 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4726, -514.45996)
+rotation = -1.1955506
+
+[node name="PenteUsineDouceMontante4" parent="UsinePereNoel/Sol/MurDroit2" unique_id=1964944981 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4725, -880.45996)
+rotation = -1.1955506
+
+[node name="MurGauche2" type="Node2D" parent="UsinePereNoel/Sol" unique_id=181110908]
+
+[node name="PenteUsineDouceDescendante" parent="UsinePereNoel/Sol/MurGauche2" unique_id=698474 instance=ExtResource("18_3ovfr")]
+position = Vector2(1637, -219.45996)
+rotation = 1.1955506
+
+[node name="PenteUsineDouceDescendante2" parent="UsinePereNoel/Sol/MurGauche2" unique_id=646393152 instance=ExtResource("18_3ovfr")]
+position = Vector2(1637, -588.45996)
+rotation = 1.1955506
+
+[node name="PenteUsineDouceDescendante3" parent="UsinePereNoel/Sol/MurGauche2" unique_id=1781125560 instance=ExtResource("18_3ovfr")]
+position = Vector2(1638, -956.45996)
+rotation = 1.1955506
+
+[node name="PenteUsineDouceDescendante4" parent="UsinePereNoel/Sol/MurGauche2" unique_id=843662402 instance=ExtResource("18_3ovfr")]
+position = Vector2(1638, -1325.46)
+rotation = 1.1955506
+
+[node name="PorteBois" parent="UsinePereNoel/Sol" unique_id=1710586759 instance=ExtResource("16_rtxd3")]
+position = Vector2(1667.065, 245.575)
+scale = Vector2(1.615, 1.615)
+
 [node name="Decor" type="Node2D" parent="UsinePereNoel" unique_id=1280656102]
 
+[node name="BancTravailA" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=927058952]
+position = Vector2(1796, -812)
+texture = ExtResource("22_g86s4")
+
+[node name="BancTravailB" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=977464062]
+position = Vector2(1926, -891)
+texture = ExtResource("23_c3de4")
+
+[node name="SapinGrand" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1032444961]
+z_index = -1
+position = Vector2(1961, -945)
+texture = ExtResource("24_g86s4")
+
+[node name="GuirlandeSegmentRouge" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=36609937]
+z_index = -2
+position = Vector2(1854.5, -983.75)
+scale = Vector2(1.33125, 1.3148148)
+texture = ExtResource("25_c3de4")
+
 [node name="Pnj" type="Node2D" parent="UsinePereNoel" unique_id=2000834972]
+
+[node name="MiniJouetExplosif" parent="UsinePereNoel/Pnj" unique_id=743188203 instance=ExtResource("21_0gqfy")]
+z_index = 1
+position = Vector2(2821, 242)
+
+[node name="LocomotiveJouet2" parent="UsinePereNoel/Pnj" unique_id=2060677146 instance=ExtResource("21_qwj7e")]
+position = Vector2(1974, 228)
+
+[node name="MechaJouetLanceur" parent="UsinePereNoel/Pnj" unique_id=2052075158 instance=ExtResource("26_j4gj1")]
+position = Vector2(3016, 207)
+
+[node name="LutinNoel" parent="UsinePereNoel/Pnj" unique_id=276249539 instance=ExtResource("28_ce8ch")]
+position = Vector2(4613, 208)
+DialogueDynamique = true
+Contexte = "Tu gardes la porte du fond de la fabrique du Père Noël. Tu croules sous les commandes de dernière minute, tu es débordé mais fier de ton travail, et tu n'as pas une seconde à perdre. Tu presses Glooby de passer cette porte pour aller voir le Père Noël, au lieu de traîner entre les machines."
+MemoireRequise = "lutin_cgt_don_poissons"
+ContexteAlternatif = "Tu gardes la porte du fond de la fabrique du Père Noël, le jour où la grève a tout arrêté. La chaîne est immobile, le piquet bloque l'atelier et un Lutin Mecha s'est emparé des machines. Tu es paniqué et rancunier : c'est Glooby qui a rempli la caisse de grève avec ses cinquante poissons, tu le lui reproches, et tu ne sais pas si tu dois le remercier ou l'engueuler d'avoir tout bloqué."
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
@@ -97,35 +263,12 @@ position = Vector2(4700, 200)
 CheminSceneSuivante = "uid://d3ixspn6np4ud"
 PointEntreeCible = "bossEnd"
 
-[node name="SolUsineBoisEmboutGauche" parent="UsinePereNoel/Interactifs" unique_id=940213876 instance=ExtResource("10_544ey")]
-position = Vector2(1610.835, 206.9)
-
-[node name="SolUsineBoisCentreA" parent="UsinePereNoel/Interactifs" unique_id=875444956 instance=ExtResource("10_bw6ma")]
-position = Vector2(1954.62, 207)
-
-[node name="SolUsineBoisCentreB" parent="UsinePereNoel/Interactifs" unique_id=2096601153 instance=ExtResource("11_bw6ma")]
-position = Vector2(2298.66, 207.015)
-
-[node name="SolUsineBoisCentreC" parent="UsinePereNoel/Interactifs" unique_id=1678345921 instance=ExtResource("12_pfk45")]
-position = Vector2(2642.635, 206.88)
-
-[node name="SolUsineBoisCentreB2" parent="UsinePereNoel/Interactifs" unique_id=1060842312 instance=ExtResource("11_bw6ma")]
-position = Vector2(2985, 207.245)
-
-[node name="SolUsineBoisCentreA2" parent="UsinePereNoel/Interactifs" unique_id=991934944 instance=ExtResource("10_bw6ma")]
-position = Vector2(3326, 206.935)
-
-[node name="SolUsineBoisCentreC2" parent="UsinePereNoel/Interactifs" unique_id=875947607 instance=ExtResource("12_pfk45")]
-position = Vector2(3669, 206.81)
-
-[node name="SolUsineBoisCentreB3" parent="UsinePereNoel/Interactifs" unique_id=469558100 instance=ExtResource("11_bw6ma")]
-position = Vector2(4009, 206.8)
-
-[node name="SolUsineBoisCentreA3" parent="UsinePereNoel/Interactifs" unique_id=1162743877 instance=ExtResource("10_bw6ma")]
-position = Vector2(4352, 206.77)
-
-[node name="SolUsineBoisCentreC3" parent="UsinePereNoel/Interactifs" unique_id=1773034292 instance=ExtResource("12_pfk45")]
-position = Vector2(4695.895, 206.78)
+[node name="PanneauBois" parent="UsinePereNoel/Interactifs" unique_id=197425152 instance=ExtResource("27_wgvji")]
+z_index = -1
+position = Vector2(2618, 191)
+rotation = 0.2443461
+Type = 3
+Texte = "Cave"
 
 [node name="Frontiere" type="Node2D" parent="UsinePereNoel" unique_id=82496359]
 
@@ -136,3 +279,162 @@ position = Vector2(87, 209)
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784830]
 script = ExtResource("mpause")
+
+[node name="UsinePereNoelUnderGround" type="Node2D" parent="." unique_id=1219185374]
+position = Vector2(0, 1565.46)
+
+[node name="Camera" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=938259219]
+
+[node name="ZoneUsine" parent="UsinePereNoelUnderGround/Camera" unique_id=1473649807 instance=ExtResource("camzone")]
+z_index = -1
+position = Vector2(3176.0002, -516)
+rotation = 0.00030183748
+scale = Vector2(12.1875, 6.103882)
+NomRegion = "usine"
+Type = 1
+
+[node name="Sol" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1307344259]
+
+[node name="SuspensionBois" parent="UsinePereNoelUnderGround/Sol" unique_id=881538028 instance=ExtResource("16_ro3l8")]
+position = Vector2(2812, -1270.46)
+scale = Vector2(1.53, 1.53)
+Distance = 360.0
+
+[node name="SolUsineBoisEmboutGauche" parent="UsinePereNoelUnderGround/Sol" unique_id=74424618 instance=ExtResource("10_544ey")]
+position = Vector2(1611, 207)
+
+[node name="SolUsineBoisCentreA" parent="UsinePereNoelUnderGround/Sol" unique_id=1956121179 instance=ExtResource("10_bw6ma")]
+position = Vector2(1954.62, 207)
+
+[node name="SolUsineBoisCentreB" parent="UsinePereNoelUnderGround/Sol" unique_id=2058098953 instance=ExtResource("11_bw6ma")]
+position = Vector2(2298.66, 207.01501)
+
+[node name="SolUsineBoisCentreB4" parent="UsinePereNoelUnderGround/Sol" unique_id=988603537 instance=ExtResource("11_bw6ma")]
+position = Vector2(2643.66, 207.01501)
+
+[node name="SolUsineBoisCentreB2" parent="UsinePereNoelUnderGround/Sol" unique_id=1676438026 instance=ExtResource("11_bw6ma")]
+position = Vector2(2985, 207.245)
+
+[node name="SolUsineBoisCentreA2" parent="UsinePereNoelUnderGround/Sol" unique_id=392167096 instance=ExtResource("10_bw6ma")]
+position = Vector2(3326, 206.93506)
+
+[node name="SolUsineBoisCentreC2" parent="UsinePereNoelUnderGround/Sol" unique_id=1678345921 instance=ExtResource("12_pfk45")]
+position = Vector2(3669, 206.81006)
+
+[node name="SolUsineBoisCentreB3" parent="UsinePereNoelUnderGround/Sol" unique_id=1085891990 instance=ExtResource("11_bw6ma")]
+position = Vector2(4009, 206.80005)
+
+[node name="SolUsineBoisCentreA3" parent="UsinePereNoelUnderGround/Sol" unique_id=1269502010 instance=ExtResource("10_bw6ma")]
+position = Vector2(4352, 206.77002)
+
+[node name="SolUsineBoisCentreC3" parent="UsinePereNoelUnderGround/Sol" unique_id=626907089 instance=ExtResource("12_pfk45")]
+position = Vector2(4695.895, 206.78003)
+
+[node name="MurDroit" type="Node2D" parent="UsinePereNoelUnderGround/Sol" unique_id=1197436775]
+
+[node name="PenteUsineDouceMontante" parent="UsinePereNoelUnderGround/Sol/MurDroit" unique_id=1688737461 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4727, 212.54004)
+rotation = -1.1955506
+
+[node name="PenteUsineDouceMontante2" parent="UsinePereNoelUnderGround/Sol/MurDroit" unique_id=2097917178 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4727, -153.45996)
+rotation = -1.1955506
+
+[node name="PenteUsineDouceMontante3" parent="UsinePereNoelUnderGround/Sol/MurDroit" unique_id=36304853 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4726, -514.45996)
+rotation = -1.1955506
+
+[node name="PenteUsineDouceMontante4" parent="UsinePereNoelUnderGround/Sol/MurDroit" unique_id=184082133 instance=ExtResource("17_e0ldw")]
+z_index = -3
+position = Vector2(4725, -880.45996)
+rotation = -1.1955506
+
+[node name="MurGauche" type="Node2D" parent="UsinePereNoelUnderGround/Sol" unique_id=2142127193]
+
+[node name="PenteUsineDouceDescendante" parent="UsinePereNoelUnderGround/Sol/MurGauche" unique_id=417597492 instance=ExtResource("18_3ovfr")]
+position = Vector2(1637, -77.45996)
+rotation = 1.1955506
+
+[node name="PenteUsineDouceDescendante2" parent="UsinePereNoelUnderGround/Sol/MurGauche" unique_id=196881143 instance=ExtResource("18_3ovfr")]
+position = Vector2(1637, -446.45996)
+rotation = 1.1955506
+
+[node name="PenteUsineDouceDescendante3" parent="UsinePereNoelUnderGround/Sol/MurGauche" unique_id=1824953235 instance=ExtResource("18_3ovfr")]
+position = Vector2(1638, -814.4602)
+rotation = 1.1955506
+
+[node name="PenteUsineDouceDescendante4" parent="UsinePereNoelUnderGround/Sol/MurGauche" unique_id=1769515218 instance=ExtResource("18_3ovfr")]
+position = Vector2(1638, -1183.46)
+rotation = 1.1955506
+
+[node name="SolUsineBoisCentreA4" parent="UsinePereNoelUnderGround/Sol" unique_id=1508441343 instance=ExtResource("10_bw6ma")]
+position = Vector2(2890, -845.45996)
+
+[node name="SolUsineBoisCentreA5" parent="UsinePereNoelUnderGround/Sol" unique_id=1369366457 instance=ExtResource("10_bw6ma")]
+z_index = -1
+position = Vector2(2324, -1004.45996)
+
+[node name="Decor" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1502865475]
+
+[node name="Pnj" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1292346637]
+
+[node name="LocomotiveJouet" parent="UsinePereNoelUnderGround/Pnj" unique_id=762410787 instance=ExtResource("21_qwj7e")]
+position = Vector2(1901, 236.54004)
+
+[node name="LocomotiveJouet3" parent="UsinePereNoelUnderGround/Pnj" unique_id=1130176790 instance=ExtResource("21_qwj7e")]
+position = Vector2(2334, 232.54004)
+
+[node name="LocomotiveJouet4" parent="UsinePereNoelUnderGround/Pnj" unique_id=1471802954 instance=ExtResource("21_qwj7e")]
+position = Vector2(2996, 224.54004)
+
+[node name="LocomotiveJouet5" parent="UsinePereNoelUnderGround/Pnj" unique_id=1925403224 instance=ExtResource("21_qwj7e")]
+position = Vector2(3455, 214.54004)
+
+[node name="LocomotiveJouet6" parent="UsinePereNoelUnderGround/Pnj" unique_id=1687980143 instance=ExtResource("21_qwj7e")]
+position = Vector2(3766, 224.54004)
+
+[node name="LocomotiveJouet7" parent="UsinePereNoelUnderGround/Pnj" unique_id=1680930964 instance=ExtResource("21_qwj7e")]
+position = Vector2(4490, 214.54004)
+
+[node name="MechaJouetLanceur2" parent="UsinePereNoelUnderGround/Pnj" unique_id=1016939188 instance=ExtResource("26_j4gj1")]
+position = Vector2(4207, 229.54004)
+
+[node name="MechaJouetLanceur3" parent="UsinePereNoelUnderGround/Pnj" unique_id=1263411121 instance=ExtResource("26_j4gj1")]
+position = Vector2(3227, 232.54004)
+
+[node name="MechaJouetLanceur4" parent="UsinePereNoelUnderGround/Pnj" unique_id=1125516500 instance=ExtResource("26_j4gj1")]
+position = Vector2(2003, 224.54004)
+
+[node name="MiniJouetExplosif2" parent="UsinePereNoelUnderGround/Pnj" unique_id=1917607737 instance=ExtResource("21_0gqfy")]
+position = Vector2(2557, 226.54004)
+
+[node name="MiniJouetExplosif3" parent="UsinePereNoelUnderGround/Pnj" unique_id=1667564501 instance=ExtResource("21_0gqfy")]
+position = Vector2(2765, 228.54004)
+
+[node name="MiniJouetExplosif4" parent="UsinePereNoelUnderGround/Pnj" unique_id=28545808 instance=ExtResource("21_0gqfy")]
+position = Vector2(1793, 224.54004)
+
+[node name="MiniJouetExplosif5" parent="UsinePereNoelUnderGround/Pnj" unique_id=1524177242 instance=ExtResource("21_0gqfy")]
+position = Vector2(2136, 236.54004)
+
+[node name="MiniJouetExplosif6" parent="UsinePereNoelUnderGround/Pnj" unique_id=643443115 instance=ExtResource("21_0gqfy")]
+position = Vector2(2880, 234.54004)
+
+[node name="MiniJouetExplosif7" parent="UsinePereNoelUnderGround/Pnj" unique_id=232884308 instance=ExtResource("21_0gqfy")]
+position = Vector2(3128, 228.54004)
+
+[node name="MiniJouetExplosif8" parent="UsinePereNoelUnderGround/Pnj" unique_id=223430567 instance=ExtResource("21_0gqfy")]
+position = Vector2(3964, 234.54004)
+
+[node name="MiniJouetExplosif9" parent="UsinePereNoelUnderGround/Pnj" unique_id=115522122 instance=ExtResource("21_0gqfy")]
+position = Vector2(4655, 222.54004)
+
+[node name="Interactifs" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=954797307]
+
+[node name="Frontiere" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=411982176]
+
+[node name="CheckpointCadeau" parent="." unique_id=1905489645 instance=ExtResource("30_ogcic")]
+position = Vector2(1750.055, 243)

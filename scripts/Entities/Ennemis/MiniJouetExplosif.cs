@@ -4,12 +4,14 @@ using Godot;
 // Trois états seulement, dans cet ordre et sans retour en arrière :
 //   Chute     — il descend lentement suspendu à son parachute, en se balançant ;
 //   Fonce     — parachute largué (le passage est visible : le parachute se détache et
-//               dérive), il court vers le joueur, mèche qui se consume ;
+//               dérive). Il reste alors PLANTÉ SUR PLACE tant qu'il n'a pas repéré le
+//               joueur ; c'est la détection qui allume la mèche ET lance la course ;
 //   Explosion — il éclate, blesse tout joueur dans le rayon, puis se libère.
 //
 // L'explosion est le SEUL dénouement ET la seule source de dégâts : elle survient au
 // contact du joueur, à la fin de la mèche, ou si le joueur le détruit avant l'impact
-// (PvMax = 1 => Mourir() explose). Le contact ne blesse jamais de lui-même, et la zone
+// (il garde le PvMax de référence, 3 => une boule de neige suffit, et Mourir() explose).
+// Le contact ne blesse jamais de lui-même, et la zone
 // de contact n'est même armée qu'à partir de l'état Fonce : tant qu'il descend sous son
 // parachute, le jouet est inoffensif et traversable.
 // Le boss n'a qu'à instancier la scène et l'ajouter à l'arbre : le jouet se débrouille.
@@ -24,8 +26,12 @@ public partial class MiniJouetExplosif : LivingEntity
 	[Export] public float AngleBalancement = 12f;
 	// Course kamikaze : plus lent que le joueur (220), donc distançable.
 	[Export] public float VitesseFonce = 130f;
-	// Délai avant auto-explosion une fois au sol, même si le joueur reste hors d'atteinte.
+	// Délai avant auto-explosion une fois la mèche allumée, même si le joueur reste hors
+	// d'atteinte : la mèche ne s'allume qu'à la VUE du joueur (voir PorteeVue).
 	[Export] public float DureeMeche = 4f;
+	// Portée de vue servant de repli quand la scène ne porte pas d'Area2D « ZoneDetection » ;
+	// avec la zone, c'est la taille de sa forme qui décide (réglable par instance).
+	[Export] public float PorteeVue = 200f;
 	// Rayon de souffle en pixels : le jouet blesse plus loin que son corps.
 	[Export] public float RayonSouffle = 42f;
 	// Battement entre le déclenchement et le souffle. C'est ce qui sépare le CONTACT de
@@ -40,6 +46,10 @@ public partial class MiniJouetExplosif : LivingEntity
 	private Node2D _parachute;
 	private Area2D _zoneDegats;
 	private float _minuteurMeche;
+	// Allumée par la VUE du joueur, elle ne s'éteint plus ensuite : une fois amorcé, le
+	// jouet court et le compte à rebours va jusqu'au bout même si le joueur se dérobe.
+	// Ce même drapeau commande le mouvement : avant lui, le jouet ne bouge pas.
+	private bool _mecheAllumee;
 
 	public override void _Ready()
 	{
@@ -49,6 +59,9 @@ public partial class MiniJouetExplosif : LivingEntity
 
 		AppliquerCollisionsPnj();
 		MasquerApercuEditeur();
+		// Vue du jouet : si la scène porte une Area2D « ZoneDetection », sa forme
+		// (réglable par instance) définit la portée à la place de PorteeVue.
+		CablerZoneDetection();
 		Pv = PvMax;
 		AddToGroup("pnj");
 
@@ -105,9 +118,29 @@ public partial class MiniJouetExplosif : LivingEntity
 			return;
 		}
 
-		// Fonce : gravité normale + course vers le joueur, mèche qui se consume.
+		// Fonce : gravité toujours (il doit rester posé au sol), le reste dépend de la vue.
 		AppliquerGravite(ref velocite, dt);
 
+		// La mèche s'allume à la VUE du joueur, et ne s'éteint plus ensuite : un jouet qui
+		// n'a jamais aperçu personne attend indéfiniment au lieu de se saborder tout seul
+		// dans son coin, et le joueur qui se dérobe ensuite ne l'éteint pas — d'où le test
+		// unique, qui coupe aussi la détection une fois amorcé.
+		if (!_mecheAllumee && JoueurAPortee(out float distanceVue) != null && distanceVue <= PorteeVue)
+			Amorcer();
+
+		// Tant qu'il n'a rien vu, il reste PLANTÉ : pas de course, pas de mèche. Le joueur
+		// peut donc traverser l'arène en évitant les jouets déjà posés au lieu de se faire
+		// pourchasser par toute la fournée dès l'atterrissage.
+		if (!_mecheAllumee)
+		{
+			AppliquerFriction(ref velocite, dt);
+			Velocity = velocite;
+			MoveAndSlide();
+			return;
+		}
+
+		// Amorcé : course kamikaze vers le joueur. On vise le joueur le plus proche et non
+		// celui de la zone de détection — une fois lancé, il poursuit même hors de vue.
 		var joueur = JoueurLePlusProche(out float _);
 		if (joueur != null)
 		{
@@ -137,7 +170,10 @@ public partial class MiniJouetExplosif : LivingEntity
 	private void LarguerParachute()
 	{
 		EtatCourant = Etat.Fonce;
+		// Il se met en position mais reste immobile : l'animation de course est figée sur sa
+		// première frame (le petit soldat au garde-à-vous) jusqu'à ce qu'il repère le joueur.
 		_sprite.Play("fonce");
+		_sprite.Pause();
 		// C'est ici, et pas avant, que le jouet devient dangereux au contact.
 		ArmerZoneDegats(true);
 
@@ -153,6 +189,14 @@ public partial class MiniJouetExplosif : LivingEntity
 		tween.TweenProperty(_parachute, "global_position", position + new Vector2(14f, -26f), 1.1f);
 		Effets.Disparaitre(_parachute, _parachute.Scale * 0.8f, 1.1f);
 		_parachute = null;
+	}
+
+	// Repérage du joueur : la mèche s'allume et la course démarre en même temps (l'animation
+	// de course, figée depuis le largage, repart). Sans retour possible à l'immobilité.
+	private void Amorcer()
+	{
+		_mecheAllumee = true;
+		_sprite.Play("fonce");
 	}
 
 	// Contact avec le joueur : le kamikaze fait son office. Le contact ne blesse jamais

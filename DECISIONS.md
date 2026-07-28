@@ -26,6 +26,15 @@ souffle de givre=2. Joueur PvMax=5. Non testé en conditions réelles
 (impossible de playtester à la manette en headless) - chiffres posés par
 défaut raisonnable, à réajuster après un premier essai humain.
 
+**Mise à jour (28/07/2026) : les PV d'ennemi sont passés au tiers de point.**
+Affaiblir la boule de neige d'un tiers était impossible sur des entiers (2 -> 1
+est une division par deux, qui doublait tous les combats de boss). Toute
+l'échelle a donc été multipliée par 3 : boule=4, feu=3, et tous les PvMax x3
+(Cerf et Lutin 120, Père Noël 135, ennemi de référence 3). Les rapports sont
+strictement conservés, sauf celui voulu : la boule fait bien 2/3 de son ancien
+montant. **Les dégâts SUBIS par le joueur ne sont pas concernés** - ils se
+comptent en cœurs sur GameState, une autre échelle.
+
 ## Chemin 3 (Carrefour) : impasse propre
 
 Sur consigne explicite de cette mission ("chemin optionnel en impasse propre
@@ -105,6 +114,15 @@ sur tout le dépôt ne trouvait aucune occurrence de `FloorSnapLength` — la va
 était restée au défaut de 1. Le réglage est désormais réellement posé, dans
 `Player._Ready()`. Note : le problème ne se limite pas au 45°, une pente *douce*
 (21,6°) fait déjà chuter de 1,45px par frame, soit au-delà du snap par défaut.
+
+**Révision 2026-07-28 : 8 → 12.** Deux raisons. (1) `HauteurMarcheMax` vaut
+désormais 20 : *descendre* une marche encaissée par `GererMarcheAutomatique`
+décollait le joueur d'une frame avec un snap de 8, et l'escalier sautillait.
+(2) En glissade sur pente forte (44,8°) le joueur chute de 6,95px/frame à
+420px/s et **9,73px/frame sur glace** (588px/s) : 8px était donc trop court
+là aussi, il perdait le contact — donc `GetFloorNormal()`, donc
+`EstPenteDescendante()` et le gel de l'élan de pente. Le saut reste intact
+(le snap ne s'applique jamais quand `velocity.Y < 0`).
 
 ## CameraZone : hauteur minimale = hauteur du viewport (360)
 

@@ -44,6 +44,74 @@ public abstract partial class Boss : LivingEntity
 		return true;
 	}
 
+	// ---- Salve de projectiles visée ----
+	// Les deux boss de l'usine (Lutin Mecha, Père Noël) tirent le MÊME EclatGlace de la même
+	// façon ; leur tir est donc mutualisé ici. Rien n'y est propre à un boss : c'est « lâche
+	// ce projectile-là depuis mon milieu, dans l'axe du joueur ». Opt-in — un boss qui ne
+	// tire pas (le Cerf) n'appelle simplement rien de tout ça.
+
+	// Avancée du point de tir devant le boss, dans le sens du regard : sans elle le
+	// projectile naîtrait au beau milieu du torse.
+	[Export] public float AvanceeTir = 30f;
+
+	// Phase 2 : délai entre les deux projectiles de la salve. Ils partent À LA SUITE et non
+	// ensemble — un joueur qui a esquivé le premier doit encore lire le second, qui est
+	// re-visé au moment où il part.
+	[Export] public float DelaiSecondTir = 0.22f;
+
+	// Le MILIEU du boss, en global. L'AnimatedSprite2D est posé à moins sa demi-hauteur
+	// (convention des scènes de boss), donc sa position locale EST le centre du corps.
+	// Passer par ToGlobal plutôt qu'ajouter à GlobalPosition tient compte de l'échelle de
+	// l'instance : un boss agrandi tire depuis son milieu à lui, pas depuis un décalage fixe.
+	protected Vector2 PointDeTir(int direction)
+		=> ToGlobal(Sprite.Position + new Vector2(direction * AvanceeTir, 0f));
+
+	// La salve complète : UN projectile en phase 1, DEUX à la suite en phase 2.
+	protected void TirerSalveVisee(PackedScene scene, int direction, float vitesse)
+	{
+		if (scene == null)
+			return;
+
+		TirerProjectileVise(scene, direction, vitesse);
+
+		if (Phase < 2)
+			return;
+
+		GetTree().CreateTimer(DelaiSecondTir).Timeout += () =>
+		{
+			// Le boss a pu tomber — ou être libéré — pendant le délai.
+			if (IsInstanceValid(this) && !EstVaincu)
+				TirerProjectileVise(scene, direction, vitesse);
+		};
+	}
+
+	// Un projectile lâché du milieu du boss, DANS L'AXE DU JOUEUR. L'éclat vole en ligne
+	// droite (sa scène règle Gravite = 0) : tiré à plat, il filait sur toute la longueur de
+	// la salle sans jamais menacer un joueur qui n'était pas exactement à sa hauteur — il
+	// faut le viser. L'orientation en vol suit la vitesse, c'est la base Projectile qui s'en
+	// charge, et la surcharge vectorielle d'Initialiser conserve la norme du tir.
+	protected void TirerProjectileVise(PackedScene scene, int direction, float vitesse)
+	{
+		var origine = PointDeTir(direction);
+		var projectile = scene.Instantiate<Projectile>();
+		projectile.Initialiser(this, DirectionVersJoueur(origine, direction) * vitesse);
+		projectile.GlobalPosition = origine;
+		GetParent().AddChild(projectile);
+	}
+
+	// Ligne de visée unitaire, du point de tir vers le joueur. Repli sur l'horizontale dans
+	// le sens du regard quand il n'y a pas de joueur en scène, ou qu'il est pile sur le
+	// point de tir : un vecteur nul normalisé enverrait le projectile n'importe où.
+	protected Vector2 DirectionVersJoueur(Vector2 origine, int directionRepli)
+	{
+		var joueur = JoueurLePlusProche(out _);
+		if (joueur == null)
+			return new Vector2(directionRepli, 0f);
+
+		var vers = joueur.GlobalPosition - origine;
+		return vers.LengthSquared() < 1f ? new Vector2(directionRepli, 0f) : vers.Normalized();
+	}
+
 	// Hook d'init des sous-classes (récupération de nœuds, RNG, état/anim de départ...).
 	protected virtual void Initialiser() { }
 

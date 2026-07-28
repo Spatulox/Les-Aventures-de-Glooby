@@ -88,10 +88,11 @@ public partial class GameState : Node
 	// authorée du nœud Joueur (comportement d'origine, ex. tout premier lancement).
 	public string PointEntreeDemande { get; set; } = "";
 
-	// Vrai quand le joueur est à portée d'un élément parlant (Talkative) : la touche
-	// de saut, partagée avec l'action "action", est alors captée par le dialogue et
-	// ne fait pas sauter le joueur (voir Player._PhysicsProcess et DeclencheurDialogue).
-	public bool DialogueDisponible { get; set; }
+	// Vrai quand le joueur est à portée de QUELQUE CHOSE avec quoi interagir : un élément
+	// parlant (Talkative) ou un mécanisme manœuvrable (PorteBois). La touche de saut,
+	// partagée avec l'action "action", est alors captée par cet élément et ne fait pas
+	// sauter le joueur — mais seulement s'il est immobile, voir Player._PhysicsProcess.
+	public bool InteractionDisponible { get; set; }
 
 	// Vrai pendant une conversation à choix : le joueur ne joue plus, ses touches
 	// pilotent la liste de réponses (haut/bas pour naviguer, "action" pour valider).
@@ -132,6 +133,17 @@ public partial class GameState : Node
 	{
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
 		ManaGlace = ManaGlaceMax;
+		QuitterModeDebug();
+	}
+
+	// Fin d'une partie de test : on retombe dans une vraie partie. À appeler sur TOUT
+	// chemin qui sort d'une session de debug — sinon ModeDebug, qui survit au changement
+	// de scène (autoload), reste vrai dans la partie suivante et la sabote en silence :
+	// Sauvegarder() n'écrit plus rien, Checkpoint ne déplace plus le campement actif
+	// (donc les campements ne s'allument même plus) et les facilités cochées (invincible,
+	// one-shot, mana infini) restent accordées.
+	public void QuitterModeDebug()
+	{
 		ModeDebug = false;
 		_optionsDebug.Clear();
 	}
@@ -316,6 +328,10 @@ public partial class GameState : Node
 		var dict = Sauvegarde.Lire();
 		if (dict == null)
 			return false;
+
+		// Reprendre une sauvegarde, c'est par définition reprendre une VRAIE partie :
+		// on sort du mode test ici plutôt que de compter sur le passage par le menu.
+		QuitterModeDebug();
 
 		_donnees = DonneesSauvegarde.DepuisDictionnaire(dict);
 		Pv = Mathf.Min(Pv, PvMax);

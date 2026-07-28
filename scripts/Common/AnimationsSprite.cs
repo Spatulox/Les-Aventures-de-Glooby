@@ -8,12 +8,16 @@ using System.Collections.Generic;
 public static class AnimationsSprite
 {
 	// Charge les PNG d'un dossier, triés par nom, en tableau de textures.
-	public static Texture2D[] ChargerFrames(string dossier)
+	// `prefixe` ne retient que les fichiers commençant par lui : sert aux lots d'assets
+	// livrés À PLAT dans un dossier commun, plusieurs animations mélangées, avec un
+	// préfixe par animation (ex. cadeau_explosif_vol_01 / cadeau_explosif_explosion_01).
+	// Défaut vide = tout le dossier, le cas historique « un dossier = une animation ».
+	public static Texture2D[] ChargerFrames(string dossier, string prefixe = "")
 	{
 		var fichiers = new List<string>();
 		foreach (var fichier in DirAccess.GetFilesAt(dossier))
 		{
-			if (fichier.EndsWith(".png"))
+			if (fichier.EndsWith(".png") && fichier.StartsWith(prefixe))
 				fichiers.Add(fichier);
 		}
 		fichiers.Sort();

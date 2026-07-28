@@ -10,6 +10,9 @@ size = Vector2(18, 46)
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 14.0
 
+[sub_resource type="CircleShape2D" id="CercleVue"]
+radius = 334.01346
+
 [node name="MiniJouetExplosif" type="CharacterBody2D" unique_id=743188203]
 collision_layer = 4
 collision_mask = 17
@@ -37,3 +40,11 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDegats" unique_id=2065872078]
 position = Vector2(0, -22)
 shape = SubResource("CircleShape2D_1")
+
+[node name="ZoneDetection" type="Area2D" parent="." unique_id=781987708]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneDetection" unique_id=570860883]
+position = Vector2(0, -22)
+shape = SubResource("CercleVue")

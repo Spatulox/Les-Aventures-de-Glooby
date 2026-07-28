@@ -98,10 +98,18 @@ public partial class DeclencheurZone : Area2D
 		if (!string.IsNullOrEmpty(nomRegion))
 			BackgroundManager.Instance?.AfficherRegion(nomRegion);
 
-		// La clé sonore n'est PAS la région visuelle : le village et la banquise
-		// partagent le fond "banquise" mais pas la musique. À défaut de clé propre,
-		// on retombe sur la région - seuls les lieux qui s'en écartent ont besoin
-		// de renseigner NomAmbiance.
+		JouerAmbianceSalle(nomRegion, nomAmbiance);
+	}
+
+	// Demande au GestionnaireAudio l'ambiance d'une salle. La clé sonore n'est PAS la
+	// région visuelle : le village et la banquise partagent le fond "banquise" mais pas
+	// la musique. À défaut de clé propre, on retombe sur la région - seuls les lieux qui
+	// s'en écartent ont besoin de renseigner NomAmbiance.
+	// À part depuis AppliquerCommeSalle : une salle peut changer de musique SANS changer
+	// de salle (l'arène de boss bascule sur son thème quand le combat s'engage), et la
+	// détection de salle du Player est à hystérésis - elle ne rappellerait pas Appliquer.
+	protected static void JouerAmbianceSalle(string nomRegion, string nomAmbiance)
+	{
 		var ambiance = string.IsNullOrEmpty(nomAmbiance) ? nomRegion : nomAmbiance;
 		if (!string.IsNullOrEmpty(ambiance))
 			GestionnaireAudio.Instance?.JouerAmbiance(ambiance);
