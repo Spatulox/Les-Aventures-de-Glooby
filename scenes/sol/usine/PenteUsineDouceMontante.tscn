@@ -1,17 +1,17 @@
 [gd_scene format=3 uid="uid://busnpdm01"]
 
-[ext_resource type="Script" path="res://scripts/sol/PenteUsineBois.cs" id="1"]
-[ext_resource type="Texture2D" path="res://assets/sol/usine/pente_douce_montante.png" id="2"]
+[ext_resource type="Script" uid="uid://cme0k1alrcho3" path="res://scripts/sol/PenteUsineBois.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://c34uvlvxsq6vo" path="res://assets/sol/usine/pente_douce_montante.png" id="2"]
 
-[node name="PenteUsineDouceMontante" type="StaticBody2D"]
+[node name="PenteUsineDouceMontante" type="StaticBody2D" unique_id=1726084505]
 script = ExtResource("1")
-Type = 0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1423310629]
 position = Vector2(0, -128)
 scale = Vector2(2, 2)
-centered = false
 texture = ExtResource("2")
+centered = false
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(0, 8, 344, -128, 344, 44, 0, 180)
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1540602098]
+position = Vector2(0, 35)
+polygon = PackedVector2Array(0, 8, 344, -128, 344, 12, 0, 149)
