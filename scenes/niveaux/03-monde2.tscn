@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://busolboisca" path="res://scenes/sol/usine/SolUsineBoisCentreA.tscn" id="10_bw6ma"]
 [ext_resource type="Texture2D" uid="uid://cc6yrec3tv63a" path="res://assets/props/cristal_petit.png" id="10_s4oyp"]
 [ext_resource type="PackedScene" uid="uid://busolboiscb" path="res://scenes/sol/usine/SolUsineBoisCentreB.tscn" id="11_bw6ma"]
+[ext_resource type="PackedScene" uid="uid://bdtwkujmg3bxy" path="res://scenes/interactifs/checkpoint_peche.tscn" id="12_lw0y4"]
 [ext_resource type="PackedScene" uid="uid://busolboiscc" path="res://scenes/sol/usine/SolUsineBoisCentreC.tscn" id="12_pfk45"]
 [ext_resource type="PackedScene" uid="uid://ddbp8ti1rtatq" path="res://scenes/plateformes/usine/PlateformeMobileBoisSuspendue.tscn" id="16_ro3l8"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/PorteBois.tscn" id="16_rtxd3"]
@@ -35,6 +36,13 @@
 [ext_resource type="Texture2D" uid="uid://cubi3vqy308qw" path="res://assets/props/noel/sapin_petit.png" id="36_pcgnn"]
 [ext_resource type="PackedScene" uid="uid://civtsuvy2xvd8" path="res://scenes/entites/lutin_cgt.tscn" id="37_8vt6c"]
 [ext_resource type="Texture2D" uid="uid://168qjahpgnvf" path="res://assets/pnj/boss_cerf/vaincu/6.png" id="38_3aija"]
+[ext_resource type="Texture2D" uid="uid://dy6yfny0c6740" path="res://assets/decors/grotte_florale/kit/arbre_givre.png" id="47_7rn6x"]
+[ext_resource type="Texture2D" uid="uid://c4jbxoh2g7vki" path="res://assets/decors/grotte_florale/kit/arbre_givre_b.png" id="48_u20t7"]
+[ext_resource type="Texture2D" uid="uid://bfui0shstcwob" path="res://assets/decors/grotte_florale/kit/arbre_givre_c.png" id="49_u20t7"]
+[ext_resource type="Texture2D" uid="uid://dhvj2ivhr5eol" path="res://assets/decors/grotte_florale/kit/cristaux.png" id="50_barlp"]
+[ext_resource type="Texture2D" uid="uid://byq405ppxbg6m" path="res://assets/decors/grotte_florale/kit/cristaux_b.png" id="51_geeny"]
+[ext_resource type="Texture2D" uid="uid://bplarv8qai221" path="res://assets/decors/grotte_florale/props/racine_arche.png" id="52_geeny"]
+[ext_resource type="Texture2D" uid="uid://b4x2egko1wruq" path="res://assets/props/grotte/racine_arbre_gele.png" id="53_yktmh"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" uid="uid://bpisvoy4atw3d" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -80,7 +88,7 @@ NomRegion = "banquise"
 
 [node name="Pingouin" parent="Banquise/Camera" unique_id=1788672048 instance=ExtResource("34_ftbij")]
 z_index = 1
-position = Vector2(1183, 222.99998)
+position = Vector2(1284, 223)
 scale = Vector2(0.72, 0.72)
 DialogueDynamique = true
 Contexte = "Tu es un bébé pinguoin naif qui adore regarder les Rennes, et surtout ceux du père noël"
@@ -116,6 +124,21 @@ z_index = -2
 position = Vector2(43.999996, 156)
 scale = Vector2(5.5384617, 5.6770835)
 texture = ExtResource("31_uwxrn")
+
+[node name="CheckpointPeche" parent="Banquise/Camera" unique_id=968770096 instance=ExtResource("12_lw0y4")]
+z_index = 1
+position = Vector2(547, 239)
+
+[node name="SapinPetit" type="Sprite2D" parent="Banquise/Camera" unique_id=1654508271]
+position = Vector2(1298, 194.74997)
+scale = Vector2(1.75, 1.671875)
+texture = ExtResource("36_pcgnn")
+
+[node name="SapinPetit2" type="Sprite2D" parent="Banquise/Camera" unique_id=916250655]
+z_index = 2
+position = Vector2(1354, 151)
+scale = Vector2(2.9479167, 3.5)
+texture = ExtResource("36_pcgnn")
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
 
@@ -660,16 +683,19 @@ DialogueDynamique = true
 Contexte = "Tu es un lutin très engagé dans la production de jouet, et tu es très triste car de temps en temps, des jouets tombent dans le néant et on ne les revoit jamais..."
 
 [node name="6" type="Sprite2D" parent="." unique_id=106078806]
-position = Vector2(1335, 221)
+position = Vector2(1300, 224)
+scale = Vector2(0.6413044, 0.5652174)
 texture = ExtResource("38_3aija")
 
 [node name="7" type="Sprite2D" parent="." unique_id=1478319027]
-position = Vector2(1252, 220)
+z_index = -1
+position = Vector2(1437, 215)
 texture = ExtResource("38_3aija")
 
 [node name="8" type="Sprite2D" parent="." unique_id=394933825]
-z_index = -1
-position = Vector2(1294, 212)
+z_index = 2
+position = Vector2(1354, 237)
+scale = Vector2(0.6847826, 0.6847826)
 texture = ExtResource("38_3aija")
 
 [node name="RocherA3" type="Sprite2D" parent="." unique_id=930601649]
@@ -738,7 +764,7 @@ scale = Vector2(1.4895834, 1.2916666)
 texture = ExtResource("29_rswis")
 
 [node name="RocherGlace2" type="Sprite2D" parent="." unique_id=438230706]
-z_index = 2
+z_index = 3
 position = Vector2(280, 318)
 texture = ExtResource("29_rswis")
 
@@ -747,3 +773,43 @@ z_index = -2
 position = Vector2(354, 163)
 scale = Vector2(1.7083334, 1.6354166)
 texture = ExtResource("29_rswis")
+
+[node name="ArbreGivre" type="Sprite2D" parent="." unique_id=702793056]
+z_index = -1
+position = Vector2(654, 133.00002)
+scale = Vector2(1.3648648, 1.2840909)
+texture = ExtResource("47_7rn6x")
+
+[node name="ArbreGivreB" type="Sprite2D" parent="." unique_id=1766258875]
+z_index = -2
+position = Vector2(341, 111.00001)
+scale = Vector2(1.9835327, 2.110465)
+texture = ExtResource("48_u20t7")
+
+[node name="ArbreGivreC" type="Sprite2D" parent="." unique_id=1785404962]
+z_index = 2
+position = Vector2(270, 187)
+scale = Vector2(1.439394, 1.3131868)
+texture = ExtResource("49_u20t7")
+
+[node name="Cristaux" type="Sprite2D" parent="." unique_id=1017245455]
+z_index = -1
+position = Vector2(757, 218)
+texture = ExtResource("50_barlp")
+
+[node name="CristauxB" type="Sprite2D" parent="." unique_id=329396242]
+z_index = 2
+position = Vector2(828, 236)
+texture = ExtResource("51_geeny")
+
+[node name="RacineArche" type="Sprite2D" parent="." unique_id=1942912868]
+z_index = -1
+position = Vector2(971.99994, 187)
+scale = Vector2(3.1363637, 2.3392856)
+texture = ExtResource("52_geeny")
+
+[node name="RacineArbreGele" type="Sprite2D" parent="." unique_id=1386787619]
+z_index = -3
+position = Vector2(961, 172.00002)
+scale = Vector2(5.625, 4.982143)
+texture = ExtResource("53_yktmh")
