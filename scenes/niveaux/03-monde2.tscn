@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://qopyq3e1vk2k"]
 
 [ext_resource type="PackedScene" uid="uid://kjhdxmbys0gl" path="res://scenes/core/zone_chargement_scene.tscn" id="4_544ey"]
+[ext_resource type="PackedScene" uid="uid://bqlwks44b6g3q" path="res://scenes/entites/PereNoel.tscn" id="8_ashjp"]
 [ext_resource type="PackedScene" uid="uid://busolboisemg" path="res://scenes/sol/usine/SolUsineBoisEmboutGauche.tscn" id="10_544ey"]
 [ext_resource type="PackedScene" uid="uid://busolboisca" path="res://scenes/sol/usine/SolUsineBoisCentreA.tscn" id="10_bw6ma"]
 [ext_resource type="PackedScene" uid="uid://busolboiscb" path="res://scenes/sol/usine/SolUsineBoisCentreB.tscn" id="11_bw6ma"]
@@ -29,7 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://civtsuvy2xvd8" path="res://scenes/entites/lutin_cgt.tscn" id="37_8vt6c"]
 [ext_resource type="Texture2D" uid="uid://168qjahpgnvf" path="res://assets/pnj/boss_cerf/vaincu/6.png" id="38_3aija"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
-[ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
+[ext_resource type="PackedScene" uid="uid://bpisvoy4atw3d" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
 [ext_resource type="PackedScene" path="res://scenes/decors/FondBanquise.tscn" id="fond_banquise"]
 [ext_resource type="PackedScene" path="res://scenes/decors/usine/FondUsine.tscn" id="fond_usine"]
@@ -78,6 +79,11 @@ scale = Vector2(0.72, 0.72)
 DialogueDynamique = true
 Contexte = "Tu es un bébé pinguoin naif qui adore regarder les Rennes, et surtout ceux du père noël"
 
+[node name="PereNoel" parent="Banquise/Camera" unique_id=45457349 instance=ExtResource("8_ashjp")]
+position = Vector2(4186, -855)
+DialogueDynamique = true
+Contexte = "Tu es le Grand Père Noël, mais tu es fatigué de travailler pour le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT"
+
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
 
 [node name="SolEmboutGauche" parent="Banquise/Sol" unique_id=693222020 instance=ExtResource("sol_embout_g")]
@@ -106,6 +112,7 @@ position = Vector2(1444, 280)
 [node name="UsinePereNoel" type="Node2D" parent="." unique_id=902516751]
 
 [node name="Camera" type="Node2D" parent="UsinePereNoel" unique_id=1063593249]
+visible = false
 
 [node name="ZoneUsine" parent="UsinePereNoel/Camera" unique_id=21096232 instance=ExtResource("camzone")]
 z_index = -5

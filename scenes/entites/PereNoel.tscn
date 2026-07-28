@@ -1,17 +1,17 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://bqlwks44b6g3q"]
 
-[ext_resource type="Script" path="res://scripts/Entities/Pnj/PereNoel.cs" id="1"]
-[ext_resource type="Script" path="res://scripts/Core/DeclencheurDialogue.cs" id="3"]
-[ext_resource type="Texture2D" path="res://assets/pnj/pere_noel/idle/00.png" id="4_apercu"]
+[ext_resource type="Script" uid="uid://b3awsferu56rn" path="res://scripts/Entities/Pnj/PereNoel.cs" id="1"]
+[ext_resource type="Script" uid="uid://bnskcw6i56nex" path="res://scripts/Core/DeclencheurDialogue.cs" id="3"]
+[ext_resource type="Texture2D" uid="uid://d3laje3trq24i" path="res://assets/pnj/pere_noel/idle/00.png" id="4_apercu"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1"]
-radius = 8.0
-height = 30.0
+radius = 25.0
+height = 86.0
 
 [sub_resource type="RectangleShape2D" id="RectProximite"]
 size = Vector2(88, 96)
 
-[node name="PereNoel" type="CharacterBody2D"]
+[node name="PereNoel" type="CharacterBody2D" unique_id=1858601392]
 collision_layer = 4
 collision_mask = 17
 script = ExtResource("1")
@@ -19,22 +19,22 @@ Lignes = PackedStringArray("Ho ho ho ! Te voilà enfin, petit !")
 AncrageBulle = Vector2(0, -105)
 AuPassage = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1853652684]
 position = Vector2(0, -46)
 
-[node name="Apercu" type="Sprite2D" parent="."]
+[node name="Apercu" type="Sprite2D" parent="." unique_id=1404841836]
 position = Vector2(0, -46)
 texture = ExtResource("4_apercu")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -15)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1974129157]
+position = Vector2(2, -43)
 shape = SubResource("CapsuleShape2D_1")
 
-[node name="DeclencheurDialogue" type="Area2D" parent="."]
+[node name="DeclencheurDialogue" type="Area2D" parent="." unique_id=316069]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("3")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue"]
-position = Vector2(0, -45)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeclencheurDialogue" unique_id=1346390065]
+position = Vector2(0, -47)
 shape = SubResource("RectProximite")
