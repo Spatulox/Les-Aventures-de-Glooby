@@ -81,8 +81,10 @@ Contexte = "Tu es un bébé pinguoin naif qui adore regarder les Rennes, et surt
 
 [node name="PereNoel" parent="Banquise/Camera" unique_id=45457349 instance=ExtResource("8_ashjp")]
 position = Vector2(4186, -855)
+ArtRegardeADroite = true
 DialogueDynamique = true
-Contexte = "Tu es le Grand Père Noël, mais tu es fatigué de travailler pour le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT"
+Contexte = "Tu es le Grand-Père Noël, et tu as été mis au rebut par le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT.
+Tu dois forcément parler du fait que tu es le Grand-Père Noel. Ne dis pas que tu es le Père Noel, tu es le Grand-Père Noel, le prédécesseur du Père Noel actuel"
 
 [node name="Sol" type="Node2D" parent="Banquise" unique_id=846197035]
 
@@ -295,6 +297,7 @@ position = Vector2(4492, 197.58)
 scale = Vector2(0.515, 0.515)
 Type = 3
 Texte = "Antre du Père Noël"
+Lignes = PackedStringArray("Antre du Père Noël")
 
 [node name="LutinNoel2" parent="UsinePereNoel/Pnj" unique_id=1850405562 instance=ExtResource("28_ce8ch")]
 position = Vector2(2365, -131)
