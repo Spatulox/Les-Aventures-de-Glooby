@@ -112,11 +112,13 @@ position = Vector2(1444, 280)
 position = Vector2(1300, 224)
 scale = Vector2(0.6413044, 0.5652174)
 texture = ExtResource("38_3aija")
+flip_h = true
 
 [node name="7" type="Sprite2D" parent="Banquise/Decor" unique_id=1478319027]
 z_index = -1
 position = Vector2(1437, 215)
 texture = ExtResource("38_3aija")
+flip_h = true
 
 [node name="8" type="Sprite2D" parent="Banquise/Decor" unique_id=394933825]
 z_index = 2
@@ -1116,6 +1118,7 @@ Contexte = "Tu es un lutin de noel qui est soulagé d'avoir fini le rush de noel
 
 [node name="PereNoel" parent="UsinePereNoel/Pnj" unique_id=45457349 instance=ExtResource("8_ashjp")]
 position = Vector2(4648, -860)
+scale = Vector2(-1, 1)
 ArtRegardeADroite = true
 DialogueDynamique = true
 Contexte = "Tu es le Grand-Père Noël, et tu as été mis au rebut par le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT.
