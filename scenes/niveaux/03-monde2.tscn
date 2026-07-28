@@ -1059,12 +1059,12 @@ Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que t
 [node name="LutinNoel16" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=11409057 instance=ExtResource("28_ce8ch")]
 position = Vector2(1810, -896)
 DialogueDynamique = true
-Contexte = "Tu trouve ca bizarre, que tu n'ai pas le même sapin en décoration que tes collègues de travail..."
+Contexte = "Tu comprend pas pourquoi il n'y as pas de tapis roulant, sans cet élément essentiel, les jouet ne peuvent pas être distribués..."
 
 [node name="LutinNoel17" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=517626593 instance=ExtResource("28_ce8ch")]
 position = Vector2(1915, -895)
 DialogueDynamique = true
-Contexte = "Tu trouve ca bizarre, que tu n'ai pas le même sapin en décoration que tes collègues de travail..."
+Contexte = "Tu trouve ca bizarre, que d'avoir un sapin différent par rapport à tes collègues de travail..."
 
 [node name="LutinNoel5" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=294852464 instance=ExtResource("28_ce8ch")]
 position = Vector2(2943, -885)
