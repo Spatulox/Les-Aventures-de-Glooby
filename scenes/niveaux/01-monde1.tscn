@@ -1215,7 +1215,7 @@ texture = ExtResource("g_congere")
 position = Vector2(2523, 712)
 
 [node name="CheckpointEntry" parent="Grotte/Interactifs" unique_id=1616650343 instance=ExtResource("checkpoint")]
-position = Vector2(1755, 559)
+position = Vector2(1756, 563)
 IdCheckpoint = "grotte_start"
 
 [node name="PanneauBoisEntry" parent="Grotte/Interactifs" unique_id=26847602 instance=ExtResource("panneau")]
