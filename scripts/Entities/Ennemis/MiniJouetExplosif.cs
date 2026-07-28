@@ -4,7 +4,8 @@ using Godot;
 // Trois états seulement, dans cet ordre et sans retour en arrière :
 //   Chute     — il descend lentement suspendu à son parachute, en se balançant ;
 //   Fonce     — parachute largué (le passage est visible : le parachute se détache et
-//               dérive), il court vers le joueur, mèche qui se consume ;
+//               dérive). Il reste alors PLANTÉ SUR PLACE tant qu'il n'a pas repéré le
+//               joueur ; c'est la détection qui allume la mèche ET lance la course ;
 //   Explosion — il éclate, blesse tout joueur dans le rayon, puis se libère.
 //
 // L'explosion est le SEUL dénouement ET la seule source de dégâts : elle survient au
@@ -44,8 +45,9 @@ public partial class MiniJouetExplosif : LivingEntity
 	private Node2D _parachute;
 	private Area2D _zoneDegats;
 	private float _minuteurMeche;
-	// La mèche est allumée par la VUE du joueur, et ne s'éteint plus ensuite : une fois
-	// amorcé, le compte à rebours va jusqu'au bout même si le joueur se dérobe.
+	// Allumée par la VUE du joueur, elle ne s'éteint plus ensuite : une fois amorcé, le
+	// jouet court et le compte à rebours va jusqu'au bout même si le joueur se dérobe.
+	// Ce même drapeau commande le mouvement : avant lui, le jouet ne bouge pas.
 	private bool _mecheAllumee;
 
 	public override void _Ready()
@@ -115,9 +117,29 @@ public partial class MiniJouetExplosif : LivingEntity
 			return;
 		}
 
-		// Fonce : gravité normale + course vers le joueur, mèche qui se consume.
+		// Fonce : gravité toujours (il doit rester posé au sol), le reste dépend de la vue.
 		AppliquerGravite(ref velocite, dt);
 
+		// La mèche s'allume à la VUE du joueur, et ne s'éteint plus ensuite : un jouet qui
+		// n'a jamais aperçu personne attend indéfiniment au lieu de se saborder tout seul
+		// dans son coin, et le joueur qui se dérobe ensuite ne l'éteint pas — d'où le test
+		// unique, qui coupe aussi la détection une fois amorcé.
+		if (!_mecheAllumee && JoueurAPortee(out float distanceVue) != null && distanceVue <= PorteeVue)
+			Amorcer();
+
+		// Tant qu'il n'a rien vu, il reste PLANTÉ : pas de course, pas de mèche. Le joueur
+		// peut donc traverser l'arène en évitant les jouets déjà posés au lieu de se faire
+		// pourchasser par toute la fournée dès l'atterrissage.
+		if (!_mecheAllumee)
+		{
+			AppliquerFriction(ref velocite, dt);
+			Velocity = velocite;
+			MoveAndSlide();
+			return;
+		}
+
+		// Amorcé : course kamikaze vers le joueur. On vise le joueur le plus proche et non
+		// celui de la zone de détection — une fois lancé, il poursuit même hors de vue.
 		var joueur = JoueurLePlusProche(out float _);
 		if (joueur != null)
 		{
@@ -137,19 +159,6 @@ public partial class MiniJouetExplosif : LivingEntity
 		Velocity = velocite;
 		MoveAndSlide();
 
-		// La mèche ne se consume qu'une fois ALLUMÉE, et elle ne s'allume qu'à la vue du
-		// joueur : un jouet qui n'a jamais aperçu personne attend indéfiniment au lieu de
-		// se saborder tout seul dans son coin. Le joueur qui se dérobe ensuite ne l'éteint
-		// pas — d'où le test unique, qui coupe aussi la recherche du joueur une fois amorcé.
-		if (!_mecheAllumee)
-		{
-			var vu = JoueurAPortee(out float distanceVue);
-			_mecheAllumee = vu != null && distanceVue <= PorteeVue;
-		}
-
-		if (!_mecheAllumee)
-			return;
-
 		_minuteurMeche -= dt;
 		if (_minuteurMeche <= 0f)
 			Exploser();
@@ -160,7 +169,10 @@ public partial class MiniJouetExplosif : LivingEntity
 	private void LarguerParachute()
 	{
 		EtatCourant = Etat.Fonce;
+		// Il se met en position mais reste immobile : l'animation de course est figée sur sa
+		// première frame (le petit soldat au garde-à-vous) jusqu'à ce qu'il repère le joueur.
 		_sprite.Play("fonce");
+		_sprite.Pause();
 		// C'est ici, et pas avant, que le jouet devient dangereux au contact.
 		ArmerZoneDegats(true);
 
@@ -176,6 +188,14 @@ public partial class MiniJouetExplosif : LivingEntity
 		tween.TweenProperty(_parachute, "global_position", position + new Vector2(14f, -26f), 1.1f);
 		Effets.Disparaitre(_parachute, _parachute.Scale * 0.8f, 1.1f);
 		_parachute = null;
+	}
+
+	// Repérage du joueur : la mèche s'allume et la course démarre en même temps (l'animation
+	// de course, figée depuis le largage, repart). Sans retour possible à l'immobilité.
+	private void Amorcer()
+	{
+		_mecheAllumee = true;
+		_sprite.Play("fonce");
 	}
 
 	// Contact avec le joueur : le kamikaze fait son office. Le contact ne blesse jamais
