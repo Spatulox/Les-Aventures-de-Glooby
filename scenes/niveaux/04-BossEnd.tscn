@@ -39,6 +39,7 @@ NomBossAlternatif = "Lutin Mecha"
 PvBossAlternatif = 40
 NomRegion = "usine"
 NomAmbiance = "boss_cerf"
+NomAmbiancePrologue = "usine"
 CheminBarre = NodePath("../../BossHudBarre")
 PvBoss = 45
 ScenePnjPrologue = ExtResource("prologue_pere_noel")

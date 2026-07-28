@@ -16,6 +16,8 @@
 [ext_resource type="Texture2D" uid="uid://hoeyfknx78n5" path="res://assets/props/noel/sapin_grand.png" id="24_g86s4"]
 [ext_resource type="Texture2D" uid="uid://sh6owfc0k6oj" path="res://assets/props/noel/guirlande_segment_rouge.png" id="25_c3de4"]
 [ext_resource type="PackedScene" path="res://scenes/ennemis/usine/MechaJouetLanceur.tscn" id="26_j4gj1"]
+[ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="27_wgvji"]
+[ext_resource type="PackedScene" uid="uid://cfuc5gb01g7jn" path="res://scenes/entites/lutin_noel.tscn" id="28_ce8ch"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -359,3 +361,65 @@ texture = ExtResource("25_c3de4")
 
 [node name="MechaJouetLanceur" parent="." unique_id=2052075158 instance=ExtResource("26_j4gj1")]
 position = Vector2(3016, 207)
+
+[node name="PanneauBois" parent="." unique_id=197425152 instance=ExtResource("27_wgvji")]
+z_index = -1
+position = Vector2(2618, 191)
+rotation = 0.2443461
+Type = 3
+Texte = "Cave"
+
+[node name="LocomotiveJouet" parent="." unique_id=762410787 instance=ExtResource("21_qwj7e")]
+position = Vector2(1901, 1802)
+
+[node name="LocomotiveJouet3" parent="." unique_id=1130176790 instance=ExtResource("21_qwj7e")]
+position = Vector2(2334, 1798)
+
+[node name="LocomotiveJouet4" parent="." unique_id=1471802954 instance=ExtResource("21_qwj7e")]
+position = Vector2(2996, 1790)
+
+[node name="LocomotiveJouet5" parent="." unique_id=1925403224 instance=ExtResource("21_qwj7e")]
+position = Vector2(3455, 1780)
+
+[node name="LocomotiveJouet6" parent="." unique_id=1687980143 instance=ExtResource("21_qwj7e")]
+position = Vector2(3766, 1790)
+
+[node name="LocomotiveJouet7" parent="." unique_id=1680930964 instance=ExtResource("21_qwj7e")]
+position = Vector2(4490, 1780)
+
+[node name="MechaJouetLanceur2" parent="." unique_id=1016939188 instance=ExtResource("26_j4gj1")]
+position = Vector2(4207, 1795)
+
+[node name="MechaJouetLanceur3" parent="." unique_id=1263411121 instance=ExtResource("26_j4gj1")]
+position = Vector2(3227, 1798)
+
+[node name="MechaJouetLanceur4" parent="." unique_id=1125516500 instance=ExtResource("26_j4gj1")]
+position = Vector2(2003, 1790)
+
+[node name="MiniJouetExplosif2" parent="." unique_id=1917607737 instance=ExtResource("21_0gqfy")]
+position = Vector2(2557, 1792)
+
+[node name="MiniJouetExplosif3" parent="." unique_id=1667564501 instance=ExtResource("21_0gqfy")]
+position = Vector2(2765, 1794)
+
+[node name="MiniJouetExplosif4" parent="." unique_id=28545808 instance=ExtResource("21_0gqfy")]
+position = Vector2(1793, 1790)
+
+[node name="MiniJouetExplosif5" parent="." unique_id=1524177242 instance=ExtResource("21_0gqfy")]
+position = Vector2(2136, 1802)
+
+[node name="MiniJouetExplosif6" parent="." unique_id=643443115 instance=ExtResource("21_0gqfy")]
+position = Vector2(2880, 1800)
+
+[node name="MiniJouetExplosif7" parent="." unique_id=232884308 instance=ExtResource("21_0gqfy")]
+position = Vector2(3128, 1794)
+
+[node name="MiniJouetExplosif8" parent="." unique_id=223430567 instance=ExtResource("21_0gqfy")]
+position = Vector2(3964, 1800)
+
+[node name="MiniJouetExplosif9" parent="." unique_id=115522122 instance=ExtResource("21_0gqfy")]
+position = Vector2(4655, 1788)
+
+[node name="LutinNoel" parent="." unique_id=276249539 instance=ExtResource("28_ce8ch")]
+position = Vector2(4613, 208)
+DialogueDynamique = true

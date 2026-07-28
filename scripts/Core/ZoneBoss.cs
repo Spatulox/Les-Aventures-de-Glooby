@@ -51,6 +51,14 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// au hasard entre les deux. Vide = reprendre NomRegion.
 	[Export] public string NomAmbiance = "";
 
+	// Ambiance HORS COMBAT de l'arène : ce qu'on entend en y entrant, pendant le prologue,
+	// et de nouveau dès la chute du boss (épilogue). NomAmbiance, le thème de combat, ne
+	// joue donc QUE pendant le combat lui-même. Sert à laisser la musique du lieu franchir
+	// la porte - l'usine tourne encore pendant qu'on discute - sans lui coller un thème de
+	// combat de bout en bout.
+	// Vide = pas d'avant-combat, l'arène sonne comme le combat dès l'entrée.
+	[Export] public string NomAmbiancePrologue = "";
+
 	// Barre de vie à révéler et lier au boss spawné.
 	[Export] public NodePath CheminBarre;
 
@@ -91,6 +99,14 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	protected Node2D PnjPrologue;
 	private Player _joueurPrologue;
 	private bool _epilogueLance;
+
+	// Le combat a-t-il commencé ? Ne sert qu'à choisir l'ambiance sonore (avant-combat
+	// ou combat) - le boss lui-même reste la référence pour tout le reste.
+	private bool _combatEngage;
+
+	// Clé d'ambiance à jouer maintenant. Vide = repli sur NomRegion, comme partout.
+	private string AmbianceCourante =>
+		!_combatEngage && !string.IsNullOrEmpty(NomAmbiancePrologue) ? NomAmbiancePrologue : NomAmbiance;
 
 	// Vrai quand la variante cachée est débloquée. Les deux conditions sont exigées
 	// ensemble : une mémoire sans scène alternative (ou l'inverse) est un câblage
@@ -173,6 +189,12 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 		PnjPrologue = null;
 
 		Barre?.Masquer();
+		// On retombe dans l'avant-combat : revenir à l'arène après une mort réentend la
+		// musique du lieu, et le thème de combat repart quand le boss réapparaît. Pas de
+		// bascule sonore ici même : soit le joueur a été téléporté ailleurs et c'est sa
+		// nouvelle salle qui décide, soit il ressuscite dans l'arène et LancerCombat
+		// suit dans la foulée.
+		_combatEngage = false;
 		RearmerDeclencheur();
 		CallDeferred(MethodName.RelancerSiJoueurPresent);
 	}
@@ -185,7 +207,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 
 	// IZoneCamera : verrouille la caméra du joueur sur l'arène (limites = rectangle de
 	// la zone) et affiche le fond de région. Appelé par le Player par sondage.
-	public void Appliquer(Player joueur) => AppliquerCommeSalle(joueur, NomRegion, NomAmbiance, MargeChuteVide);
+	public void Appliquer(Player joueur) => AppliquerCommeSalle(joueur, NomRegion, AmbianceCourante, MargeChuteVide);
 
 	protected override void SurEntreeJoueur(Player joueur)
 	{
@@ -214,6 +236,13 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 	// d'héritage. Appelé à l'entrée du joueur, ou après le prologue s'il y en a un.
 	private void LancerCombat(Player joueur)
 	{
+		// La musique de combat prend la main sur celle de l'avant-combat. Le
+		// changement est demandé ICI et pas laissé à Appliquer : la détection de salle
+		// du Player est à hystérésis, elle ne rappelle la zone que s'il en change -
+		// or il ne bouge pas d'arène entre le prologue et le combat.
+		_combatEngage = true;
+		JouerAmbianceSalle(NomRegion, AmbianceCourante);
+
 		Boss = FaireApparaitreBoss();
 		if (Boss != null)
 		{
@@ -324,6 +353,14 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 			return;
 
 		_epilogueLance = true;
+
+		// Le thème de combat s'arrête AVEC le boss, pas au bout du battement : on
+		// retrouve la musique du lieu (celle de l'avant-combat) dès qu'il s'affaisse,
+		// pour que l'épilogue se joue au calme. Sans avant-combat renseigné, rien ne
+		// change - AmbianceCourante retombe sur celle du combat.
+		_combatEngage = false;
+		JouerAmbianceSalle(NomRegion, AmbianceCourante);
+
 		GetTree().CreateTimer(DelaiEpilogue).Timeout += CloreCombat;
 	}
 

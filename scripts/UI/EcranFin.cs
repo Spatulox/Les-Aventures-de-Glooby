@@ -16,10 +16,11 @@ public partial class EcranFin : Control
 	// Scène chargée quand le générique est fini (ou passé).
 	[Export(PropertyHint.File, "*.tscn")] public string CheminSuite = "res://scenes/niveaux/01-monde1.tscn";
 
-	// Ambiance sonore du générique, par son nom (cf. GestionnaireAudio). Laissé
-	// VIDE volontairement : la musique du combat final continue sans coupure.
-	// Renseigner "fin" ici le jour où assets/audio/ambiances/fin.tres existe.
-	[Export] public string NomAmbiance = "";
+	// Ambiance sonore du générique, par son nom (cf. GestionnaireAudio). Le thème
+	// du boss revient ici : l'arène le coupe dès que le boss tombe (pour que
+	// l'épilogue se joue au calme), et il fait la musique de fin. Vide = on garde
+	// ce qui jouait déjà, sans coupure.
+	[Export] public string NomAmbiance = "boss_cerf";
 
 	private VBoxContainer _colonne;
 
