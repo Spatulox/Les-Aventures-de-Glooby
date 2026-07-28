@@ -1010,40 +1010,6 @@ texture = ExtResource("25_c3de4")
 
 [node name="Pnj" type="Node2D" parent="UsinePereNoel" unique_id=2000834972]
 
-[node name="LocomotiveJouet2" parent="UsinePereNoel/Pnj" unique_id=2060677146 instance=ExtResource("21_qwj7e")]
-position = Vector2(1974, 228)
-
-[node name="MechaJouetLanceur" parent="UsinePereNoel/Pnj" unique_id=2052075158 instance=ExtResource("26_j4gj1")]
-position = Vector2(3016, 207)
-
-[node name="LutinNoel" parent="UsinePereNoel/Pnj" unique_id=114923281 instance=ExtResource("28_ce8ch")]
-position = Vector2(4613, 208)
-Lignes = PackedStringArray("Ollama est cassé T_T, je ne peux pas parler normalement")
-DialogueDynamique = true
-Contexte = "Tu gardes la porte du fond de la fabrique du Père Noël. Tu croules sous les commandes de dernière minute, tu es débordé mais fier de ton travail, et tu n'as pas une seconde à perdre. Tu presses Glooby de passer cette porte pour aller voir le Père Noël, au lieu de traîner entre les machines."
-MemoireRequise = "lutin_cgt_don_poissons"
-ContexteAlternatif = "Tu gardes la porte du fond de la fabrique du Père Noël, le jour où la grève a tout arrêté. La chaîne est immobile, le piquet bloque l'atelier et un Lutin Mecha s'est emparé des machines. Tu es paniqué et rancunier : c'est Glooby qui a rempli la caisse de grève avec ses cinquante poissons, tu le lui reproches, et tu ne sais pas si tu dois le remercier ou l'engueuler d'avoir tout bloqué."
-
-[node name="PanneauBois" parent="UsinePereNoel/Pnj" unique_id=197425152 instance=ExtResource("27_wgvji")]
-z_index = -1
-position = Vector2(4492, 197.58)
-scale = Vector2(0.515, 0.515)
-Type = 3
-Texte = "Antre du Père Noël"
-Lignes = PackedStringArray("Antre du Père Noël")
-
-[node name="LutinNoel2" parent="UsinePereNoel/Pnj" unique_id=1850405562 instance=ExtResource("28_ce8ch")]
-position = Vector2(2365, -131)
-DialogueDynamique = true
-Contexte = "Tu es un lutin de noel qui est soulagé d'avoir fini le rush de noel"
-
-[node name="PereNoel" parent="UsinePereNoel/Pnj" unique_id=45457349 instance=ExtResource("8_ashjp")]
-position = Vector2(4648, -860)
-ArtRegardeADroite = true
-DialogueDynamique = true
-Contexte = "Tu es le Grand-Père Noël, et tu as été mis au rebut par le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT.
-Tu dois forcément parler du fait que tu es le Grand-Père Noel. Ne dis pas que tu es le Père Noel, tu es le Grand-Père Noel, le prédécesseur du Père Noel actuel"
-
 [node name="LutinHautTriste" type="Node2D" parent="UsinePereNoel/Pnj" unique_id=888933144]
 
 [node name="LutinNoel3" parent="UsinePereNoel/Pnj/LutinHautTriste" unique_id=276249539 instance=ExtResource("28_ce8ch")]
@@ -1120,6 +1086,52 @@ Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que t
 position = Vector2(4502, -895)
 DialogueDynamique = true
 Contexte = "tu es triste car les Lutins de la CGT jètent tous les cadeaux que tu produis"
+
+[node name="LocomotiveJouet2" parent="UsinePereNoel/Pnj" unique_id=2060677146 instance=ExtResource("21_qwj7e")]
+position = Vector2(1974, 228)
+
+[node name="MechaJouetLanceur" parent="UsinePereNoel/Pnj" unique_id=2052075158 instance=ExtResource("26_j4gj1")]
+position = Vector2(3016, 207)
+
+[node name="LutinNoel" parent="UsinePereNoel/Pnj" unique_id=114923281 instance=ExtResource("28_ce8ch")]
+position = Vector2(4613, 208)
+Lignes = PackedStringArray("Ollama est cassé T_T, je ne peux pas parler normalement")
+DialogueDynamique = true
+Contexte = "Tu gardes la porte du fond de la fabrique du Père Noël. Tu croules sous les commandes de dernière minute, tu es débordé mais fier de ton travail, et tu n'as pas une seconde à perdre. Tu presses Glooby de passer cette porte pour aller voir le Père Noël, au lieu de traîner entre les machines."
+MemoireRequise = "lutin_cgt_don_poissons"
+ContexteAlternatif = "Tu gardes la porte du fond de la fabrique du Père Noël, le jour où la grève a tout arrêté. La chaîne est immobile, le piquet bloque l'atelier et un Lutin Mecha s'est emparé des machines. Tu es paniqué et rancunier : c'est Glooby qui a rempli la caisse de grève avec ses cinquante poissons, tu le lui reproches, et tu ne sais pas si tu dois le remercier ou l'engueuler d'avoir tout bloqué."
+
+[node name="PanneauBois" parent="UsinePereNoel/Pnj" unique_id=197425152 instance=ExtResource("27_wgvji")]
+z_index = -1
+position = Vector2(4492, 197.58)
+scale = Vector2(0.515, 0.515)
+Type = 3
+Texte = "Antre du Père Noël"
+Lignes = PackedStringArray("Antre du Père Noël")
+
+[node name="LutinNoel2" parent="UsinePereNoel/Pnj" unique_id=1850405562 instance=ExtResource("28_ce8ch")]
+position = Vector2(2365, -131)
+DialogueDynamique = true
+Contexte = "Tu es un lutin de noel qui est soulagé d'avoir fini le rush de noel"
+
+[node name="PereNoel" parent="UsinePereNoel/Pnj" unique_id=45457349 instance=ExtResource("8_ashjp")]
+position = Vector2(4648, -860)
+ArtRegardeADroite = true
+DialogueDynamique = true
+Contexte = "Tu es le Grand-Père Noël, et tu as été mis au rebut par le nouveau père noël, donc toi aussi tu fait grève avec les lutins de la CGT.
+Tu dois forcément parler du fait que tu es le Grand-Père Noel. Ne dis pas que tu es le Père Noel, tu es le Grand-Père Noel, le prédécesseur du Père Noel actuel"
+
+[node name="MechaJouetLanceur2" parent="UsinePereNoel/Pnj" unique_id=1820248209 instance=ExtResource("26_j4gj1")]
+position = Vector2(3284, 231)
+
+[node name="LocomotiveJouet" parent="UsinePereNoel/Pnj" unique_id=132672402 instance=ExtResource("21_qwj7e")]
+position = Vector2(3442, 231)
+
+[node name="LocomotiveJouet3" parent="UsinePereNoel/Pnj" unique_id=2060451587 instance=ExtResource("21_qwj7e")]
+position = Vector2(3647, 228)
+
+[node name="MechaJouetLanceur3" parent="UsinePereNoel/Pnj" unique_id=1558637332 instance=ExtResource("26_j4gj1")]
+position = Vector2(3888, 235)
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
