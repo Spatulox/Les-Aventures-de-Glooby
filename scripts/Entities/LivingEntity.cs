@@ -39,13 +39,9 @@ public abstract partial class LivingEntity : CharacterBody2D, Damageable
 	// Chaque scène d'entité porte un Sprite2D « Apercu » figé sur la 1re frame de son idle,
 	// uniquement pour que l'entité soit visible/positionnable dans l'éditeur Godot. En jeu,
 	// c'est l'AnimatedSprite2D qui rend : on masque donc l'aperçu au démarrage (facultatif,
-	// une scène sans nœud « Apercu » est simplement ignorée).
-	protected void MasquerApercuEditeur()
-	{
-		var apercu = GetNodeOrNull<Sprite2D>("Apercu");
-		if (apercu != null)
-			apercu.Visible = false;
-	}
+	// une scène sans nœud « Apercu » est simplement ignorée). La règle est partagée avec les
+	// projectiles, d'où le helper commun ApercuEditeur.
+	protected void MasquerApercuEditeur() => ApercuEditeur.Masquer(this);
 
 	// ---- Détection du joueur (portée) ----
 	// Joueur actuellement présent dans la ZoneDetection (Area2D enfant facultative), ou null.

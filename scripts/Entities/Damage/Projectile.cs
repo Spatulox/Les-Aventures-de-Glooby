@@ -63,6 +63,8 @@ public abstract partial class Projectile : Area2D
 		// d'arbre), ils se dessinent après le joueur à z égal, ce qui est le bon ordre.
 		ZIndex = Constantes.ZJoueur;
 
+		ApercuEditeur.Masquer(this);
+
 		_tempsRestant = DureeVie;
 		_sprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");
 		BodyEntered += OnBodyEntered;
