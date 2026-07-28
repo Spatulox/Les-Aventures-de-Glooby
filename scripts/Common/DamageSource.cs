@@ -18,6 +18,10 @@ public enum DamageSource
 	EcrasementMecha,
 	JouetExplosif,
 
+	// Onde de choc qui court AU SOL (punch du Père Noël) : la seule attaque qu'on esquive
+	// en étant en l'air, d'où sa source propre — c'est OndeDeChoc qui porte cette règle.
+	OndeDeChoc,
+
 	// Subis par le joueur au contact d'un PNJ méchant (contact simple ou charge).
 	ContactMechant,
 }
@@ -49,6 +53,7 @@ public static class DamageSourceExtensions
 		DamageSource.EclatGlace => 1,
 		DamageSource.EcrasementMecha => 2,
 		DamageSource.JouetExplosif => 2,
+		DamageSource.OndeDeChoc => 2,
 		DamageSource.ContactMechant => 1,
 		_ => 1,
 	};

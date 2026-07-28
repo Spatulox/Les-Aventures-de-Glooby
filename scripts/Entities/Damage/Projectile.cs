@@ -20,6 +20,9 @@ public abstract partial class Projectile : Area2D
 	private float _vitesseChute;
 	private float _tempsRestant;
 	private bool _impact;
+	// Sprite du projectile, s'il en a un : sert UNIQUEMENT au miroir de l'orientation
+	// (voir OrienterSurLaVitesse). Optionnel — un projectile sans sprite reste valide.
+	private AnimatedSprite2D _sprite;
 
 	// Configure le tir : qui l'a lancé (immunisé) et dans quelle direction.
 	// À appeler avant l'ajout à l'arbre.
@@ -53,6 +56,7 @@ public abstract partial class Projectile : Area2D
 		CollisionMask = Constantes.MasqueProjectile;
 
 		_tempsRestant = DureeVie;
+		_sprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");
 		BodyEntered += OnBodyEntered;
 	}
 
@@ -64,13 +68,30 @@ public abstract partial class Projectile : Area2D
 		var dt = (float)delta;
 		_vitesseChute += Gravite * dt;
 		Position += new Vector2(Direction * Vitesse, _vitesseChute) * dt;
-		// Oriente le projectile dans le sens de son déplacement : il part à plat et
-		// pique progressivement du nez à mesure que la gravité le fait retomber.
-		Rotation = VelociteCourante.Angle();
+		OrienterSurLaVitesse();
 
 		_tempsRestant -= dt;
 		if (_tempsRestant <= 0f)
 			Eclater();
+	}
+
+	// Oriente le projectile dans le sens de son déplacement : il part à plat et pique
+	// progressivement du nez à mesure que la gravité le fait retomber.
+	//
+	// Vers la GAUCHE, une rotation seule ne suffit pas : l'angle vaut alors ~180°, ce qui
+	// RETOURNE le sprite (cadeau la tête en bas, boule de neige à l'envers) au lieu de le
+	// miroiter. Un tir vers la gauche est le MIROIR d'un tir vers la droite, pas sa rotation
+	// d'un demi-tour. On compose donc un miroir horizontal (FlipH sur le sprite, jamais sur
+	// la racine : ça déformerait aussi la forme de collision) avec l'angle du vecteur opposé
+	// — les deux se combinent exactement en la réflexion voulue, et l'objet reste debout.
+	private void OrienterSurLaVitesse()
+	{
+		var vitesse = VelociteCourante;
+		bool versLaGauche = Direction < 0;
+
+		Rotation = versLaGauche ? (-vitesse).Angle() : vitesse.Angle();
+		if (_sprite != null)
+			_sprite.FlipH = versLaGauche;
 	}
 
 	private void OnBodyEntered(Node body)
