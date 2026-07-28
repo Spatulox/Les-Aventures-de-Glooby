@@ -33,7 +33,7 @@
 [ext_resource type="Texture2D" uid="uid://bfui0shstcwob" path="res://assets/decors/grotte_florale/kit/arbre_givre_c.png" id="79_h5wnt"]
 [ext_resource type="Texture2D" uid="uid://sh772flofnin" path="res://assets/props/rocher_enneige/rocher_b.png" id="80_nvqnp"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
-[ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
+[ext_resource type="PackedScene" uid="uid://bpisvoy4atw3d" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" uid="uid://bdtwkujmg3bxy" path="res://scenes/interactifs/checkpoint_peche.tscn" id="checkpoint"]
 [ext_resource type="Texture2D" uid="uid://b873grf55e3xa" path="res://assets/props/cristal_gros.png" id="cristalg"]
 [ext_resource type="Texture2D" uid="uid://cc6yrec3tv63a" path="res://assets/props/cristal_petit.png" id="cristalp"]
@@ -181,10 +181,39 @@ position = Vector2(360, 284)
 texture = ExtResource("fleur")
 offset = Vector2(0, 4)
 
+[node name="RocherB" type="Sprite2D" parent="Village/Decor" unique_id=1241779103]
+z_index = -2
+position = Vector2(46, 232)
+scale = Vector2(1.5480769, 1.5416666)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB2" type="Sprite2D" parent="Village/Decor" unique_id=1075584865]
+z_index = -3
+position = Vector2(139, 193.00002)
+scale = Vector2(1.9903846, 2.1979167)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB3" type="Sprite2D" parent="Village/Decor" unique_id=1613713036]
+position = Vector2(-33, 264)
+scale = Vector2(1.6009616, 1.5364585)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB4" type="Sprite2D" parent="Village/Decor" unique_id=1866930033]
+z_index = -1
+position = Vector2(638, 241.00002)
+scale = Vector2(1.4519231, 1.4583334)
+texture = ExtResource("80_nvqnp")
+
+[node name="RocherB5" type="Sprite2D" parent="Village/Decor" unique_id=82540258]
+z_index = -3
+position = Vector2(569, 215)
+scale = Vector2(1.9038461, 2.2083333)
+texture = ExtResource("80_nvqnp")
+
 [node name="Pnj" type="Node2D" parent="Village" unique_id=700000020]
 
 [node name="Pingouin" parent="Village/Pnj" unique_id=700000001 instance=ExtResource("pingouin")]
-position = Vector2(251, 266)
+position = Vector2(260, 260)
 Lignes = PackedStringArray("Oh ! Salut Glooby !", "J\'adore ton Pantalon !")
 DialogueDynamique = true
 Contexte = "Tu es un pinguoin nommé Pipo qui n'est jamais sorti de son village, et tu croise Glooby, l'enfant de ton voisin, avec son pantalon trop grand, qui se balade dans le village a coté chez lui"
@@ -194,6 +223,8 @@ MotMoyenParReponse = 5
 [node name="Pingouin2" parent="Village/Pnj" unique_id=700000002 instance=ExtResource("pingouin")]
 position = Vector2(723, 253)
 Lignes = PackedStringArray("Huummff")
+DialogueDynamique = true
+Contexte = "Tu es le garde de l'entrée du village et tu es content, aucun danger ne plane sur le village."
 Invite = "Adresse une courte réplique à Glooby, en restant dans ton caractère."
 
 [node name="Pingouin3" parent="Village/Pnj" unique_id=977666246 instance=ExtResource("pingouin")]
@@ -203,6 +234,16 @@ Lignes = PackedStringArray("J\'adore Noël !", "Je suis triste, il n\'y a pas de
 DialogueDynamique = true
 Contexte = "Il adore Noël, et plus particulièrement les guirlandes rouge (mais y'en a pas donc il est triste)"
 Invite = "Dis une courte réplique dans ton caractère ."
+
+[node name="Pingouin4" parent="Village/Pnj" unique_id=1788672048 instance=ExtResource("pingouin")]
+position = Vector2(88, 277)
+scale = Vector2(0.645, 0.645)
+DialogueDynamique = true
+Contexte = "Tu es enthousiast à l'idée que Glooby veut peut être jouer au Ballon avec toi"
+
+[node name="Pingouin5" parent="Village/Pnj" unique_id=1515127785 instance=ExtResource("pingouin")]
+position = Vector2(375, 281)
+scale = Vector2(0.43, 0.43)
 
 [node name="Interactifs" type="Node2D" parent="Village" unique_id=1309275839]
 
@@ -498,6 +539,20 @@ position = Vector2(3092, 268)
 [node name="TasNeigeA" type="Sprite2D" parent="Banquise/Pnj" unique_id=432015480]
 position = Vector2(2327, 408)
 texture = ExtResource("36_gw68a")
+
+[node name="LutinCgt" parent="Banquise/Pnj" unique_id=1619686424 instance=ExtResource("59_0ihna")]
+position = Vector2(5015, 258)
+Slogan = "35H OU RIEN !"
+Lignes = PackedStringArray("On lâche rien. Même pas les jouets !", "Camarade ! Il me manque encore des poissons pour tenir le piquet !", "50 poissons, pas un de moins, sinon on retourne à l\'atelier !", "On lâche rien ! Mais on a faim !", "")
+DialogueDynamique = true
+Contexte = "Tu es un ouvrier de la fabrique du Père Noël, délégué syndical CGT, en grève depuis ce matin.
+Tu tiens le piquet de grève avec ta pancarte : la direction impose des cadences folles, vous emballez les cadeaux jour et nuit, et la hotte n'est toujours pas passée aux 35 heures.
+Ton problème immédiat : le piquet n'a plus rien à manger. Tu ravitailles tes camarades grévistes et il te faut au 50 poissons pour tenir ; en dessous, la grève s'effondre et tout le monde retourne à l'atelier.
+Tu réclames donc des poissons à quiconque passe devant toi, tu comptes ce qu'il te manque, tu promets un reçu de la caisse de solidarité.
+Ton ton : combatif et syndical (camarade, revendications, piquet de grève, on lâche rien), râleur envers la direction, chaleureux envers ceux qui te soutiennent, jamais méchant ni menaçant."
+MotMoyenParReponse = 12
+ConversationRessource = ExtResource("60_dlgcgt")
+PvMax = 1
 
 [node name="Interactifs" type="Node2D" parent="Banquise" unique_id=1713257003]
 
@@ -1210,6 +1265,129 @@ texture = ExtResource("20_hau0f")
 position = Vector2(2794, 853)
 texture = ExtResource("g_congere")
 
+[node name="MassifRose" type="Sprite2D" parent="Grotte/Decor" unique_id=192091386]
+position = Vector2(4432, 1160)
+texture = ExtResource("67_1dkk7")
+
+[node name="ChampignonCluster" type="Sprite2D" parent="Grotte/Decor" unique_id=1402605339]
+z_index = 17
+position = Vector2(4514, 1166)
+texture = ExtResource("68_yx73y")
+
+[node name="GouttesGlace" type="Sprite2D" parent="Grotte/Decor" unique_id=14261861]
+position = Vector2(4311, 754)
+texture = ExtResource("69_b8g1y")
+
+[node name="FleurGlaceClochette" type="Sprite2D" parent="Grotte/Decor" unique_id=250237947]
+position = Vector2(4199, 918)
+texture = ExtResource("70_tvxqa")
+
+[node name="RacinesEtalees" type="Sprite2D" parent="Grotte/Decor" unique_id=1541218731]
+z_index = 20
+position = Vector2(4269, 951)
+texture = ExtResource("71_2tmy5")
+
+[node name="ArbreGivreB" type="Sprite2D" parent="Grotte/Decor" unique_id=1351740721]
+z_index = -4
+position = Vector2(3961, 1161)
+scale = Vector2(3.8720052, 4.114825)
+texture = ExtResource("72_2tmy5")
+
+[node name="ArbreGivre" type="Sprite2D" parent="Grotte/Decor" unique_id=2086093292]
+z_index = -3
+position = Vector2(4436, 1202)
+scale = Vector2(3.2499964, 3.2301137)
+texture = ExtResource("73_3y76o")
+
+[node name="ArbreGivre2" type="Sprite2D" parent="Grotte/Decor" unique_id=536059251]
+z_index = 13
+position = Vector2(4192.0005, 1328)
+scale = Vector2(3.3969607, 3.7031243)
+texture = ExtResource("73_3y76o")
+
+[node name="LianeGrimpante" type="Sprite2D" parent="Grotte/Decor" unique_id=871249020]
+z_index = -3
+position = Vector2(4646, 1413)
+scale = Vector2(2.875, 3.8142858)
+texture = ExtResource("74_otft7")
+
+[node name="LianeGrimpante2" type="Sprite2D" parent="Grotte/Decor" unique_id=1082824389]
+z_index = -3
+position = Vector2(4726.0005, 1249.0001)
+scale = Vector2(2.8750048, 5.202381)
+texture = ExtResource("74_otft7")
+
+[node name="LianeGrimpante3" type="Sprite2D" parent="Grotte/Decor" unique_id=782792921]
+z_index = -3
+position = Vector2(4839, 1349.0001)
+scale = Vector2(2.71875, 4.3095236)
+texture = ExtResource("74_otft7")
+
+[node name="LianePendante" type="Sprite2D" parent="Grotte/Decor" unique_id=2127670686]
+z_index = -3
+position = Vector2(4976, 591)
+scale = Vector2(3.452381, 3.8653846)
+texture = ExtResource("62_vq52v")
+
+[node name="LianePendante2" type="Sprite2D" parent="Grotte/Decor" unique_id=187684232]
+z_index = -3
+position = Vector2(5022, 529)
+scale = Vector2(2.452381, 2.7403846)
+texture = ExtResource("62_vq52v")
+
+[node name="LianePendante3" type="Sprite2D" parent="Grotte/Decor" unique_id=1968287563]
+z_index = -11
+position = Vector2(4995.25, 921)
+scale = Vector2(1.6904762, 2.3076923)
+texture = ExtResource("62_vq52v")
+
+[node name="LianePendante4" type="Sprite2D" parent="Grotte/Decor" unique_id=534558324]
+z_index = -14
+position = Vector2(5056, 1007)
+scale = Vector2(3.1428545, 3.8653846)
+texture = ExtResource("62_vq52v")
+
+[node name="LianePendante5" type="Sprite2D" parent="Grotte/Decor" unique_id=1055878283]
+z_index = -3
+position = Vector2(4980.75, 1232)
+scale = Vector2(2.5, 2.8076923)
+texture = ExtResource("62_vq52v")
+
+[node name="CristauxB" type="Sprite2D" parent="Grotte/Decor" unique_id=380687026]
+z_index = -8
+position = Vector2(3464, 1142)
+texture = ExtResource("77_7hv05")
+
+[node name="BuissonGeleB" type="Sprite2D" parent="Grotte/Decor" unique_id=975717112]
+z_index = 13
+position = Vector2(2859.0002, 1240)
+scale = Vector2(0.5508475, 0.6212121)
+texture = ExtResource("78_jxva4")
+
+[node name="ArbreGivreC" type="Sprite2D" parent="Grotte/Decor" unique_id=1543836660]
+z_index = -3
+position = Vector2(3113.5, 972.5)
+scale = Vector2(5.6060605, 5.664835)
+texture = ExtResource("79_h5wnt")
+
+[node name="ArbreGivreC2" type="Sprite2D" parent="Grotte/Decor" unique_id=1909513646]
+z_index = -3
+position = Vector2(3243, 1220)
+scale = Vector2(3.1994963, 3.263736)
+texture = ExtResource("79_h5wnt")
+
+[node name="ArbreGivreB2" type="Sprite2D" parent="Grotte/Decor" unique_id=608794543]
+z_index = -3
+position = Vector2(2557.9998, 1290)
+scale = Vector2(2.1526947, 2.7209303)
+texture = ExtResource("72_2tmy5")
+
+[node name="ArbreGivre3" type="Sprite2D" parent="Grotte/Decor" unique_id=1247138403]
+z_index = -3
+position = Vector2(1877, 1348)
+scale = Vector2(1.6013514, 1.6477273)
+texture = ExtResource("73_3y76o")
+
 [node name="Interactifs" type="Node2D" parent="Grotte" unique_id=925847537]
 
 [node name="PouvoirChaleur" parent="Grotte/Interactifs" unique_id=345962472 instance=ExtResource("pouvoir")]
@@ -1268,7 +1446,7 @@ scale = Vector2(1.52, 1.235)
 position = Vector2(4117, 922)
 Lignes = PackedStringArray("J\'ai trop peur pour sauter... Pourtant c\'est le seul moyen T_T")
 
-[node name="BlizzardHaterPingouin" parent="Grotte/Pnj" unique_id=1788672048 instance=ExtResource("pingouin")]
+[node name="BlizzardHaterPingouin" parent="Grotte/Pnj" unique_id=1199762243 instance=ExtResource("pingouin")]
 position = Vector2(1702, 1455)
 Lignes = PackedStringArray("Je suis bien ici, il fait trop froid la haut !", "Vade Retro Satanas le Blizard, n\'es-ce pas ?")
 DialogueDynamique = true
@@ -1391,171 +1569,5 @@ limit_bottom = 400
 
 [node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784829]
 script = ExtResource("mpause")
-
-[node name="LutinCgt" parent="." unique_id=1619686424 instance=ExtResource("59_0ihna")]
-position = Vector2(5015, 258)
-Slogan = "35H OU RIEN !"
-Lignes = PackedStringArray("On lâche rien. Même pas les jouets !", "Camarade ! Il me manque encore des poissons pour tenir le piquet !", "50 poissons, pas un de moins, sinon on retourne à l\'atelier !", "On lâche rien ! Mais on a faim !", "")
-DialogueDynamique = true
-Contexte = "Tu es un ouvrier de la fabrique du Père Noël, délégué syndical CGT, en grève depuis ce matin.
-Tu tiens le piquet de grève avec ta pancarte : la direction impose des cadences folles, vous emballez les cadeaux jour et nuit, et la hotte n'est toujours pas passée aux 35 heures.
-Ton problème immédiat : le piquet n'a plus rien à manger. Tu ravitailles tes camarades grévistes et il te faut au 50 poissons pour tenir ; en dessous, la grève s'effondre et tout le monde retourne à l'atelier.
-Tu réclames donc des poissons à quiconque passe devant toi, tu comptes ce qu'il te manque, tu promets un reçu de la caisse de solidarité.
-Ton ton : combatif et syndical (camarade, revendications, piquet de grève, on lâche rien), râleur envers la direction, chaleureux envers ceux qui te soutiennent, jamais méchant ni menaçant."
-MotMoyenParReponse = 12
-ConversationRessource = ExtResource("60_dlgcgt")
-PvMax = 1
-
-[node name="MassifRose" type="Sprite2D" parent="." unique_id=192091386]
-position = Vector2(4432, 1160)
-texture = ExtResource("67_1dkk7")
-
-[node name="ChampignonCluster" type="Sprite2D" parent="." unique_id=1402605339]
-z_index = 17
-position = Vector2(4514, 1166)
-texture = ExtResource("68_yx73y")
-
-[node name="GouttesGlace" type="Sprite2D" parent="." unique_id=14261861]
-position = Vector2(4311, 754)
-texture = ExtResource("69_b8g1y")
-
-[node name="FleurGlaceClochette" type="Sprite2D" parent="." unique_id=250237947]
-position = Vector2(4199, 918)
-texture = ExtResource("70_tvxqa")
-
-[node name="RacinesEtalees" type="Sprite2D" parent="." unique_id=1541218731]
-z_index = 20
-position = Vector2(4269, 951)
-texture = ExtResource("71_2tmy5")
-
-[node name="ArbreGivreB" type="Sprite2D" parent="." unique_id=1351740721]
-z_index = -4
-position = Vector2(3961, 1161)
-scale = Vector2(3.8720052, 4.114825)
-texture = ExtResource("72_2tmy5")
-
-[node name="ArbreGivre" type="Sprite2D" parent="." unique_id=2086093292]
-z_index = -3
-position = Vector2(4436, 1202)
-scale = Vector2(3.2499964, 3.2301137)
-texture = ExtResource("73_3y76o")
-
-[node name="ArbreGivre2" type="Sprite2D" parent="." unique_id=536059251]
-z_index = 13
-position = Vector2(4192.0005, 1328)
-scale = Vector2(3.3969607, 3.7031243)
-texture = ExtResource("73_3y76o")
-
-[node name="LianeGrimpante" type="Sprite2D" parent="." unique_id=871249020]
-z_index = -3
-position = Vector2(4646, 1413)
-scale = Vector2(2.875, 3.8142858)
-texture = ExtResource("74_otft7")
-
-[node name="LianeGrimpante2" type="Sprite2D" parent="." unique_id=1082824389]
-z_index = -3
-position = Vector2(4726.0005, 1249.0001)
-scale = Vector2(2.8750048, 5.202381)
-texture = ExtResource("74_otft7")
-
-[node name="LianeGrimpante3" type="Sprite2D" parent="." unique_id=782792921]
-z_index = -3
-position = Vector2(4839, 1349.0001)
-scale = Vector2(2.71875, 4.3095236)
-texture = ExtResource("74_otft7")
-
-[node name="LianePendante" type="Sprite2D" parent="." unique_id=2127670686]
-z_index = -3
-position = Vector2(4976, 591)
-scale = Vector2(3.452381, 3.8653846)
-texture = ExtResource("62_vq52v")
-
-[node name="LianePendante2" type="Sprite2D" parent="." unique_id=187684232]
-z_index = -3
-position = Vector2(5022, 529)
-scale = Vector2(2.452381, 2.7403846)
-texture = ExtResource("62_vq52v")
-
-[node name="LianePendante3" type="Sprite2D" parent="." unique_id=1968287563]
-z_index = -11
-position = Vector2(4995.25, 921)
-scale = Vector2(1.6904762, 2.3076923)
-texture = ExtResource("62_vq52v")
-
-[node name="LianePendante4" type="Sprite2D" parent="." unique_id=534558324]
-z_index = -14
-position = Vector2(5056, 1007)
-scale = Vector2(3.1428545, 3.8653846)
-texture = ExtResource("62_vq52v")
-
-[node name="LianePendante5" type="Sprite2D" parent="." unique_id=1055878283]
-z_index = -3
-position = Vector2(4980.75, 1232)
-scale = Vector2(2.5, 2.8076923)
-texture = ExtResource("62_vq52v")
-
-[node name="CristauxB" type="Sprite2D" parent="." unique_id=380687026]
-z_index = -8
-position = Vector2(3464, 1142)
-texture = ExtResource("77_7hv05")
-
-[node name="BuissonGeleB" type="Sprite2D" parent="." unique_id=975717112]
-z_index = 13
-position = Vector2(2859.0002, 1240)
-scale = Vector2(0.5508475, 0.6212121)
-texture = ExtResource("78_jxva4")
-
-[node name="ArbreGivreC" type="Sprite2D" parent="." unique_id=1543836660]
-z_index = -3
-position = Vector2(3113.5, 972.5)
-scale = Vector2(5.6060605, 5.664835)
-texture = ExtResource("79_h5wnt")
-
-[node name="ArbreGivreC2" type="Sprite2D" parent="." unique_id=1909513646]
-z_index = -3
-position = Vector2(3243, 1220)
-scale = Vector2(3.1994963, 3.263736)
-texture = ExtResource("79_h5wnt")
-
-[node name="ArbreGivreB2" type="Sprite2D" parent="." unique_id=608794543]
-z_index = -3
-position = Vector2(2557.9998, 1290)
-scale = Vector2(2.1526947, 2.7209303)
-texture = ExtResource("72_2tmy5")
-
-[node name="ArbreGivre3" type="Sprite2D" parent="." unique_id=1247138403]
-z_index = -3
-position = Vector2(1877, 1348)
-scale = Vector2(1.6013514, 1.6477273)
-texture = ExtResource("73_3y76o")
-
-[node name="RocherB" type="Sprite2D" parent="." unique_id=1241779103]
-z_index = -2
-position = Vector2(46, 232)
-scale = Vector2(1.5480769, 1.5416666)
-texture = ExtResource("80_nvqnp")
-
-[node name="RocherB2" type="Sprite2D" parent="." unique_id=1075584865]
-z_index = -3
-position = Vector2(134, 201)
-scale = Vector2(1.9903846, 2.1979167)
-texture = ExtResource("80_nvqnp")
-
-[node name="RocherB3" type="Sprite2D" parent="." unique_id=1613713036]
-position = Vector2(-33, 264)
-scale = Vector2(1.6009616, 1.5364585)
-texture = ExtResource("80_nvqnp")
-
-[node name="RocherB4" type="Sprite2D" parent="." unique_id=1866930033]
-z_index = -1
-position = Vector2(638, 241.00002)
-scale = Vector2(1.4519231, 1.4583334)
-texture = ExtResource("80_nvqnp")
-
-[node name="RocherB5" type="Sprite2D" parent="." unique_id=82540258]
-z_index = -3
-position = Vector2(569, 215)
-scale = Vector2(1.9038461, 2.2083333)
-texture = ExtResource("80_nvqnp")
 
 [editable path="Joueur"]
