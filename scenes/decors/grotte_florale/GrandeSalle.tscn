@@ -1,8 +1,7 @@
 [gd_scene format=3 uid="uid://crhj5wew8ccsx"]
 
 [ext_resource type="PackedScene" uid="uid://cc554bace5c53" path="res://scenes/plateformes/PlateformeGlace.tscn" id="19_0dpcm"]
-[ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
-[ext_resource type="PackedScene" uid="uid://bj4l8jmcag3ln" path="res://scenes/ennemis/OursDeNeige.tscn" id="pO"]
+[ext_resource type="PackedScene" uid="uid://bdtwkujmg3bxy" path="res://scenes/interactifs/checkpoint_peche.tscn" id="pC"]
 [ext_resource type="Texture2D" uid="uid://dvkmbtpekkcvo" path="res://assets/decors/grotte_florale/grande/fond.png" id="t1"]
 [ext_resource type="Texture2D" uid="uid://dxsfrbtbau6bk" path="res://assets/decors/grotte_florale/grande/terrain.png" id="t2"]
 [ext_resource type="Texture2D" uid="uid://d18hb5libsoph" path="res://assets/decors/grotte_florale/region/glow_magenta.png" id="t3"]
@@ -373,9 +372,6 @@ flip_h = true
 [node name="CheckpointPeche" parent="." unique_id=1171378069 instance=ExtResource("pC")]
 position = Vector2(192, 498)
 IdCheckpoint = "grande"
-
-[node name="OursDeNeige" parent="." unique_id=160782261 instance=ExtResource("pO")]
-position = Vector2(1556, 460)
 
 [node name="Sortie" type="Node2D" parent="." unique_id=519654873]
 position = Vector2(2097, 460)

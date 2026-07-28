@@ -423,6 +423,6 @@ position = Vector2(4655, 1788)
 [node name="LutinNoel" parent="." unique_id=276249539 instance=ExtResource("28_ce8ch")]
 position = Vector2(4613, 208)
 DialogueDynamique = true
-Contexte = "Tu es un lutin de la fabrique du Père Noël, posté devant la sortie de l'atelier. À deux jours de Noël tu croules sous les commandes, tu es débordé mais fier de ton travail. Tu ne connais pas ce petit pingouin en pantalon trop grand ; tu le presses d'aller voir le Père Noël au fond de l'atelier au lieu de traîner entre les machines."
+Contexte = "Tu gardes la porte du fond de la fabrique du Père Noël. Tu croules sous les commandes de dernière minute, tu es débordé mais fier de ton travail, et tu n'as pas une seconde à perdre. Tu presses Glooby de passer cette porte pour aller voir le Père Noël, au lieu de traîner entre les machines."
 MemoireRequise = "lutin_cgt_don_poissons"
-ContexteAlternatif = "Tu es un lutin de la fabrique du Père Noël, posté devant la sortie de l'atelier, le jour où la grève a tout arrêté. La chaîne est immobile, le piquet bloque l'atelier et un Lutin Mecha s'est emparé des machines. Tu es paniqué et un peu rancunier : tu as reconnu ce petit pingouin en pantalon trop grand, c'est lui qui a rempli la caisse de grève avec ses poissons, et tu ne sais pas si tu dois le remercier ou l'engueuler."
+ContexteAlternatif = "Tu gardes la porte du fond de la fabrique du Père Noël, le jour où la grève a tout arrêté. La chaîne est immobile, le piquet bloque l'atelier et un Lutin Mecha s'est emparé des machines. Tu es paniqué et rancunier : c'est Glooby qui a rempli la caisse de grève avec ses cinquante poissons, tu le lui reproches, et tu ne sais pas si tu dois le remercier ou l'engueuler d'avoir tout bloqué."

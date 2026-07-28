@@ -1304,6 +1304,7 @@ Pose = 0
 Slogan = ""
 DialogueDynamique = true
 Contexte = "Il a perdu son chemin après avoir livré les cadeaux et il ne sais pas comment rentrer chez lui, dans la fabrique du père noel..."
+PvMax = 1
 
 [node name="RacineArche" type="Sprite2D" parent="Grotte/Pnj" unique_id=1765641018]
 z_index = -3
@@ -1402,6 +1403,7 @@ Tu réclames donc des poissons à quiconque passe devant toi, tu comptes ce qu'i
 Ton ton : combatif et syndical (camarade, revendications, piquet de grève, on lâche rien), râleur envers la direction, chaleureux envers ceux qui te soutiennent, jamais méchant ni menaçant."
 MotMoyenParReponse = 12
 ConversationRessource = ExtResource("60_dlgcgt")
+PvMax = 1
 
 [node name="MassifRose" type="Sprite2D" parent="." unique_id=192091386]
 position = Vector2(4432, 1160)
