@@ -1,0 +1,98 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/Entities/Misc/CheckpointCadeau.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://bthaj8w15gp3s" path="res://assets/props/noel/cadeau_checkpoint_ferme.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bw7bmefixki5n" path="res://assets/props/noel/cadeau_checkpoint_ouvert.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bfax0swexqonc" path="res://assets/props/noel/cadeau_checkpoint_transition_01.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://0psc8lqwbkqk" path="res://assets/props/noel/cadeau_checkpoint_transition_02.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://1not80fyrqyw" path="res://assets/props/noel/cadeau_checkpoint_transition_03.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://c1xw48xenane7" path="res://assets/props/noel/cadeau_checkpoint_transition_04.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://n5ogbup5typd" path="res://assets/props/noel/cadeau_checkpoint_confettis_01.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://dea3fuora4js7" path="res://assets/props/noel/cadeau_checkpoint_confettis_02.png" id="9"]
+[ext_resource type="Texture2D" uid="uid://dj37deccvow4r" path="res://assets/props/noel/cadeau_checkpoint_confettis_03.png" id="10"]
+[ext_resource type="Texture2D" uid="uid://cs3yu2jrbinby" path="res://assets/props/noel/cadeau_checkpoint_confettis_04.png" id="11"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cadeau"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2")
+}],
+"loop": true,
+"name": &"ferme",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3")
+}],
+"loop": true,
+"name": &"ouvert",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3")
+}],
+"loop": false,
+"name": &"ouverture",
+"speed": 12.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_confettis"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11")
+}],
+"loop": true,
+"name": &"boucle",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(56, 48)
+
+[node name="CheckpointCadeau" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1")
+
+[node name="Cadeau" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.4, 0.4)
+sprite_frames = SubResource("SpriteFrames_cadeau")
+animation = &"ferme"
+offset = Vector2(0, -83)
+
+[node name="Confettis" type="AnimatedSprite2D" parent="."]
+visible = false
+z_index = 1
+scale = Vector2(0.4, 0.4)
+sprite_frames = SubResource("SpriteFrames_confettis")
+animation = &"boucle"
+offset = Vector2(0, -83)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -24)
+shape = SubResource("RectangleShape2D_1")

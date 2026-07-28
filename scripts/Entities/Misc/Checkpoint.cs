@@ -6,9 +6,17 @@ using Godot;
 // frame (comme CameraZone) : ça re-déclenche à chaque passage - campement déjà actif
 // compris - et reste robuste aux téléportations (respawn qui pose le joueur sur le
 // campement). L'hystérésis (_joueurDansZone) garantit une seule sauvegarde par passage.
+// Toute la logique ci-dessous est indépendante du visuel : une variante de campement
+// (cadeau mécanique de l'usine, cf. CheckpointCadeau) n'a qu'à redéfinir PreparerVisuel
+// et AfficherEtat.
 public partial class Checkpoint : DeclencheurZone
 {
 	[Export] public string IdCheckpoint = "";
+
+	// Décalage du point de réapparition par rapport au campement : on ne fait pas
+	// réapparaître le joueur DANS le décor. Exporté car il dépend de la largeur du
+	// visuel (trou de pêche 48 px de large, cadeau bien plus).
+	[Export] public Vector2 OffsetRespawn = new(-20, 0);
 
 	private Sprite2D _spriteInactif;
 	private Sprite2D _spriteActif;
@@ -18,8 +26,7 @@ public partial class Checkpoint : DeclencheurZone
 
 	protected override bool PreparerDeclencheur()
 	{
-		_spriteInactif = GetNode<Sprite2D>("TrouInactif");
-		_spriteActif = GetNode<Sprite2D>("TrouActif");
+		PreparerVisuel();
 
 		if (string.IsNullOrEmpty(IdCheckpoint))
 			IdCheckpoint = GetPath().ToString();
@@ -53,7 +60,7 @@ public partial class Checkpoint : DeclencheurZone
 	private void DeclencherSauvegarde()
 	{
 		if (GameState.Instance.CheckpointIdActif != IdCheckpoint && !GameState.Instance.ModeDebug)
-			GameState.Instance.ActiverCheckpoint(IdCheckpoint, GlobalPosition + new Vector2(-20, 0));
+			GameState.Instance.ActiverCheckpoint(IdCheckpoint, GlobalPosition + OffsetRespawn);
 
 		GameState.Instance.Sauvegarder();
 	}
@@ -76,7 +83,17 @@ public partial class Checkpoint : DeclencheurZone
 		AfficherEtat(idCheckpoint == IdCheckpoint);
 	}
 
-	private void AfficherEtat(bool actif)
+	// Récupération des nœuds du visuel, avant tout affichage. Redéfinie par les variantes
+	// dont le skin n'est pas la paire de Sprite2D du trou de pêche.
+	protected virtual void PreparerVisuel()
+	{
+		_spriteInactif = GetNode<Sprite2D>("TrouInactif");
+		_spriteActif = GetNode<Sprite2D>("TrouActif");
+	}
+
+	// Reflète l'état du campement. Appelée une première fois au _Ready (restauration de la
+	// sauvegarde) puis à chaque diffusion de CheckpointActif.
+	protected virtual void AfficherEtat(bool actif)
 	{
 		_spriteInactif.Visible = !actif;
 		_spriteActif.Visible = actif;
