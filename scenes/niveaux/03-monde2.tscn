@@ -20,6 +20,8 @@
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="27_wgvji"]
 [ext_resource type="PackedScene" uid="uid://cfuc5gb01g7jn" path="res://scenes/entites/lutin_noel.tscn" id="28_ce8ch"]
 [ext_resource type="PackedScene" path="res://scenes/interactifs/checkpoint_cadeau.tscn" id="30_ogcic"]
+[ext_resource type="PackedScene" uid="uid://b8usinebois01" path="res://scenes/sol/usine/SolUsineBois.tscn" id="31_r5l3y"]
+[ext_resource type="PackedScene" uid="uid://busolboisemd" path="res://scenes/sol/usine/SolUsineBoisEmboutDroit.tscn" id="32_dimcd"]
 [ext_resource type="Script" uid="uid://dfoct3q6xd3xh" path="res://scripts/Core/BackgroundManager.cs" id="bgmgr"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
 [ext_resource type="PackedScene" path="res://scenes/decors/DecorBanquise.tscn" id="decor_banquise"]
@@ -105,11 +107,12 @@ Type = 1
 position = Vector2(1652, -889)
 
 [node name="SolUsineBoisCentreA2" parent="UsinePereNoel/Sol" unique_id=1992762850 instance=ExtResource("10_bw6ma")]
+z_index = 1
 position = Vector2(2242, -887)
 
 [node name="PenteUsineDouceMontante" parent="UsinePereNoel/Sol" unique_id=1659657029 instance=ExtResource("17_e0ldw")]
 z_index = -3
-position = Vector2(3047, 117)
+position = Vector2(3047, 218.41)
 rotation = -1.1955506
 
 [node name="SolUsineBoisEmboutGauche" parent="UsinePereNoel/Sol" unique_id=940213876 instance=ExtResource("10_544ey")]
@@ -215,6 +218,15 @@ rotation = 1.1955506
 position = Vector2(1667.065, 245.575)
 scale = Vector2(1.615, 1.615)
 
+[node name="SolUsineBois" parent="UsinePereNoel/Sol" unique_id=555896231 instance=ExtResource("31_r5l3y")]
+position = Vector2(2571, -887)
+
+[node name="SolUsineBoisEmboutDroit" parent="UsinePereNoel/Sol" unique_id=1934098250 instance=ExtResource("32_dimcd")]
+position = Vector2(2300, -132)
+
+[node name="PenteUsineDouceDescendante" parent="UsinePereNoel/Sol" unique_id=210110520 instance=ExtResource("18_3ovfr")]
+position = Vector2(1956, -137)
+
 [node name="Decor" type="Node2D" parent="UsinePereNoel" unique_id=1280656102]
 
 [node name="BancTravailA" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=927058952]
@@ -236,11 +248,11 @@ position = Vector2(1854.5, -983.75)
 scale = Vector2(1.33125, 1.3148148)
 texture = ExtResource("25_c3de4")
 
-[node name="Pnj" type="Node2D" parent="UsinePereNoel" unique_id=2000834972]
+[node name="BancTravailA2" type="Sprite2D" parent="UsinePereNoel/Decor" unique_id=1340971272]
+position = Vector2(2357, -55)
+texture = ExtResource("22_g86s4")
 
-[node name="MiniJouetExplosif" parent="UsinePereNoel/Pnj" unique_id=743188203 instance=ExtResource("21_0gqfy")]
-z_index = 1
-position = Vector2(2821, 242)
+[node name="Pnj" type="Node2D" parent="UsinePereNoel" unique_id=2000834972]
 
 [node name="LocomotiveJouet2" parent="UsinePereNoel/Pnj" unique_id=2060677146 instance=ExtResource("21_qwj7e")]
 position = Vector2(1974, 228)
@@ -250,10 +262,21 @@ position = Vector2(3016, 207)
 
 [node name="LutinNoel" parent="UsinePereNoel/Pnj" unique_id=276249539 instance=ExtResource("28_ce8ch")]
 position = Vector2(4613, 208)
+Lignes = PackedStringArray("Ollama est cassé T_T, je ne peux pas parler normalement")
 DialogueDynamique = true
 Contexte = "Tu gardes la porte du fond de la fabrique du Père Noël. Tu croules sous les commandes de dernière minute, tu es débordé mais fier de ton travail, et tu n'as pas une seconde à perdre. Tu presses Glooby de passer cette porte pour aller voir le Père Noël, au lieu de traîner entre les machines."
 MemoireRequise = "lutin_cgt_don_poissons"
 ContexteAlternatif = "Tu gardes la porte du fond de la fabrique du Père Noël, le jour où la grève a tout arrêté. La chaîne est immobile, le piquet bloque l'atelier et un Lutin Mecha s'est emparé des machines. Tu es paniqué et rancunier : c'est Glooby qui a rempli la caisse de grève avec ses cinquante poissons, tu le lui reproches, et tu ne sais pas si tu dois le remercier ou l'engueuler d'avoir tout bloqué."
+
+[node name="PanneauBois" parent="UsinePereNoel/Pnj" unique_id=197425152 instance=ExtResource("27_wgvji")]
+z_index = -1
+position = Vector2(4492, 197.58)
+scale = Vector2(0.515, 0.515)
+Type = 3
+Texte = "Antre du Père Noël"
+
+[node name="LutinNoel2" parent="UsinePereNoel/Pnj" unique_id=1850405562 instance=ExtResource("28_ce8ch")]
+position = Vector2(2365, -131)
 
 [node name="Interactifs" type="Node2D" parent="UsinePereNoel" unique_id=1710568237]
 
@@ -263,22 +286,20 @@ position = Vector2(4700, 200)
 CheminSceneSuivante = "uid://d3ixspn6np4ud"
 PointEntreeCible = "bossEnd"
 
-[node name="PanneauBois" parent="UsinePereNoel/Interactifs" unique_id=197425152 instance=ExtResource("27_wgvji")]
+[node name="PanneauBois" parent="UsinePereNoel/Interactifs" unique_id=1212419885 instance=ExtResource("27_wgvji")]
 z_index = -1
 position = Vector2(2618, 191)
 rotation = 0.2443461
 Type = 3
 Texte = "Cave"
 
+[node name="CheckpointCadeau" parent="UsinePereNoel/Interactifs" unique_id=1905489645 instance=ExtResource("30_ogcic")]
+position = Vector2(1750.055, 243)
+
+[node name="CheckpointCadeau2" parent="UsinePereNoel/Interactifs" unique_id=107058184 instance=ExtResource("30_ogcic")]
+position = Vector2(2578, -96)
+
 [node name="Frontiere" type="Node2D" parent="UsinePereNoel" unique_id=82496359]
-
-[node name="Joueur" parent="." unique_id=1975658095 instance=ExtResource("player")]
-position = Vector2(87, 209)
-
-[node name="Meteo" parent="." unique_id=2107469773 instance=ExtResource("meteo")]
-
-[node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784830]
-script = ExtResource("mpause")
 
 [node name="UsinePereNoelUnderGround" type="Node2D" parent="." unique_id=1219185374]
 position = Vector2(0, 1565.46)
@@ -296,9 +317,10 @@ Type = 1
 [node name="Sol" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=1307344259]
 
 [node name="SuspensionBois" parent="UsinePereNoelUnderGround/Sol" unique_id=881538028 instance=ExtResource("16_ro3l8")]
-position = Vector2(2812, -1270.46)
+position = Vector2(2815, -1609.4598)
 scale = Vector2(1.53, 1.53)
-Distance = 360.0
+Distance = 690.0
+Vitesse = 100.0
 
 [node name="SolUsineBoisEmboutGauche" parent="UsinePereNoelUnderGround/Sol" unique_id=74424618 instance=ExtResource("10_544ey")]
 position = Vector2(1611, 207)
@@ -436,5 +458,10 @@ position = Vector2(4655, 222.54004)
 
 [node name="Frontiere" type="Node2D" parent="UsinePereNoelUnderGround" unique_id=411982176]
 
-[node name="CheckpointCadeau" parent="." unique_id=1905489645 instance=ExtResource("30_ogcic")]
-position = Vector2(1750.055, 243)
+[node name="Joueur" parent="." unique_id=1975658095 instance=ExtResource("player")]
+position = Vector2(87, 209)
+
+[node name="Meteo" parent="." unique_id=2107469773 instance=ExtResource("meteo")]
+
+[node name="MenuPause" type="CanvasLayer" parent="." unique_id=1234784830]
+script = ExtResource("mpause")
