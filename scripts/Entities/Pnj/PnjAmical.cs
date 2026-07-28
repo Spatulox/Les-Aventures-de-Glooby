@@ -173,6 +173,25 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 	// PNJ qui décide s'il est aimable, ronchon, timide… et s'il salue ou entre dans le vif.
 	[Export(PropertyHint.MultilineText)] public string Invite { get; set; } = "Dis une courte réplique dans ton caractère.";
 
+	// ---- Variante de discours selon la progression ----
+	// Même principe que ZoneBoss.MemoireRequise : si cette mémoire de GameState est
+	// consommée, le PNJ parle avec ContexteAlternatif au lieu de Contexte. C'est ainsi
+	// qu'un PNJ tient un autre discours après un jalon de l'histoire (ex. le don des 50
+	// poissons au lutin CGT, LutinCgt.IdDonPoissons) sans dupliquer son instance.
+	// Vide (ou variante non renseignée) = un seul discours, comportement d'origine.
+	[Export] public string MemoireRequise = "";
+	[Export(PropertyHint.MultilineText)] public string ContexteAlternatif { get; set; } = "";
+
+	// La route alternative est-elle prise dans cette partie ?
+	protected bool VariantePrise =>
+		!string.IsNullOrEmpty(MemoireRequise)
+		&& GameState.Instance?.EstConsomme(MemoireRequise) == true;
+
+	// Le contexte réellement envoyé au modèle (relu à chaque conversation : la bascule
+	// est immédiate, sans rechargement de scène).
+	public string ContexteCourant =>
+		VariantePrise && !string.IsNullOrEmpty(ContexteAlternatif) ? ContexteAlternatif : Contexte;
+
 	// Longueur cible de la réplique générée (nombre de mots moyen). Petit = PNJ laconique,
 	// grand = PNJ bavard. Borne aussi la longueur côté modèle (voir OllamaService.GenererFlux).
 	[Export] public int MotMoyenParReponse { get; set; } = 10;
@@ -195,6 +214,11 @@ public abstract partial class PnjAmical : LivingEntity, FriendlyLivingEntity, Ol
 	public Resource ConversationRessource { get; set; }
 
 	NoeudDialogue TalkativeAChoix.Conversation => ConversationRessource as NoeudDialogue;
+
+	// Implémentation EXPLICITE : l'export public Contexte garde son nom (les scènes qui
+	// le renseignent sont intactes), mais le moteur, qui lit par l'interface, reçoit la
+	// variante quand la route alternative est prise.
+	string OllamaTalkative.Contexte => ContexteCourant;
 
 	// Hook « choix retenu » : rien par défaut. Les PNJ qui font agir un choix sur le
 	// jeu (le lutin gréviste et ses poissons...) l'override et se repèrent à

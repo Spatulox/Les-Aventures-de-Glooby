@@ -40,6 +40,12 @@ public partial class MenuPrincipal : Control
 
 	public override void _Ready()
 	{
+		// Revenir au menu termine la partie en cours, y compris une partie de test :
+		// filet de sécurité couvrant TOUS les chemins de sortie (pause, écran de fin,
+		// futurs game over), pour qu'aucune facilité de debug ne fuie dans la partie
+		// suivante. L'écran de debug ne rallume ModeDebug que sur clic, donc après ceci.
+		GameState.Instance.QuitterModeDebug();
+
 		// Le village partage cette piste : en lançant une partie, la musique
 		// enchaîne sans coupure (le gestionnaire ne relance pas une piste déjà
 		// en cours).

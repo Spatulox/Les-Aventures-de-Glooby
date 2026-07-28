@@ -132,6 +132,17 @@ public partial class GameState : Node
 	{
 		_donnees = new DonneesSauvegarde { Pv = PvMax };
 		ManaGlace = ManaGlaceMax;
+		QuitterModeDebug();
+	}
+
+	// Fin d'une partie de test : on retombe dans une vraie partie. À appeler sur TOUT
+	// chemin qui sort d'une session de debug — sinon ModeDebug, qui survit au changement
+	// de scène (autoload), reste vrai dans la partie suivante et la sabote en silence :
+	// Sauvegarder() n'écrit plus rien, Checkpoint ne déplace plus le campement actif
+	// (donc les campements ne s'allument même plus) et les facilités cochées (invincible,
+	// one-shot, mana infini) restent accordées.
+	public void QuitterModeDebug()
+	{
 		ModeDebug = false;
 		_optionsDebug.Clear();
 	}
@@ -316,6 +327,10 @@ public partial class GameState : Node
 		var dict = Sauvegarde.Lire();
 		if (dict == null)
 			return false;
+
+		// Reprendre une sauvegarde, c'est par définition reprendre une VRAIE partie :
+		// on sort du mode test ici plutôt que de compter sur le passage par le menu.
+		QuitterModeDebug();
 
 		_donnees = DonneesSauvegarde.DepuisDictionnaire(dict);
 		Pv = Mathf.Min(Pv, PvMax);

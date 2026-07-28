@@ -58,6 +58,19 @@ public partial class Checkpoint : DeclencheurZone
 		GameState.Instance.Sauvegarder();
 	}
 
+	// Débranchement obligatoire : un délégué C# ne se défait pas seul à la libération du
+	// nœud abonné (même piège que Player._ExitTree et ZoneBoss._ExitTree). Les campements
+	// de la scène précédente restaient branchés sur CheckpointActif ; à l'activation
+	// suivante leur handler levait ObjectDisposedException sur des Sprite2D libérés, ce
+	// qui AVORTAIT la diffusion du signal — les campements vivants, abonnés après eux, ne
+	// le recevaient jamais et ne s'allumaient plus. Se voyait dès la 2e partie d'une même
+	// session (debug -> menu -> nouvelle partie).
+	public override void _ExitTree()
+	{
+		if (GameState.Instance != null)
+			GameState.Instance.CheckpointActif -= OnCheckpointActif;
+	}
+
 	private void OnCheckpointActif(string idCheckpoint)
 	{
 		AfficherEtat(idCheckpoint == IdCheckpoint);
