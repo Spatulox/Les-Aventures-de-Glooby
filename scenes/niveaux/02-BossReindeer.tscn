@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dfcn030tpflmp"]
 
 [ext_resource type="PackedScene" uid="uid://carg5rg48s3v5" path="res://scenes/interactifs/PanneauBois.tscn" id="5_hn7gu"]
+[ext_resource type="PackedScene" path="res://scenes/ennemis/grotte_florale/NueePollen.tscn" id="17_4c4j2"]
 [ext_resource type="PackedScene" uid="uid://db787e3w3hsgj" path="res://scenes/ui/boss_hud_barre.tscn" id="barreboss"]
 [ext_resource type="PackedScene" uid="uid://cv40tu2hw6qo7" path="res://scenes/boss/BossCerf.tscn" id="bosscerf"]
 [ext_resource type="PackedScene" path="res://scenes/core/camera_zone.tscn" id="camzone"]
@@ -175,6 +176,21 @@ position = Vector2(160, 512)
 script = ExtResource("mpause")
 
 [node name="RecalageParallaxe" parent="." unique_id=65139707 instance=ExtResource("recalage")]
+
+[node name="NueePollen" parent="." unique_id=1197580561 instance=ExtResource("17_4c4j2")]
+position = Vector2(5025, 847)
+
+[node name="NueePollen2" parent="." unique_id=687561053 instance=ExtResource("17_4c4j2")]
+position = Vector2(5268, 395)
+
+[node name="NueePollen3" parent="." unique_id=870721228 instance=ExtResource("17_4c4j2")]
+position = Vector2(11301, 540)
+
+[node name="NueePollen4" parent="." unique_id=605762146 instance=ExtResource("17_4c4j2")]
+position = Vector2(11534, 527)
+
+[node name="NueePollen5" parent="." unique_id=1636707940 instance=ExtResource("17_4c4j2")]
+position = Vector2(12027, 511)
 
 [editable path="Caverne/Salle"]
 [editable path="ArenBoss/Salle"]
