@@ -9,9 +9,9 @@ using Godot;
 // lui-même le boss, la cage n'a aucun sens : elle se retire d'elle-même (MemoireRequise).
 //
 // Parlante (Talkative) sur le modèle de PanneauBois : tout le rappel de touche et la
-// bulle viennent du DeclencheurDialogue enfant, la cage ne fait qu'échanger son sprite
-// et lâcher son contenu. Le verrou de progression reprend celui de PorteInterne
-// (BossRequis + GameState.EstBossVaincu).
+// bulle viennent du DeclencheurDialogue enfant, la cage ne fait qu'effacer son sprite,
+// mettre le prisonnier debout (PnjLibere) et lâcher son contenu. Le verrou de
+// progression reprend celui de PorteInterne (BossRequis + GameState.EstBossVaincu).
 public partial class CagePereNoel : Node2D, Talkative
 {
 	// Mémoire GameState exigée pour que la cage EXISTE (vide = toujours présente).
@@ -24,7 +24,21 @@ public partial class CagePereNoel : Node2D, Talkative
 	[Export] public string BossRequis = "";
 
 	// Texture de la cage une fois ouverte (celle de la cage fermée vit dans la scène).
+	// VIDE (défaut) = le prop s'efface purement et simplement à l'ouverture : c'est le
+	// cas quand le prisonnier sort pour de bon (PnjLibere), sans quoi on continuerait de
+	// le voir derrière ses barreaux alors qu'il est censé être dehors.
 	[Export] public Texture2D TextureOuverte;
+
+	// Le prisonnier, DEBOUT ET LIBRE : la scène de PNJ qui prend la place de la cage une
+	// fois celle-ci ouverte (vide = personne n'en sort). C'est un vrai PNJ animé, qui a
+	// donc ses propres répliques — la cage, elle, se tait dès qu'elle est ouverte.
+	[Export] public PackedScene PnjLibere;
+
+	// Où le libéré se plante, par rapport au centre de la cage (son origine est au CENTRE
+	// de son sprite, celle d'un PNJ à ses pieds). Réglé pour tomber JUSTE AU-DESSUS du sol
+	// de l'arène : un PNJ est un corps physique, il finit de descendre tout seul, alors
+	// qu'apparaître sous le plancher le coincerait dedans.
+	[Export] public Vector2 DecalagePnjLibere = new(0f, 50f);
 
 	// Objet libéré à l'ouverture, posé en enfant de la cage (vide = rien à donner).
 	[Export] public PackedScene Contenu;
@@ -76,17 +90,32 @@ public partial class CagePereNoel : Node2D, Talkative
 
 		_ouverte = true;
 
-		if (TextureOuverte != null && _sprite != null)
-			_sprite.Texture = TextureOuverte;
+		// Sans texture d'après, la cage disparaît : le prisonnier est dehors, garder son
+		// image derrière les barreaux le montrerait à deux endroits à la fois. Le nœud,
+		// lui, reste (il porte le libéré et le contenu).
+		if (_sprite != null)
+		{
+			if (TextureOuverte != null)
+				_sprite.Texture = TextureOuverte;
+			else
+				_sprite.Visible = false;
+		}
 
-		if (Contenu == null)
+		PoserEnfant(PnjLibere, DecalagePnjLibere);
+		PoserEnfant(Contenu, DecalageContenu);
+	}
+
+	// Fait apparaître une scène à l'endroit de la cage (libéré, contenu...). Différé : on
+	// peut arriver ici depuis une sortie de zone, donc en plein flush des requêtes
+	// physiques, où une forme de collision ne peut pas être ajoutée.
+	private void PoserEnfant(PackedScene scene, Vector2 decalage)
+	{
+		if (scene == null)
 			return;
 
-		var objet = Contenu.Instantiate<Node2D>();
-		objet.Position = DecalageContenu;
-		// Différé : on peut arriver ici depuis une sortie de zone, donc en plein flush
-		// des requêtes physiques, où une forme de collision ne peut pas être ajoutée.
-		CallDeferred(Node.MethodName.AddChild, objet);
+		var noeud = scene.Instantiate<Node2D>();
+		noeud.Position = decalage;
+		CallDeferred(Node.MethodName.AddChild, noeud);
 	}
 
 	// ---- Talkative ----
