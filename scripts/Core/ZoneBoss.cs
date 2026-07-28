@@ -336,7 +336,7 @@ public partial class ZoneBoss : DeclencheurZone, IZoneCamera
 
 			// Filet : si le PNJ pouvait encore parler, il a laissé le rappel de touche
 			// armé en partant, et Espace resterait détourné du saut pour tout le combat.
-			GameState.Instance.DialogueDisponible = false;
+			GameState.Instance.InteractionDisponible = false;
 			GameState.Instance.DialogueModal = false;
 			LancerCombat(_joueurPrologue);
 		});

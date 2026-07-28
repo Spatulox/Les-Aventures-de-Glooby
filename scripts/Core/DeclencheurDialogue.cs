@@ -222,7 +222,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	private void AfficherRappel()
 	{
 		// À portée : la touche de saut (Espace) parle au lieu de faire sauter.
-		GameState.Instance.DialogueDisponible = true;
+		GameState.Instance.InteractionDisponible = true;
 		_bulle.Position = ToLocal(_parlant.PointBulle);
 		_bulle.AfficherRappel(LibelleTouche);
 	}
@@ -266,7 +266,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 	{
 		OuvrirConversation();
 		GameState.Instance.DialogueModal = true;
-		GameState.Instance.DialogueDisponible = false;
+		GameState.Instance.InteractionDisponible = false;
 	}
 
 	// ---- Parcours de l'arbre ----
@@ -551,7 +551,7 @@ public partial class DeclencheurDialogue : DeclencheurZone
 		}
 		else
 		{
-			GameState.Instance.DialogueDisponible = true;
+			GameState.Instance.InteractionDisponible = true;
 		}
 
 		_bulle.AfficherDialogue(_lignes[_ligne]);
@@ -649,6 +649,6 @@ public partial class DeclencheurDialogue : DeclencheurZone
 
 		_auto?.Cacher();
 		_bulle?.Cacher();
-		GameState.Instance.DialogueDisponible = false;
+		GameState.Instance.InteractionDisponible = false;
 	}
 }

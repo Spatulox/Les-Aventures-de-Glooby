@@ -4,7 +4,9 @@ using System.Collections.Generic;
 // Le héros jouable (LivingEntity) : contrôleur à minuteurs — coyote time + tampon de
 // saut, glissade accélérée (plus vive sur la glace), lancer de boule de neige, courte
 // invincibilité post-coup, rupture de tuile fragile, filet anti-chute relatif à la zone,
-// pentes trop raides non praticables (glissade forcée vers le bas).
+// pentes trop raides non praticables (glissade forcée vers le bas), franchissement
+// automatique des marches jusqu'à HauteurMarcheMax (le sol est un pavage de pièces dont
+// les dessus ne tombent pas au pixel près).
 // PV/gravité/friction/saut/dégâts viennent de LivingEntity ; ses PV vivent dans GameState.
 public partial class Player : LivingEntity
 {
@@ -36,9 +38,18 @@ public partial class Player : LivingEntity
 	// frame : ce délai l'élimine sans être perceptible sur une vraie pente.
 	[Export] public float DelaiConfirmationPenteRaide = 0.06f;
 	// Hauteur maximale d'un ressaut franchi automatiquement (voir GererMarcheAutomatique).
-	// Couvre les micro-marches entre pièces de sol (jointures de dalles, pied de pente,
-	// embouts) sans permettre d'escalader quoi que ce soit de volontairement infranchissable.
-	[Export] public float HauteurMarcheMax = 10f;
+	// Couvre les micro-marches entre pièces de sol (jointures de dalles, raccords
+	// pente <-> sol de 5 à 7 px, dérive sub-pixel des rangées de dalles) ET les vraies
+	// petites marches d'escalier, sans permettre d'escalader quoi que ce soit de
+	// volontairement infranchissable : le plus petit solide du jeu fait 24 px d'épaisseur
+	// (PlateformeGlace), les blocs de glace 28 à 44, un mur de gameplay bien davantage.
+	[Export] public float HauteurMarcheMax = 20f;
+	// Jeu ajouté au décollement recherché. HauteurMarcheMax est la hauteur du RESSAUT
+	// franchi, pas la hauteur testée : décoller pile de la hauteur du ressaut laisse la
+	// capsule À RAS de son arête, et TestMove (marge de sécurité 0,08 px) y voit encore
+	// une collision. Sans ce jeu, la marche exactement égale au seuil annoncé était la
+	// seule à ne jamais passer — le joueur se bloquait pile à la hauteur censée passer.
+	[Export] public float MargeFranchissement = 1f;
 	// Finesse de recherche de la hauteur : on monte du strict nécessaire, pas plus.
 	[Export] public float PasMarche = 1f;
 	// Distance minimale sondée devant le joueur pour détecter un ressaut.
@@ -138,9 +149,16 @@ public partial class Player : LivingEntity
 		// Pentes (PenteBanquise) : le snap par défaut de Godot (1px) ne recolle
 		// pas le joueur au sol en descente. À Speed=220 il avance 3,67px par
 		// frame, soit déjà 1,45px de chute sur une pente douce (21,6°) : sans
-		// marge il dévale en petits sauts et perd EstAuSol. 8px couvre large,
-		// jusqu'aux pentes fortes. Voir DECISIONS.md.
-		FloorSnapLength = 8f;
+		// marge il dévale en petits sauts et perd EstAuSol. Voir DECISIONS.md.
+		//
+		// 12 px (et non 8) pour deux raisons : DESCENDRE une marche encaissée par
+		// GererMarcheAutomatique (jusqu'à HauteurMarcheMax) doit recoller le joueur au
+		// sol, sinon il décolle d'une frame et l'escalier sautille ; et en glissade sur
+		// pente forte (44,8°) il chute de 6,95 px/frame à 420 px/s, jusqu'à 9,73 px/frame
+		// sur glace (588) — 8 px était trop court, le joueur perdait le contact et avec
+		// lui GetFloorNormal(), donc EstPenteDescendante() et le gel de l'élan de pente.
+		// Le snap ne s'applique jamais quand velocity.Y < 0 : les sauts sont intacts.
+		FloorSnapLength = 12f;
 
 		// Le sol est un pavage de segments SolBanquise distincts, aux dessus coplanaires
 		// et largement chevauchants. Le bas arrondi de la capsule accroche le COIN
@@ -233,12 +251,13 @@ public partial class Player : LivingEntity
 		var auSol = IsOnFloor();
 		_coyoteTimer = auSol ? CoyoteTime : Mathf.Max(0f, _coyoteTimer - dt);
 
-		// À portée d'un PNJ parlant, Espace (partagé avec "action") sert à parler — mais
-		// SEULEMENT si le joueur est immobile : dès qu'il presse une direction, Espace
-		// redevient le saut normal (le dialogue ne se déclenche pas en marchant).
+		// À portée d'un élément interactif (PNJ parlant, porte…), Espace (partagé avec
+		// "action") sert à interagir — mais SEULEMENT si le joueur est immobile : dès qu'il
+		// presse une direction, Espace redevient le saut normal (on n'ouvre pas une porte
+		// ni ne déclenche un dialogue en marchant).
 		bool bougeHorizon = !Mathf.IsZeroApprox(Input.GetAxis("move_left", "move_right"));
-		bool espaceCaptureParDialogue = GameState.Instance.DialogueDisponible && !bougeHorizon;
-		if (!espaceCaptureParDialogue && Input.IsActionJustPressed("jump"))
+		bool espaceCaptureParInteraction = GameState.Instance.InteractionDisponible && !bougeHorizon;
+		if (!espaceCaptureParInteraction && Input.IsActionJustPressed("jump"))
 			_bufferSautTimer = JumpBufferTime;
 		else
 			_bufferSautTimer = Mathf.Max(0f, _bufferSautTimer - dt);
@@ -722,6 +741,14 @@ public partial class Player : LivingEntity
 	// y remonte le corps — la montée est donc proportionnée à la marche réelle. Au-delà
 	// de HauteurMarcheMax c'est un vrai mur : on ne grimpe pas. FloorSnapLength recolle
 	// ensuite le joueur au sol, donc aucun flottement si le ressaut était plus bas.
+	//
+	// C'est aussi ce « plus petit décollement » qui rend la méthode inoffensive sur les
+	// pentes : sur une pente la sonde horizontale est libérée par 4·tan(angle), soit
+	// ~1,6 px en douce (21,9°) et ~4 px en forte (44,8°). La hauteur retenue est donc la
+	// même quel que soit HauteurMarcheMax — relever le plafond n'agit que sur des faces
+	// verticales. Et la glissade obligatoire (GererPenteRaide) est armée par le COLLIDER
+	// sous les pieds, pas par l'angle : un décollement de marche ne peut ni la déclencher
+	// ni l'annuler.
 	private void GererMarcheAutomatique(Vector2 velocity, float dt)
 	{
 		// Coyote plutôt qu'IsOnFloor strict : en passant le sommet d'une butte le joueur
@@ -752,7 +779,11 @@ public partial class Player : LivingEntity
 		if (TestMove(depart, deplacement))
 		{
 			_framesSansProgres = 0;
-			for (var hauteur = PasMarche; hauteur <= HauteurMarcheMax; hauteur += PasMarche)
+			// On monte jusqu'à HauteurMarcheMax + MargeFranchissement : franchir un ressaut
+			// de HauteurMarcheMax exige de décoller d'un poil PLUS que sa hauteur (cf.
+			// MargeFranchissement), sinon la marche annoncée est justement celle qui bloque.
+			var decollementMax = HauteurMarcheMax + MargeFranchissement;
+			for (var hauteur = PasMarche; hauteur <= decollementMax; hauteur += PasMarche)
 			{
 				var montee = new Vector2(0f, -hauteur);
 				// Plafond juste au-dessus : inutile de chercher plus haut.

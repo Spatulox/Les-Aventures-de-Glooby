@@ -1,0 +1,114 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/Entities/Interactable/PorteBois.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://dy4nmjviluxd6" path="res://assets/decors/usine/porte_bois_cadre.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://ceahm8ghywpda" path="res://assets/decors/usine/porte_bois_fermee.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://c2upntexhmwka" path="res://assets/decors/usine/porte_bois_ouverte.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://k0m1k4hiugcm" path="res://assets/decors/usine/porte_bois_transition_01.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://dyvg3ryyan6n3" path="res://assets/decors/usine/porte_bois_transition_02.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://ca5gprv3nvjt7" path="res://assets/decors/usine/porte_bois_transition_03.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://n7ubvq6ej6tv" path="res://assets/decors/usine/porte_bois_transition_04.png" id="8"]
+[ext_resource type="Texture2D" uid="uid://cw7iw1lwlr8bq" path="res://assets/decors/usine/porte_bois_transition_05.png" id="9"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_battant"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3")
+}],
+"loop": true,
+"name": &"ferme",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4")
+}],
+"loop": true,
+"name": &"ouvert",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9")
+}],
+"loop": false,
+"name": &"ouverture",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5")
+}],
+"loop": false,
+"name": &"fermeture",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_blocage"]
+size = Vector2(34, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_battant"]
+size = Vector2(34, 56)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interaction"]
+size = Vector2(110, 60)
+
+[node name="PorteBois" type="StaticBody2D"]
+script = ExtResource("1")
+
+[node name="Visuel" type="Node2D" parent="."]
+scale = Vector2(0.5, 0.5)
+
+[node name="Battant" type="AnimatedSprite2D" parent="Visuel"]
+sprite_frames = SubResource("SpriteFrames_battant")
+animation = &"ferme"
+offset = Vector2(0, -106)
+
+[node name="Cadre" type="Sprite2D" parent="Visuel"]
+texture = ExtResource("2")
+offset = Vector2(0, -106)
+
+[node name="Blocage" type="CollisionShape2D" parent="."]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_blocage")
+
+[node name="ZoneBattant" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneBattant"]
+position = Vector2(0, -28)
+shape = SubResource("RectangleShape2D_battant")
+
+[node name="ZoneInteraction" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZoneInteraction"]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_interaction")
