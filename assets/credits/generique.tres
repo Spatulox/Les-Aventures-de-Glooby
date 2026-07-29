@@ -17,7 +17,7 @@ Noms = PackedStringArray("Spatulox", "AlexandreDjazz", "Claude Code (c\'est le b
 [sub_resource type="Resource" id="EntreeDesign"]
 script = ExtResource("2_entree")
 Categorie = "Game design & level design"
-Noms = PackedStringArray("Spatulox", "AlexandreDjazz", "Claude Code (il pue la merde)")
+Noms = PackedStringArray("Spatulox", "AlexandreDjazz", "Sahiko", "Claude Code (il pue la merde)")
 
 [sub_resource type="Resource" id="EntreeArt"]
 script = ExtResource("2_entree")
