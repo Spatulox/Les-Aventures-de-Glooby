@@ -61,6 +61,15 @@ public partial class EcranParametres : Control
 	private readonly List<(Control Noeud, string[] Cotes, int Base)> _marges = new();
 	private readonly List<(BoxContainer Boite, int Base)> _separations = new();
 
+	// Taille de police de base des contrôles qui n'ont PAS de libellé passé par Police() —
+	// boutons, listes déroulantes, cases à cocher, dialogues de confirmation : ceux-là lisent
+	// la taille du thème. Sans thème mis à l'échelle, leur texte garderait la taille par
+	// défaut du moteur pendant que leurs gabarits, eux, suivent le facteur — texte débordant
+	// des boutons. Un Theme (et non un override local) parce qu'il se propage à tout l'écran,
+	// fenêtres de dialogue comprises.
+	private const int PoliceParDefaut = 16;
+	private readonly Theme _theme = new();
+
 	public bool EnCapture => _capture != null && _capture.EnCours;
 
 	// --- Helpers d'enregistrement pour le redimensionnement proportionnel ---
@@ -96,12 +105,25 @@ public partial class EcranParametres : Control
 		return boite;
 	}
 
-	// Facteur d'échelle courant, dérivé de la taille RÉELLE de la fenêtre (pas du canvas 640×360
-	// figé). Réf. = fenêtre par défaut (720 p) → 1.0. Borné : le canvas restant fixe, au-delà de
-	// ~1.5 les colonnes déborderaient malgré l'autowrap des libellés ; en dessous de 0.75 le
-	// texte deviendrait illisible.
-	private static float FacteurEchelle() =>
-		Mathf.Clamp(DisplayServer.WindowGetSize().Y / 720f, 0.75f, 1.5f);
+	// Facteur d'échelle courant, dérivé de la hauteur du VIEWPORT — l'espace de mise en page
+	// réellement disponible — et non de la fenêtre système. Le projet est en stretch
+	// « viewport » : l'interface est dessinée dans un canvas fixe de 640×360 que le moteur
+	// agrandit ensuite pour remplir la fenêtre. Mesurer la fenêtre (1280×720 → 1.0) revenait
+	// donc à dessiner à taille 720 p dans un canvas deux fois plus petit, puis à tout
+	// réagrandir ×2 : texte énorme et colonnes qui débordaient à droite — et c'était pire en
+	// grande fenêtre, l'ancien facteur montant jusqu'à 1.5 alors que le canvas, lui, ne
+	// grandit jamais. Réf. = 720 p → 1.0, donc 0.5 dans le canvas 640×360 : les dimensions de
+	// base restent écrites en pixels « écran » et retombent sur la bonne taille à l'affichage,
+	// × EchelleConfort pour le confort de lecture.
+	private float FacteurEchelle() =>
+		Mathf.Clamp(GetViewportRect().Size.Y / 720f, 0.4f, 1.5f) * EchelleConfort;
+
+	// Grossissement de confort appliqué par-dessus le facteur de mise à l'échelle : à taille
+	// « exacte » l'écran est correct mais un peu petit. Réglage unique et volontairement
+	// modeste — c'est la marge horizontale qui borne la valeur : à ×1.2 la plus large des
+	// rangées (les deux boutons Ollama) occupe ~271 px des ~612 px utiles du canvas 640, donc
+	// on a encore de l'air, mais au-delà de ~×2 les colonnes finiraient par déborder.
+	private const float EchelleConfort = 1.2f;
 
 	// Réapplique la taille de base × facteur à tous les éléments enregistrés. Appelée après la
 	// construction (différée) et à chaque changement de taille de la fenêtre. On purge d'abord les
@@ -109,6 +131,7 @@ public partial class EcranParametres : Control
 	private void AppliquerEchelle()
 	{
 		float k = FacteurEchelle();
+		_theme.DefaultFontSize = Mathf.RoundToInt(PoliceParDefaut * k);
 		_taillesMin.RemoveAll(e => !IsInstanceValid(e.Ctrl));
 		foreach (var (ctrl, b) in _taillesMin)
 			ctrl.CustomMinimumSize = b * k;
@@ -141,6 +164,11 @@ public partial class EcranParametres : Control
 		ProcessMode = ProcessModeEnum.Always;
 		SetAnchorsPreset(LayoutPreset.FullRect);
 
+		// Posé avant la construction : les contrôles créés ensuite héritent directement de la
+		// bonne taille de police (AppliquerEchelle la réajuste à chaque redimensionnement).
+		_theme.DefaultFontSize = Mathf.RoundToInt(PoliceParDefaut * FacteurEchelle());
+		Theme = _theme;
+
 		MenuFabrique.AjouterFond(this, new Color(0.06f, 0.08f, 0.14f));
 
 		var marge = new MarginContainer();
@@ -172,7 +200,7 @@ public partial class EcranParametres : Control
 		if (OllamaService.Instance != null)
 			OllamaService.Instance.ProvisionnementTermine += OnProvisionnementTermine;
 
-		// Redimensionnement dynamique : l'écran suit la taille réelle de la fenêtre. La taille
+		// Redimensionnement dynamique : l'écran suit la taille de l'espace de dessin. Celle-ci
 		// n'étant pas garantie finale en _Ready, on applique une première fois en différé, puis à
 		// chaque changement de taille de la fenêtre (même motif que MenuPrincipal sur Resized).
 		GetTree().Root.SizeChanged += AppliquerEchelle;
