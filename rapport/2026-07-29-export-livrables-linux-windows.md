@@ -38,7 +38,28 @@ Chaque dossier contient **3 éléments indissociables** : l'exécutable, le `.pc
 `data_Les Aventures de Glooby_<plateforme>_x86_64/` (les assemblies .NET). Zipper le dossier entier,
 jamais l'exe seul.
 
-## Vérifications
+## Vérifications (après correctif, recompilation complète)
+
+| Étape | Résultat |
+|---|---|
+| `dotnet build -c ExportRelease` (`obj/`+`bin/` supprimés) | **0 avertissement, 0 erreur** |
+| `./exporter.sh` (3 exports + zips) | log **vide** de toute erreur/warning, exit 0 |
+| `godot --headless --quit-after 200` (projet source) | 12 × `Not supported by this display server` + 2 lignes de fin |
+| Build **exporté** lancé en headless | **profil identique** au projet source, 0 « aucune frame » |
+
+Les 12 erreurs sont un **artefact du headless** : `keyboard_get_label_from_physical`
+(`display_server.cpp:1215`) une fois par action de `CatalogueActions` (12 actions), quand l'écran
+Paramètres résout le libellé des touches — il n'y a pas de disposition clavier sans serveur
+d'affichage. `resources still in use` / `ObjectDB instances leaked` sont le bruit de sortie habituel
+de Godot. Rien de tout ça ne concerne le jeu lancé normalement.
+
+Point important : **le build exporté produit exactement le même log que le projet source** — c'est ce
+qui manquait avant le correctif `FichiersProjet`.
+
+Note : `exporter.sh` n'envoie plus la compilation C# dans `/dev/null` (c'était le seul endroit où
+passaient les warnings du compilateur).
+
+## Vérifications initiales
 
 - Export Linux et Windows : **0 erreur**, `dotnet publish` OK sur les deux.
 - Binaire Linux lancé en headless : démarre, le C# tourne (autoloads + `MenuPrincipal`). Les seules

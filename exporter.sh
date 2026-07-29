@@ -12,7 +12,8 @@ rm -rf builds
 mkdir -p builds/linux builds/linux-arm64 builds/windows
 
 echo "== Compilation C# =="
-"$GODOT" --headless --build-solutions --quit >/dev/null
+# Sortie NON masquée : c'est le seul endroit où passent les warnings du compilateur.
+"$GODOT" --headless --build-solutions --quit
 
 echo "== Export Linux x86_64 =="
 "$GODOT" --headless --export-release "Linux"
