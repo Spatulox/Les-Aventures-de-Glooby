@@ -22,6 +22,9 @@ obj/
 # Config et état locaux Claude Code (propres à cette machine)
 .claude/
 
+# Livrables exportés (builds Linux/Windows)
+builds/
+
 # Config IDE locale
 .idea/
 *.DotSettings.user
