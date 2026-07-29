@@ -14,13 +14,19 @@ public static class AnimationsSprite
 	// Défaut vide = tout le dossier, le cas historique « un dossier = une animation ».
 	public static Texture2D[] ChargerFrames(string dossier, string prefixe = "")
 	{
+		// Passage obligé par FichiersProjet : à l'export le dossier ne contient plus
+		// « 0.png » mais « 0.png.import », et un filtre naïf sur .png ne trouve rien.
 		var fichiers = new List<string>();
-		foreach (var fichier in DirAccess.GetFilesAt(dossier))
+		foreach (string fichier in FichiersProjet.Lister(dossier, ".png"))
 		{
-			if (fichier.EndsWith(".png") && fichier.StartsWith(prefixe))
+			if (fichier.StartsWith(prefixe))
 				fichiers.Add(fichier);
 		}
-		fichiers.Sort();
+
+		// Un dossier d'animation vide est toujours une erreur d'intégration (chemin
+		// faux, asset non exporté) : le signaler évite l'entité invisible et muette.
+		if (fichiers.Count == 0)
+			GD.PushWarning($"AnimationsSprite : aucune frame trouvée dans « {dossier} » (préfixe « {prefixe} »).");
 
 		var textures = new Texture2D[fichiers.Count];
 		for (int i = 0; i < fichiers.Count; i++)

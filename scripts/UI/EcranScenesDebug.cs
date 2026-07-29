@@ -186,11 +186,8 @@ public partial class EcranScenesDebug : Control
 		if (acces == null)
 			return;
 
-		foreach (var fichier in acces.GetFiles())
+		foreach (string fichier in FichiersProjet.Lister(dossier, ".tscn"))
 		{
-			if (!fichier.EndsWith(".tscn"))
-				continue;
-
 			if (!parDossier.TryGetValue(dossier, out var niveaux))
 				parDossier[dossier] = niveaux = new List<string>();
 			niveaux.Add($"{dossier}/{fichier}");

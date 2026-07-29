@@ -230,15 +230,11 @@ public partial class MenuPrincipal : Control
 	// ou introuvable. GD.Randomize garantit un tirage différent à chaque ouverture.
 	private static string FondAleatoire()
 	{
-		using var dossier = DirAccess.Open(DossierFonds);
-		if (dossier == null)
-			return null;
-
 		// Les fonds d'arène de boss sont réservés au combat : on les exclut du
 		// tirage du menu pour ne pas déflorer un boss sur l'écran-titre.
 		var fichiers = new List<string>();
-		foreach (var nom in dossier.GetFiles())
-			if (nom.EndsWith(".png") && !nom.Contains("boss"))
+		foreach (string nom in FichiersProjet.Lister(DossierFonds, ".png"))
+			if (!nom.Contains("boss"))
 				fichiers.Add(nom);
 
 		if (fichiers.Count == 0)

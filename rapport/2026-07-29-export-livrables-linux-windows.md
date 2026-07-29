@@ -46,6 +46,38 @@ jamais l'exe seul.
   d'affichage), identiques à `godot --headless` sur le projet source.
 - **Non vérifié** : le `.exe` Windows (pas de Windows/Wine ici) et un lancement fenêtré réel.
 
+## Bug d'export corrigé : assets invisibles (joueur / PNJ / boss)
+
+**Symptôme** : dans le build, aucune entité animée n'a de sprite. Dans l'éditeur, tout va bien.
+
+**Cause** : à l'export, un dossier ne contient plus `0.png` mais **`0.png.import`** (l'image réelle est
+un `.ctex` de `.godot/imported/`), et les ressources texte deviennent `banquise.tres.remap`.
+`GD.Load("res://.../0.png")` résout toujours — mais l'**énumération** (`DirAccess.GetFilesAt`) renvoie
+les noms suffixés, donc tout filtre `EndsWith(".png")` trouve **zéro fichier**.
+
+Vérifié directement sur le `.pck` (script GDScript sur le pack chargé) :
+
+| | |
+|---|---|
+| Noms réels dans le pack | `0.png.import`, `1.png.import`… |
+| Ancien filtre `.png` | **0 frames** ← le bug |
+| Nouveau filtre | **5 frames**, `load()` renvoie un `CompressedTexture2D` |
+
+**Correctif** : nouveau helper partagé `scripts/Common/FichiersProjet.cs` (`Lister` / `NomOrigine`)
+qui retire les suffixes `.import` / `.remap` et dédoublonne (dans l'éditeur un asset apparaît en
+`0.png` **et** `0.png.import`). **Tout scan de dossier du projet doit passer par lui.** Répercuté sur
+les 4 sites qui scannaient un dossier :
+
+| Fichier | Ce qui était cassé à l'export |
+|---|---|
+| `Common/AnimationsSprite.cs` | **toutes** les animations d'entités (joueur, PNJ, boss) — le bug signalé |
+| `UI/MenuPrincipal.cs` | fond aléatoire du menu (`.png`) |
+| `UI/EcranScenesDebug.cs` | liste des niveaux (`.tscn` → `.tscn.remap`) : écran vide |
+| `Core/GestionnaireAudio.cs` | déjà géré (`.remap`) — repassé sur le helper pour ne pas dupliquer |
+
+`ChargerFrames` journalise désormais un `PushWarning` quand un dossier d'animation ressort vide :
+la prochaine régression de ce type se verra dans la console au lieu de produire une entité invisible.
+
 ## Configuration requise (mesurée sur les binaires produits)
 
 - **Linux** : glibc ≥ 2.28, **kernel ≥ 5.15** (note ABI du binaire), **Vulkan 1.0**. Le binaire ne se lie

@@ -76,18 +76,11 @@ public partial class GestionnaireAudio : Node
 	// Lit toutes les ressources d'ambiance du dossier et les indexe par leur Nom.
 	private void ChargerAmbiances()
 	{
-		using var dossier = DirAccess.Open(DossierAmbiances);
-		if (dossier == null)
-			return;   // pas encore d'assets audio : le jeu tourne en silence.
-
-		foreach (string fichier in dossier.GetFiles())
+		// FichiersProjet gère le suffixe .remap que l'export ajoute aux ressources
+		// texte converties en binaire (sinon : plus une seule ambiance dans le jeu
+		// exporté). Dossier absent = pas encore d'assets audio, le jeu est muet.
+		foreach (string nomFichier in FichiersProjet.Lister(DossierAmbiances, ".tres", ".res"))
 		{
-			// À l'export, les ressources peuvent être converties en binaire et
-			// suffixées .remap - on retrouve le chemin réel en retirant le suffixe.
-			string nomFichier = fichier.EndsWith(".remap") ? fichier.GetBaseName() : fichier;
-			if (!nomFichier.EndsWith(".tres") && !nomFichier.EndsWith(".res"))
-				continue;
-
 			if (GD.Load($"{DossierAmbiances}/{nomFichier}") is AmbianceSonore ambiance
 				&& !string.IsNullOrEmpty(ambiance.Nom))
 				_ambiances[ambiance.Nom] = ambiance;
