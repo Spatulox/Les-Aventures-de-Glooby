@@ -1,1 +1,3 @@
 # Les-Aventures-de-Glooby
+
+The goal of this school project is to only uses AI to generate the game...
